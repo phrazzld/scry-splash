@@ -10,7 +10,7 @@
         1. Brand colors are available as Tailwind utility classes (e.g., `bg-ink`, `text-chalk`, `border-cobalt`).
     - **Depends‑on:** none
 
-- [ ] **T002 · Chore · P2: add ibm plex sans font files**
+- [x] **T002 · Chore · P2: add ibm plex sans font files**
     - **Context:** PLAN.md § 1. Brand & Visual System, § 5. Task 1
     - **Action:**
         1. Acquire IBM Plex Sans font files (Regular, Medium, Bold weights).
