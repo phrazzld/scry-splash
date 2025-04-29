@@ -21,7 +21,7 @@
         2. `@font-face` rules are correctly configured in global CSS.
     - **Depends‑on:** none
 
-- [ ] **T003 · Chore · P2: configure tailwind typography scale and font family**
+- [x] **T003 · Chore · P2: configure tailwind typography scale and font family**
     - **Context:** PLAN.md § 1. Brand & Visual System (Typography)
     - **Action:**
         1. Set IBM Plex Sans as the default sans-serif font family in `tailwind.config.js`.
