@@ -32,7 +32,7 @@
         2. IBM Plex Sans is the default font applied.
     - **Depends‑on:** T002
 
-- [ ] **T004 · Chore · P2: configure tailwind grid system**
+- [x] **T004 · Chore · P2: configure tailwind grid system**
     - **Context:** PLAN.md § 3. Layout Grid
     - **Action:**
         1. Ensure Tailwind is configured for a 12-column grid system.
