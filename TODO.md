@@ -133,7 +133,7 @@
     - **Depends‑on:** T009
 
 ## Interaction & Accessibility
-- [ ] **T012 · Feature · P3: implement page content fade-in animation**
+- [x] **T012 · Feature · P3: implement page content fade-in animation**
     - **Context:** PLAN.md § 4. Interaction & Accessibility
     - **Action:**
         1. Apply a CSS animation or transition to the main content container(s).

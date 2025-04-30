@@ -27,4 +27,8 @@
   
   /* Spacing */
   --spacing-vertical-lg: 10rem;
+  
+  /* Animations */
+  --animation-fade-duration: 200ms;
+  --animation-fade-timing: ease-out;
 }

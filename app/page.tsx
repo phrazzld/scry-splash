@@ -13,7 +13,7 @@ export default function Home() {
       {/* Grid container */}
       <div className="grid-container relative z-10 px-6 mx-auto">
         {/* Main content - spans full width on mobile, 6 columns centered on desktop */}
-        <main className="col-span-12 md:col-span-6 md:col-start-4 flex flex-col items-center my-vertical-lg">
+        <main className="col-span-12 md:col-span-6 md:col-start-4 flex flex-col items-center my-vertical-lg animate-fade-in">
           {/* Logo area - 64pt Bold */}
           <div className="mb-8">
             <h1 className="text-display font-bold text-chalk">

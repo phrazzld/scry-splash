@@ -113,3 +113,13 @@ body {
 .mb-vertical-lg, .my-vertical-lg {
   margin-bottom: var(--spacing-vertical-lg);
 }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--animation-fade-duration) var(--animation-fade-timing) forwards;
+}
