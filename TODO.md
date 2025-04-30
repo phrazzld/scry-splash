@@ -158,7 +158,7 @@
     - **Depends‑on:** T008, T009
 
 ## Verification & Audits
-- [ ] **T014 · Test · P2: verify responsive layout behavior**
+- [x] **T014 · Test · P2: verify responsive layout behavior**
     - **Context:** PLAN.md § 3. Layout Grid, § 5. Task 6
     - **Action:**
         1. Test the page layout by resizing the browser viewport from 320px width up to desktop sizes.
