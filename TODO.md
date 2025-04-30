@@ -44,7 +44,7 @@
     - **Depends‑on:** none
 
 ## Styling & Layout
-- [ ] **T005 · Feature · P1: implement page background color and noise overlay**
+- [x] **T005 · Feature · P1: implement page background color and noise overlay**
     - **Context:** PLAN.md § 1. Brand & Visual System, § 5. Task 2
     - **Action:**
         1. Set the main page container's background to `Ink Black` using the configured Tailwind utility (from T001).
