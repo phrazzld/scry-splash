@@ -59,7 +59,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
         3. Stories demonstrate interaction states
         4. Stories include accessibility checks
 
-- [ ] **SB006 · Component · P2: Create NoiseBackground component**
+- [x] **SB006 · Component · P2: Create NoiseBackground component**
     - **Action:**
         1. Extract the noise overlay background into a standalone component
         2. Support customization of opacity and base color
