@@ -87,7 +87,7 @@
     - **Depends‑on:** T001, T003
 
 ## Content & Components
-- [ ] **T008 · Feature · P1: insert final page copy and remove placeholders**
+- [x] **T008 · Feature · P1: insert final page copy and remove placeholders**
     - **Context:** PLAN.md § 2. Final Copy, § 5. Task 4
     - **Action:**
         1. Replace all placeholder text with the exact copy from PLAN.md § 2.

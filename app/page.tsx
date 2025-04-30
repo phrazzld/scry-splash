@@ -16,55 +16,35 @@ export default function Home() {
         <main className="col-span-12 md:col-span-6 md:col-start-4 flex flex-col items-center my-vertical-lg animate-fade-in">
           {/* Logo area - 64pt Bold */}
           <div className="mb-8">
-            <h1 className="text-display font-bold text-chalk">
+            <h1 className="text-display font-bold text-chalk" aria-label="Scry">
               Scry<span className="opacity-70">.</span>
             </h1>
           </div>
           
           {/* Tag-line - 32pt Regular */}
           <h2 className="mb-4 text-heading font-regular text-chalk text-center max-w-prose">
-            Memorize less. <span className="text-purple">Learn more.</span>
+            Remember effortlessly.
           </h2>
           
           {/* Subheadline - 14pt Regular */}
           <p className="mb-8 text-body font-regular text-chalk text-center max-w-prose opacity-80">
-            Transform your notes into personalized learning experiences.
+            Turns your notes into spaced‑repetition prompts—automatically.
           </p>
           
-          {/* Feature bullets - 18pt Medium for labels, 14pt Regular for content */}
-          <div className="flex flex-col gap-3 mb-10 text-left w-full max-w-prose">
-            <div className="flex items-center">
-              <div className="flex items-center justify-center w-10 h-10 mr-3 rounded-full bg-chalk opacity-10">
-                <div className="w-5 h-5 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-purple)' }}></div>
-              </div>
-              <p className="text-body text-chalk opacity-90">
-                <span className="font-medium text-subheading">AI-Powered:</span> Turn simple notes into comprehensive learning materials
-              </p>
-            </div>
-            
-            <div className="flex items-center">
-              <div className="flex items-center justify-center w-10 h-10 mr-3 rounded-full bg-chalk opacity-10">
-                <div className="w-5 h-5 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-purple)' }}></div>
-              </div>
-              <p className="text-body text-chalk opacity-90">
-                <span className="font-medium text-subheading">Effortless:</span> Create effective flashcards in seconds, not hours
-              </p>
-            </div>
-            
-            <div className="flex items-center">
-              <div className="flex items-center justify-center w-10 h-10 mr-3 rounded-full bg-chalk opacity-10">
-                <div className="w-5 h-5 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-purple)' }}></div>
-              </div>
-              <p className="text-body text-chalk opacity-90">
-                <span className="font-medium text-subheading">Adaptive:</span> Learning that evolves with your knowledge
-              </p>
-            </div>
-          </div>
+          {/* Benefit trio - 18pt Medium */}
+          <p className="mb-10 text-subheading font-medium text-chalk text-center max-w-prose">
+            Capture anything · Review in moments · Master for life
+          </p>
           
           {/* CTA button - 18pt Medium */}
           <button className="px-8 py-3 text-subheading font-medium text-chalk transition-all rounded-full bg-cobalt hover:opacity-90 active:scale-[0.98]">
-            Join the waitlist
+            Join the wait‑list
           </button>
+          
+          {/* Microcopy - 14pt Regular */}
+          <p className="mt-4 text-body font-regular text-chalk opacity-70 text-center">
+            Beta invites roll out weekly.
+          </p>
         </main>
       </div>
     </div>
