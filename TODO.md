@@ -58,7 +58,7 @@
         2. Visually confirm noise texture presence.
     - **Depends‑on:** T001
 
-- [ ] **T006 · Feature · P1: implement main content grid layout**
+- [x] **T006 · Feature · P1: implement main content grid layout**
     - **Context:** PLAN.md § 3. Layout Grid, § 5. Task 3
     - **Action:**
         1. Structure the main content area using Tailwind's 12-column grid.
