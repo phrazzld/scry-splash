@@ -38,7 +38,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
         2. Stories demonstrate each variant
         3. Stories include accessibility checks
 
-- [ ] **SB004 · Component · P1: Create Logo component**
+- [x] **SB004 · Component · P1: Create Logo component**
     - **Action:**
         1. Extract the "Scry." logo into a standalone component
         2. Support size variants
