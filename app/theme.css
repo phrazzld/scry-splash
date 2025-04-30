@@ -1,0 +1,30 @@
+/**
+ * Core theme styles for Scry application
+ * This file contains css variables and base styles
+ */
+
+:root {
+  /* Colors */
+  --color-ink: #121212;
+  --color-chalk: #FAFAFA;
+  --color-cobalt: #0047AB;
+  --color-purple: #b494e9;
+  
+  /* Typography */
+  --font-display-size: 5.33rem;
+  --font-heading-size: 2.67rem;
+  --font-subheading-size: 1.5rem;
+  --font-body-size: 1.17rem;
+  
+  --font-display-line-height: 1.1;
+  --font-heading-line-height: 1.2;
+  --font-subheading-line-height: 1.3;
+  --font-body-line-height: 1.5;
+  
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-bold: 700;
+  
+  /* Spacing */
+  --spacing-vertical-lg: 10rem;
+}

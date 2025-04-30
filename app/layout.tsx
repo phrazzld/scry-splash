@@ -2,15 +2,13 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// IBM Plex Sans is loaded via @font-face in globals.css
-// We'll create a CSS variable for it to be consistent with Next.js font handling
-const ibmPlexSans = {
-  variable: "--font-ibm-plex-sans"
-};
+// Note: IBM Plex Sans is loaded directly via @font-face in globals.css
+// We don't use Next.js font loader for IBM Plex Sans to avoid conflicts
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -25,9 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${ibmPlexSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistMono.variable}`}>
         {children}
       </body>
     </html>

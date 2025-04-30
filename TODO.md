@@ -72,7 +72,7 @@
         2. Inspect margins using dev tools.
     - **Depends‑on:** T004
 
-- [ ] **T007 · Feature · P1: apply typography styles and constraints**
+- [x] **T007 · Feature · P1: apply typography styles and constraints**
     - **Context:** PLAN.md § 1. Brand & Visual System, § 3. Layout Grid, § 5. Task 3
     - **Action:**
         1. Apply the configured Tailwind font size and weight utilities to text elements (Logo, Tag-line, Benefit trio, CTA label, Microcopy).
