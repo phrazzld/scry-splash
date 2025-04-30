@@ -32,4 +32,9 @@
   /* Animations */
   --animation-fade-duration: 200ms;
   --animation-fade-timing: ease-out;
+  
+  /* Focus styles */
+  --focus-outline-width: 2px;
+  --focus-outline-radius: 8px;
+  --focus-outline-color: var(--color-cobalt);
 }

@@ -142,3 +142,9 @@ button {
 .btn-cta:hover {
   background-color: var(--color-cobalt-light);
 }
+
+.btn-cta:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: 2px;
+  border-radius: var(--focus-outline-radius);
+}

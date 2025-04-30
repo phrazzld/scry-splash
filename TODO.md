@@ -120,7 +120,7 @@
         1. Mouse over the button and observe the background color change.
     - **Depends‑on:** T009
 
-- [ ] **T011 · Feature · P1: implement cta button focus style**
+- [x] **T011 · Feature · P1: implement cta button focus style**
     - **Context:** PLAN.md § 4. Interaction & Accessibility, § 5. Task 5
     - **Action:**
         1. Implement a CSS `:focus` or `:focus-visible` state for the CTA button.
