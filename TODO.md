@@ -144,7 +144,7 @@
         1. Refresh the page and observe the fade-in effect.
     - **Depends‑on:** T006
 
-- [ ] **T013 · Feature · P2: add required aria attributes**
+- [x] **T013 · Feature · P2: add required aria attributes**
     - **Context:** PLAN.md § 4. Interaction & Accessibility
     - **Action:**
         1. Add `aria-label="Scry"` to the main logo/heading element.

@@ -1,6 +1,11 @@
+export const metadata = {
+  title: 'Scry - Remember effortlessly',
+  description: 'Turns your notes into spaced-repetition prompts—automatically',
+};
+
 export default function Home() {
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden" role="main">
       {/* Background with noise texture overlay */}
       <div className="absolute inset-0 bg-ink z-0">
         <div className="absolute inset-0 opacity-[0.02]" style={{ 
@@ -40,6 +45,7 @@ export default function Home() {
           <button 
             className="px-8 py-4 text-subheading font-medium text-chalk bg-cobalt btn-cta rounded-lg cursor-pointer transition-all active:scale-[0.98]"
             type="button"
+            aria-label="Join the wait-list for Scry to turn your notes into spaced-repetition prompts"
           >
             Join the wait‑list
           </button>
