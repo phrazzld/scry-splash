@@ -47,7 +47,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
         1. Logo component renders correctly
         2. Component includes proper aria-label
 
-- [ ] **SB005 · Component · P1: Implement Button using shadcn/ui Button**
+- [x] **SB005 · Component · P1: Implement Button using shadcn/ui Button**
     - **Action:**
         1. Add shadcn/ui Button component
         2. Customize variants to match Scry's design (primary/CTA with Cobalt Blue)
