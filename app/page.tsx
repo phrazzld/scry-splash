@@ -37,7 +37,10 @@ export default function Home() {
           </p>
           
           {/* CTA button - 18pt Medium */}
-          <button className="px-8 py-3 text-subheading font-medium text-chalk transition-all rounded-full bg-cobalt hover:opacity-90 active:scale-[0.98]">
+          <button 
+            className="px-8 py-4 text-subheading font-medium text-chalk bg-cobalt hover:opacity-90 focus:outline-none active:scale-[0.98] rounded-lg cursor-pointer transition-all"
+            type="button"
+          >
             Join the wait‑list
           </button>
           

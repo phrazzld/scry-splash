@@ -100,7 +100,7 @@
         1. Visually proofread the page against PLAN.md § 2.
     - **Depends‑on:** T006, T007
 
-- [ ] **T009 · Feature · P1: build cta button structure and base style**
+- [x] **T009 · Feature · P1: build cta button structure and base style**
     - **Context:** PLAN.md § 1. Brand & Visual System, § 5. Task 5
     - **Action:**
         1. Create a semantic `<button>` element for the "Join the wait‑list" CTA.

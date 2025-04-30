@@ -123,3 +123,14 @@ body {
 .animate-fade-in {
   animation: fadeIn var(--animation-fade-duration) var(--animation-fade-timing) forwards;
 }
+
+/* Button styles */
+button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Sans', sans-serif;
+  border: none;
+  overflow: hidden;
+}
