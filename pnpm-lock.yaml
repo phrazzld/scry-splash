@@ -33,6 +33,9 @@ importers:
       '@eslint/eslintrc':
         specifier: ^3
         version: 3.3.1
+      '@storybook/addon-a11y':
+        specifier: ^8.6.12
+        version: 8.6.12(storybook@8.6.12)
       '@storybook/addon-essentials':
         specifier: ^8.6.12
         version: 8.6.12(@types/react@19.1.2)(storybook@8.6.12)
@@ -43,6 +46,9 @@ importers:
         specifier: ^8.6.12
         version: 8.6.12(react@19.1.0)(storybook@8.6.12)
       '@storybook/addon-onboarding':
+        specifier: ^8.6.12
+        version: 8.6.12(storybook@8.6.12)
+      '@storybook/addon-viewport':
         specifier: ^8.6.12
         version: 8.6.12(storybook@8.6.12)
       '@storybook/blocks':
@@ -1222,6 +1228,11 @@ packages:
 
   '@rushstack/eslint-patch@1.11.0':
     resolution: {integrity: sha512-zxnHvoMQVqewTJr/W4pKjF0bMGiKJv1WX7bSrkl46Hg0QjESbzBROWK0Wg4RphzSOS5Jiy7eFimmM3UgMrMZbQ==}
+
+  '@storybook/addon-a11y@8.6.12':
+    resolution: {integrity: sha512-H28zHiL8uuv29XsVNf9VjNWsCeht/l66GPYHT7aom1jh+f3fS9+sutrCGEBC/T7cnRpy8ZyuHCtihUqS+RI4pg==}
+    peerDependencies:
+      storybook: ^8.6.12
 
   '@storybook/addon-actions@8.6.12':
     resolution: {integrity: sha512-B5kfiRvi35oJ0NIo53CGH66H471A3XTzrfaa6SxXEJsgxxSeKScG5YeXcCvLiZfvANRQ7QDsmzPUgg0o3hdMXw==}
@@ -5396,6 +5407,14 @@ snapshots:
   '@rtsao/scc@1.1.0': {}
 
   '@rushstack/eslint-patch@1.11.0': {}
+
+  '@storybook/addon-a11y@8.6.12(storybook@8.6.12)':
+    dependencies:
+      '@storybook/addon-highlight': 8.6.12(storybook@8.6.12)
+      '@storybook/global': 5.0.0
+      '@storybook/test': 8.6.12(storybook@8.6.12)
+      axe-core: 4.10.3
+      storybook: 8.6.12
 
   '@storybook/addon-actions@8.6.12(storybook@8.6.12)':
     dependencies:

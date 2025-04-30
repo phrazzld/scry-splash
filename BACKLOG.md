@@ -1,5 +1,7 @@
 # Project Backlog
 
+- set up e2e tests
+
 ## Infrastructure
 - [ ] Set up GitHub Actions CI
 - [ ] Set up useful precommit hooks

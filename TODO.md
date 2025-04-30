@@ -27,7 +27,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
 
 ## Atomic Components
 
-- [ ] **SB003 · Component · P1: Implement Typography using shadcn/ui Typography**
+- [x] **SB003 · Component · P1: Implement Typography using shadcn/ui Typography**
     - **Action:**
         1. Add shadcn/ui Typography components
         2. Extend/customize to support Scry's typography scale (display, heading, subheading, body)
