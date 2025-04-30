@@ -36,5 +36,5 @@
   /* Focus styles */
   --focus-outline-width: 2px;
   --focus-outline-radius: 8px;
-  --focus-outline-color: var(--color-cobalt);
+  --focus-outline-color: #0060E6; /* Brighter blue for 3:1 minimum contrast ratio */
 }

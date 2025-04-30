@@ -170,7 +170,7 @@
         1. Use browser dev tools responsive mode.
     - **Depends‑on:** T006, T008, T009
 
-- [ ] **T015 · Test · P1: verify color contrast ratios**
+- [x] **T015 · Test · P1: verify color contrast ratios**
     - **Context:** PLAN.md § 1. Brand & Visual System, § 4. Interaction & Accessibility, § 5. Task 6
     - **Action:**
         1. Use browser dev tools or an online checker to verify contrast ratios.
