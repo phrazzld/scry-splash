@@ -16,7 +16,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
         2. shadcn/ui components render correctly in Storybook
         3. Theme variables are accessible in stories
 
-- [ ] **SB002 · Setup · P1: Create design token integration**
+- [x] **SB002 · Setup · P1: Create design token integration**
     - **Action:**
         1. Ensure Scry brand colors (Ink, Chalk, Cobalt) are properly integrated with shadcn/ui theming
         2. Create stories that demonstrate the theme configuration

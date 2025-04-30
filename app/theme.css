@@ -4,7 +4,7 @@
  */
 
 :root {
-  /* Colors */
+  /* Scry Brand Colors */
   --color-ink: #121212;
   --color-chalk: #FAFAFA;
   --color-cobalt: #0047AB;
@@ -37,4 +37,66 @@
   --focus-outline-width: 2px;
   --focus-outline-radius: 8px;
   --focus-outline-color: #0060E6; /* Brighter blue for 3:1 minimum contrast ratio */
+  
+  /* shadcn/ui Semantic Colors - Dark Mode (Default) */
+  --background: var(--color-ink);
+  --foreground: var(--color-chalk);
+  
+  --card: var(--color-ink);
+  --card-foreground: var(--color-chalk);
+  
+  --popover: var(--color-ink);
+  --popover-foreground: var(--color-chalk);
+  
+  --primary: var(--color-cobalt);
+  --primary-foreground: var(--color-chalk);
+  
+  --secondary: #333333;
+  --secondary-foreground: var(--color-chalk);
+  
+  --muted: #333333;
+  --muted-foreground: #a0a0a0;
+  
+  --accent: var(--color-purple);
+  --accent-foreground: var(--color-ink);
+  
+  --destructive: #ef4444;
+  --destructive-foreground: var(--color-chalk);
+  
+  --border: #333333;
+  --input: #333333;
+  --ring: var(--focus-outline-color);
+  
+  --radius: 0.5rem;
+}
+
+/* Light mode theme (for flexibility) */
+.light {
+  --background: var(--color-chalk);
+  --foreground: var(--color-ink);
+  
+  --card: var(--color-chalk);
+  --card-foreground: var(--color-ink);
+  
+  --popover: var(--color-chalk);
+  --popover-foreground: var(--color-ink);
+  
+  --primary: var(--color-cobalt);
+  --primary-foreground: var(--color-chalk);
+  
+  --secondary: #e5e5e5;
+  --secondary-foreground: var(--color-ink);
+  
+  --muted: #e5e5e5;
+  --muted-foreground: #737373;
+  
+  --accent: var(--color-purple);
+  --accent-foreground: var(--color-ink);
+  
+  --destructive: #ef4444;
+  --destructive-foreground: var(--color-chalk);
+  
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: var(--focus-outline-color);
 }
