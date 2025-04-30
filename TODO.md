@@ -109,7 +109,7 @@
         1. A styled button with the correct text is rendered on the page.
     - **Depends‑on:** T001, T003, T008
 
-- [ ] **T010 · Feature · P2: implement cta button hover style**
+- [x] **T010 · Feature · P2: implement cta button hover style**
     - **Context:** PLAN.md § 5. Task 5
     - **Action:**
         1. Implement a CSS `:hover` state for the CTA button.

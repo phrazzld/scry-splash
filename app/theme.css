@@ -8,6 +8,7 @@
   --color-ink: #121212;
   --color-chalk: #FAFAFA;
   --color-cobalt: #0047AB;
+  --color-cobalt-light: #0051c4; /* 10% increased luminance for hover state */
   --color-purple: #b494e9;
   
   /* Typography */
