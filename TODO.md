@@ -120,7 +120,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
         1. Component properly implements the responsive page layout
         2. Stories demonstrate different layout configurations
 
-- [ ] **SB012 · Component · P0: Create SplashPage component**
+- [x] **SB012 · Component · P0: Create SplashPage component**
     - **Action:**
         1. Compose all molecules into the complete page layout
         2. Ensure proper vertical spacing
@@ -130,27 +130,6 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
         1. Component renders the complete splash page
         2. Stories demonstrate responsive behavior
         3. Component uses all the molecule components
-
-## Advanced Components (Optional)
-
-- [ ] **SB013 · Component · P3: Implement shadcn/ui Toast for notifications**
-    - **Action:**
-        1. Add shadcn/ui Toast component
-        2. Create a variant for waitlist confirmation
-        3. Design a clean integration with the splash page
-    - **Done-when:**
-        1. Toast component appears when CTA is clicked
-        2. Stories demonstrate different toast messages
-
-- [ ] **SB014 · Component · P3: Implement shadcn/ui Dialog for waitlist form**
-    - **Action:**
-        1. Add shadcn/ui Dialog component
-        2. Design a simple email input form for waitlist signup
-        3. Ensure proper a11y support
-    - **Done-when:**
-        1. Dialog opens when CTA is clicked
-        2. Form captures email input
-        3. Stories demonstrate form validation states
 
 ## Documentation & Tooling
 

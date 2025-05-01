@@ -123,6 +123,8 @@ body {
 
 .animate-fade-in {
   animation: fadeIn var(--animation-fade-duration) var(--animation-fade-timing) forwards;
+  animation-fill-mode: both;
+  opacity: 0;
 }
 
 /* Button styles */
