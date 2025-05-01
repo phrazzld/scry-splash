@@ -115,35 +115,37 @@ export function SplashPage({
       backgroundColor={backgroundColor}
       animate={false} // We handle our own animation
       centered={centered}
-      className={cn(className)}
+      className={cn("flex items-center justify-center", className)}
       {...props}
     >
-      {/* Hero Section */}
-      <div className={cn(animateClass)} {...heroDelay}>
-        <HeroSection
-          headline={headline}
-          subheadline={subheadline}
-          centered={centered}
-        />
-      </div>
-      
-      {/* Benefits Section */}
-      <div className={cn("mt-8 md:mt-10", animateClass)} {...benefitsDelay}>
-        <BenefitTrio
-          benefits={benefits}
-          layout={benefitsLayout}
-          centered={centered}
-        />
-      </div>
-      
-      {/* CTA Section */}
-      <div className={cn("mt-10 md:mt-12", animateClass)} {...ctaDelay}>
-        <CTASection
-          buttonText={buttonText}
-          microcopy={microcopy}
-          centered={centered}
-          onButtonClick={onCtaClick}
-        />
+      <div className="flex flex-col items-center w-full max-w-3xl">
+        {/* Hero Section */}
+        <div className={cn("w-full", animateClass)} {...heroDelay}>
+          <HeroSection
+            headline={headline}
+            subheadline={subheadline}
+            centered={centered}
+          />
+        </div>
+        
+        {/* Benefits Section */}
+        <div className={cn("mt-8 md:mt-10 w-full", animateClass)} {...benefitsDelay}>
+          <BenefitTrio
+            benefits={benefits}
+            layout={benefitsLayout}
+            centered={centered}
+          />
+        </div>
+        
+        {/* CTA Section */}
+        <div className={cn("mt-10 md:mt-12", animateClass)} {...ctaDelay}>
+          <CTASection
+            buttonText={buttonText}
+            microcopy={microcopy}
+            centered={centered}
+            onButtonClick={onCtaClick}
+          />
+        </div>
       </div>
     </PageLayout>
   )

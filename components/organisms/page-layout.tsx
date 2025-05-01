@@ -121,14 +121,14 @@ export function DefaultLayout({
   ...props
 }: Omit<PageLayoutProps, "children"> & { children: React.ReactNode }) {
   return (
-    <PageLayout {...props}>
+    <PageLayout className="flex items-center justify-center" {...props}>
       <GridItem 
         span={12} 
         md={10} 
         lg={8} 
         mdStart={2}
         lgStart={3}
-        className="flex flex-col items-center my-vertical-lg"
+        className="flex flex-col items-center"
       >
         {children}
       </GridItem>
