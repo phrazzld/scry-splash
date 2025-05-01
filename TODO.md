@@ -110,7 +110,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
 
 ## Organism Components
 
-- [ ] **SB011 · Component · P0: Create PageLayout component**
+- [x] **SB011 · Component · P0: Create PageLayout component**
     - **Action:**
         1. Use shadcn/ui Container as the foundation
         2. Support configurable column spans for different breakpoints
