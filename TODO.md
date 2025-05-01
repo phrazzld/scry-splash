@@ -160,7 +160,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
 
 ## Refactoring Current Implementation
 
-- [ ] **SB018 · Refactor · P0: Refactor page.tsx to use the component library**
+- [x] **SB018 · Refactor · P0: Refactor page.tsx to use the component library**
     - **Action:**
         1. Replace the monolithic page implementation with the new shadcn/ui-based components
         2. Ensure visual parity with the current implementation
