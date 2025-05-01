@@ -84,6 +84,28 @@ const preview: Preview = {
       // Default pauseAnimationAtEnd for consistent rendering
       pauseAnimationAtEnd: true,
     },
+    // Global a11y configuration for all stories
+    a11y: {
+      // WCAG AA compliance level
+      config: {
+        rules: [
+          {
+            // High contrast requirement
+            id: 'color-contrast',
+            enabled: true
+          }
+        ]
+      },
+      // Options for the a11y addon
+      options: {
+        runOnly: {
+          type: 'tag',
+          values: ['wcag2a', 'wcag2aa', 'wcag21aa'], // WCAG 2.1 AA compliance
+        },
+      },
+      // Automatically check a11y for all stories
+      manual: false,
+    },
   },
   globalTypes: {
     theme: {

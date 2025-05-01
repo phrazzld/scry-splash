@@ -12,7 +12,9 @@
     "build-storybook": "storybook build",
     "chromatic": "chromatic --exit-zero-on-changes",
     "chromatic:ci": "pnpm build-storybook && chromatic --exit-zero-on-changes",
-    "chromatic:baseline": "pnpm build-storybook && chromatic --exit-zero-on-changes --auto-accept-changes"
+    "chromatic:baseline": "pnpm build-storybook && chromatic --exit-zero-on-changes --auto-accept-changes",
+    "setup-hooks": "git config core.hooksPath .githooks && chmod +x .githooks/*",
+    "postinstall": "npm run setup-hooks"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

@@ -10,7 +10,9 @@ First, install dependencies:
 pnpm install
 ```
 
-Then, run the development server:
+Git hooks will be set up automatically during installation. For more information, see the [Git Hooks documentation](docs/GIT_HOOKS.md).
+
+Finally, run the development server:
 
 ```bash
 pnpm dev

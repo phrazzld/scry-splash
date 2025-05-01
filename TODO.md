@@ -150,7 +150,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
         1. Visual regression tests run automatically
         2. Baseline snapshots are established
 
-- [ ] **SB017 · Tooling · P1: Implement a11y testing in Storybook**
+- [x] **SB017 · Tooling · P1: Implement a11y testing in Storybook**
     - **Action:**
         1. Configure the a11y addon for all stories
         2. Ensure all components pass WCAG AA standards
