@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react';
 import '../app/globals.css';
 import { ThemeDecorator } from './ThemeDecorator';
+import { ChromaticDecorator } from './chromatic-decorator';
 
 // Define viewports matching Tailwind breakpoints
 const viewports = {
@@ -74,6 +75,15 @@ const preview: Preview = {
     },
     layout: 'fullscreen',
     actions: { argTypesRegex: '^on[A-Z].*' },
+    // Chromatic parameters for visual testing
+    chromatic: {
+      // Disable animations to prevent flaky visual tests
+      disableAnimations: true,
+      // Capture snapshots at specific viewports
+      viewports: [320, 768, 1024],
+      // Default pauseAnimationAtEnd for consistent rendering
+      pauseAnimationAtEnd: true,
+    },
   },
   globalTypes: {
     theme: {
@@ -90,7 +100,7 @@ const preview: Preview = {
       },
     },
   },
-  decorators: [ThemeDecorator],
+  decorators: [ChromaticDecorator, ThemeDecorator],
 };
 
 export default preview;

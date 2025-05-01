@@ -142,7 +142,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
         1. All design tokens are documented and visualized in Storybook
         2. Integration patterns with shadcn/ui are clearly documented
 
-- [ ] **SB016 · Tooling · P2: Implement visual regression testing**
+- [x] **SB016 · Tooling · P2: Implement visual regression testing**
     - **Action:**
         1. Set up Chromatic or similar tool for visual regression testing
         2. Create baseline snapshots for all components
