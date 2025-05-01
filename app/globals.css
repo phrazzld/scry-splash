@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./theme.css";
+@import "../components/ui/container.css";
 
 /* IBM Plex Sans font-face declarations */
 @font-face {

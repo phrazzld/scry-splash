@@ -68,7 +68,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
         1. Component renders the noise texture correctly
         2. Stories demonstrate configuration options
 
-- [ ] **SB007 · Component · P2: Implement shadcn/ui Container**
+- [x] **SB007 · Component · P2: Implement shadcn/ui Container**
     - **Action:**
         1. Add shadcn/ui Container component
         2. Customize to support the 12-column grid system
