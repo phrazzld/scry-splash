@@ -133,7 +133,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
 
 ## Documentation & Tooling
 
-- [ ] **SB015 · Docs · P2: Create design system documentation**
+- [x] **SB015 · Docs · P2: Create design system documentation**
     - **Action:**
         1. Document all color, typography, spacing, and animation tokens
         2. Create a story showcasing all tokens visually
