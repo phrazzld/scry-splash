@@ -79,7 +79,7 @@ This plan outlines the tasks needed to implement a Storybook-driven approach for
 
 ## Molecule Components
 
-- [ ] **SB008 · Component · P1: Create HeroSection component**
+- [x] **SB008 · Component · P1: Create HeroSection component**
     - **Action:**
         1. Compose Logo and Typography components into a hero section
         2. Support customizable headline and subheadline
