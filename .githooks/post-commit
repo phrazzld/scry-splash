@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Run glance ./ asynchronously in the background (nohup prevents HUP signal when terminal closes)
+nohup sh -c 'glance ./ > /dev/null 2>&1 &' > /dev/null 2>&1 &
+
+# Display a message indicating the post-commit task started
+echo "⚡ Running glance in the background..."

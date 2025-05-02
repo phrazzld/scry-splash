@@ -42,7 +42,9 @@ next-env.d.ts
 
 # storybook
 *storybook.log
+*-plan.md
 
 # claude
 /.claude/
+**/.claude/settings.local.json
 **/glance.md

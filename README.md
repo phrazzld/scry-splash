@@ -1,24 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Scry Splash Page
+
+This is the landing page for Scry, built with Next.js and shadcn/ui components. The project uses a Storybook-driven approach following atomic design principles.
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+```
+
+Git hooks will be set up automatically during installation. For more information, see the [Git Hooks documentation](docs/GIT_HOOKS.md).
+
+Finally, run the development server:
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Storybook
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project uses Storybook to develop and document UI components. To run Storybook:
+
+```bash
+pnpm storybook
+```
+
+Open [http://localhost:6006](http://localhost:6006) to view the component library.
+
+## Visual Testing
+
+This project uses Chromatic for visual regression testing. To run visual tests:
+
+```bash
+pnpm chromatic
+```
+
+For more information about visual testing, see the [Visual Testing documentation](docs/VISUAL_TESTING.md) and [Chromatic Examples](docs/CHROMATIC_EXAMPLES.md).
+
+## Design System
+
+This project is built on a custom design system that extends shadcn/ui. Key features include:
+
+- Custom theme with Scry brand colors (Ink, Chalk, Cobalt)
+- Typography system based on IBM Plex Sans
+- 12-column responsive grid system
+- Atomic design components (atoms, molecules, organisms)
 
 ## Learn More
 

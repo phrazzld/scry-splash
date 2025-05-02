@@ -1,0 +1,85 @@
+/*
+ * Container and Grid styles
+ * Provides utilities for the 12-column grid system
+ */
+
+/* Base grid container */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  width: 100%;
+  gap: 1rem;
+}
+
+/* Responsive padding */
+@media (max-width: 640px) {
+  .grid-container.px-responsive {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .grid-container.px-responsive {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .grid-container.px-responsive {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Gap utilities */
+.grid-container.gap-sm {
+  gap: 0.5rem;
+}
+
+.grid-container.gap-md {
+  gap: 1rem;
+}
+
+.grid-container.gap-lg {
+  gap: 2rem;
+}
+
+.grid-container.gap-xl {
+  gap: 3rem;
+}
+
+/* Row gap utilities */
+.grid-container.gap-y-sm {
+  row-gap: 0.5rem;
+}
+
+.grid-container.gap-y-md {
+  row-gap: 1rem;
+}
+
+.grid-container.gap-y-lg {
+  row-gap: 2rem;
+}
+
+.grid-container.gap-y-xl {
+  row-gap: 3rem;
+}
+
+/* Column gap utilities */
+.grid-container.gap-x-sm {
+  column-gap: 0.5rem;
+}
+
+.grid-container.gap-x-md {
+  column-gap: 1rem;
+}
+
+.grid-container.gap-x-lg {
+  column-gap: 2rem;
+}
+
+.grid-container.gap-x-xl {
+  column-gap: 3rem;
+}
