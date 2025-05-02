@@ -20,7 +20,7 @@ const meta: Meta<typeof CTASection> = {
     },
     buttonVariant: {
       control: "select",
-      options: ["default", "cta", "destructive", "outline", "secondary", "ghost", "link"],
+      options: ["default", "cta", "gradient", "destructive", "outline", "secondary", "ghost", "link"],
       description: "Button variant style",
     },
     buttonSize: {
@@ -60,9 +60,9 @@ const withBackground = (Story: React.ComponentType) => (
 // Default (with preset text and styles)
 export const Default: Story = {
   args: {
-    buttonText: "Join the wait‑list",
+    buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
-    buttonVariant: "cta",
+    buttonVariant: "gradient",
     buttonSize: "xl",
     centered: true,
     microcopyColor: "text-chalk",
@@ -73,7 +73,7 @@ export const Default: Story = {
 // Different button variant (outline)
 export const OutlineVariant: Story = {
   args: {
-    buttonText: "Join the wait‑list",
+    buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
     buttonVariant: "outline",
     buttonSize: "xl",
@@ -125,9 +125,9 @@ export const GhostButton: Story = {
 // Left-aligned
 export const LeftAligned: Story = {
   args: {
-    buttonText: "Join the wait‑list",
+    buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
-    buttonVariant: "cta",
+    buttonVariant: "gradient",
     buttonSize: "xl",
     centered: false,
     microcopyColor: "text-chalk",
@@ -150,7 +150,7 @@ export const NoMicrocopy: Story = {
 // Alternative color scheme
 export const AlternativeColorScheme: Story = {
   args: {
-    buttonText: "Join the wait‑list",
+    buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
     buttonVariant: "secondary",
     buttonSize: "xl",

@@ -31,7 +31,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'cta', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      options: ['default', 'cta', 'gradient', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
       description: 'The visual style variant of the button',
       table: {
         defaultValue: { summary: 'default' }
@@ -83,10 +83,10 @@ export const Primary: Story = {
  */
 export const CTA: Story = {
   args: {
-    children: 'Join the waitlist',
-    variant: 'cta',
+    children: 'Get early access',
+    variant: 'gradient',
     size: 'xl',
-    'aria-label': 'Join the waitlist for Scry',
+    'aria-label': 'Get early access to Scry',
   },
 };
 
@@ -171,6 +171,7 @@ export const ButtonGrid: Story = {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <Button variant="default">Default</Button>
           <Button variant="cta">CTA</Button>
+          <Button variant="gradient">Gradient</Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="outline">Outline</Button>
           <Button variant="destructive">Destructive</Button>
@@ -208,11 +209,11 @@ export const CTAExample: Story = {
         Turns your notes into spaced‑repetition prompts—automatically.
       </p>
       <Button 
-        variant="cta"
+        variant="gradient"
         size="xl"
-        aria-label="Join the wait-list for Scry to turn your notes into spaced-repetition prompts"
+        aria-label="Get early access to Scry to turn your notes into spaced-repetition prompts"
       >
-        Join the wait‑list
+        Get early access
       </Button>
       <p className="mt-4 text-body font-regular text-chalk opacity-70 text-center">
         Beta invites roll out weekly.
