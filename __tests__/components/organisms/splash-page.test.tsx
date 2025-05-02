@@ -4,9 +4,38 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { SplashPage } from '@/components/organisms/splash-page';
 
+// Mock component interfaces
+interface PageLayoutProps {
+  children: React.ReactNode;
+  backgroundColor?: string;
+  centered?: boolean;
+  animate?: boolean;
+  className?: string;
+  [key: string]: unknown;
+}
+
+interface HeroSectionProps {
+  headline?: string;
+  subheadline?: string;
+  centered?: boolean;
+}
+
+interface BenefitTrioProps {
+  benefits?: string[];
+  layout?: string;
+  centered?: boolean;
+}
+
+interface CTASectionProps {
+  buttonText?: string;
+  microcopy?: string;
+  centered?: boolean;
+  onButtonClick?: () => void;
+}
+
 // Mock the dependencies
 jest.mock('@/components/organisms/page-layout', () => ({
-  PageLayout: ({ children, backgroundColor, centered, animate, className, ...props }) => (
+  PageLayout: ({ children, backgroundColor, centered, animate, className, ...props }: PageLayoutProps) => (
     <div 
       data-testid="mock-page-layout" 
       data-background-color={backgroundColor}
@@ -21,7 +50,7 @@ jest.mock('@/components/organisms/page-layout', () => ({
 }));
 
 jest.mock('@/components/molecules/hero-section', () => ({
-  HeroSection: ({ headline, subheadline, centered }) => (
+  HeroSection: ({ headline, subheadline, centered }: HeroSectionProps) => (
     <div 
       data-testid="mock-hero-section"
       data-headline={headline}
@@ -34,7 +63,7 @@ jest.mock('@/components/molecules/hero-section', () => ({
 }));
 
 jest.mock('@/components/molecules/benefit-trio', () => ({
-  BenefitTrio: ({ benefits, layout, centered }) => (
+  BenefitTrio: ({ benefits, layout, centered }: BenefitTrioProps) => (
     <div 
       data-testid="mock-benefit-trio"
       data-benefits={benefits ? benefits.join(',') : ''}
@@ -47,7 +76,7 @@ jest.mock('@/components/molecules/benefit-trio', () => ({
 }));
 
 jest.mock('@/components/molecules/cta-section', () => ({
-  CTASection: ({ buttonText, microcopy, centered, onButtonClick }) => (
+  CTASection: ({ buttonText, microcopy, centered, onButtonClick }: CTASectionProps) => (
     <div 
       data-testid="mock-cta-section"
       data-button-text={buttonText}

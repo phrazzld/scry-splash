@@ -4,6 +4,22 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { CTASection } from '@/components/molecules/cta-section';
 
+// Mock component interfaces
+interface ButtonProps {
+  children: React.ReactNode;
+  variant?: string;
+  size?: string;
+  onClick?: () => void;
+  'aria-label'?: string;
+  type?: 'button' | 'submit' | 'reset';
+  [key: string]: unknown;
+}
+
+interface BodyTextProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
 // Mock the dependencies
 jest.mock('@/components/ui/button', () => ({
   Button: ({ 
@@ -14,7 +30,7 @@ jest.mock('@/components/ui/button', () => ({
     'aria-label': ariaLabel, 
     type,
     ...props 
-  }) => (
+  }: ButtonProps) => (
     <button 
       data-testid="mock-button" 
       data-variant={variant} 
@@ -30,14 +46,14 @@ jest.mock('@/components/ui/button', () => ({
 }));
 
 jest.mock('@/components/ui/typography', () => ({
-  BodyText: ({ children, className }) => (
+  BodyText: ({ children, className }: BodyTextProps) => (
     <div data-testid="mock-body-text" className={className}>{children}</div>
   ),
 }));
 
 // Mock the cn utility function
 jest.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' ')
+  cn: (...args: string[]) => args.filter(Boolean).join(' ')
 }));
 
 describe('CTASection Component', () => {

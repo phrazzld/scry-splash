@@ -241,7 +241,7 @@ export function AnimationTokens({ className, ...props }: AnimationTokensProps) {
           
           <GridItem span={12} md={6}>
             <div className="p-4 rounded-md border border-border">
-              <SubheadingText as="h3" className="mb-2">Don't</SubheadingText>
+              <SubheadingText as="h3" className="mb-2">Don&apos;t</SubheadingText>
               <ul className="list-disc pl-5 space-y-2">
                 <li>Create animations that are too long or distracting</li>
                 <li>Use animations that could trigger motion sickness</li>

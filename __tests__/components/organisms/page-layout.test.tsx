@@ -3,6 +3,35 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { PageLayout, DefaultLayout } from '@/components/organisms/page-layout';
 
+// Mock component interfaces
+interface ContainerProps {
+  children: React.ReactNode;
+  maxWidth?: string;
+  padding?: string;
+  center?: boolean;
+  className?: string;
+  [key: string]: unknown;
+}
+
+interface GridItemProps {
+  children: React.ReactNode;
+  span?: number;
+  md?: number;
+  lg?: number;
+  mdStart?: number;
+  lgStart?: number;
+  className?: string;
+  [key: string]: unknown;
+}
+
+interface NoiseBackgroundProps {
+  baseColor?: string;
+  noiseOpacity?: number;
+  className?: string;
+  children?: React.ReactNode;
+  [key: string]: unknown;
+}
+
 // Mock the dependencies
 jest.mock('@/components/ui/container', () => ({
   Container: ({ 
@@ -12,7 +41,7 @@ jest.mock('@/components/ui/container', () => ({
     center, 
     className, 
     ...props 
-  }) => (
+  }: ContainerProps) => (
     <div 
       data-testid="mock-container" 
       data-max-width={maxWidth} 
@@ -33,7 +62,7 @@ jest.mock('@/components/ui/container', () => ({
     lgStart, 
     className, 
     ...props 
-  }) => (
+  }: GridItemProps) => (
     <div 
       data-testid="mock-grid-item" 
       data-span={span} 
@@ -54,21 +83,24 @@ jest.mock('@/components/ui/noise-background', () => ({
     baseColor, 
     noiseOpacity, 
     className, 
+    children,
     ...props 
-  }) => (
+  }: NoiseBackgroundProps) => (
     <div 
       data-testid="mock-noise-background" 
       data-base-color={baseColor} 
       data-noise-opacity={noiseOpacity}
       className={className}
       {...props}
-    />
+    >
+      {children}
+    </div>
   ),
 }));
 
 // Mock the cn utility function
 jest.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' ')
+  cn: (...args: string[]) => args.filter(Boolean).join(' ')
 }));
 
 describe('PageLayout Component', () => {

@@ -57,7 +57,7 @@ const GridVisualizer = ({
   start?: number,
   children?: React.ReactNode, 
   className?: string, 
-  [key: string]: any
+  [key: string]: unknown
 }) => (
   <GridItem 
     span={span} 
@@ -192,7 +192,7 @@ export const PageLayout: Story = {
       <>
         <GridItem span={12} md={10} mdStart={2} lg={8} lgStart={3} className="bg-background p-6 rounded-lg shadow">
           <h1 className="text-2xl font-bold mb-4">Hero Section</h1>
-          <p>This example shows a typical centered content layout that's responsive.</p>
+          <p>This example shows a typical centered content layout that&apos;s responsive.</p>
         </GridItem>
         
         <GridItem span={12} className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -230,7 +230,7 @@ export const GapOptions: Story = {
     children: (
       <>
         <div className="col-span-12 mb-4 text-center text-muted-foreground">
-          Container with gap="lg"
+          Container with gap=&quot;lg&quot;
         </div>
         <GridVisualizer span={6}>Column 1</GridVisualizer>
         <GridVisualizer span={6}>Column 2</GridVisualizer>
@@ -253,7 +253,7 @@ export const DirectionalGaps: Story = {
     children: (
       <>
         <div className="col-span-12 mb-4 text-center text-muted-foreground">
-          Container with gapX="lg" and gapY="sm"
+          Container with gapX=&quot;lg&quot; and gapY=&quot;sm&quot;
         </div>
         <GridVisualizer span={6}>Column 1</GridVisualizer>
         <GridVisualizer span={6}>Column 2</GridVisualizer>

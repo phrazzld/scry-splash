@@ -3,9 +3,44 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { HeroSection } from '@/components/molecules/hero-section';
 
+// Mock component interfaces
+interface LogoProps {
+  size?: string;
+  color?: string;
+  as?: React.ElementType;
+}
+
+interface HeadingTextProps {
+  children: React.ReactNode;
+  className?: string;
+  as?: React.ElementType;
+}
+
+interface BodyTextProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+interface ContainerProps {
+  children: React.ReactNode;
+  className?: string;
+  gap?: string;
+  [key: string]: unknown;
+}
+
+interface GridItemProps {
+  children: React.ReactNode;
+  span?: number;
+  md?: number;
+  lg?: number;
+  mdStart?: number;
+  lgStart?: number;
+  className?: string;
+}
+
 // Mock the dependencies of HeroSection
 jest.mock('@/components/ui/logo', () => ({
-  Logo: ({ size, color, as }) => (
+  Logo: ({ size, color, as }: LogoProps) => (
     <div data-testid="mock-logo" data-size={size} data-color={color} data-as={as}>
       Scry.
     </div>
@@ -13,19 +48,19 @@ jest.mock('@/components/ui/logo', () => ({
 }));
 
 jest.mock('@/components/ui/typography', () => ({
-  HeadingText: ({ children, className, as }) => (
+  HeadingText: ({ children, className, as }: HeadingTextProps) => (
     <div data-testid="mock-heading" data-as={as} className={className}>{children}</div>
   ),
-  BodyText: ({ children, className }) => (
+  BodyText: ({ children, className }: BodyTextProps) => (
     <div data-testid="mock-body" className={className}>{children}</div>
   ),
 }));
 
 jest.mock('@/components/ui/container', () => ({
-  Container: ({ children, className, gap, ...props }) => (
+  Container: ({ children, className, gap, ...props }: ContainerProps) => (
     <div data-testid="mock-container" data-gap={gap} className={className} {...props}>{children}</div>
   ),
-  GridItem: ({ children, span, md, lg, mdStart, lgStart, className }) => (
+  GridItem: ({ children, span, md, lg, mdStart, lgStart, className }: GridItemProps) => (
     <div 
       data-testid="mock-grid-item" 
       data-span={span} 

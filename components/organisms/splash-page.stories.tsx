@@ -1,4 +1,3 @@
-import React from "react"
 import type { Meta, StoryObj } from "@storybook/react"
 import { SplashPage } from "./splash-page"
 
@@ -11,7 +10,7 @@ const meta: Meta<typeof SplashPage> = {
   argTypes: {
     headline: { control: "text" },
     subheadline: { control: "text" },
-    benefits: { control: "array" },
+    benefits: { control: { type: "object" } },
     buttonText: { control: "text" },
     microcopy: { control: "text" },
     backgroundColor: { control: "color" },

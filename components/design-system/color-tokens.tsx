@@ -231,10 +231,10 @@ export function ColorTokens({ className, ...props }: ColorTokensProps) {
           
           <GridItem span={12} md={6}>
             <div className="p-4 rounded-md border border-border">
-              <SubheadingText as="h3" className="mb-2">Don't</SubheadingText>
+              <SubheadingText as="h3" className="mb-2">Don&apos;t</SubheadingText>
               <ul className="list-disc pl-5 space-y-2">
                 <li>Use colors not defined in the design system</li>
-                <li>Place text directly on colors that don't provide sufficient contrast</li>
+                <li>Place text directly on colors that don&apos;t provide sufficient contrast</li>
                 <li>Override semantic colors without understanding their purpose</li>
                 <li>Use HEX values directly; always use CSS variables</li>
               </ul>

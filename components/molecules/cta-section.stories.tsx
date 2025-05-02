@@ -51,7 +51,7 @@ export default meta
 type Story = StoryObj<typeof CTASection>
 
 // Helper for consistent decoration
-const withBackground = (Story: any) => (
+const withBackground = (Story: React.ComponentType) => (
   <NoiseBackground baseColor="var(--color-ink)" className="p-12">
     <Story />
   </NoiseBackground>

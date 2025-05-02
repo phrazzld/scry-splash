@@ -136,7 +136,7 @@ export function LayoutTokens({ className, ...props }: LayoutTokensProps) {
         <SubheadingText as="h2" className="mb-4">12-Column Grid System</SubheadingText>
         <BodyText className="mb-6">
           The 12-column grid system provides a flexible layout framework that adapts to different screen sizes.
-          It's implemented through the Container and GridItem components.
+          It&apos;s implemented through the Container and GridItem components.
         </BodyText>
         
         {/* Grid Visualization */}

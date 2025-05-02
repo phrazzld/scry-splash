@@ -4,21 +4,28 @@ import '@testing-library/jest-dom';
 import { BenefitTrio } from '@/components/molecules/benefit-trio';
 
 // Mock the Typography components
+interface TypographyProps {
+  children: React.ReactNode;
+  className?: string;
+  as?: React.ElementType;
+  weight?: 'regular' | 'medium' | 'bold';
+}
+
 jest.mock('@/components/ui/typography', () => ({
-  SubheadingText: ({ children, className, as, weight }) => (
+  SubheadingText: ({ children, className, as, weight }: TypographyProps) => (
     <div data-testid="mock-subheading" data-as={as} data-weight={weight} className={className}>{children}</div>
   ),
-  BodyText: ({ children, className, as, weight }) => (
+  BodyText: ({ children, className, as, weight }: TypographyProps) => (
     <div data-testid="mock-body" data-as={as} data-weight={weight} className={className}>{children}</div>
   ),
-  HeadingText: ({ children, className, as, weight }) => (
+  HeadingText: ({ children, className, as, weight }: TypographyProps) => (
     <div data-testid="mock-heading" data-as={as} data-weight={weight} className={className}>{children}</div>
   ),
 }));
 
 // Mock the cn utility function
 jest.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' ')
+  cn: (...args: string[]) => args.filter(Boolean).join(' ')
 }));
 
 describe('BenefitTrio Component', () => {

@@ -10,11 +10,39 @@ export interface TokensOverviewProps extends React.HTMLAttributes<HTMLDivElement
   className?: string
 }
 
+// Define types for the different example formats
+type ColorExample = {
+  name: string;
+  color: string;
+  textColor: string;
+}
+
+type StyleExample = {
+  name: string;
+  style: string;
+}
+
+type VisualExample = {
+  name: string;
+  visual: string;
+}
+
+// Union type for all example types
+type TokenExample = ColorExample | StyleExample | VisualExample;
+
+// Define the type for a token category
+interface TokenCategory {
+  name: string;
+  description: string;
+  path: string;
+  examples: TokenExample[];
+}
+
 /**
  * TokensOverview component provides an overview of all design tokens
  */
 export function TokensOverview({ className, ...props }: TokensOverviewProps) {
-  const tokenCategories = [
+  const tokenCategories: TokenCategory[] = [
     {
       name: "Colors",
       description: "Brand colors and semantic color tokens",
@@ -87,27 +115,37 @@ export function TokensOverview({ className, ...props }: TokensOverviewProps) {
               {/* Color examples */}
               {category.name === "Colors" && (
                 <div className="flex gap-2 mb-4">
-                  {category.examples.map((example, i) => (
-                    <div 
-                      key={i} 
-                      className="h-12 w-12 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: example.color, color: example.textColor }}
-                    />
-                  ))}
+                  {category.examples.map((example, i) => {
+                    // Type guard to ensure we're working with ColorExample type
+                    if ('color' in example && 'textColor' in example) {
+                      return (
+                        <div 
+                          key={i} 
+                          className="h-12 w-12 rounded-full flex items-center justify-center"
+                          style={{ backgroundColor: example.color, color: example.textColor }}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
                 </div>
               )}
               
               {/* Typography examples */}
               {category.name === "Typography" && (
                 <div className="flex flex-col gap-1 mb-4">
-                  {category.examples.map((example, i) => (
-                    <div key={i} className={example.style}>{example.name}</div>
-                  ))}
+                  {category.examples.map((example, i) => {
+                    // Type guard to ensure we're working with StyleExample type
+                    if ('style' in example) {
+                      return <div key={i} className={example.style}>{example.name}</div>;
+                    }
+                    return null;
+                  })}
                 </div>
               )}
               
               {/* Other visual examples */}
-              {category.examples.some(ex => ex.visual === "grid-demo") && (
+              {category.examples.some(ex => 'visual' in ex && ex.visual === "grid-demo") && (
                 <div className="grid grid-cols-4 gap-1 h-8 mb-4">
                   {[...Array(4)].map((_, i) => (
                     <div key={i} className="bg-muted rounded-sm h-full"></div>
@@ -115,7 +153,7 @@ export function TokensOverview({ className, ...props }: TokensOverviewProps) {
                 </div>
               )}
               
-              {category.examples.some(ex => ex.visual === "fade-demo") && (
+              {category.examples.some(ex => 'visual' in ex && ex.visual === "fade-demo") && (
                 <div className="h-10 w-full bg-muted rounded animate-fade-in mb-4"></div>
               )}
               

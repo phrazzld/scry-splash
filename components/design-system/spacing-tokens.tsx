@@ -1,7 +1,6 @@
 import React from "react"
 import { cn } from "@/lib/utils"
 import { HeadingText, SubheadingText, BodyText } from "@/components/ui/typography"
-import { Container, GridItem } from "@/components/ui/container"
 
 export interface SpacingTokensProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

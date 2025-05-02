@@ -11,7 +11,7 @@ const meta: Meta<typeof BenefitTrio> = {
   tags: ["autodocs"],
   argTypes: {
     benefits: {
-      control: "array",
+      control: { type: "object" },
       description: "Array of benefit points to display",
     },
     separator: {
@@ -48,7 +48,7 @@ export default meta
 type Story = StoryObj<typeof BenefitTrio>
 
 // Helper for consistent decoration
-const withBackground = (Story: any) => (
+const withBackground = (Story: React.ComponentType) => (
   <NoiseBackground baseColor="var(--color-ink)" className="p-12">
     <Story />
   </NoiseBackground>

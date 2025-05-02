@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import { PageLayout, DefaultLayout } from "./page-layout"
 import { GridItem } from "@/components/ui/container"
-import { HeadingText, BodyText } from "@/components/ui/typography"
+import { HeadingText, SubheadingText, BodyText } from "@/components/ui/typography"
 import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/ui/logo"
 
@@ -70,7 +70,7 @@ export const Default: Story = {
         
         {/* Common layouts examples */}
         <GridItem span={12} className="mt-12 mb-4">
-          <HeadingText as="h3" variant="subheading" className="text-chalk">Common Layouts</HeadingText>
+          <SubheadingText as="h3" className="text-chalk">Common Layouts</SubheadingText>
         </GridItem>
         
         <GridItem span={12} className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4">

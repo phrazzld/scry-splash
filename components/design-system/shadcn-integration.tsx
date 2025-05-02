@@ -79,8 +79,8 @@ export function ShadcnIntegration({ className, ...props }: ShadcnIntegrationProp
       <div className="mb-8">
         <HeadingText>shadcn/ui Integration</HeadingText>
         <BodyText className="mt-2 text-muted-foreground">
-          Scry's design system builds on shadcn/ui, a collection of reusable components built with Radix UI and Tailwind CSS.
-          This document explains how Scry's design tokens map to shadcn/ui's theming system and how components have been customized.
+          Scry&apos;s design system builds on shadcn/ui, a collection of reusable components built with Radix UI and Tailwind CSS.
+          This document explains how Scry&apos;s design tokens map to shadcn/ui&apos;s theming system and how components have been customized.
         </BodyText>
       </div>
       
@@ -88,7 +88,7 @@ export function ShadcnIntegration({ className, ...props }: ShadcnIntegrationProp
       <div className="mb-12">
         <SubheadingText as="h2" className="mb-4">Color Mapping</SubheadingText>
         <BodyText className="mb-6">
-          Scry's brand colors are mapped to shadcn/ui's semantic color variables to ensure consistent theming:
+          Scry&apos;s brand colors are mapped to shadcn/ui&apos;s semantic color variables to ensure consistent theming:
         </BodyText>
         
         <table className="w-full border-collapse mb-8">
@@ -276,8 +276,8 @@ export const buttonVariants = cva(
             <div className="p-4 rounded-md border border-border">
               <SubheadingText as="h3" className="mb-2">Do</SubheadingText>
               <ul className="list-disc pl-5 space-y-2">
-                <li>Use shadcn/ui components with Scry's customizations</li>
-                <li>Follow shadcn/ui's documentation for component APIs</li>
+                <li>Use shadcn/ui components with Scry&apos;s customizations</li>
+                <li>Follow shadcn/ui&apos;s documentation for component APIs</li>
                 <li>Use semantic color variables (--primary, --background) instead of direct brand colors</li>
                 <li>Check Storybook for examples of component usage</li>
               </ul>
@@ -286,7 +286,7 @@ export const buttonVariants = cva(
           
           <GridItem span={12} md={6}>
             <div className="p-4 rounded-md border border-border">
-              <SubheadingText as="h3" className="mb-2">Don't</SubheadingText>
+              <SubheadingText as="h3" className="mb-2">Don&apos;t</SubheadingText>
               <ul className="list-disc pl-5 space-y-2">
                 <li>Import components directly from shadcn/ui repositories</li>
                 <li>Override component styling with inline styles</li>
