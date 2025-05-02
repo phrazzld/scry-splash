@@ -4,6 +4,7 @@ import React from "react"
 import { cn } from "@/lib/utils"
 import { Container, GridItem } from "@/components/ui/container"
 import { NoiseBackground } from "@/components/ui/noise-background"
+import { Footer } from "@/components/molecules/footer"
 
 export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -43,6 +44,18 @@ export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   animate?: boolean;
   
   /**
+   * Whether to show the footer
+   * @default true
+   */
+  showFooter?: boolean;
+  
+  /**
+   * Footer project text
+   * @default "a misty step project"
+   */
+  footerText?: string;
+  
+  /**
    * Optional class name for styling
    */
   className?: string;
@@ -72,6 +85,8 @@ export function PageLayout({
   padding = "md",
   centered = false,
   animate = true,
+  showFooter = true,
+  footerText = "a misty step project",
   className,
   children,
   ...props
@@ -79,7 +94,7 @@ export function PageLayout({
   return (
     <div 
       className={cn(
-        "relative min-h-screen flex flex-col justify-center overflow-hidden",
+        "relative min-h-screen flex flex-col justify-start overflow-hidden",
         className
       )} 
       role="main"
@@ -92,18 +107,30 @@ export function PageLayout({
         className="absolute inset-0 z-0"
       />
       
-      {/* Content container */}
-      <Container
-        maxWidth={maxWidth}
-        padding={padding}
-        center={centered}
-        className={cn(
-          "relative z-10",
-          animate && "animate-fade-in"
-        )}
-      >
-        {children}
-      </Container>
+      {/* Main content container */}
+      <div className="flex-1 flex flex-col justify-center">
+        <Container
+          maxWidth={maxWidth}
+          padding={padding}
+          center={centered}
+          className={cn(
+            "relative z-10",
+            animate && "animate-fade-in"
+          )}
+        >
+          {children}
+        </Container>
+      </div>
+      
+      {/* Footer */}
+      {showFooter && (
+        <div className={cn("relative z-10 mt-auto", animate && "animate-fade-in")}>
+          <Footer 
+            projectText={footerText} 
+            centered={centered}
+          />
+        </div>
+      )}
     </div>
   )
 }
@@ -120,10 +147,17 @@ export function PageLayout({
  */
 export function DefaultLayout({
   children,
+  showFooter = true,
+  footerText = "a misty step project",
   ...props
 }: Omit<PageLayoutProps, "children"> & { children: React.ReactNode }) {
   return (
-    <PageLayout className="flex justify-center" {...props}>
+    <PageLayout 
+      className="flex justify-center" 
+      showFooter={showFooter}
+      footerText={footerText}
+      {...props}
+    >
       <GridItem 
         span={12} 
         md={10} 

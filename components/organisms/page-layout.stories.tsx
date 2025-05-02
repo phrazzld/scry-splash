@@ -39,6 +39,14 @@ const meta: Meta<typeof PageLayout> = {
       control: "boolean",
       description: "Whether to animate the content with fade-in",
     },
+    showFooter: {
+      control: "boolean",
+      description: "Whether to show the footer",
+    },
+    footerText: {
+      control: "text",
+      description: "Footer project text",
+    },
   },
 }
 
@@ -54,6 +62,8 @@ export const Default: Story = {
     padding: "md",
     centered: true,
     animate: true,
+    showFooter: true,
+    footerText: "a misty step project",
     children: (
       <>
         <GridItem span={12} className="mb-8 text-center">
@@ -150,6 +160,8 @@ export const HeroSectionExample: Story = {
     padding: "md",
     centered: true,
     animate: true,
+    showFooter: true,
+    footerText: "a misty step project",
     children: (
       <>
         <GridItem span={12} md={10} lg={8} mdStart={2} lgStart={3} className="text-center py-16">
@@ -158,9 +170,54 @@ export const HeroSectionExample: Story = {
           <BodyText className="text-chalk opacity-80 mb-8">
             Turns your notes into spaced-repetition prompts—automatically
           </BodyText>
-          <Button size="xl" variant="cta">Join the wait‑list</Button>
+          <Button size="xl" variant="cta">Get early access</Button>
         </GridItem>
       </>
+    ),
+  },
+}
+
+// No footer example
+export const WithoutFooter: Story = {
+  args: {
+    backgroundColor: "var(--color-ink)",
+    noiseOpacity: 0.02,
+    maxWidth: "xl",
+    padding: "md",
+    centered: true,
+    animate: true,
+    showFooter: false,
+    children: (
+      <GridItem span={12} md={8} mdStart={3} className="text-center py-12">
+        <HeadingText className="text-chalk mb-4">No Footer Layout</HeadingText>
+        <BodyText className="text-chalk opacity-80 mb-6">
+          This demonstrates a layout without the footer component
+        </BodyText>
+        <Button variant="secondary">Action Button</Button>
+      </GridItem>
+    ),
+  },
+}
+
+// Custom footer text example
+export const CustomFooterText: Story = {
+  args: {
+    backgroundColor: "var(--color-ink)",
+    noiseOpacity: 0.02,
+    maxWidth: "xl",
+    padding: "md",
+    centered: true,
+    animate: true,
+    showFooter: true,
+    footerText: "built with ❤️ by misty step",
+    children: (
+      <GridItem span={12} md={8} mdStart={3} className="text-center py-12">
+        <HeadingText className="text-chalk mb-4">Custom Footer Text</HeadingText>
+        <BodyText className="text-chalk opacity-80 mb-6">
+          This demonstrates a layout with custom footer text
+        </BodyText>
+        <Button variant="outline">Action Button</Button>
+      </GridItem>
     ),
   },
 }
