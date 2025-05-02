@@ -117,12 +117,13 @@ export function SplashPage({
         </div>
         
         {/* CTA Section */}
-        <div className={cn("mt-10 md:mt-14", animateClass)} {...ctaDelay}>
+        <div className={cn("mt-12 md:mt-16", animateClass)} {...ctaDelay}>
           <CTASection
             buttonText={buttonText}
             microcopy={microcopy}
             centered={centered}
             onButtonClick={onCtaClick}
+            inputPlaceholder="Your email address"
           />
         </div>
       </div>

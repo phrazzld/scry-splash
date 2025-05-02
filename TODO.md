@@ -9,7 +9,8 @@
     - ✓ remember everything
 - [x] add a tasteful footer
     - ✓ a misty step project
-- [ ] add some section somewhere -- between the tagline and the button? under the button? on the right side of the hero, in its own section? -- that briefly pitches the actual functionality of the app
+- [x] rework cta to be simple input + button combo
+- [ ] add some section somewhere -- probably between the tagline and the button -- that briefly pitches the actual functionality of the app
     - capture anything
     - review effortlessly
     - achieve mastery

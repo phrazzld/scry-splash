@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { CTASection } from '@/components/molecules/cta-section';
@@ -12,12 +12,24 @@ interface ButtonProps {
   onClick?: () => void;
   'aria-label'?: string;
   type?: 'button' | 'submit' | 'reset';
+  className?: string;
   [key: string]: unknown;
 }
 
 interface BodyTextProps {
   children: React.ReactNode;
   className?: string;
+}
+
+interface InputProps {
+  type?: string;
+  placeholder?: string;
+  'aria-label'?: string;
+  value?: string;
+  onChange?: (e: any) => void;
+  required?: boolean;
+  className?: string;
+  [key: string]: unknown;
 }
 
 // Mock the dependencies
@@ -29,6 +41,7 @@ jest.mock('@/components/ui/button', () => ({
     onClick, 
     'aria-label': ariaLabel, 
     type,
+    className,
     ...props 
   }: ButtonProps) => (
     <button 
@@ -38,10 +51,36 @@ jest.mock('@/components/ui/button', () => ({
       data-aria-label={ariaLabel}
       data-type={type}
       onClick={onClick}
+      className={className}
       {...props}
     >
       {children}
     </button>
+  ),
+}));
+
+jest.mock('@/components/ui/input', () => ({
+  Input: ({ 
+    type, 
+    placeholder, 
+    'aria-label': ariaLabel, 
+    value, 
+    onChange, 
+    required,
+    className,
+    ...props 
+  }: InputProps) => (
+    <input 
+      data-testid="mock-input" 
+      type={type}
+      placeholder={placeholder}
+      aria-label={ariaLabel}
+      value={value}
+      onChange={onChange}
+      required={required}
+      className={className}
+      {...props}
+    />
   ),
 }));
 
@@ -60,13 +99,25 @@ describe('CTASection Component', () => {
   it('renders correctly with default props', () => {
     render(<CTASection />);
     
+    // Check input field renders
+    const input = screen.getByTestId('mock-input');
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveAttribute('type', 'email');
+    expect(input).toHaveAttribute('placeholder', 'Your email address');
+    expect(input).toHaveAttribute('aria-label', 'Enter your email address');
+    expect(input).toHaveAttribute('required');
+    
     // Check button renders with default text
     const button = screen.getByTestId('mock-button');
     expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent('Get early access');
     expect(button).toHaveAttribute('data-variant', 'gradient');
-    expect(button).toHaveAttribute('data-size', 'xl');
-    expect(button).toHaveAttribute('data-type', 'button');
+    expect(button).toHaveAttribute('data-size', 'default');
+    expect(button).toHaveAttribute('data-type', 'submit');
+    
+    // Check form element exists
+    const form = screen.getByRole('form');
+    expect(form).toBeInTheDocument();
     
     // Check microcopy renders
     const microcopy = screen.getByTestId('mock-body-text');
@@ -87,41 +138,78 @@ describe('CTASection Component', () => {
     expect(microcopy).toHaveTextContent(customMicrocopy);
   });
 
+  it('renders with custom input placeholder and type', () => {
+    const customPlaceholder = 'Enter email to join waitlist';
+    const customType = 'text';
+    
+    render(<CTASection inputPlaceholder={customPlaceholder} inputType={customType} />);
+    
+    const input = screen.getByTestId('mock-input');
+    expect(input).toHaveAttribute('placeholder', customPlaceholder);
+    expect(input).toHaveAttribute('type', customType);
+  });
+
   it('renders with custom button variant and size', () => {
-    render(<CTASection buttonVariant="outline" buttonSize="lg" />);
+    render(<CTASection buttonVariant="outline" buttonSize="xl" />);
     
     const button = screen.getByTestId('mock-button');
     expect(button).toHaveAttribute('data-variant', 'outline');
-    expect(button).toHaveAttribute('data-size', 'lg');
+    expect(button).toHaveAttribute('data-size', 'xl');
   });
 
-  it('calls onButtonClick when button is clicked', async () => {
+  it('calls onFormSubmit with input value when form is submitted', async () => {
+    const handleSubmit = jest.fn();
+    
+    render(<CTASection onFormSubmit={handleSubmit} />);
+    
+    const form = screen.getByRole('form');
+    const input = screen.getByTestId('mock-input');
+    
+    // Type in the input
+    fireEvent.change(input, { target: { value: 'test@example.com' } });
+    
+    // Submit the form
+    fireEvent.submit(form);
+    
+    expect(handleSubmit).toHaveBeenCalledTimes(1);
+    expect(handleSubmit).toHaveBeenCalledWith('test@example.com');
+  });
+
+  it('calls onButtonClick for backward compatibility when form is submitted', async () => {
     const handleClick = jest.fn();
-    const user = userEvent.setup();
     
     render(<CTASection onButtonClick={handleClick} />);
     
-    const button = screen.getByTestId('mock-button');
-    await user.click(button);
+    const form = screen.getByRole('form');
+    
+    // Submit the form
+    fireEvent.submit(form);
     
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
+  it('applies custom input aria-label', () => {
+    const customAriaLabel = 'Custom input label';
+    render(<CTASection inputAriaLabel={customAriaLabel} />);
+    
+    const input = screen.getByTestId('mock-input');
+    expect(input).toHaveAttribute('aria-label', customAriaLabel);
+  });
+
   it('applies custom button aria-label', () => {
-    const customAriaLabel = 'Custom aria label';
+    const customAriaLabel = 'Custom button label';
     render(<CTASection buttonAriaLabel={customAriaLabel} />);
     
     const button = screen.getByTestId('mock-button');
     expect(button).toHaveAttribute('data-aria-label', customAriaLabel);
   });
 
-  it('creates default aria-label from button text and microcopy', () => {
+  it('creates default button aria-label from button text', () => {
     const buttonText = 'Join now';
-    const microcopy = 'Limited spots available';
-    render(<CTASection buttonText={buttonText} microcopy={microcopy} />);
+    render(<CTASection buttonText={buttonText} />);
     
     const button = screen.getByTestId('mock-button');
-    expect(button).toHaveAttribute('data-aria-label', `${buttonText} - ${microcopy}`);
+    expect(button).toHaveAttribute('data-aria-label', buttonText);
   });
 
   it('applies centered alignment when centered is true', () => {
@@ -130,6 +218,9 @@ describe('CTASection Component', () => {
     const container = screen.getByTestId('cta-section');
     expect(container).toHaveClass('items-center');
     expect(container).toHaveClass('text-center');
+    
+    const form = screen.getByRole('form');
+    expect(form).toHaveClass('items-center');
   });
 
   it('does not apply centered alignment when centered is false', () => {
@@ -138,6 +229,9 @@ describe('CTASection Component', () => {
     const container = screen.getByTestId('cta-section');
     expect(container).not.toHaveClass('items-center');
     expect(container).not.toHaveClass('text-center');
+    
+    const form = screen.getByRole('form');
+    expect(form).not.toHaveClass('items-center');
   });
 
   it('applies custom microcopyColor', () => {
