@@ -41,3 +41,8 @@ yarn-error.log*
 next-env.d.ts
 
 *storybook.log
+*-plan.md
+
+# claude
+**/.claude/settings.local.json
+**/glance.md
