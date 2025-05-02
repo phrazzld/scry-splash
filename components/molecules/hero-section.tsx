@@ -3,7 +3,7 @@
 import React from "react"
 import { cn } from "@/lib/utils"
 import { Logo } from "@/components/ui/logo"
-import { HeadingText, BodyText } from "@/components/ui/typography"
+import { DisplayText, BodyText } from "@/components/ui/typography"
 import { Container, GridItem } from "@/components/ui/container"
 
 export interface HeroSectionProps extends React.HTMLAttributes<HTMLElement> {
@@ -86,7 +86,7 @@ export function HeroSection({
         )}
       >
         {/* Logo */}
-        <div className="mb-8">
+        <div className="mb-1">
           <Logo 
             size={logoSize} 
             color={logoColor} 
@@ -95,19 +95,25 @@ export function HeroSection({
         </div>
         
         {/* Headline */}
-        <HeadingText 
-          className={cn("mb-4 max-w-prose", textColor)}
-          as={centered ? "h2" : "h1"}
+        <DisplayText 
+          className={cn("mb-4 max-w-prose text-[2.6rem] md:text-[3.2rem] tracking-tighter leading-[1.1] whitespace-nowrap", textColor)}
+          style={{ fontWeight: 250 }}
+          as="h1"
+          weight="regular"
         >
           {headline}
-        </HeadingText>
+        </DisplayText>
         
-        {/* Subheadline */}
-        <BodyText 
-          className={cn("max-w-prose opacity-80", textColor)}
-        >
-          {subheadline}
-        </BodyText>
+        {/* Subheadline - only render if provided */}
+        {subheadline && (
+          <div className="mb-2">
+            <BodyText 
+              className={cn("max-w-prose opacity-80", textColor)}
+            >
+              {subheadline}
+            </BodyText>
+          </div>
+        )}
       </GridItem>
     </Container>
   )

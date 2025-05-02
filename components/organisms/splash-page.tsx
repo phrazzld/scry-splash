@@ -91,10 +91,10 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
  */
 export function SplashPage({
   headline = "Remember effortlessly.",
-  subheadline = "Turns your notes into spaced‑repetition prompts—automatically.",
+  subheadline = "",
   benefits = ["Capture anything", "Review in moments", "Master for life"],
-  buttonText = "Join the wait‑list",
-  microcopy = "Beta invites roll out weekly.",
+  buttonText = "Join the waitlist",
+  microcopy = "",
   backgroundColor = "var(--color-ink)",
   centered = false,
   animate = true, 
@@ -121,7 +121,7 @@ export function SplashPage({
       className={cn("flex justify-center", className)}
       {...props}
     >
-      <div className="flex flex-col w-full max-w-3xl px-6">
+      <div className="flex flex-col w-full max-w-4xl px-6">
         {/* Hero Section */}
         <div className={cn("w-full", animateClass)} {...heroDelay}>
           <HeroSection
@@ -132,17 +132,8 @@ export function SplashPage({
           />
         </div>
         
-        {/* Benefits Section */}
-        <div className={cn("mt-8 md:mt-10 w-full", animateClass)} {...benefitsDelay}>
-          <BenefitTrio
-            benefits={benefits}
-            layout={benefitsLayout}
-            centered={centered}
-          />
-        </div>
-        
         {/* CTA Section */}
-        <div className={cn("mt-10 md:mt-12", animateClass)} {...ctaDelay}>
+        <div className={cn("mt-10 md:mt-14", animateClass)} {...ctaDelay}>
           <CTASection
             buttonText={buttonText}
             microcopy={microcopy}
