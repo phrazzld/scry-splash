@@ -63,8 +63,8 @@ describe('CTASection Component', () => {
     // Check button renders with default text
     const button = screen.getByTestId('mock-button');
     expect(button).toBeInTheDocument();
-    expect(button).toHaveTextContent('Join the wait‑list');
-    expect(button).toHaveAttribute('data-variant', 'cta');
+    expect(button).toHaveTextContent('Get early access');
+    expect(button).toHaveAttribute('data-variant', 'gradient');
     expect(button).toHaveAttribute('data-size', 'xl');
     expect(button).toHaveAttribute('data-type', 'button');
     

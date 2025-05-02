@@ -8,7 +8,7 @@ import { BodyText } from "@/components/ui/typography"
 export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Button text
-   * @default "Join the wait‑list"
+   * @default "Get early access"
    */
   buttonText?: string;
   
@@ -69,9 +69,9 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
  * ```
  */
 export function CTASection({
-  buttonText = "Join the wait‑list",
+  buttonText = "Get early access",
   microcopy = "Beta invites roll out weekly.",
-  buttonVariant = "cta",
+  buttonVariant = "gradient",
   buttonSize = "xl",
   onButtonClick,
   buttonAriaLabel,

@@ -28,7 +28,7 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   
   /**
    * CTA button text
-   * @default "Join the wait‑list"
+   * @default "Get early access"
    */
   buttonText?: string;
   
@@ -93,7 +93,7 @@ export function SplashPage({
   headline = "Remember effortlessly.",
   subheadline = "",
   benefits = ["Capture anything", "Review in moments", "Master for life"],
-  buttonText = "Join the waitlist",
+  buttonText = "Get early access",
   microcopy = "",
   backgroundColor = "var(--color-ink)",
   centered = false,

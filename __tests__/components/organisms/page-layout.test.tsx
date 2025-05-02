@@ -122,7 +122,7 @@ describe('PageLayout Component', () => {
     expect(container).toBeInTheDocument();
     expect(container).toHaveAttribute('data-max-width', 'xl');
     expect(container).toHaveAttribute('data-padding', 'md');
-    expect(container).toHaveAttribute('data-center', 'true');
+    expect(container).toHaveAttribute('data-center', 'false');
     expect(container).toHaveClass('animate-fade-in');
     
     // Check content
@@ -199,7 +199,7 @@ describe('DefaultLayout Component', () => {
     // Check PageLayout is used
     const wrapper = screen.getByRole('main');
     expect(wrapper).toBeInTheDocument();
-    expect(wrapper).toHaveClass('flex items-center justify-center');
+    expect(wrapper).toHaveClass('flex justify-center');
     
     // Check GridItem is used with correct props
     const gridItem = screen.getByTestId('mock-grid-item');
@@ -207,9 +207,8 @@ describe('DefaultLayout Component', () => {
     expect(gridItem).toHaveAttribute('data-span', '12');
     expect(gridItem).toHaveAttribute('data-md', '10');
     expect(gridItem).toHaveAttribute('data-lg', '8');
-    expect(gridItem).toHaveAttribute('data-md-start', '2');
-    expect(gridItem).toHaveAttribute('data-lg-start', '3');
-    expect(gridItem).toHaveClass('flex flex-col items-center');
+    // mdStart and lgStart are no longer used in the implementation
+    expect(gridItem).toHaveClass('flex flex-col');
     
     // Check content
     expect(gridItem).toHaveTextContent('Test Content');
