@@ -4,7 +4,6 @@ import React from "react"
 import { cn } from "@/lib/utils"
 import { PageLayout } from "@/components/organisms/page-layout"
 import { HeroSection } from "@/components/molecules/hero-section"
-import { BenefitTrio } from "@/components/molecules/benefit-trio"
 import { CTASection } from "@/components/molecules/cta-section"
 
 export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -19,12 +18,6 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
    * @default "Turns your notes into spaced‑repetition prompts—automatically."
    */
   subheadline?: string;
-  
-  /**
-   * Benefits array for BenefitTrio
-   * @default ["Capture anything", "Review in moments", "Master for life"]
-   */
-  benefits?: string[];
   
   /**
    * CTA button text
@@ -63,12 +56,6 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   staggerDelay?: number;
   
   /**
-   * Whether to use responsive layout for benefits
-   * @default "horizontal"
-   */
-  benefitsLayout?: "horizontal" | "vertical" | "responsive";
-  
-  /**
    * Callback function when CTA button is clicked
    */
   onCtaClick?: () => void;
@@ -86,28 +73,25 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
  * ```tsx
  * <SplashPage /> // Default with preset content
  * <SplashPage headline="Custom headline" subheadline="Custom subheadline" /> // Custom hero content
- * <SplashPage benefits={["A", "B", "C"]} buttonText="Sign up now" /> // Custom benefits and CTA
+ * <SplashPage buttonText="Sign up now" microcopy="Custom microcopy" /> // Custom CTA
  * ```
  */
 export function SplashPage({
   headline = "Remember effortlessly.",
   subheadline = "",
-  benefits = ["Capture anything", "Review in moments", "Master for life"],
   buttonText = "Get early access",
   microcopy = "",
   backgroundColor = "var(--color-ink)",
   centered = false,
   animate = true, 
   staggerDelay = 100,
-  benefitsLayout = "horizontal",
   onCtaClick,
   className,
   ...props
 }: SplashPageProps) {
   // Generate staggered animation delay classes if animation is enabled
   const heroDelay = animate ? { style: { animationDelay: "0ms" } } : {};
-  const benefitsDelay = animate ? { style: { animationDelay: `${staggerDelay}ms` } } : {};
-  const ctaDelay = animate ? { style: { animationDelay: `${staggerDelay * 2}ms` } } : {};
+  const ctaDelay = animate ? { style: { animationDelay: `${staggerDelay}ms` } } : {};
   
   // Animation classes for fade-in
   const animateClass = animate ? "animate-fade-in opacity-0" : "";

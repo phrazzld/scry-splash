@@ -20,9 +20,9 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
   
   /**
    * Button variant
-   * @default "cta"
+   * @default "gradient"
    */
-  buttonVariant?: "default" | "cta" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  buttonVariant?: "default" | "cta" | "gradient" | "destructive" | "outline" | "secondary" | "ghost" | "link";
   
   /**
    * Button size
