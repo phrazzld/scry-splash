@@ -27,7 +27,7 @@ export interface HeroSectionProps extends React.HTMLAttributes<HTMLElement> {
   
   /**
    * Whether to center the content
-   * @default true
+   * @default false
    */
   centered?: boolean
   
@@ -65,7 +65,7 @@ export function HeroSection({
   logoSize = "default",
   logoColor = "chalk",
   textColor = "text-chalk",
-  centered = true,
+  centered = false,
   className,
   ...props
 }: HeroSectionProps) {
@@ -73,14 +73,13 @@ export function HeroSection({
     <Container 
       className={cn("py-8 md:py-12", className)} 
       gap="lg"
+      padding="none"  
       {...props}
     >
       <GridItem 
         span={12} 
         md={10} 
         lg={8} 
-        mdStart={centered ? 2 : 1} 
-        lgStart={centered ? 3 : 1}
         className={cn(
           "flex flex-col",
           centered && "items-center text-center"

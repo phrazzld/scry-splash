@@ -32,7 +32,7 @@ export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   
   /**
    * Whether to center the Container
-   * @default true
+   * @default false
    */
   centered?: boolean;
   
@@ -70,7 +70,7 @@ export function PageLayout({
   noiseOpacity = 0.02,
   maxWidth = "xl",
   padding = "md",
-  centered = true,
+  centered = false,
   animate = true,
   className,
   children,
@@ -79,7 +79,7 @@ export function PageLayout({
   return (
     <div 
       className={cn(
-        "relative min-h-screen flex flex-col items-center justify-center overflow-hidden",
+        "relative min-h-screen flex flex-col justify-center overflow-hidden",
         className
       )} 
       role="main"
@@ -123,14 +123,12 @@ export function DefaultLayout({
   ...props
 }: Omit<PageLayoutProps, "children"> & { children: React.ReactNode }) {
   return (
-    <PageLayout className="flex items-center justify-center" {...props}>
+    <PageLayout className="flex justify-center" {...props}>
       <GridItem 
         span={12} 
         md={10} 
-        lg={8} 
-        mdStart={2}
-        lgStart={3}
-        className="flex flex-col items-center"
+        lg={8}
+        className="flex flex-col"
       >
         {children}
       </GridItem>

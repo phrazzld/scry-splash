@@ -46,7 +46,7 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   
   /**
    * Whether to center content
-   * @default true
+   * @default false
    */
   centered?: boolean;
   
@@ -96,7 +96,7 @@ export function SplashPage({
   buttonText = "Join the wait‑list",
   microcopy = "Beta invites roll out weekly.",
   backgroundColor = "var(--color-ink)",
-  centered = true,
+  centered = false,
   animate = true, 
   staggerDelay = 100,
   benefitsLayout = "horizontal",
@@ -117,10 +117,11 @@ export function SplashPage({
       backgroundColor={backgroundColor}
       animate={false} // We handle our own animation
       centered={centered}
-      className={cn("flex items-center justify-center", className)}
+      padding="none"
+      className={cn("flex justify-center", className)}
       {...props}
     >
-      <div className="flex flex-col items-center w-full max-w-3xl">
+      <div className="flex flex-col w-full max-w-3xl px-6">
         {/* Hero Section */}
         <div className={cn("w-full", animateClass)} {...heroDelay}>
           <HeroSection

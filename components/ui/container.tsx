@@ -60,7 +60,7 @@ const containerVariants = cva(
     defaultVariants: {
       maxWidth: "xl",
       padding: "md",
-      center: true,
+      center: false,
       gap: "md",
     },
   }

@@ -37,7 +37,7 @@ export interface BenefitTrioProps extends React.HTMLAttributes<HTMLDivElement> {
   
   /**
    * Whether to center the content
-   * @default true
+   * @default false
    */
   centered?: boolean
   
@@ -64,7 +64,7 @@ export function BenefitTrio({
   layout = "horizontal",
   variant = "subheading",
   textColor = "text-chalk",
-  centered = true,
+  centered = false,
   weight = "medium",
   className,
   ...props

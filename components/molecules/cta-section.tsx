@@ -42,7 +42,7 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
   
   /**
    * Whether to center the content
-   * @default true
+   * @default false
    */
   centered?: boolean;
   
@@ -75,7 +75,7 @@ export function CTASection({
   buttonSize = "xl",
   onButtonClick,
   buttonAriaLabel,
-  centered = true,
+  centered = false,
   microcopyColor = "text-chalk",
   className,
   ...props
