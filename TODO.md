@@ -50,7 +50,7 @@
   **Depends On:** T001, T002, T003  
   **AC Ref:** None
 
-- [ ] **T006: Fix Splash Page Logo Styling**  
+- [x] **T006: Fix Splash Page Logo Styling**  
   **Priority:** High  
   **Action:** Update the logo component to ensure its visibility and colors adapt correctly to both light and dark themes  
   **Depends On:** T001, T002, T003  

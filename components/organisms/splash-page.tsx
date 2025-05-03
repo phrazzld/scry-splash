@@ -81,7 +81,7 @@ export function SplashPage({
   subheadline = "",
   buttonText = "Get early access",
   microcopy = "",
-  backgroundColor = "var(--color-ink)",
+  backgroundColor = "var(--background)",
   centered = false,
   animate = true, 
   staggerDelay = 100,

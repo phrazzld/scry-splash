@@ -96,7 +96,7 @@ describe('SplashPage Component', () => {
     // Check if all sections are rendered
     const pageLayout = screen.getByTestId('mock-page-layout');
     expect(pageLayout).toBeInTheDocument();
-    expect(pageLayout).toHaveAttribute('data-background-color', 'var(--color-ink)');
+    expect(pageLayout).toHaveAttribute('data-background-color', 'var(--background)');
     expect(pageLayout).toHaveAttribute('data-centered', 'false');
     expect(pageLayout).toHaveAttribute('data-animate', 'false');
     
