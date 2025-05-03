@@ -1,11 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import { SplashPage } from "./splash-page"
+import { ThemeProvider } from "@/components/ui/theme-provider"
 
 const meta: Meta<typeof SplashPage> = {
   title: "Organisms/SplashPage",
   component: SplashPage,
   parameters: {
     layout: "fullscreen",
+    docs: {
+      description: {
+        component: `
+          The main splash page component for the Scry application.
+          This component supports both light and dark themes, with automatic
+          adaptation based on the selected theme.
+        `
+      }
+    }
   },
   argTypes: {
     headline: { control: "text" },
@@ -18,6 +28,13 @@ const meta: Meta<typeof SplashPage> = {
     staggerDelay: { control: { type: "range", min: 0, max: 500, step: 50 } },
     onCtaClick: { action: "CTA button clicked" },
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider defaultTheme="system" storageKey="storybook-theme" enableSystem>
+        <Story />
+      </ThemeProvider>
+    )
+  ]
 }
 
 export default meta
@@ -85,4 +102,30 @@ export const SlowAnimation: Story = {
   args: {
     staggerDelay: 200,
   },
+}
+
+/**
+ * Dark theme variant
+ */
+export const DarkTheme: Story = {
+  args: {
+    animate: false,
+  },
+  parameters: {
+    backgrounds: { default: 'dark' },
+    chromatic: { theme: 'dark' }
+  }
+}
+
+/**
+ * Light theme variant
+ */
+export const LightTheme: Story = {
+  args: {
+    animate: false,
+  },
+  parameters: {
+    backgrounds: { default: 'light' },
+    chromatic: { theme: 'light' }
+  }
 }

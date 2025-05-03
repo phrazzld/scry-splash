@@ -103,7 +103,7 @@
   **Depends On:** T010
   **AC Ref:** None
 
-- [ ] **T016: Verify/Update Storybook Stories**
+- [x] **T016: Verify/Update Storybook Stories**
   **Priority:** Medium
   **Action:** Ensure Storybook stories exist for key components and correctly display both theme variants
   **Depends On:** T010
