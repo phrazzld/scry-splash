@@ -79,7 +79,7 @@ export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
  * ```
  */
 export function PageLayout({
-  backgroundColor = "var(--color-ink)",
+  backgroundColor = "var(--background)",
   noiseOpacity = 0.02,
   maxWidth = "xl",
   padding = "md",

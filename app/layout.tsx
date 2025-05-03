@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { metadata as pageMetadata } from "./metadata";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 // Note: IBM Plex Sans is loaded directly via @font-face in globals.css
 // We don't use Next.js font loader for IBM Plex Sans to avoid conflicts
@@ -20,9 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistMono.variable}`}>
-        {children}
+        <ThemeProvider defaultTheme="system">
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

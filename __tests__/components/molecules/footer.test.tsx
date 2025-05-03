@@ -75,7 +75,7 @@ describe('Footer Component', () => {
     expect(body).toHaveAttribute('data-as', 'p');
     
     // Check that the default text color is applied
-    expect(body.className).toContain('text-chalk/40');
+    expect(body.className).toContain('text-foreground/40');
   });
 
   it('renders with custom project text', () => {
@@ -108,7 +108,7 @@ describe('Footer Component', () => {
     
     const body = screen.getByTestId('mock-body');
     expect(body.className).toContain(customTextColor);
-    expect(body.className).not.toContain('text-chalk/40');
+    expect(body.className).not.toContain('text-foreground/40');
   });
 
   it('applies custom className', () => {

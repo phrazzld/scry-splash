@@ -19,7 +19,7 @@ function TypewriterHeadline({
   typingSpeed = 70,    // Faster typing speed (was 100)
   deletingSpeed = 30,  // Faster deleting speed (was 50)
   delayAfterPhrase = 1500, // Shorter delay between phrases (was 2000)
-  textColor
+  textColor = "text-foreground" // Default to using foreground text color
 }: TypewriterHeadlineProps) {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0)
   const [displayText, setDisplayText] = useState("")
@@ -161,8 +161,8 @@ export function HeroSection({
   headline = "Remember effortlessly.",
   subheadline = "Turns your notes into spaced‑repetition prompts—automatically.",
   logoSize = "default",
-  logoColor = "chalk",
-  textColor = "text-chalk",
+  logoColor = "chalk", // Uses text-foreground via theme
+  textColor = "text-foreground",
   centered = false,
   className,
   useTypewriterEffect = true,

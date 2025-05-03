@@ -15,16 +15,16 @@ const logoVariants = cva("font-bold", {
       // Larger variant
       large: "text-[6rem]", // Slightly larger than display
     },
-    // Color variants - default is chalk (white)
+    // Color variants mapped to semantic colors for better theming
     color: {
-      chalk: "text-chalk",
-      ink: "text-ink", 
-      cobalt: "text-cobalt",
+      chalk: "text-foreground", // Default - adapts to current theme
+      ink: "text-background", 
+      cobalt: "text-primary",
     }
   },
   defaultVariants: {
     size: "default",
-    color: "chalk"
+    color: "chalk" // chalk maps to foreground
   }
 })
 

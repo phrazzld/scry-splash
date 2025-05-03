@@ -42,7 +42,7 @@ export interface FooterProps extends React.HTMLAttributes<HTMLElement> {
  */
 export function Footer({
   projectText = "a misty step project",
-  textColor = "text-chalk/40",
+  textColor = "text-foreground/40",
   centered = false,
   className,
   ...props
@@ -50,7 +50,7 @@ export function Footer({
   return (
     <Container 
       as="footer"
-      className={cn("py-6 border-t border-white/5", className)} 
+      className={cn("py-6 border-t border-foreground/5", className)} 
       gap="none"
       padding="md"
       {...props}

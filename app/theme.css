@@ -1,15 +1,16 @@
 /**
  * Core theme styles for Scry application
- * This file contains css variables and base styles
+ * This file contains css variables for theming
  */
 
+/* Define constants outside of theme classes */
 :root {
-  /* Scry Brand Colors */
-  --color-ink: #121212;
-  --color-chalk: #FAFAFA;
-  --color-cobalt: #0047AB;
-  --color-cobalt-light: #0051c4; /* 10% increased luminance for hover state */
-  --color-purple: #b494e9;
+  /* Base colors that don't change between themes */
+  --cobalt-base: #0047AB;
+  --cobalt-light: #0051c4;
+  --chalk-base: #FAFAFA;
+  --ink-base: #121212;
+  --purple-base: #b494e9;
   
   /* Typography */
   --font-display-size: 5.33rem;
@@ -36,9 +37,19 @@
   /* Focus styles */
   --focus-outline-width: 2px;
   --focus-outline-radius: 8px;
-  --focus-outline-color: #0060E6; /* Brighter blue for 3:1 minimum contrast ratio */
+  --radius: 0.5rem;
+}
+
+/* Dark mode theme (default) */
+:root {
+  /* Color tokens */
+  --color-ink: var(--ink-base);
+  --color-chalk: var(--chalk-base);
+  --color-cobalt: var(--cobalt-base);
+  --color-purple: var(--purple-base);
+  --focus-outline-color: #0060E6;
   
-  /* shadcn/ui Semantic Colors - Dark Mode (Default) */
+  /* Semantic tokens */
   --background: var(--color-ink);
   --foreground: var(--color-chalk);
   
@@ -66,12 +77,18 @@
   --border: #333333;
   --input: #333333;
   --ring: var(--focus-outline-color);
-  
-  --radius: 0.5rem;
 }
 
-/* Light mode theme (for flexibility) */
+/* Light mode theme */
 .light {
+  /* Color tokens */
+  --color-ink: var(--ink-base);
+  --color-chalk: var(--chalk-base);
+  --color-cobalt: var(--cobalt-base);
+  --color-purple: var(--purple-base);
+  --focus-outline-color: #0060E6;
+  
+  /* Semantic tokens */
   --background: var(--color-chalk);
   --foreground: var(--color-ink);
   
@@ -97,6 +114,6 @@
   --destructive-foreground: var(--color-chalk);
   
   --border: #e5e5e5;
-  --input: #e5e5e5;
+  --input: #f2f2f2;
   --ring: var(--focus-outline-color);
 }

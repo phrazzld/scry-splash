@@ -123,7 +123,7 @@ describe('HeroSection Component', () => {
     const logo = screen.getByTestId('mock-logo');
     expect(logo).toBeInTheDocument();
     expect(logo).toHaveAttribute('data-size', 'default');
-    expect(logo).toHaveAttribute('data-color', 'chalk');
+    expect(logo).toHaveAttribute('data-color', 'chalk'); // 'chalk' now maps to text-foreground
     expect(logo).toHaveAttribute('data-as', 'div');
     
     // Check for DisplayText component (typewriter will use this)

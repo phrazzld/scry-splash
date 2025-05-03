@@ -128,7 +128,7 @@ describe('PageLayout Component', () => {
     // Check background
     const background = screen.getByTestId('mock-noise-background');
     expect(background).toBeInTheDocument();
-    expect(background).toHaveAttribute('data-base-color', 'var(--color-ink)');
+    expect(background).toHaveAttribute('data-base-color', 'var(--background)');
     expect(background).toHaveAttribute('data-noise-opacity', '0.02');
     
     // Check container
