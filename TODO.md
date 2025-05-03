@@ -108,3 +108,68 @@
   **Action:** Ensure Storybook stories exist for key components and correctly display both theme variants
   **Depends On:** T010
   **AC Ref:** None
+
+## Final UI Cleanup Tasks
+
+- [x] **T017: Remove ThemeDebug Component from Page**
+  **Priority:** High
+  **Action:** Remove the ThemeDebug component from the page by setting `SHOW_THEME_DEBUG = false` in `app/page.tsx`
+  **Depends On:** None
+  **AC Ref:** None
+
+- [ ] **T018: Remove ThemeSwitch Component from Page**
+  **Priority:** High
+  **Action:** Remove the ThemeSwitch component from the page by setting `SHOW_THEME_SWITCH = false` in `app/page.tsx`
+  **Depends On:** None
+  **AC Ref:** None
+
+- [ ] **T019: Set Default Theme to System in ThemeProvider**
+  **Priority:** Medium
+  **Action:** Ensure the ThemeProvider in `app/layout.tsx` and ThemeScript are configured to use system theme by default
+  **Depends On:** None
+  **AC Ref:** None
+
+- [ ] **T020: Update Hero Section Default Story**
+  **Priority:** Medium
+  **Action:** Update the Default story in `hero-section.stories.tsx` to match production values:
+  - Set `logoSize` to "large"
+  - Set `centered` to false
+  - Remove or update subheadline if not needed in production
+  **Depends On:** None
+  **AC Ref:** None
+
+- [ ] **T021: Check and Update CTASection Storybook Story**
+  **Priority:** Medium
+  **Action:** Review and update the default story in `cta-section.stories.tsx` to ensure it matches the production layout with input and button stacked
+  **Depends On:** None
+  **AC Ref:** None
+
+- [ ] **T022: Update SplashPage Storybook Story**
+  **Priority:** Medium
+  **Action:** Review and update the default story in `splash-page.stories.tsx` to ensure it matches the latest production layout with left alignment and correct copy
+  **Depends On:** None
+  **AC Ref:** None
+
+- [ ] **T023: Synchronize Button Styling Across Components**
+  **Priority:** Low
+  **Action:** Ensure button styling is consistent between Storybook stories and the actual implementation, particularly for the CTA button with gradient styling
+  **Depends On:** None
+  **AC Ref:** None
+
+- [ ] **T024: Verify All Theme-Related E2E Tests Still Pass**
+  **Priority:** High
+  **Action:** Run all theme-related E2E tests to ensure they still pass after removing the theme debug and switch components
+  **Depends On:** T017, T018
+  **AC Ref:** None
+
+- [ ] **T025: Remove Development Helper Classes**
+  **Priority:** Low
+  **Action:** Check for any remaining development helper classes or CSS that might have been used during theme system development but is no longer needed
+  **Depends On:** None
+  **AC Ref:** None
+
+- [ ] **T026: Final Visual Review in Both Themes**
+  **Priority:** High
+  **Action:** Perform a final visual review of all components in both dark and light mode to ensure they look correct with system theme detection
+  **Depends On:** T017, T018, T019
+  **AC Ref:** None

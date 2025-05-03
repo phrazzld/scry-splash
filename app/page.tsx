@@ -7,7 +7,7 @@ import { ThemeDebug } from "@/components/ui/theme-debug";
 // Toggle these flags to show/hide theme development tools
 // Set both to false before deploying to production
 const SHOW_THEME_SWITCH = true;
-const SHOW_THEME_DEBUG = true;
+const SHOW_THEME_DEBUG = false;
 
 export default function Home() {
   // Potential analytics event handling could be added here

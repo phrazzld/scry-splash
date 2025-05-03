@@ -131,11 +131,21 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => <ThemeDemo />,
+  args: {
+    children: <ThemeDemo />,
+    defaultTheme: "system",
+    enableSystem: true
+  },
+  render: (args) => <ThemeProvider {...args} />
 };
 
 export const SystemThemeBased: Story = {
-  render: () => <ThemeDemo />,
+  args: {
+    children: <ThemeDemo />,
+    defaultTheme: "system",
+    enableSystem: true
+  },
+  render: (args) => <ThemeProvider {...args} />,
   parameters: {
     chromatic: {
       modes: {
