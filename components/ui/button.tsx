@@ -12,7 +12,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
         cta: "bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98]",
-        gradient: "bg-gradient-to-br from-[#003a8c] to-[#0051c4] text-primary-foreground/95 font-normal hover:bg-gradient-to-br hover:from-[#003a8c] hover:to-[#0060E6] hover:shadow-sm hover:cursor-pointer active:scale-[0.98]",
+        gradient: "bg-gradient-to-br from-primary/80 to-primary text-primary-foreground/95 font-normal hover:bg-gradient-to-br hover:from-primary/80 hover:to-primary hover:shadow-sm hover:cursor-pointer active:scale-[0.98]",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline: "border border-primary bg-transparent hover:bg-primary/10 text-primary",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",

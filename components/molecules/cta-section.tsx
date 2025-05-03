@@ -73,7 +73,7 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
   
   /**
    * Text color for microcopy
-   * @default "text-chalk"
+   * @default "text-foreground"
    */
   microcopyColor?: string;
   
@@ -105,7 +105,7 @@ export function CTASection({
   onButtonClick,
   buttonAriaLabel,
   centered = false,
-  microcopyColor = "text-chalk",
+  microcopyColor = "text-foreground",
   className,
   ...props
 }: CTASectionProps) {

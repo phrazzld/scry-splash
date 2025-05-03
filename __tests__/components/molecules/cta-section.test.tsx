@@ -234,6 +234,13 @@ describe('CTASection Component', () => {
     expect(form).not.toHaveClass('items-center');
   });
 
+  it('applies default theme-aware text color to microcopy', () => {
+    render(<CTASection />);
+    
+    const microcopy = screen.getByTestId('mock-body-text');
+    expect(microcopy).toHaveClass('text-foreground');
+  });
+
   it('applies custom microcopyColor', () => {
     const customColor = 'text-cobalt';
     render(<CTASection microcopyColor={customColor} />);

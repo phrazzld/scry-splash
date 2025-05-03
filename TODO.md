@@ -62,7 +62,7 @@
   **Depends On:** T001, T002, T003  
   **AC Ref:** None
 
-- [ ] **T008: Verify CTA Button Styling**  
+- [x] **T008: Verify CTA Button Styling**  
   **Priority:** Medium  
   **Action:** Confirm the button's background, text, border, and hover/focus states use theme-aware styles and appear correctly in both themes  
   **Depends On:** T001, T002, T003  
