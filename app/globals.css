@@ -140,7 +140,7 @@ body {
 
 /* Input placeholder styles - explicitly set for both themes */
 ::placeholder {
-  color: rgba(250, 250, 250, 0.7) !important; /* Light color for dark mode */
+  color: rgba(250, 250, 250, 0.8) !important; /* Light color for dark mode - increased opacity for better contrast */
   opacity: 1;
 }
 

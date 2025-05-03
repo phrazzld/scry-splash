@@ -158,7 +158,7 @@ export function CTASection({
             size={buttonSize}
             aria-label={buttonAriaLabelFinal}
             type="submit"
-            className="cta-button whitespace-nowrap h-12 text-base font-bold px-10 py-3"
+            className="cta-button whitespace-nowrap h-12 text-base font-bold px-10 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             {buttonText}
           </Button>

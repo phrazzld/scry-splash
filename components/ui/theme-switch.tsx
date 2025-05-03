@@ -21,8 +21,10 @@ export function ThemeSwitch({ className }: ThemeSwitchProps) {
         </div>
         <button
           onClick={() => setTheme("light")}
+          aria-label="Switch to light theme"
           className={cn(
             "px-3 py-1.5 rounded-sm font-medium",
+            "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             currentTheme === "light" ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
           )}
         >
@@ -30,8 +32,10 @@ export function ThemeSwitch({ className }: ThemeSwitchProps) {
         </button>
         <button
           onClick={() => setTheme("dark")}
+          aria-label="Switch to dark theme"
           className={cn(
             "px-3 py-1.5 rounded-sm font-medium",
+            "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             currentTheme === "dark" ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
           )}
         >
@@ -39,8 +43,10 @@ export function ThemeSwitch({ className }: ThemeSwitchProps) {
         </button>
         <button
           onClick={() => setTheme("system")}
+          aria-label="Use system theme preference"
           className={cn(
             "px-3 py-1.5 rounded-sm font-medium",
+            "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             theme === "system" ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
           )}
         >

@@ -74,7 +74,7 @@
   **Depends On:** T001, T002, T003  
   **AC Ref:** None
 
-- [ ] **T010: Comprehensive Manual Theme Testing**  
+- [x] **T010: Comprehensive Manual Theme Testing**  
   **Priority:** High  
   **Action:** Test OS theme toggling, in-app theme toggle, localStorage reset, and verify in multiple browsers  
   **Depends On:** T001, T002, T003, T004, T005, T006, T007, T008, T009  
@@ -92,13 +92,13 @@
   **Depends On:** T010  
   **AC Ref:** None
 
-- [ ] **T013: Accessibility Check**  
+- [x] **T013: Accessibility Check**  
   **Priority:** Medium  
   **Action:** Verify color contrast ratios and accessibility compliance in both light and dark modes  
   **Depends On:** T010  
   **AC Ref:** None
 
-- [ ] **T014: Code Cleanup**  
+- [x] **T014: Code Cleanup**  
   **Priority:** Low  
   **Action:** Remove any temporary CSS overrides, commented-out code, or console logs related to theme debugging  
   **Depends On:** T010  
