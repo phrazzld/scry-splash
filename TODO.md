@@ -56,7 +56,7 @@
   **Depends On:** T001, T002, T003  
   **AC Ref:** None
 
-- [ ] **T007: Fix Splash Page Headline Text Styling**  
+- [x] **T007: Fix Splash Page Headline Text Styling**  
   **Priority:** High  
   **Action:** Verify the headline text uses theme-aware color classes to ensure visibility in both light and dark modes  
   **Depends On:** T001, T002, T003  

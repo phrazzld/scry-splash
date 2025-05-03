@@ -131,10 +131,16 @@ describe('HeroSection Component', () => {
     expect(displayText).toBeInTheDocument();
     expect(displayText).toHaveAttribute('data-as', 'h1');
     
+    // Verify the theme-aware text color class is applied
+    expect(displayText.className).toContain('text-foreground');
+    
     // Check for subheadline
     const body = screen.getByTestId('mock-body');
     expect(body).toBeInTheDocument();
     expect(body).toHaveTextContent('Turns your notes into spaced‑repetition prompts—automatically.');
+    
+    // Verify the theme-aware text color class is applied
+    expect(body.className).toContain('text-foreground');
   });
 
   it('renders with static headline when useTypewriterEffect is false', () => {

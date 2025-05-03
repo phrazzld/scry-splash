@@ -113,6 +113,7 @@ export function SplashPage({
             subheadline={subheadline}
             centered={centered}
             logoSize="large"
+            textColor="text-foreground"
           />
         </div>
         
