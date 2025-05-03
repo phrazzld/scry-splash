@@ -38,7 +38,7 @@
   **Depends On:** None  
   **AC Ref:** None
 
-- [ ] **T004: Implement Anti-FOUC Script**  
+- [x] **T004: Implement Anti-FOUC Script**  
   **Priority:** Medium  
   **Action:** Add a script in the `<head>` to read the theme from localStorage or system preference and apply the correct class before React hydrates  
   **Depends On:** T001, T002  
