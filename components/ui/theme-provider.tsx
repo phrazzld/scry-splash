@@ -8,6 +8,8 @@ type ThemeProviderProps = {
   children: React.ReactNode;
   defaultTheme?: Theme;
   storageKey?: string;
+  attribute?: string;
+  enableSystem?: boolean;
 };
 
 type ThemeProviderState = {
@@ -28,6 +30,8 @@ export function ThemeProvider({
   children,
   defaultTheme = "system",
   storageKey = "scry-ui-theme",
+  attribute = "class",
+  enableSystem = true,
   ...props
 }: ThemeProviderProps) {
   // Initialize theme from localStorage or default
@@ -48,7 +52,7 @@ export function ThemeProvider({
 
   // Detect system theme using matchMedia
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && enableSystem) {
       // Check initial system preference
       const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
       setSystemTheme(isDarkMode ? "dark" : "light");
@@ -67,28 +71,33 @@ export function ThemeProvider({
         mediaQuery.removeEventListener("change", handleChange);
       };
     }
-  }, []);
+  }, [enableSystem]);
 
   // Apply theme to document - with fallback for server rendering
   useEffect(() => {
     if (typeof window !== "undefined") {
       const root = window.document.documentElement;
       
-      // Remove both theme classes first
-      root.classList.remove("light", "dark");
-      
-      // Apply appropriate theme class based on current selection
+      // Get the active theme
       const activeTheme = theme === "system" ? systemTheme : theme;
-      
-      // Only add class if it's a valid theme class name
-      if (activeTheme === "light" || activeTheme === "dark") {
-        root.classList.add(activeTheme);
-      }
       
       // Store the active theme for debugging
       root.dataset.theme = activeTheme;
+      
+      if (attribute === "class") {
+        // Remove both theme classes first
+        root.classList.remove("light", "dark");
+        
+        // Only add class if it's a valid theme class name
+        if (activeTheme === "light" || activeTheme === "dark") {
+          root.classList.add(activeTheme);
+        }
+      } else {
+        // For other attribute types (data-*)
+        root.setAttribute(attribute, activeTheme);
+      }
     }
-  }, [theme, systemTheme]);
+  }, [theme, systemTheme, attribute]);
 
   const value = {
     theme,

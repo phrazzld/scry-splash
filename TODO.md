@@ -26,7 +26,7 @@
   **Depends On:** None  
   **AC Ref:** None
 
-- [ ] **T002: Verify & Configure ThemeProvider**  
+- [x] **T002: Verify & Configure ThemeProvider**  
   **Priority:** High  
   **Action:** Ensure the `ThemeProvider` component is correctly configured with `attribute="class"`, `defaultTheme="system"`, and `enableSystem={true}`  
   **Depends On:** T001  

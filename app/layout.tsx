@@ -23,7 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistMono.variable}`}>
-        <ThemeProvider defaultTheme="system">
+        <ThemeProvider 
+          defaultTheme="system"
+          attribute="class"
+          enableSystem={true}
+        >
           {children}
         </ThemeProvider>
       </body>
