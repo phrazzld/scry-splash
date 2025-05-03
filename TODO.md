@@ -79,7 +79,7 @@
   **Depends On:** T010
   **AC Ref:** None
 
-- [ ] **T012: Add Unit/Integration Tests for Theme Hook/Context**
+- [x] **T012: Add Unit/Integration Tests for Theme Hook/Context**
   **Priority:** Low
   **Action:** If custom theme hooks exist, add tests to verify their state management under different conditions
   **Depends On:** T010
