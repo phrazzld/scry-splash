@@ -19,7 +19,7 @@ importers:
         version: 0.503.0(react@19.1.0)
       next:
         specifier: 15.3.1
-        version: 15.3.1(@babel/core@7.26.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 15.3.1(@babel/core@7.26.10)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: ^19.0.0
         version: 19.1.0
@@ -33,6 +33,9 @@ importers:
       '@eslint/eslintrc':
         specifier: ^3
         version: 3.3.1
+      '@playwright/test':
+        specifier: ^1.52.0
+        version: 1.52.0
       '@storybook/addon-a11y':
         specifier: ^8.6.12
         version: 8.6.12(storybook@8.6.12)
@@ -56,7 +59,7 @@ importers:
         version: 8.6.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.12)
       '@storybook/nextjs':
         specifier: ^8.6.12
-        version: 8.6.12(esbuild@0.25.3)(next@15.3.1(@babel/core@7.26.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.12)(type-fest@2.19.0)(typescript@5.8.3)(webpack-hot-middleware@2.26.1)(webpack@5.99.7(esbuild@0.25.3))
+        version: 8.6.12(esbuild@0.25.3)(next@15.3.1(@babel/core@7.26.10)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.12)(type-fest@2.19.0)(typescript@5.8.3)(webpack-hot-middleware@2.26.1)(webpack@5.99.7(esbuild@0.25.3))
       '@storybook/react':
         specifier: ^8.6.12
         version: 8.6.12(@storybook/test@8.6.12(storybook@8.6.12))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.12)(typescript@5.8.3)
@@ -1362,6 +1365,11 @@ packages:
   '@nolyfill/is-core-module@1.0.39':
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
+
+  '@playwright/test@1.52.0':
+    resolution: {integrity: sha512-uh6W7sb55hl7D6vsAeA+V2p5JnlAqzhqFyF0VcJkKZXkgnFcVG9PziERRHQfPLfNGx1C292a4JqbWzhR8L4R1g==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   '@pmmmwh/react-refresh-webpack-plugin@0.5.16':
     resolution: {integrity: sha512-kLQc9xz6QIqd2oIYyXRUiAp79kGpFBm3fEM9ahfG1HI0WI5gdZ2OVHWdmZYnwODt7ISck+QuQ6sBPrtvUBML7Q==}
@@ -3110,6 +3118,11 @@ packages:
   fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
 
+  fsevents@2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -4185,6 +4198,16 @@ packages:
   pkg-dir@7.0.0:
     resolution: {integrity: sha512-Ie9z/WINcxxLp27BKOCHGde4ITq9UklYKDzVo1nhk5sqGEXU3FpkwP5GM2voTGJkGd9B3Otl+Q4uwSOeSUtOBA==}
     engines: {node: '>=14.16'}
+
+  playwright-core@1.52.0:
+    resolution: {integrity: sha512-l2osTgLXSMeuLZOML9qYODUQoPPnUsKsb5/P6LJ2e6uPKXUdPK5WYhN4z03G+YNbWmGDY4YENauNu4ZKczreHg==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright@1.52.0:
+    resolution: {integrity: sha512-JAwMNMBlxJ2oD1kce4KPtMkDeKGHQstdpFPcPH3maElAXon/QZeTvtsfXmTMRyO9TslfoYOXkSsvao2nE1ilTw==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   pnp-webpack-plugin@1.7.0:
     resolution: {integrity: sha512-2Rb3vm+EXble/sMXNSu6eoBx8e79gKqhNq9F5ZWW6ERNCTE/Q0wQNne5541tE5vKjfM8hpNCYL+LGc1YTfI0dg==}
@@ -6483,6 +6506,10 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
+  '@playwright/test@1.52.0':
+    dependencies:
+      playwright: 1.52.0
+
   '@pmmmwh/react-refresh-webpack-plugin@0.5.16(react-refresh@0.14.2)(type-fest@2.19.0)(webpack-hot-middleware@2.26.1)(webpack@5.99.7(esbuild@0.25.3))':
     dependencies:
       ansi-html: 0.0.9
@@ -6718,7 +6745,7 @@ snapshots:
     dependencies:
       storybook: 8.6.12
 
-  '@storybook/nextjs@8.6.12(esbuild@0.25.3)(next@15.3.1(@babel/core@7.26.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.12)(type-fest@2.19.0)(typescript@5.8.3)(webpack-hot-middleware@2.26.1)(webpack@5.99.7(esbuild@0.25.3))':
+  '@storybook/nextjs@8.6.12(esbuild@0.25.3)(next@15.3.1(@babel/core@7.26.10)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.12)(type-fest@2.19.0)(typescript@5.8.3)(webpack-hot-middleware@2.26.1)(webpack@5.99.7(esbuild@0.25.3))':
     dependencies:
       '@babel/core': 7.26.10
       '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.26.10)
@@ -6744,7 +6771,7 @@ snapshots:
       find-up: 5.0.0
       image-size: 1.2.1
       loader-utils: 3.3.1
-      next: 15.3.1(@babel/core@7.26.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      next: 15.3.1(@babel/core@7.26.10)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       node-polyfill-webpack-plugin: 2.0.1(webpack@5.99.7(esbuild@0.25.3))
       pnp-webpack-plugin: 1.7.0(typescript@5.8.3)
       postcss: 8.5.3
@@ -8681,6 +8708,9 @@ snapshots:
 
   fs.realpath@1.0.0: {}
 
+  fsevents@2.3.2:
+    optional: true
+
   fsevents@2.3.3:
     optional: true
 
@@ -9710,7 +9740,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next@15.3.1(@babel/core@7.26.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  next@15.3.1(@babel/core@7.26.10)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@next/env': 15.3.1
       '@swc/counter': 0.1.3
@@ -9730,6 +9760,7 @@ snapshots:
       '@next/swc-linux-x64-musl': 15.3.1
       '@next/swc-win32-arm64-msvc': 15.3.1
       '@next/swc-win32-x64-msvc': 15.3.1
+      '@playwright/test': 1.52.0
       sharp: 0.34.1
     transitivePeerDependencies:
       - '@babel/core'
@@ -9968,6 +9999,14 @@ snapshots:
   pkg-dir@7.0.0:
     dependencies:
       find-up: 6.3.0
+
+  playwright-core@1.52.0: {}
+
+  playwright@1.52.0:
+    dependencies:
+      playwright-core: 1.52.0
+    optionalDependencies:
+      fsevents: 2.3.2
 
   pnp-webpack-plugin@1.7.0(typescript@5.8.3):
     dependencies:

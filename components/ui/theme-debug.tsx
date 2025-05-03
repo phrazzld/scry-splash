@@ -10,7 +10,7 @@ interface ThemeDebugProps {
 }
 
 export function ThemeDebug({ className, showCssVars = true }: ThemeDebugProps) {
-  const { theme, systemTheme, setTheme } = useTheme()
+  const { theme, systemTheme } = useTheme()
   const [cssVars, setCssVars] = useState<Record<string, string>>({})
   const [localStorage, setLocalStorage] = useState<string | null>(null)
   const [htmlClass, setHtmlClass] = useState<string>("")
