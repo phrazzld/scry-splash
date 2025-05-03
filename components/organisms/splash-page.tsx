@@ -33,7 +33,7 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   
   /**
    * Background color for page
-   * @default "var(--color-ink)"
+   * @default "var(--background)"
    */
   backgroundColor?: string;
   

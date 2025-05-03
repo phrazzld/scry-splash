@@ -14,7 +14,7 @@ export interface FooterProps extends React.HTMLAttributes<HTMLElement> {
   
   /**
    * Text color
-   * @default "text-chalk/40"
+   * @default "text-foreground/40"
    */
   textColor?: string
   

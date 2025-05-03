@@ -68,7 +68,7 @@
   **Depends On:** T001, T002, T003  
   **AC Ref:** None
 
-- [ ] **T009: Review Other Splash Page Elements**  
+- [x] **T009: Review Other Splash Page Elements**  
   **Priority:** Medium  
   **Action:** Scan other UI elements for correct theme-aware styling (backgrounds, borders, text)  
   **Depends On:** T001, T002, T003  

@@ -9,7 +9,7 @@ import { Footer } from "@/components/molecules/footer"
 export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Background color for NoiseBackground
-   * @default "var(--color-ink)"
+   * @default "var(--background)"
    */
   backgroundColor?: string;
   
