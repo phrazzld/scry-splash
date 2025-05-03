@@ -91,6 +91,16 @@ body {
 }
 
 /* Color utilities */
+/* Theme-aware semantic classes */
+.bg-theme {
+  background-color: var(--background);
+}
+
+.text-theme {
+  color: var(--foreground);
+}
+
+/* Legacy names but using theme variables - maintained for backward compatibility */
 .bg-ink {
   background-color: var(--background);
 }

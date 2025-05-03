@@ -30,7 +30,7 @@ export default function RootLayout({
           attribute="class"
         />
       </head>
-      <body className={`${geistMono.variable}`}>
+      <body className={`${geistMono.variable} bg-background text-foreground`}>
         <ThemeProvider 
           defaultTheme="system"
           attribute="class"

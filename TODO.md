@@ -44,7 +44,7 @@
   **Depends On:** T001, T002  
   **AC Ref:** None
 
-- [ ] **T005: Verify Base Layout Styles**  
+- [x] **T005: Verify Base Layout Styles**  
   **Priority:** Medium  
   **Action:** Ensure the `<body>` tag and main layout container use theme-aware utilities like `bg-background text-foreground`  
   **Depends On:** T001, T002, T003  
