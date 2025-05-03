@@ -4,11 +4,53 @@ import React, { useEffect, useState } from "react"
 import { useTheme } from "@/components/ui/theme-provider"
 import { cn } from "@/lib/utils"
 
+/**
+ * Props for the ThemeDebug component
+ */
 interface ThemeDebugProps {
+  /**
+   * Optional CSS class name to apply to the component
+   * Allows for custom positioning and styling
+   */
   className?: string;
+  
+  /**
+   * Whether to show the CSS variables section
+   * @default true
+   */
   showCssVars?: boolean;
 }
 
+/**
+ * ThemeDebug component
+ * 
+ * A development tool that displays detailed information about the current theme state
+ * and configuration. This component helps developers understand the theme system and
+ * debug theme-related issues.
+ * 
+ * The component shows:
+ * - Current theme context state (selected theme, system theme)
+ * - DOM state (HTML classes, data attributes)
+ * - localStorage theme value
+ * - Current CSS variables (optional)
+ * 
+ * By default, it's positioned in the top-right corner of the viewport.
+ * 
+ * @example
+ * ```tsx
+ * // Basic usage in development
+ * <ThemeDebug />
+ * 
+ * // Hide CSS variables section
+ * <ThemeDebug showCssVars={false} />
+ * 
+ * // Custom positioning
+ * <ThemeDebug className="fixed bottom-4 left-4" />
+ * ```
+ * 
+ * @note This component is intended for development use only and should be
+ * disabled or removed in production builds.
+ */
 export function ThemeDebug({ className, showCssVars = true }: ThemeDebugProps) {
   const { theme, systemTheme } = useTheme()
   const [cssVars, setCssVars] = useState<Record<string, string>>({})

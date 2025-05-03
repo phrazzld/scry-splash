@@ -4,11 +4,42 @@ import React from "react"
 import { useTheme } from "@/components/ui/theme-provider"
 import { cn } from "@/lib/utils"
 
+/**
+ * Props for the ThemeSwitch component
+ */
 interface ThemeSwitchProps {
+  /**
+   * Optional CSS class name to apply to the component
+   * Allows for custom positioning and styling
+   */
   className?: string
 }
 
+/**
+ * ThemeSwitch component
+ * 
+ * A UI component that allows users to manually switch between light, dark, and system themes.
+ * This component is primarily used for development and testing but can also be exposed
+ * to end users to allow manual theme switching.
+ * 
+ * The component shows:
+ * - The current active theme
+ * - Buttons to switch between light, dark, and system themes
+ * - The current system theme preference (when system mode is active)
+ * 
+ * By default, it's positioned in the bottom-right corner of the viewport.
+ * 
+ * @example
+ * ```tsx
+ * // Add to your page component
+ * <ThemeSwitch />
+ * 
+ * // With custom positioning
+ * <ThemeSwitch className="fixed top-4 left-4" />
+ * ```
+ */
 export function ThemeSwitch({ className }: ThemeSwitchProps) {
+  // Access theme state and controls from context
   const { theme, systemTheme, setTheme } = useTheme()
   
   const currentTheme = theme === "system" ? systemTheme : theme

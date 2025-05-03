@@ -97,7 +97,7 @@
   **Depends On:** T010
   **AC Ref:** None
 
-- [ ] **T015: Update Documentation**
+- [x] **T015: Update Documentation**
   **Priority:** Low
   **Action:** Document the theme implementation in code comments and relevant docs
   **Depends On:** T010
