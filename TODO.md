@@ -32,7 +32,7 @@
   **Depends On:** T001  
   **AC Ref:** None
 
-- [ ] **T003: Verify Tailwind Dark Mode Configuration**  
+- [x] **T003: Verify Tailwind Dark Mode Configuration**  
   **Priority:** High  
   **Action:** Confirm that `darkMode: 'class'` is set in the Tailwind configuration (`tailwind.config.js`)  
   **Depends On:** None  
