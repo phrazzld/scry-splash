@@ -96,7 +96,7 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
 export function CTASection({
   buttonText = "Get early access",
   microcopy = "Beta invites roll out weekly.",
-  buttonVariant = "gradient",
+  buttonVariant = "default",
   buttonSize = "default", // Custom styling will be applied in the JSX
   inputPlaceholder = "Your email address",
   inputType = "email",
@@ -158,7 +158,7 @@ export function CTASection({
             size={buttonSize}
             aria-label={buttonAriaLabelFinal}
             type="submit"
-            className="whitespace-nowrap h-12 text-base font-normal px-10"
+            className="cta-button whitespace-nowrap h-12 text-base font-bold px-10 py-3"
           >
             {buttonText}
           </Button>
