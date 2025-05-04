@@ -10,7 +10,7 @@ export interface NoiseBackgroundProps extends React.HTMLAttributes<HTMLDivElemen
 }
 
 export function NoiseBackground({
-  baseColor = "var(--color-ink)",
+  baseColor = "var(--background)",
   noiseOpacity = 0.02,
   className,
   children,

@@ -16,11 +16,11 @@ const meta: Meta<typeof CTASection> = {
     },
     microcopy: {
       control: "text",
-      description: "Microcopy text displayed below the button",
+      description: "Microcopy text displayed below the form",
     },
     buttonVariant: {
       control: "select",
-      options: ["default", "cta", "destructive", "outline", "secondary", "ghost", "link"],
+      options: ["default", "cta", "gradient", "destructive", "outline", "secondary", "ghost", "link"],
       description: "Button variant style",
     },
     buttonSize: {
@@ -28,9 +28,25 @@ const meta: Meta<typeof CTASection> = {
       options: ["default", "sm", "md", "lg", "xl", "icon"],
       description: "Button size",
     },
+    inputPlaceholder: {
+      control: "text",
+      description: "Placeholder text for the input field",
+    },
+    inputType: {
+      control: "text",
+      description: "Input type (e.g., email, text)",
+    },
+    inputAriaLabel: {
+      control: "text",
+      description: "Aria label for the input field",
+    },
+    onFormSubmit: {
+      action: "form submitted",
+      description: "Callback function when form is submitted with the input value",
+    },
     onButtonClick: {
-      action: "clicked",
-      description: "Callback function when button is clicked",
+      action: "button clicked",
+      description: "Legacy callback function when button is clicked (deprecated)",
     },
     buttonAriaLabel: {
       control: "text",
@@ -52,42 +68,49 @@ type Story = StoryObj<typeof CTASection>
 
 // Helper for consistent decoration
 const withBackground = (Story: React.ComponentType) => (
-  <NoiseBackground baseColor="var(--color-ink)" className="p-12">
+  <NoiseBackground baseColor="var(--background)" className="p-12">
     <Story />
   </NoiseBackground>
 )
 
-// Default (with preset text and styles)
+// Default (matches production configuration)
 export const Default: Story = {
   args: {
-    buttonText: "Join the wait‑list",
+    buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
-    buttonVariant: "cta",
-    buttonSize: "xl",
-    centered: true,
-    microcopyColor: "text-chalk",
+    inputPlaceholder: "Your email address",
+    buttonVariant: "gradient",
+    buttonSize: "default",
+    centered: false, // Left-aligned in production
+    microcopyColor: "text-foreground" // Theme-aware color in production
   },
-  decorators: [withBackground],
+  decorators: [(Story) => (
+    <NoiseBackground baseColor="var(--background)" className="p-12">
+      <Story />
+    </NoiseBackground>
+  )],
 }
 
 // Different button variant (outline)
 export const OutlineVariant: Story = {
   args: {
-    buttonText: "Join the wait‑list",
+    buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
+    inputPlaceholder: "Your email address",
     buttonVariant: "outline",
-    buttonSize: "xl",
+    buttonSize: "lg",
     centered: true,
     microcopyColor: "text-chalk",
   },
   decorators: [withBackground],
 }
 
-// Smaller size
-export const SmallerSize: Story = {
+// Custom placeholders
+export const CustomPlaceholder: Story = {
   args: {
-    buttonText: "Sign up",
-    microcopy: "Get early access",
+    buttonText: "Join waitlist",
+    microcopy: "We'll notify you when Scry is ready",
+    inputPlaceholder: "Enter your email to join waitlist",
     buttonVariant: "cta",
     buttonSize: "lg",
     centered: true,
@@ -101,20 +124,8 @@ export const AlternativeContent: Story = {
   args: {
     buttonText: "Request access",
     microcopy: "Get notified when we launch",
+    inputPlaceholder: "Email address",
     buttonVariant: "cta",
-    buttonSize: "xl",
-    centered: true,
-    microcopyColor: "text-chalk",
-  },
-  decorators: [withBackground],
-}
-
-// Ghost button style
-export const GhostButton: Story = {
-  args: {
-    buttonText: "Learn more",
-    microcopy: "See how Scry works",
-    buttonVariant: "ghost",
     buttonSize: "lg",
     centered: true,
     microcopyColor: "text-chalk",
@@ -122,15 +133,30 @@ export const GhostButton: Story = {
   decorators: [withBackground],
 }
 
-// Left-aligned
-export const LeftAligned: Story = {
+// Secondary button style
+export const SecondaryButton: Story = {
   args: {
-    buttonText: "Join the wait‑list",
-    microcopy: "Beta invites roll out weekly.",
-    buttonVariant: "cta",
-    buttonSize: "xl",
-    centered: false,
+    buttonText: "Join beta",
+    microcopy: "See how Scry works",
+    inputPlaceholder: "Enter your email",
+    buttonVariant: "secondary",
+    buttonSize: "lg",
+    centered: true,
     microcopyColor: "text-chalk",
+  },
+  decorators: [withBackground],
+}
+
+// Left-aligned with alternate size
+export const LeftAlignedLarge: Story = {
+  args: {
+    buttonText: "Get early access",
+    microcopy: "Beta invites roll out weekly.",
+    inputPlaceholder: "Your email address",
+    buttonVariant: "gradient",
+    buttonSize: "lg",
+    centered: false,
+    microcopyColor: "text-foreground",
   },
   decorators: [withBackground],
 }
@@ -140,8 +166,9 @@ export const NoMicrocopy: Story = {
   args: {
     buttonText: "Join now",
     microcopy: "",
+    inputPlaceholder: "Your email address",
     buttonVariant: "cta",
-    buttonSize: "xl",
+    buttonSize: "lg",
     centered: true,
   },
   decorators: [withBackground],
@@ -150,15 +177,34 @@ export const NoMicrocopy: Story = {
 // Alternative color scheme
 export const AlternativeColorScheme: Story = {
   args: {
-    buttonText: "Join the wait‑list",
-    microcopy: "Beta invites roll out weekly.",
+    buttonText: "Subscribe",
+    microcopy: "Stay updated on our progress",
+    inputPlaceholder: "Your email address",
     buttonVariant: "secondary",
-    buttonSize: "xl",
+    buttonSize: "lg",
     centered: true,
     microcopyColor: "text-chalk",
   },
   decorators: [(Story) => (
     <NoiseBackground baseColor="#1a1a1a" className="p-12">
+      <Story />
+    </NoiseBackground>
+  )],
+}
+
+// Mobile stacked view (small container)
+export const MobileStacked: Story = {
+  args: {
+    buttonText: "Get early access",
+    microcopy: "Beta invites roll out weekly.",
+    inputPlaceholder: "Your email address",
+    buttonVariant: "gradient",
+    buttonSize: "lg",
+    centered: true,
+    microcopyColor: "text-chalk",
+  },
+  decorators: [(Story) => (
+    <NoiseBackground baseColor="var(--color-ink)" className="p-6" style={{ maxWidth: "375px" }}>
       <Story />
     </NoiseBackground>
   )],

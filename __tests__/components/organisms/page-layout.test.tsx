@@ -3,6 +3,20 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { PageLayout, DefaultLayout } from '@/components/organisms/page-layout';
 
+// Mock the Footer component
+jest.mock('@/components/molecules/footer', () => ({
+  Footer: ({ projectText, centered, ...props }: any) => (
+    <div 
+      data-testid="mock-footer" 
+      data-project-text={projectText}
+      data-centered={centered}
+      {...props}
+    >
+      {projectText}
+    </div>
+  ),
+}));
+
 // Mock component interfaces
 interface ContainerProps {
   children: React.ReactNode;
@@ -114,7 +128,7 @@ describe('PageLayout Component', () => {
     // Check background
     const background = screen.getByTestId('mock-noise-background');
     expect(background).toBeInTheDocument();
-    expect(background).toHaveAttribute('data-base-color', 'var(--color-ink)');
+    expect(background).toHaveAttribute('data-base-color', 'var(--background)');
     expect(background).toHaveAttribute('data-noise-opacity', '0.02');
     
     // Check container
@@ -122,11 +136,17 @@ describe('PageLayout Component', () => {
     expect(container).toBeInTheDocument();
     expect(container).toHaveAttribute('data-max-width', 'xl');
     expect(container).toHaveAttribute('data-padding', 'md');
-    expect(container).toHaveAttribute('data-center', 'true');
+    expect(container).toHaveAttribute('data-center', 'false');
     expect(container).toHaveClass('animate-fade-in');
     
     // Check content
     expect(container).toHaveTextContent('Test Content');
+    
+    // Check footer
+    const footer = screen.getByTestId('mock-footer');
+    expect(footer).toBeInTheDocument();
+    expect(footer).toHaveAttribute('data-project-text', 'a misty step project');
+    expect(footer).toHaveAttribute('data-centered', 'false');
   });
 
   it('renders with custom background color and noise opacity', () => {
@@ -190,6 +210,20 @@ describe('PageLayout Component', () => {
     const wrapper = screen.getByRole('main');
     expect(wrapper).toHaveAttribute('data-custom', 'custom-attr');
   });
+
+  it('renders without footer when showFooter is false', () => {
+    render(<PageLayout showFooter={false}>Content</PageLayout>);
+    
+    expect(screen.queryByTestId('mock-footer')).not.toBeInTheDocument();
+  });
+
+  it('renders with custom footer text', () => {
+    const customFooterText = 'Custom footer text';
+    render(<PageLayout footerText={customFooterText}>Content</PageLayout>);
+    
+    const footer = screen.getByTestId('mock-footer');
+    expect(footer).toHaveAttribute('data-project-text', customFooterText);
+  });
 });
 
 describe('DefaultLayout Component', () => {
@@ -199,7 +233,7 @@ describe('DefaultLayout Component', () => {
     // Check PageLayout is used
     const wrapper = screen.getByRole('main');
     expect(wrapper).toBeInTheDocument();
-    expect(wrapper).toHaveClass('flex items-center justify-center');
+    expect(wrapper).toHaveClass('flex justify-center');
     
     // Check GridItem is used with correct props
     const gridItem = screen.getByTestId('mock-grid-item');
@@ -207,9 +241,8 @@ describe('DefaultLayout Component', () => {
     expect(gridItem).toHaveAttribute('data-span', '12');
     expect(gridItem).toHaveAttribute('data-md', '10');
     expect(gridItem).toHaveAttribute('data-lg', '8');
-    expect(gridItem).toHaveAttribute('data-md-start', '2');
-    expect(gridItem).toHaveAttribute('data-lg-start', '3');
-    expect(gridItem).toHaveClass('flex flex-col items-center');
+    // mdStart and lgStart are no longer used in the implementation
+    expect(gridItem).toHaveClass('flex flex-col');
     
     // Check content
     expect(gridItem).toHaveTextContent('Test Content');
@@ -217,11 +250,13 @@ describe('DefaultLayout Component', () => {
 
   it('passes props to the PageLayout component', () => {
     const customColor = 'var(--color-cobalt)';
+    const customFooterText = 'Custom footer for DefaultLayout';
     
     render(
       <DefaultLayout 
         backgroundColor={customColor} 
         animate={false}
+        footerText={customFooterText}
       >
         Content
       </DefaultLayout>
@@ -234,5 +269,19 @@ describe('DefaultLayout Component', () => {
     // Check that props are passed to the Container
     const container = screen.getByTestId('mock-container');
     expect(container).not.toHaveClass('animate-fade-in');
+    
+    // Check that props are passed to the Footer
+    const footer = screen.getByTestId('mock-footer');
+    expect(footer).toHaveAttribute('data-project-text', customFooterText);
+  });
+  
+  it('renders without footer when showFooter is false', () => {
+    render(
+      <DefaultLayout showFooter={false}>
+        Content
+      </DefaultLayout>
+    );
+    
+    expect(screen.queryByTestId('mock-footer')).not.toBeInTheDocument();
   });
 });

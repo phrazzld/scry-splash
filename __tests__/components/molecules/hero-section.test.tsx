@@ -10,10 +10,12 @@ interface LogoProps {
   as?: React.ElementType;
 }
 
-interface HeadingTextProps {
+interface DisplayTextProps {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   as?: React.ElementType;
+  weight?: string;
 }
 
 interface BodyTextProps {
@@ -38,6 +40,32 @@ interface GridItemProps {
   className?: string;
 }
 
+// Mock necessary React hooks for TypewriterHeadline component
+jest.mock('react', () => {
+  const originalReact = jest.requireActual('react');
+  let effectCount = 0;
+  return {
+    ...originalReact,
+    // Mock useState to return fixed values
+    useState: (initialValue: any) => {
+      // Different state values for different calls
+      const state = [
+        ["", () => {}],           // displayText
+        [0, () => {}],            // currentPhraseIndex
+        [false, () => {}],        // isDeleting
+        [false, () => {}],        // isWaiting
+        [false, () => {}],        // isComplete
+      ][effectCount++ % 5];
+      return state;
+    },
+    // Mock useEffect to do nothing
+    useEffect: (callback: () => void, deps: any[]) => {
+      // Don't actually run the effect in tests
+      return;
+    }
+  };
+});
+
 // Mock the dependencies of HeroSection
 jest.mock('@/components/ui/logo', () => ({
   Logo: ({ size, color, as }: LogoProps) => (
@@ -48,8 +76,16 @@ jest.mock('@/components/ui/logo', () => ({
 }));
 
 jest.mock('@/components/ui/typography', () => ({
-  HeadingText: ({ children, className, as }: HeadingTextProps) => (
-    <div data-testid="mock-heading" data-as={as} className={className}>{children}</div>
+  DisplayText: ({ children, className, as, style, weight }: DisplayTextProps) => (
+    <div 
+      data-testid="mock-display-text" 
+      data-as={as} 
+      data-weight={weight}
+      className={className}
+      style={style}
+    >
+      {children}
+    </div>
   ),
   BodyText: ({ children, className }: BodyTextProps) => (
     <div data-testid="mock-body" className={className}>{children}</div>
@@ -76,7 +112,7 @@ jest.mock('@/components/ui/container', () => ({
 }));
 
 describe('HeroSection Component', () => {
-  it('renders correctly with default props', () => {
+  it('renders correctly with default props and typewriter effect', () => {
     render(<HeroSection />);
     
     // Check if the component renders correctly
@@ -87,28 +123,43 @@ describe('HeroSection Component', () => {
     const logo = screen.getByTestId('mock-logo');
     expect(logo).toBeInTheDocument();
     expect(logo).toHaveAttribute('data-size', 'default');
-    expect(logo).toHaveAttribute('data-color', 'chalk');
+    expect(logo).toHaveAttribute('data-color', 'chalk'); // 'chalk' now maps to text-foreground
     expect(logo).toHaveAttribute('data-as', 'div');
     
-    // Check for headline and subheadline
-    const heading = screen.getByTestId('mock-heading');
-    expect(heading).toBeInTheDocument();
-    expect(heading).toHaveAttribute('data-as', 'h2'); // h2 since centered is true by default
-    expect(heading).toHaveTextContent('Remember effortlessly.');
+    // Check for DisplayText component (typewriter will use this)
+    const displayText = screen.getByTestId('mock-display-text');
+    expect(displayText).toBeInTheDocument();
+    expect(displayText).toHaveAttribute('data-as', 'h1');
     
+    // Verify the theme-aware text color class is applied
+    expect(displayText.className).toContain('text-foreground');
+    
+    // Check for subheadline
     const body = screen.getByTestId('mock-body');
     expect(body).toBeInTheDocument();
     expect(body).toHaveTextContent('Turns your notes into spaced‑repetition prompts—automatically.');
+    
+    // Verify the theme-aware text color class is applied
+    expect(body.className).toContain('text-foreground');
   });
 
-  it('renders with custom headline and subheadline', () => {
+  it('renders with static headline when useTypewriterEffect is false', () => {
+    const customHeadline = 'Custom headline';
+    
+    render(<HeroSection headline={customHeadline} useTypewriterEffect={false} />);
+    
+    const displayText = screen.getByTestId('mock-display-text');
+    expect(displayText).toHaveTextContent(customHeadline);
+  });
+
+  it('renders with custom headline and subheadline when typewriter is disabled', () => {
     const customHeadline = 'Custom headline';
     const customSubheadline = 'Custom subheadline';
     
-    render(<HeroSection headline={customHeadline} subheadline={customSubheadline} />);
+    render(<HeroSection headline={customHeadline} subheadline={customSubheadline} useTypewriterEffect={false} />);
     
-    const heading = screen.getByTestId('mock-heading');
-    expect(heading).toHaveTextContent(customHeadline);
+    const displayText = screen.getByTestId('mock-display-text');
+    expect(displayText).toHaveTextContent(customHeadline);
     
     const body = screen.getByTestId('mock-body');
     expect(body).toHaveTextContent(customSubheadline);
@@ -124,41 +175,27 @@ describe('HeroSection Component', () => {
 
   it('handles centered prop correctly', () => {
     // Test with centered=false
-    const { rerender } = render(<HeroSection centered={false} />);
-    
-    // Check that centered is properly passed to GridItem
-    const gridItem = screen.getByTestId('mock-grid-item');
-    expect(gridItem).toHaveAttribute('data-md-start', '1');
-    expect(gridItem).toHaveAttribute('data-lg-start', '1');
-    
-    // Check that heading has proper tag
-    const heading = screen.getByTestId('mock-heading');
-    expect(heading).toHaveAttribute('data-as', 'h1');
+    const { rerender } = render(<HeroSection centered={false} useTypewriterEffect={false} />);
     
     // Check that className doesn't include centering classes
+    const gridItem = screen.getByTestId('mock-grid-item');
     expect(gridItem.className).not.toContain('items-center');
     expect(gridItem.className).not.toContain('text-center');
     
     // Rerender with centered=true
-    rerender(<HeroSection centered={true} />);
+    rerender(<HeroSection centered={true} useTypewriterEffect={false} />);
     
     const updatedGridItem = screen.getByTestId('mock-grid-item');
-    expect(updatedGridItem).toHaveAttribute('data-md-start', '2');
-    expect(updatedGridItem).toHaveAttribute('data-lg-start', '3');
-    
-    const updatedHeading = screen.getByTestId('mock-heading');
-    expect(updatedHeading).toHaveAttribute('data-as', 'h2');
-    
     expect(updatedGridItem.className).toContain('items-center');
     expect(updatedGridItem.className).toContain('text-center');
   });
 
   it('applies custom text color', () => {
     const customTextColor = 'text-cobalt';
-    render(<HeroSection textColor={customTextColor} />);
+    render(<HeroSection textColor={customTextColor} useTypewriterEffect={false} />);
     
-    const heading = screen.getByTestId('mock-heading');
-    expect(heading.className).toContain(customTextColor);
+    const displayText = screen.getByTestId('mock-display-text');
+    expect(displayText.className).toContain(customTextColor);
     
     const body = screen.getByTestId('mock-body');
     expect(body.className).toContain(customTextColor);

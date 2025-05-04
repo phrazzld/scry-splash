@@ -1,102 +1,199 @@
 /**
  * Core theme styles for Scry application
- * This file contains css variables and base styles
+ * 
+ * This file defines the CSS variables that power the theming system.
+ * It follows a tiered approach to variables:
+ * 
+ * 1. Base Constants: Raw color values and design tokens that don't change
+ * 2. Theme-specific Color Tokens: Mappings of semantic names to raw values
+ * 3. Semantic Tokens: Usage-specific variables that map to color tokens
+ * 
+ * This organization allows for easy theming while maintaining consistency 
+ * across the application.
  */
 
+/**
+ * Base constants and tokens
+ * 
+ * These values are shared between themes and provide the foundation
+ * for the theming system. They are not directly used in components,
+ * but rather mapped to semantic variables.
+ */
 :root {
-  /* Scry Brand Colors */
-  --color-ink: #121212;
-  --color-chalk: #FAFAFA;
-  --color-cobalt: #0047AB;
-  --color-cobalt-light: #0051c4; /* 10% increased luminance for hover state */
-  --color-purple: #b494e9;
+  /* 
+   * Base colors - raw color values
+   * These are the source of truth for our color palette.
+   * They don't change between themes and are referenced by theme tokens.
+   */
+  --cobalt-base: #0047AB; /* Primary brand color */
+  --cobalt-light: #0051c4; /* Lighter variation of primary */
+  --chalk-base: #FAFAFA;  /* Light neutral - used for text/backgrounds */
+  --ink-base: #121212;    /* Dark neutral - used for text/backgrounds */
+  --purple-base: #b494e9; /* Accent color */
   
-  /* Typography */
-  --font-display-size: 5.33rem;
-  --font-heading-size: 2.67rem;
-  --font-subheading-size: 1.5rem;
-  --font-body-size: 1.17rem;
+  /* 
+   * Typography scale
+   * Consistent font sizing across the application
+   */
+  --font-display-size: 5.33rem;      /* Very large text (hero headlines) */
+  --font-heading-size: 2.67rem;      /* Section headers */
+  --font-subheading-size: 1.5rem;    /* Sub-section headers */
+  --font-body-size: 1.17rem;         /* Body text */
   
-  --font-display-line-height: 1.1;
+  --font-display-line-height: 1.1;   /* Tighter for large text */
   --font-heading-line-height: 1.2;
   --font-subheading-line-height: 1.3;
-  --font-body-line-height: 1.5;
+  --font-body-line-height: 1.5;      /* More space for readability */
   
   --font-regular: 400;
   --font-medium: 500;
   --font-bold: 700;
   
-  /* Spacing */
-  --spacing-vertical-lg: 10rem;
+  /* 
+   * Spacing system
+   * Consistent spacing values across the application
+   */
+  --spacing-vertical-lg: 10rem;      /* Large vertical spacing (sections) */
   
-  /* Animations */
-  --animation-fade-duration: 200ms;
-  --animation-fade-timing: ease-out;
+  /* 
+   * Animation settings
+   * Consistent timing for animations
+   */
+  --animation-fade-duration: 200ms;  /* Standard fade duration */
+  --animation-fade-timing: ease-out; /* Standard easing function */
   
-  /* Focus styles */
-  --focus-outline-width: 2px;
-  --focus-outline-radius: 8px;
-  --focus-outline-color: #0060E6; /* Brighter blue for 3:1 minimum contrast ratio */
-  
-  /* shadcn/ui Semantic Colors - Dark Mode (Default) */
-  --background: var(--color-ink);
-  --foreground: var(--color-chalk);
-  
-  --card: var(--color-ink);
-  --card-foreground: var(--color-chalk);
-  
-  --popover: var(--color-ink);
-  --popover-foreground: var(--color-chalk);
-  
-  --primary: var(--color-cobalt);
-  --primary-foreground: var(--color-chalk);
-  
-  --secondary: #333333;
-  --secondary-foreground: var(--color-chalk);
-  
-  --muted: #333333;
-  --muted-foreground: #a0a0a0;
-  
-  --accent: var(--color-purple);
-  --accent-foreground: var(--color-ink);
-  
-  --destructive: #ef4444;
-  --destructive-foreground: var(--color-chalk);
-  
-  --border: #333333;
-  --input: #333333;
-  --ring: var(--focus-outline-color);
-  
-  --radius: 0.5rem;
+  /* 
+   * Focus and accessibility styles
+   * Used for focus indicators and interactive elements
+   */
+  --focus-outline-width: 2px;        /* Focus outline thickness */
+  --focus-outline-radius: 8px;       /* Focus outline corner radius */
+  --radius: 0.5rem;                  /* Standard border radius */
 }
 
-/* Light mode theme (for flexibility) */
+/**
+ * Dark Mode Theme (Default)
+ * 
+ * This defines the color tokens and semantic variables for dark mode.
+ * Dark mode is the default theme and doesn't require a class on the root element.
+ */
+:root {
+  /**
+   * Color Tokens
+   * 
+   * These map our raw color values to named tokens for this specific theme.
+   * These tokens are then mapped to semantic variables below.
+   */
+  --color-ink: var(--ink-base);      /* Dark color (near black) */
+  --color-chalk: var(--chalk-base);  /* Light color (near white) */
+  --color-cobalt: var(--cobalt-base); /* Primary blue */
+  --color-purple: var(--purple-base); /* Accent purple */
+  --focus-outline-color: #0060E6;    /* Focus indicator blue */
+  
+  /**
+   * Semantic Tokens
+   * 
+   * These map color tokens to their semantic usage in the UI.
+   * Components should use these semantic variables, not the color tokens directly.
+   * This layer of abstraction makes theme switching possible.
+   */
+  
+  /* Base page colors */
+  --background: var(--color-ink);       /* Main page background */
+  --foreground: var(--color-chalk);     /* Main text color */
+  
+  /* Card component colors */
+  --card: var(--color-ink);             /* Card background */
+  --card-foreground: var(--color-chalk); /* Card text color */
+  
+  /* Popover/dropdown component colors */
+  --popover: var(--color-ink);          /* Popover background */
+  --popover-foreground: var(--color-chalk); /* Popover text */
+  
+  /* Primary action colors (buttons, links, etc.) */
+  --primary: var(--color-cobalt);       /* Primary button background */
+  --primary-foreground: var(--color-chalk); /* Primary button text */
+  
+  /* Secondary UI element colors */
+  --secondary: #333333;                 /* Secondary button/element background */
+  --secondary-foreground: var(--color-chalk); /* Secondary text */
+  
+  /* Muted/subtle UI element colors */
+  --muted: #333333;                     /* Subtle background for text/elements */
+  --muted-foreground: #a0a0a0;          /* De-emphasized text */
+  
+  /* Accent colors for highlights and attention */
+  --accent: var(--color-purple);        /* Accent background */
+  --accent-foreground: var(--color-ink); /* Text on accent background */
+  
+  /* Destructive action colors (delete, errors) */
+  --destructive: #ef4444;               /* Error/destructive action color */
+  --destructive-foreground: var(--color-chalk); /* Text on destructive elements */
+  
+  /* Borders and inputs */
+  --border: #333333;                    /* Border color for containers/cards */
+  --input: #333333;                     /* Input field background */
+  --ring: var(--focus-outline-color);   /* Focus ring for interactive elements */
+}
+
+/**
+ * Light Mode Theme
+ * 
+ * Applied when the .light class is added to the HTML element.
+ * Variables here only need to include what differs from the dark theme.
+ */
 .light {
-  --background: var(--color-chalk);
-  --foreground: var(--color-ink);
+  /**
+   * Color Tokens
+   * 
+   * Some raw mappings are the same as dark mode, but their usage differs.
+   */
+  --color-ink: var(--ink-base);         /* Dark color (near black) */
+  --color-chalk: var(--chalk-base);     /* Light color (near white) */
+  --color-cobalt: var(--cobalt-base);   /* Primary blue */
+  --color-purple: var(--purple-base);   /* Accent purple */
+  --focus-outline-color: #0060E6;       /* Focus indicator blue */
   
-  --card: var(--color-chalk);
-  --card-foreground: var(--color-ink);
+  /**
+   * Semantic Tokens
+   * 
+   * Light theme reverses many of the color mappings from dark theme.
+   */
   
-  --popover: var(--color-chalk);
-  --popover-foreground: var(--color-ink);
+  /* Base page colors - inverted from dark theme */
+  --background: var(--color-chalk);     /* Main page background (light) */
+  --foreground: var(--color-ink);       /* Main text color (dark) */
   
-  --primary: var(--color-cobalt);
-  --primary-foreground: var(--color-chalk);
+  /* Card component colors - inverted from dark theme */
+  --card: var(--color-chalk);           /* Card background */
+  --card-foreground: var(--color-ink);  /* Card text color */
   
-  --secondary: #e5e5e5;
-  --secondary-foreground: var(--color-ink);
+  /* Popover/dropdown component colors - inverted from dark theme */
+  --popover: var(--color-chalk);        /* Popover background */
+  --popover-foreground: var(--color-ink); /* Popover text */
   
-  --muted: #e5e5e5;
-  --muted-foreground: #737373;
+  /* Primary action colors (buttons, links, etc.) */
+  --primary: var(--color-cobalt);       /* Primary button background */
+  --primary-foreground: var(--color-chalk); /* Primary button text */
   
-  --accent: var(--color-purple);
-  --accent-foreground: var(--color-ink);
+  /* Secondary UI element colors - lighter than dark theme */
+  --secondary: #e5e5e5;                 /* Secondary button/element background */
+  --secondary-foreground: var(--color-ink); /* Secondary text */
   
-  --destructive: #ef4444;
-  --destructive-foreground: var(--color-chalk);
+  /* Muted/subtle UI element colors - lighter than dark theme */
+  --muted: #e5e5e5;                     /* Subtle background for text/elements */
+  --muted-foreground: #737373;          /* De-emphasized text */
   
-  --border: #e5e5e5;
-  --input: #e5e5e5;
-  --ring: var(--focus-outline-color);
+  /* Accent colors for highlights and attention */
+  --accent: var(--color-purple);        /* Accent background */
+  --accent-foreground: var(--color-ink); /* Text on accent background */
+  
+  /* Destructive action colors (delete, errors) */
+  --destructive: #ef4444;               /* Error/destructive action color */
+  --destructive-foreground: var(--color-chalk); /* Text on destructive elements */
+  
+  /* Borders and inputs - lighter than dark theme */
+  --border: #e5e5e5;                    /* Border color for containers/cards */
+  --input: #f2f2f2;                     /* Input field background */
+  --ring: var(--focus-outline-color);   /* Focus ring for interactive elements */
 }

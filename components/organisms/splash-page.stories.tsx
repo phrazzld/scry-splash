@@ -1,38 +1,59 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import { SplashPage } from "./splash-page"
+import { ThemeProvider } from "@/components/ui/theme-provider"
 
 const meta: Meta<typeof SplashPage> = {
   title: "Organisms/SplashPage",
   component: SplashPage,
   parameters: {
     layout: "fullscreen",
+    docs: {
+      description: {
+        component: `
+          The main splash page component for the Scry application.
+          This component supports both light and dark themes, with automatic
+          adaptation based on the selected theme.
+        `
+      }
+    }
   },
   argTypes: {
     headline: { control: "text" },
     subheadline: { control: "text" },
-    benefits: { control: { type: "object" } },
     buttonText: { control: "text" },
     microcopy: { control: "text" },
     backgroundColor: { control: "color" },
     centered: { control: "boolean" },
     animate: { control: "boolean" },
     staggerDelay: { control: { type: "range", min: 0, max: 500, step: 50 } },
-    benefitsLayout: { 
-      control: "radio", 
-      options: ["horizontal", "vertical", "responsive"] 
-    },
     onCtaClick: { action: "CTA button clicked" },
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider defaultTheme="system" storageKey="storybook-theme" enableSystem>
+        <Story />
+      </ThemeProvider>
+    )
+  ]
 }
 
 export default meta
 type Story = StoryObj<typeof SplashPage>
 
 /**
- * Default splash page with all default content and styling
+ * Default splash page matching production configuration with left alignment and theme-aware styling
  */
 export const Default: Story = {
-  args: {},
+  args: {
+    headline: "Remember effortlessly.",
+    subheadline: "", // Empty in production
+    buttonText: "Get early access",
+    microcopy: "", // Empty in production
+    backgroundColor: "var(--background)", // Theme-aware background
+    centered: false, // Left-aligned in production
+    animate: true,
+    staggerDelay: 100,
+  },
 }
 
 /**
@@ -45,11 +66,11 @@ export const NoAnimation: Story = {
 }
 
 /**
- * Left-aligned version of the splash page
+ * Centered version of the splash page (alternate layout)
  */
-export const LeftAligned: Story = {
+export const Centered: Story = {
   args: {
-    centered: false,
+    centered: true,
   },
 }
 
@@ -60,27 +81,8 @@ export const CustomContent: Story = {
   args: {
     headline: "Unlock Your Knowledge",
     subheadline: "Transform your notes into a powerful learning system with AI-powered spaced repetition",
-    benefits: ["Save time", "Improve retention", "Learn smarter"],
     buttonText: "Get Early Access",
     microcopy: "Join thousands of beta users today",
-  },
-}
-
-/**
- * Vertical benefits layout variant
- */
-export const VerticalBenefits: Story = {
-  args: {
-    benefitsLayout: "vertical",
-  },
-}
-
-/**
- * Responsive benefits layout
- */
-export const ResponsiveBenefits: Story = {
-  args: {
-    benefitsLayout: "responsive",
   },
 }
 
@@ -109,4 +111,42 @@ export const SlowAnimation: Story = {
   args: {
     staggerDelay: 200,
   },
+}
+
+/**
+ * Dark theme variant
+ */
+export const DarkTheme: Story = {
+  args: {
+    headline: "Remember effortlessly.",
+    subheadline: "", // Empty in production
+    buttonText: "Get early access",
+    microcopy: "", // Empty in production
+    backgroundColor: "var(--background)", // Theme-aware background
+    centered: false, // Left-aligned in production
+    animate: false, // Disabled for consistent screenshots
+  },
+  parameters: {
+    backgrounds: { default: 'dark' },
+    chromatic: { theme: 'dark' }
+  }
+}
+
+/**
+ * Light theme variant
+ */
+export const LightTheme: Story = {
+  args: {
+    headline: "Remember effortlessly.",
+    subheadline: "", // Empty in production
+    buttonText: "Get early access",
+    microcopy: "", // Empty in production
+    backgroundColor: "var(--background)", // Theme-aware background
+    centered: false, // Left-aligned in production
+    animate: false, // Disabled for consistent screenshots
+  },
+  parameters: {
+    backgrounds: { default: 'light' },
+    chromatic: { theme: 'light' }
+  }
 }

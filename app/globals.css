@@ -35,12 +35,13 @@ html {
 body {
   min-height: 100vh;
   font-family: 'IBM Plex Sans', sans-serif;
-  background-color: var(--color-ink);
-  color: var(--color-chalk);
+  background-color: var(--background);
+  color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Typography classes */
@@ -90,20 +91,30 @@ body {
 }
 
 /* Color utilities */
+/* Theme-aware semantic classes */
+.bg-theme {
+  background-color: var(--background);
+}
+
+.text-theme {
+  color: var(--foreground);
+}
+
+/* Legacy names but using theme variables - maintained for backward compatibility */
 .bg-ink {
-  background-color: var(--color-ink);
+  background-color: var(--background);
 }
 
 .text-chalk {
-  color: var(--color-chalk);
+  color: var(--foreground);
 }
 
 .text-purple {
-  color: var(--color-purple);
+  color: var(--accent);
 }
 
 .bg-cobalt {
-  background-color: var(--color-cobalt);
+  background-color: var(--primary);
 }
 
 /* Spacing */
@@ -127,6 +138,17 @@ body {
   opacity: 0;
 }
 
+/* Input placeholder styles - explicitly set for both themes */
+::placeholder {
+  color: rgba(250, 250, 250, 0.8) !important; /* Light color for dark mode - increased opacity for better contrast */
+  opacity: 1;
+}
+
+.light ::placeholder {
+  color: rgba(18, 18, 18, 0.7) !important; /* Dark color for light mode */
+  opacity: 1;
+}
+
 /* Button styles */
 button {
   position: relative;
@@ -136,6 +158,26 @@ button {
   font-family: 'IBM Plex Sans', sans-serif;
   border: none;
   overflow: hidden;
+}
+
+/* Button specific for CTA */
+.cta-button {
+  background-color: var(--color-cobalt);
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  border: 2px solid var(--color-cobalt);
+}
+
+.light .cta-button {
+  background-color: var(--color-cobalt);
+  color: white;
+  border: 2px solid var(--color-cobalt);
+}
+
+.cta-button:hover {
+  background-color: var(--color-cobalt-light);
+  border-color: var(--color-cobalt-light);
 }
 
 .bg-cobalt-light {

@@ -1,28 +1,29 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { BodyText } from "@/components/ui/typography"
 
 export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Button text
-   * @default "Join the wait‑list"
+   * @default "Get early access"
    */
   buttonText?: string;
   
   /**
-   * Microcopy text displayed below the button
+   * Microcopy text displayed below the form
    * @default "Beta invites roll out weekly."
    */
   microcopy?: string;
   
   /**
    * Button variant
-   * @default "cta"
+   * @default "gradient"
    */
-  buttonVariant?: "default" | "cta" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  buttonVariant?: "default" | "cta" | "gradient" | "destructive" | "outline" | "secondary" | "ghost" | "link";
   
   /**
    * Button size
@@ -31,7 +32,31 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
   buttonSize?: "default" | "sm" | "md" | "lg" | "xl" | "icon";
   
   /**
-   * Callback function when button is clicked
+   * Input placeholder text
+   * @default "Your email address"
+   */
+  inputPlaceholder?: string;
+  
+  /**
+   * Input type
+   * @default "email"
+   */
+  inputType?: string;
+  
+  /**
+   * Aria label for the input field
+   * @default "Enter your email address"
+   */
+  inputAriaLabel?: string;
+  
+  /**
+   * Callback function when form is submitted
+   */
+  onFormSubmit?: (value: string) => void;
+  
+  /**
+   * Callback function when button is clicked (deprecated, use onFormSubmit)
+   * @deprecated
    */
   onButtonClick?: () => void;
   
@@ -42,13 +67,13 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
   
   /**
    * Whether to center the content
-   * @default true
+   * @default false
    */
   centered?: boolean;
   
   /**
    * Text color for microcopy
-   * @default "text-chalk"
+   * @default "text-foreground"
    */
   microcopyColor?: string;
   
@@ -59,29 +84,46 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * CTASection component for call-to-action sections
+ * CTASection component for call-to-action sections with an input field
  * 
  * @example
  * ```tsx
- * <CTASection /> // Default with preset text
- * <CTASection buttonText="Sign up now" microcopy="Limited time offer" /> // Custom text
- * <CTASection buttonVariant="outline" buttonSize="lg" /> // Custom button style
+ * <CTASection /> // Default with preset text and email input
+ * <CTASection buttonText="Subscribe" inputPlaceholder="Your email" /> // Custom text
+ * <CTASection onFormSubmit={(email) => console.log(email)} /> // Handle form submission
  * ```
  */
 export function CTASection({
-  buttonText = "Join the wait‑list",
+  buttonText = "Get early access",
   microcopy = "Beta invites roll out weekly.",
-  buttonVariant = "cta",
-  buttonSize = "xl",
+  buttonVariant = "gradient",
+  buttonSize = "default", // Custom styling will be applied in the JSX
+  inputPlaceholder = "Your email address",
+  inputType = "email",
+  inputAriaLabel = "Enter your email address",
+  onFormSubmit,
   onButtonClick,
   buttonAriaLabel,
-  centered = true,
-  microcopyColor = "text-chalk",
+  centered = false,
+  microcopyColor = "text-foreground",
   className,
   ...props
 }: CTASectionProps) {
+  const [inputValue, setInputValue] = useState("");
+  
   // Create a default aria-label if not provided
-  const ariaLabel = buttonAriaLabel || `${buttonText} - ${microcopy}`;
+  const buttonAriaLabelFinal = buttonAriaLabel || `${buttonText}`;
+  
+  // Handle form submission
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onFormSubmit) {
+      onFormSubmit(inputValue);
+    } else if (onButtonClick) {
+      // Legacy support
+      onButtonClick();
+    }
+  };
   
   return (
     <div 
@@ -92,15 +134,36 @@ export function CTASection({
       )} 
       {...props}
     >
-      <Button
-        variant={buttonVariant}
-        size={buttonSize}
-        onClick={onButtonClick}
-        aria-label={ariaLabel}
-        type="button"
+      <form 
+        onSubmit={handleSubmit}
+        className={cn(
+          "flex flex-col gap-2 w-full max-w-lg",
+          centered && "items-center"
+        )}
+        role="form"
       >
-        {buttonText}
-      </Button>
+        <div className="w-full">
+          <Input
+            type={inputType}
+            placeholder={inputPlaceholder}
+            aria-label={inputAriaLabel}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            required
+          />
+        </div>
+        <div className={cn(centered ? "text-center" : "text-left", "w-full")}>
+          <Button
+            variant={buttonVariant}
+            size={buttonSize}
+            aria-label={buttonAriaLabelFinal}
+            type="submit"
+            className="cta-button whitespace-nowrap h-12 text-base font-bold px-10 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            {buttonText}
+          </Button>
+        </div>
+      </form>
       
       {microcopy && (
         <BodyText 

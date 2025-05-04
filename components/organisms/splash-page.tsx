@@ -4,7 +4,6 @@ import React from "react"
 import { cn } from "@/lib/utils"
 import { PageLayout } from "@/components/organisms/page-layout"
 import { HeroSection } from "@/components/molecules/hero-section"
-import { BenefitTrio } from "@/components/molecules/benefit-trio"
 import { CTASection } from "@/components/molecules/cta-section"
 
 export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -21,14 +20,8 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   subheadline?: string;
   
   /**
-   * Benefits array for BenefitTrio
-   * @default ["Capture anything", "Review in moments", "Master for life"]
-   */
-  benefits?: string[];
-  
-  /**
    * CTA button text
-   * @default "Join the wait‑list"
+   * @default "Get early access"
    */
   buttonText?: string;
   
@@ -40,13 +33,13 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   
   /**
    * Background color for page
-   * @default "var(--color-ink)"
+   * @default "var(--background)"
    */
   backgroundColor?: string;
   
   /**
    * Whether to center content
-   * @default true
+   * @default false
    */
   centered?: boolean;
   
@@ -61,12 +54,6 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
    * @default 100
    */
   staggerDelay?: number;
-  
-  /**
-   * Whether to use responsive layout for benefits
-   * @default "horizontal"
-   */
-  benefitsLayout?: "horizontal" | "vertical" | "responsive";
   
   /**
    * Callback function when CTA button is clicked
@@ -86,28 +73,25 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
  * ```tsx
  * <SplashPage /> // Default with preset content
  * <SplashPage headline="Custom headline" subheadline="Custom subheadline" /> // Custom hero content
- * <SplashPage benefits={["A", "B", "C"]} buttonText="Sign up now" /> // Custom benefits and CTA
+ * <SplashPage buttonText="Sign up now" microcopy="Custom microcopy" /> // Custom CTA
  * ```
  */
 export function SplashPage({
   headline = "Remember effortlessly.",
-  subheadline = "Turns your notes into spaced‑repetition prompts—automatically.",
-  benefits = ["Capture anything", "Review in moments", "Master for life"],
-  buttonText = "Join the wait‑list",
-  microcopy = "Beta invites roll out weekly.",
-  backgroundColor = "var(--color-ink)",
-  centered = true,
+  subheadline = "",
+  buttonText = "Get early access",
+  microcopy = "",
+  backgroundColor = "var(--background)",
+  centered = false,
   animate = true, 
   staggerDelay = 100,
-  benefitsLayout = "horizontal",
   onCtaClick,
   className,
   ...props
 }: SplashPageProps) {
   // Generate staggered animation delay classes if animation is enabled
   const heroDelay = animate ? { style: { animationDelay: "0ms" } } : {};
-  const benefitsDelay = animate ? { style: { animationDelay: `${staggerDelay}ms` } } : {};
-  const ctaDelay = animate ? { style: { animationDelay: `${staggerDelay * 2}ms` } } : {};
+  const ctaDelay = animate ? { style: { animationDelay: `${staggerDelay}ms` } } : {};
   
   // Animation classes for fade-in
   const animateClass = animate ? "animate-fade-in opacity-0" : "";
@@ -117,35 +101,30 @@ export function SplashPage({
       backgroundColor={backgroundColor}
       animate={false} // We handle our own animation
       centered={centered}
-      className={cn("flex items-center justify-center", className)}
+      padding="none"
+      className={cn("flex justify-center", className)}
       {...props}
     >
-      <div className="flex flex-col items-center w-full max-w-3xl">
+      <div className="flex flex-col w-full max-w-4xl px-6">
         {/* Hero Section */}
         <div className={cn("w-full", animateClass)} {...heroDelay}>
           <HeroSection
             headline={headline}
             subheadline={subheadline}
             centered={centered}
-          />
-        </div>
-        
-        {/* Benefits Section */}
-        <div className={cn("mt-8 md:mt-10 w-full", animateClass)} {...benefitsDelay}>
-          <BenefitTrio
-            benefits={benefits}
-            layout={benefitsLayout}
-            centered={centered}
+            logoSize="large"
+            textColor="text-foreground"
           />
         </div>
         
         {/* CTA Section */}
-        <div className={cn("mt-10 md:mt-12", animateClass)} {...ctaDelay}>
+        <div className={cn("mt-12 md:mt-16", animateClass)} {...ctaDelay}>
           <CTASection
             buttonText={buttonText}
             microcopy={microcopy}
             centered={centered}
             onButtonClick={onCtaClick}
+            inputPlaceholder="Your email address"
           />
         </div>
       </div>

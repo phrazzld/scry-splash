@@ -122,8 +122,6 @@
 
 ## Infrastructure
 
-- [x] Set up Storybook
-- [x] Set up Chromatic for visual testing
 - [ ] Set up GitHub Actions CI
 - [ ] Set up useful precommit hooks
   * Warn when files are over 500 lines

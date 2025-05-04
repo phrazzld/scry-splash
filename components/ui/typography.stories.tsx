@@ -8,6 +8,7 @@ import {
   SmallText, 
   SubtleText 
 } from './typography';
+import { ThemeProvider } from './theme-provider';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
@@ -72,6 +73,15 @@ const meta = {
     }
   },
   tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <ThemeProvider defaultTheme="system" storageKey="storybook-theme" enableSystem>
+        <div className="p-6 bg-background text-foreground rounded-lg">
+          <Story />
+        </div>
+      </ThemeProvider>
+    )
+  ]
 } satisfies Meta<typeof Typography>;
 
 export default meta;
@@ -194,14 +204,14 @@ export const SemanticElements: Story = {
       <Typography variant="subheading" as="h3">H3 Element (Subheading)</Typography>
       <Typography variant="body" as="p">Paragraph Element (Body)</Typography>
       <Typography variant="small" as="span">Span Element (Small)</Typography>
-      <div className="border p-4 mt-8">
+      <div className="border border-border p-4 mt-8 rounded-md">
         <Typography variant="body" as="label">
           This is a label element with body typography
         </Typography>
         <input 
           id="example-input" 
           type="text" 
-          className="block mt-2 border p-2 w-full" 
+          className="block mt-2 border border-border p-2 w-full bg-input" 
           placeholder="Input with associated label"
         />
       </div>
@@ -213,7 +223,7 @@ export const SemanticElements: Story = {
 export const TypographyInContext: Story = {
   args: { children: 'Placeholder' }, // Required by type but not used in render function
   render: () => (
-    <div className="max-w-3xl space-y-8 p-6 border rounded-lg">
+    <div className="max-w-3xl space-y-8 p-6 border border-border rounded-lg bg-card text-card-foreground">
       <div>
         <DisplayText>Memorize less. Learn more.</DisplayText>
         <SubheadingText className="mt-4">
@@ -233,8 +243,8 @@ export const TypographyInContext: Story = {
         </BodyText>
       </div>
       
-      <div className="bg-muted p-4 rounded-md">
-        <SubheadingText>Get early access</SubheadingText>
+      <div className="bg-muted text-muted-foreground p-4 rounded-md">
+        <SubheadingText className="text-foreground">Get early access</SubheadingText>
         <BodyText className="mt-2">
           Join our waitlist to be among the first to try Scry.
         </BodyText>
@@ -244,4 +254,60 @@ export const TypographyInContext: Story = {
       </div>
     </div>
   ),
+};
+
+// Theme comparison
+export const ThemeComparison: Story = {
+  args: { children: 'Placeholder' }, // Required by type but not used in render function
+  render: () => (
+    <div className="max-w-4xl grid grid-cols-1 gap-8">
+      <div className="space-y-3">
+        <Typography variant="heading">Typography Theme Adaptation</Typography>
+        <Typography variant="body">
+          This example demonstrates how typography adapts to theme changes.
+          Toggle between dark and light themes in the toolbar to see the difference.
+        </Typography>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-4 bg-card text-card-foreground rounded-lg border border-border">
+          <Typography variant="subheading" className="mb-3">Card Background</Typography>
+          <Typography variant="body">
+            Text on card background uses text-card-foreground for proper contrast.
+          </Typography>
+        </div>
+        
+        <div className="p-4 bg-muted text-muted-foreground rounded-lg">
+          <Typography variant="subheading" className="mb-3 text-foreground">Muted Background</Typography>
+          <Typography variant="body">
+            Text on muted background uses text-muted-foreground for de-emphasized content.
+          </Typography>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-4 bg-primary text-primary-foreground rounded-lg">
+          <Typography variant="subheading" className="mb-3">Primary Background</Typography>
+          <Typography variant="body">
+            Text on primary background uses text-primary-foreground for proper contrast.
+          </Typography>
+        </div>
+        
+        <div className="p-4 bg-secondary text-secondary-foreground rounded-lg">
+          <Typography variant="subheading" className="mb-3">Secondary Background</Typography>
+          <Typography variant="body">
+            Text on secondary background uses text-secondary-foreground for proper contrast.
+          </Typography>
+        </div>
+      </div>
+    </div>
+  ),
+  parameters: {
+    chromatic: {
+      modes: {
+        dark: { theme: 'dark' },
+        light: { theme: 'light' }
+      }
+    }
+  }
 };
