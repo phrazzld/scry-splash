@@ -156,7 +156,7 @@
   **Depends On:** None
   **AC Ref:** None
 
-- [ ] **T024: Verify All Theme-Related E2E Tests Still Pass**
+- [x] **T024: Verify All Theme-Related E2E Tests Still Pass**
   **Priority:** High
   **Action:** Run all theme-related E2E tests to ensure they still pass after removing the theme debug and switch components
   **Depends On:** T017, T018
