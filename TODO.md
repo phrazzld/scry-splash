@@ -117,7 +117,7 @@
   **Depends On:** None
   **AC Ref:** None
 
-- [ ] **T018: Remove ThemeSwitch Component from Page**
+- [x] **T018: Remove ThemeSwitch Component from Page**
   **Priority:** High
   **Action:** Remove the ThemeSwitch component from the page by setting `SHOW_THEME_SWITCH = false` in `app/page.tsx`
   **Depends On:** None
