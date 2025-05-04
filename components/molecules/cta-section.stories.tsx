@@ -79,10 +79,10 @@ export const Default: Story = {
     buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
     inputPlaceholder: "Your email address",
-    buttonVariant: "default",
+    buttonVariant: "gradient",
     buttonSize: "default",
     centered: false, // Left-aligned in production
-    microcopyColor: "text-foreground", // Theme-aware color in production
+    microcopyColor: "text-foreground" // Theme-aware color in production
   },
   decorators: [(Story) => (
     <NoiseBackground baseColor="var(--background)" className="p-12">
@@ -147,8 +147,8 @@ export const SecondaryButton: Story = {
   decorators: [withBackground],
 }
 
-// Left-aligned
-export const LeftAligned: Story = {
+// Left-aligned with alternate size
+export const LeftAlignedLarge: Story = {
   args: {
     buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
@@ -156,7 +156,7 @@ export const LeftAligned: Story = {
     buttonVariant: "gradient",
     buttonSize: "lg",
     centered: false,
-    microcopyColor: "text-chalk",
+    microcopyColor: "text-foreground",
   },
   decorators: [withBackground],
 }

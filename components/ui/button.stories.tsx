@@ -98,8 +98,9 @@ export const CTA: Story = {
   args: {
     children: 'Get early access',
     variant: 'gradient',
-    size: 'xl',
+    size: 'default',
     'aria-label': 'Get early access to Scry',
+    className: 'whitespace-nowrap h-12 text-base font-bold px-10 py-3'
   },
 };
 
@@ -223,7 +224,8 @@ export const CTAExample: Story = {
       </Typography>
       <Button 
         variant="gradient"
-        size="xl"
+        size="default"
+        className="whitespace-nowrap h-12 text-base font-bold px-10 py-3"
         aria-label="Get early access to Scry to turn your notes into spaced-repetition prompts"
       >
         Get early access
@@ -268,19 +270,19 @@ export const InteractionStates: Story = {
         <Typography variant="subheading" className="mb-4">CTA Button States</Typography>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center">
           <div className="flex flex-col items-center gap-2">
-            <Button variant="cta" size="xl">CTA Button</Button>
+            <Button variant="gradient" size="default" className="whitespace-nowrap h-12 text-base font-bold px-10 py-3">CTA Button</Button>
             <Typography variant="small" className="mt-2">Normal</Typography>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Button variant="cta" size="xl" className="hover">Hover State</Button>
+            <Button variant="gradient" size="default" className="whitespace-nowrap h-12 text-base font-bold px-10 py-3 hover">Hover State</Button>
             <Typography variant="small" className="mt-2">Hover</Typography>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Button variant="cta" size="xl" className="focus-visible">Focus State</Button>
+            <Button variant="gradient" size="default" className="whitespace-nowrap h-12 text-base font-bold px-10 py-3 focus-visible">Focus State</Button>
             <Typography variant="small" className="mt-2">Focus</Typography>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Button variant="cta" size="xl" className="active scale-[0.98]">Active State</Button>
+            <Button variant="gradient" size="default" className="whitespace-nowrap h-12 text-base font-bold px-10 py-3 active scale-[0.98]">Active State</Button>
             <Typography variant="small" className="mt-2">Active</Typography>
           </div>
         </div>
