@@ -12,6 +12,7 @@ interface TypewriterHeadlineProps {
   deletingSpeed?: number
   delayAfterPhrase?: number
   textColor?: string
+  staticPrefix?: string
 }
 
 function TypewriterHeadline({
@@ -19,7 +20,8 @@ function TypewriterHeadline({
   typingSpeed = 70,    // Faster typing speed (was 100)
   deletingSpeed = 30,  // Faster deleting speed (was 50)
   delayAfterPhrase = 1500, // Shorter delay between phrases (was 2000)
-  textColor = "text-foreground" // Default to using foreground text color
+  textColor = "text-foreground", // Default to using foreground text color
+  staticPrefix = "Remember " // Static part that remains constant
 }: TypewriterHeadlineProps) {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0)
   const [displayText, setDisplayText] = useState("")
@@ -46,7 +48,7 @@ function TypewriterHeadline({
     
     // If waiting, don't do anything until delay is over
     if (isWaiting) {
-      // If we've reached the final phrase "remember everything", stop the animation
+      // If we've reached the final phrase "everything", stop the animation
       if (currentPhrase === finalPhrase) {
         setIsComplete(true)
         return
@@ -91,6 +93,7 @@ function TypewriterHeadline({
       weight="regular"
     >
       <span aria-live="polite" className="whitespace-nowrap">
+        {staticPrefix}
         {displayText || " "}
         {!isComplete && <span className="animate-pulse">|</span>}
       </span>
@@ -168,13 +171,13 @@ export function HeroSection({
   useTypewriterEffect = true,
   ...props
 }: HeroSectionProps) {
-  // Phrases for the typewriter effect
+  // Phrases for the typewriter effect - only the parts after "Remember "
   const typewriterPhrases = [
-    "Remember birthdays.",
-    "Remember important dates.",
-    "Remember key insights.",
-    "Remember effortlessly.",
-    "Remember everything."
+    "birthdays.",
+    "important dates.",
+    "key insights.",
+    "effortlessly.",
+    "everything."
   ]
   
   return (
