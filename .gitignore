@@ -15,6 +15,8 @@
 /test-results/
 /playwright-report/
 /.github/playwright/
+# Test screenshots should not be committed
+/e2e/screenshots/
 *.png
 
 # next.js

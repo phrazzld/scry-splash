@@ -41,7 +41,7 @@ test.describe('Splash Page Component', () => {
     await expect(footer).toBeVisible();
     
     // Take a screenshot of the splash page
-    await page.screenshot({ path: 'dark-splash-page.png' });
+    await page.screenshot({ path: 'e2e/screenshots/dark-splash-page.png' });
   });
   
   test('should render correctly in light theme', async ({ page }) => {
@@ -84,7 +84,7 @@ test.describe('Splash Page Component', () => {
     await expect(footer).toBeVisible();
     
     // Take a screenshot of the splash page
-    await page.screenshot({ path: 'light-splash-page.png' });
+    await page.screenshot({ path: 'e2e/screenshots/light-splash-page.png' });
   });
   
   test('should have proper focus styles in dark theme', async ({ page }) => {
@@ -102,7 +102,7 @@ test.describe('Splash Page Component', () => {
     await page.keyboard.press('Tab'); // Usually focuses on email input
     
     // Capture screenshot with focused element
-    await page.screenshot({ path: 'dark-focus-input.png' });
+    await page.screenshot({ path: 'e2e/screenshots/dark-focus-input.png' });
     
     // Check if something has focus
     const hasFocus = await page.evaluate(() => !!document.activeElement && document.activeElement !== document.body);
@@ -112,7 +112,7 @@ test.describe('Splash Page Component', () => {
     await page.keyboard.press('Tab');
     
     // Capture screenshot with button focused
-    await page.screenshot({ path: 'dark-focus-button.png' });
+    await page.screenshot({ path: 'e2e/screenshots/dark-focus-button.png' });
     
     // Check if it's a different element now
     const isFocusChanged = await page.evaluate(() => 
@@ -137,7 +137,7 @@ test.describe('Splash Page Component', () => {
     await page.keyboard.press('Tab'); // Usually focuses on email input
     
     // Capture screenshot with focused element
-    await page.screenshot({ path: 'light-focus-input.png' });
+    await page.screenshot({ path: 'e2e/screenshots/light-focus-input.png' });
     
     // Check if something has focus
     const hasFocus = await page.evaluate(() => !!document.activeElement && document.activeElement !== document.body);
@@ -147,7 +147,7 @@ test.describe('Splash Page Component', () => {
     await page.keyboard.press('Tab');
     
     // Capture screenshot with button focused
-    await page.screenshot({ path: 'light-focus-button.png' });
+    await page.screenshot({ path: 'e2e/screenshots/light-focus-button.png' });
     
     // Check if it's a different element now
     const isFocusChanged = await page.evaluate(() => 

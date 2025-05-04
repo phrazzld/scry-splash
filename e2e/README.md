@@ -40,7 +40,7 @@ npx playwright test --debug
 
 ## Screenshots
 
-The tests will generate several screenshots in the project root directory:
+The tests will generate several screenshots in the `/e2e/screenshots/` directory:
 - `dark-theme.png`: Dark theme visual appearance
 - `light-theme.png`: Light theme visual appearance
 - `dark-splash-page.png`: Splash page in dark theme
@@ -49,6 +49,8 @@ The tests will generate several screenshots in the project root directory:
 - `light-focus-input.png`: Input field with focus in light theme
 - `dark-focus-button.png`: Button with focus in dark theme
 - `light-focus-button.png`: Button with focus in light theme
+
+These screenshots are automatically gitignored and should not be committed to the repository.
 
 ## Configuration
 

@@ -40,7 +40,7 @@ test.describe.skip('Theme Visual Appearance', () => {
     expect(isLightText).toBeTruthy();
     
     // Take a screenshot for visual verification
-    await page.screenshot({ path: 'dark-theme.png' });
+    await page.screenshot({ path: 'e2e/screenshots/dark-theme.png' });
   });
   
   test('should apply correct styles in light theme', async ({ page }) => {
@@ -82,7 +82,7 @@ test.describe.skip('Theme Visual Appearance', () => {
     expect(isDarkText).toBeTruthy();
     
     // Take a screenshot for visual verification
-    await page.screenshot({ path: 'light-theme.png' });
+    await page.screenshot({ path: 'e2e/screenshots/light-theme.png' });
   });
   
   test('should have visible CTA button with proper contrast in both themes', async ({ browser }) => {
