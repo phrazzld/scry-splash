@@ -123,7 +123,7 @@
   **Depends On:** None
   **AC Ref:** None
 
-- [ ] **T019: Set Default Theme to System in ThemeProvider**
+- [x] **T019: Set Default Theme to System in ThemeProvider**
   **Priority:** Medium
   **Action:** Ensure the ThemeProvider in `app/layout.tsx` and ThemeScript are configured to use system theme by default
   **Depends On:** None
