@@ -178,6 +178,7 @@ button {
 .cta-button:hover {
   background-color: var(--color-cobalt-light);
   border-color: var(--color-cobalt-light);
+  color: white !important; /* Ensure text remains white on hover */
 }
 
 .bg-cobalt-light {
