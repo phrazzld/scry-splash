@@ -144,7 +144,7 @@
   **Depends On:** None
   **AC Ref:** None
 
-- [ ] **T022: Update SplashPage Storybook Story**
+- [x] **T022: Update SplashPage Storybook Story**
   **Priority:** Medium
   **Action:** Review and update the default story in `splash-page.stories.tsx` to ensure it matches the latest production layout with left alignment and correct copy
   **Depends On:** None

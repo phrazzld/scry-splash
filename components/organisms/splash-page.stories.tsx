@@ -41,10 +41,19 @@ export default meta
 type Story = StoryObj<typeof SplashPage>
 
 /**
- * Default splash page with all default content and styling
+ * Default splash page matching production configuration with left alignment and theme-aware styling
  */
 export const Default: Story = {
-  args: {},
+  args: {
+    headline: "Remember effortlessly.",
+    subheadline: "", // Empty in production
+    buttonText: "Get early access",
+    microcopy: "", // Empty in production
+    backgroundColor: "var(--background)", // Theme-aware background
+    centered: false, // Left-aligned in production
+    animate: true,
+    staggerDelay: 100,
+  },
 }
 
 /**
@@ -57,11 +66,11 @@ export const NoAnimation: Story = {
 }
 
 /**
- * Left-aligned version of the splash page
+ * Centered version of the splash page (alternate layout)
  */
-export const LeftAligned: Story = {
+export const Centered: Story = {
   args: {
-    centered: false,
+    centered: true,
   },
 }
 
@@ -109,7 +118,13 @@ export const SlowAnimation: Story = {
  */
 export const DarkTheme: Story = {
   args: {
-    animate: false,
+    headline: "Remember effortlessly.",
+    subheadline: "", // Empty in production
+    buttonText: "Get early access",
+    microcopy: "", // Empty in production
+    backgroundColor: "var(--background)", // Theme-aware background
+    centered: false, // Left-aligned in production
+    animate: false, // Disabled for consistent screenshots
   },
   parameters: {
     backgrounds: { default: 'dark' },
@@ -122,7 +137,13 @@ export const DarkTheme: Story = {
  */
 export const LightTheme: Story = {
   args: {
-    animate: false,
+    headline: "Remember effortlessly.",
+    subheadline: "", // Empty in production
+    buttonText: "Get early access",
+    microcopy: "", // Empty in production
+    backgroundColor: "var(--background)", // Theme-aware background
+    centered: false, // Left-aligned in production
+    animate: false, // Disabled for consistent screenshots
   },
   parameters: {
     backgrounds: { default: 'light' },
