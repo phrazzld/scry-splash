@@ -138,7 +138,7 @@
   **Depends On:** None
   **AC Ref:** None
 
-- [ ] **T021: Check and Update CTASection Storybook Story**
+- [x] **T021: Check and Update CTASection Storybook Story**
   **Priority:** Medium
   **Action:** Review and update the default story in `cta-section.stories.tsx` to ensure it matches the production layout with input and button stacked
   **Depends On:** None

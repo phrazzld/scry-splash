@@ -68,23 +68,27 @@ type Story = StoryObj<typeof CTASection>
 
 // Helper for consistent decoration
 const withBackground = (Story: React.ComponentType) => (
-  <NoiseBackground baseColor="var(--color-ink)" className="p-12">
+  <NoiseBackground baseColor="var(--background)" className="p-12">
     <Story />
   </NoiseBackground>
 )
 
-// Default (with preset text and styles)
+// Default (matches production configuration)
 export const Default: Story = {
   args: {
     buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
     inputPlaceholder: "Your email address",
-    buttonVariant: "gradient",
-    buttonSize: "lg",
-    centered: true,
-    microcopyColor: "text-chalk",
+    buttonVariant: "default",
+    buttonSize: "default",
+    centered: false, // Left-aligned in production
+    microcopyColor: "text-foreground", // Theme-aware color in production
   },
-  decorators: [withBackground],
+  decorators: [(Story) => (
+    <NoiseBackground baseColor="var(--background)" className="p-12">
+      <Story />
+    </NoiseBackground>
+  )],
 }
 
 // Different button variant (outline)
