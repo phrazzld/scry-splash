@@ -129,7 +129,7 @@
   **Depends On:** None
   **AC Ref:** None
 
-- [ ] **T020: Update Hero Section Default Story**
+- [x] **T020: Update Hero Section Default Story**
   **Priority:** Medium
   **Action:** Update the Default story in `hero-section.stories.tsx` to match production values:
   - Set `logoSize` to "large"

@@ -46,20 +46,20 @@ const meta: Meta<typeof HeroSection> = {
 export default meta
 type Story = StoryObj<typeof HeroSection>
 
-// Default hero section with typewriter animation
+// Default hero section with typewriter animation (matches production configuration)
 export const Default: Story = {
   args: {
     headline: "Remember effortlessly.",
-    subheadline: "Turns your notes into spaced‑repetition prompts—automatically.",
-    logoSize: "default",
+    subheadline: "", // Empty in production
+    logoSize: "large", // Large logo in production
     logoColor: "chalk",
-    centered: true,
-    textColor: "text-chalk",
+    centered: false, // Left-aligned in production
+    textColor: "text-foreground", // Uses theme-aware color in production
     useTypewriterEffect: true,
   },
   decorators: [
     (Story) => (
-      <NoiseBackground baseColor="var(--color-ink)" className="min-h-[400px]">
+      <NoiseBackground baseColor="var(--background)" className="min-h-[400px]">
         <Story />
       </NoiseBackground>
     ),
