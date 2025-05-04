@@ -162,7 +162,7 @@
   **Depends On:** T017, T018
   **AC Ref:** None
 
-- [ ] **T025: Remove Development Helper Classes**
+- [x] **T025: Remove Development Helper Classes**
   **Priority:** Low
   **Action:** Check for any remaining development helper classes or CSS that might have been used during theme system development but is no longer needed
   **Depends On:** None

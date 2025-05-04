@@ -18,13 +18,6 @@ test.describe('Theme Persistence', () => {
     // Verify HTML has light class
     const htmlClass = await page.evaluate(() => document.documentElement.classList.contains('light'));
     expect(htmlClass).toBeTruthy();
-    
-    // Check the theme debug info if visible
-    const themeDebug = page.locator('.bg-background:has-text("Theme Debug")');
-    if (await themeDebug.isVisible()) {
-      const debugInfo = await themeDebug.textContent();
-      expect(debugInfo).toContain('Selected: light');
-    }
   });
   
   test('should persist dark theme across page reloads', async ({ page }) => {
@@ -44,13 +37,6 @@ test.describe('Theme Persistence', () => {
     // Verify HTML has dark class
     const htmlClass = await page.evaluate(() => document.documentElement.classList.contains('dark'));
     expect(htmlClass).toBeTruthy();
-    
-    // Check the theme debug info if visible
-    const themeDebug = page.locator('.bg-background:has-text("Theme Debug")');
-    if (await themeDebug.isVisible()) {
-      const debugInfo = await themeDebug.textContent();
-      expect(debugInfo).toContain('Selected: dark');
-    }
   });
   
   test('should persist system theme preference across page reloads', async ({ page }) => {
@@ -63,13 +49,6 @@ test.describe('Theme Persistence', () => {
     
     // Reload the page
     await page.reload();
-    
-    // Check the theme debug info if visible
-    const themeDebug = page.locator('.bg-background:has-text("Theme Debug")');
-    if (await themeDebug.isVisible()) {
-      const debugInfo = await themeDebug.textContent();
-      expect(debugInfo).toContain('Selected: system');
-    }
     
     // Check localStorage to verify it remains unchanged
     const localStorageTheme = await page.evaluate(() => localStorage.getItem('scry-ui-theme'));
