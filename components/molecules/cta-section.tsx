@@ -259,7 +259,7 @@ export function CTASection({
         <BodyText 
           className={cn("mt-4 text-green-600 dark:text-green-400")}
         >
-          Thank you! Your email has been submitted successfully. We'll be in touch soon.
+          Thank you! Your email has been submitted successfully. We&apos;ll be in touch soon.
         </BodyText>
       )}
       
