@@ -239,13 +239,13 @@ export function CTASection({
         </div>
         <div className={cn(centered ? "text-center" : "text-left", "w-full")}>
           <Button
-            variant={buttonVariant}
+            variant="cta"
             size={buttonSize}
             aria-label={buttonAriaLabelFinal}
             type="submit"
             disabled={isSubmitting || !inputValue.trim()}
             className={cn(
-              "cta-button whitespace-nowrap h-12 text-base font-bold px-10 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+              "whitespace-nowrap h-12 text-base font-bold px-10 py-3 bg-[#0047AB] text-white hover:bg-[#003d91]",
               isSubmitting && "opacity-80 cursor-not-allowed"
             )}
           >
