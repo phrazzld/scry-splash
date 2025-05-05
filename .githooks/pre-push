@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Pre-push hook to run linting and type checking
+
+echo "📋 Running ESLint..."
+pnpm lint
+
+if [ $? -ne 0 ]; then
+  echo "❌ ESLint found issues. Please fix them before pushing."
+  exit 1
+fi
+
+echo "📋 Running TypeScript type checking..."
+pnpm typecheck
+
+if [ $? -ne 0 ]; then
+  echo "❌ TypeScript found type errors. Please fix them before pushing."
+  exit 1
+fi
+
+echo "✅ Linting and type checking passed! Pushing changes..."
+exit 0

@@ -160,25 +160,8 @@ button {
   overflow: hidden;
 }
 
-/* Button specific for CTA */
-.cta-button {
-  background-color: var(--color-cobalt);
-  color: white;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  border: 2px solid var(--color-cobalt);
-}
-
-.light .cta-button {
-  background-color: var(--color-cobalt);
-  color: white;
-  border: 2px solid var(--color-cobalt);
-}
-
-.cta-button:hover {
-  background-color: var(--color-cobalt-light);
-  border-color: var(--color-cobalt-light);
-}
+/* We're removing custom button styling from globals.css
+   Button styling should be handled entirely by the Button component */
 
 .bg-cobalt-light {
   background-color: var(--color-cobalt-light);

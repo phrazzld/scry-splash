@@ -23,6 +23,16 @@ This hook runs after a successful commit operation.
 - The command runs without blocking your terminal
 - A confirmation message is displayed when the background process starts
 
+### pre-push
+
+This hook runs before pushing commits to a remote repository.
+
+**Current functionality:**
+- Runs ESLint (`pnpm lint`) to check for linting errors
+- Runs TypeScript type checking (`pnpm typecheck`) to verify types
+- Blocks the push if either check fails with an informative error message
+- Provides feedback on successful checks before pushing
+
 ## Adding New Hooks
 
 To add a new hook:

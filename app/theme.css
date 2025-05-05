@@ -26,7 +26,7 @@
    * They don't change between themes and are referenced by theme tokens.
    */
   --cobalt-base: #0047AB; /* Primary brand color */
-  --cobalt-light: #0051c4; /* Lighter variation of primary */
+  --cobalt-dark: #003d91; /* Darker variation for hover states */
   --chalk-base: #FAFAFA;  /* Light neutral - used for text/backgrounds */
   --ink-base: #121212;    /* Dark neutral - used for text/backgrounds */
   --purple-base: #b494e9; /* Accent color */
@@ -112,6 +112,7 @@
   
   /* Primary action colors (buttons, links, etc.) */
   --primary: var(--color-cobalt);       /* Primary button background */
+  --primary-hover: var(--cobalt-dark);  /* Primary button hover background */
   --primary-foreground: var(--color-chalk); /* Primary button text */
   
   /* Secondary UI element colors */
@@ -174,6 +175,7 @@
   
   /* Primary action colors (buttons, links, etc.) */
   --primary: var(--color-cobalt);       /* Primary button background */
+  --primary-hover: var(--cobalt-dark);  /* Primary button hover background */
   --primary-foreground: var(--color-chalk); /* Primary button text */
   
   /* Secondary UI element colors - lighter than dark theme */

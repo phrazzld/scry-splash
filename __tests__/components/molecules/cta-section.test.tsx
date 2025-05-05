@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { CTASection } from '@/components/molecules/cta-section';
+import { FORMSPARK } from '@/lib/constants';
 
 // Mock component interfaces
 interface ButtonProps {
@@ -23,6 +24,7 @@ interface BodyTextProps {
 
 interface InputProps {
   type?: string;
+  name?: string;
   placeholder?: string;
   'aria-label'?: string;
   value?: string;
@@ -90,10 +92,27 @@ jest.mock('@/components/ui/typography', () => ({
   ),
 }));
 
-// Mock the cn utility function
+// Mock the cn utility function and other dependencies
 jest.mock('@/lib/utils', () => ({
   cn: (...args: string[]) => args.filter(Boolean).join(' ')
 }));
+
+// Mock the constants
+jest.mock('@/lib/constants', () => ({
+  FORMSPARK: {
+    FORM_ID: 'test-form-id',
+    FORM_ACTION: 'https://submit-form.com/',
+    SUBMIT_URL: 'https://submit-form.com/test-form-id'
+  }
+}));
+
+// Mock fetch globally
+global.fetch = jest.fn(() => 
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ success: true })
+  } as unknown as Response)
+);
 
 describe('CTASection Component', () => {
   it('renders correctly with default props', () => {
@@ -103,6 +122,7 @@ describe('CTASection Component', () => {
     const input = screen.getByTestId('mock-input');
     expect(input).toBeInTheDocument();
     expect(input).toHaveAttribute('type', 'email');
+    expect(input).toHaveAttribute('name', 'email');
     expect(input).toHaveAttribute('placeholder', 'Your email address');
     expect(input).toHaveAttribute('aria-label', 'Enter your email address');
     expect(input).toHaveAttribute('required');
@@ -111,13 +131,17 @@ describe('CTASection Component', () => {
     const button = screen.getByTestId('mock-button');
     expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent('Get early access');
-    expect(button).toHaveAttribute('data-variant', 'gradient');
+    expect(button).toHaveAttribute('data-variant', 'cta'); // Now using cta variant by default
     expect(button).toHaveAttribute('data-size', 'default');
     expect(button).toHaveAttribute('data-type', 'submit');
     
     // Check form element exists
     const form = screen.getByRole('form');
     expect(form).toBeInTheDocument();
+    
+    // Check honeypot field exists
+    const honeypot = document.querySelector('input[name="_gotcha"]');
+    expect(honeypot).toBeInTheDocument();
     
     // Check microcopy renders
     const microcopy = screen.getByTestId('mock-body-text');
@@ -149,11 +173,10 @@ describe('CTASection Component', () => {
     expect(input).toHaveAttribute('type', customType);
   });
 
-  it('renders with custom button variant and size', () => {
-    render(<CTASection buttonVariant="outline" buttonSize="xl" />);
+  it('renders with custom button size', () => {
+    render(<CTASection buttonSize="xl" />);
     
     const button = screen.getByTestId('mock-button');
-    expect(button).toHaveAttribute('data-variant', 'outline');
     expect(button).toHaveAttribute('data-size', 'xl');
   });
 
@@ -181,9 +204,16 @@ describe('CTASection Component', () => {
     render(<CTASection onButtonClick={handleClick} />);
     
     const form = screen.getByRole('form');
+    const input = screen.getByTestId('mock-input');
+    
+    // Type in the input so the form is valid
+    fireEvent.change(input, { target: { value: 'test@example.com' } });
     
     // Submit the form
-    fireEvent.submit(form);
+    await fireEvent.submit(form);
+    
+    // Wait for the async submission to complete
+    await new Promise(resolve => setTimeout(resolve, 0));
     
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
@@ -262,5 +292,62 @@ describe('CTASection Component', () => {
     
     const container = screen.getByTestId('cta-section');
     expect(container).toHaveAttribute('data-custom', 'custom-attr');
+  });
+
+  it('uses default Formspark URL from constants', async () => {
+    const mockFetch = global.fetch as jest.Mock;
+    mockFetch.mockClear();
+
+    render(<CTASection />);
+    
+    const form = screen.getByRole('form');
+    const input = screen.getByTestId('mock-input');
+    
+    // Type in the input
+    fireEvent.change(input, { target: { value: 'test@example.com' } });
+    
+    // Submit the form
+    await fireEvent.submit(form);
+    
+    // Wait for the async submission to complete
+    await new Promise(resolve => setTimeout(resolve, 0));
+    
+    expect(mockFetch).toHaveBeenCalledWith(
+      FORMSPARK.SUBMIT_URL,
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }),
+        body: JSON.stringify({ email: 'test@example.com' })
+      })
+    );
+  });
+
+  it('uses custom formAction URL when provided', async () => {
+    const mockFetch = global.fetch as jest.Mock;
+    mockFetch.mockClear();
+    
+    const customFormAction = 'https://submit-form.com/custom-id';
+
+    render(<CTASection formAction={customFormAction} />);
+    
+    const form = screen.getByRole('form');
+    const input = screen.getByTestId('mock-input');
+    
+    // Type in the input
+    fireEvent.change(input, { target: { value: 'test@example.com' } });
+    
+    // Submit the form
+    await fireEvent.submit(form);
+    
+    // Wait for the async submission to complete
+    await new Promise(resolve => setTimeout(resolve, 0));
+    
+    expect(mockFetch).toHaveBeenCalledWith(
+      customFormAction,
+      expect.anything()
+    );
   });
 });
