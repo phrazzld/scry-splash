@@ -3,6 +3,7 @@
  * This file serves as the single source of truth for design tokens
  */
 
+// Design Tokens
 export const COLORS = {
   INK: "#121212", // Ink Black
   CHALK: "#FAFAFA", // Chalk White
@@ -25,4 +26,13 @@ export const FONT_WEIGHTS = {
 
 export const SPACING = {
   VERTICAL_LG: "10rem", // 160px (120pt) - for vertical margins
+};
+
+// API Constants
+export const FORMSPARK = {
+  FORM_ID: process.env.NEXT_PUBLIC_FORMSPARK_FORM_ID || "rq22voxgX",
+  FORM_ACTION: "https://submit-form.com/",
+  get SUBMIT_URL() {
+    return `${this.FORM_ACTION}${this.FORM_ID}`;
+  }
 };

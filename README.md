@@ -1,6 +1,6 @@
 # Scry Splash Page
 
-This is the landing page for Scry, built with Next.js and shadcn/ui components. The project uses a Storybook-driven approach following atomic design principles. It features a functional waitlist signup form that integrates with Waitlist.com's API.
+This is the landing page for Scry, built with Next.js and shadcn/ui components. The project uses a Storybook-driven approach following atomic design principles. It features a functional early access form that integrates with Formspark.
 
 ## Getting Started
 
@@ -58,15 +58,15 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Waitlist Integration
+## Formspark Integration
 
-This project integrates with [Waitlist.com](https://getwaitlist.com) for managing the early access waitlist. Configuration:
+This project uses [Formspark](https://formspark.io) for handling the early access form submissions. Configuration:
 
-1. Set the `WAITLIST_ID` environment variable with your Waitlist.com waitlist ID
-2. The waitlist form automatically submits to the Waitlist.com API
-3. Success and error states are handled in the UI
+1. Set the `NEXT_PUBLIC_FORMSPARK_FORM_ID` environment variable with your Formspark form ID
+2. The early access form submits directly to Formspark
+3. Success and error states are handled in the UI with honeypot spam protection
 
-For more information, see the Waitlist.com [API documentation](https://getwaitlist.com/docs).
+For more information, see the Formspark [documentation](https://documentation.formspark.io/).
 
 ## Deploy on Vercel
 

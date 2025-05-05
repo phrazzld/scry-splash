@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import { cn } from "@/lib/utils"
+import { FORMSPARK } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { BodyText } from "@/components/ui/typography"
@@ -78,6 +79,12 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
   microcopyColor?: string;
   
   /**
+   * Form action URL for Formspark
+   * @default "https://submit-form.com/rq22voxgX"
+   */
+  formAction?: string;
+  
+  /**
    * Optional class name for styling
    */
   className?: string;
@@ -91,6 +98,7 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
  * <CTASection /> // Default with preset text and email input
  * <CTASection buttonText="Subscribe" inputPlaceholder="Your email" /> // Custom text
  * <CTASection onFormSubmit={(email) => console.log(email)} /> // Handle form submission
+ * <CTASection formAction="https://submit-form.com/your-form-id" /> // Custom Formspark form
  * ```
  */
 export function CTASection({
@@ -106,6 +114,7 @@ export function CTASection({
   buttonAriaLabel,
   centered = false,
   microcopyColor = "text-foreground",
+  formAction = FORMSPARK.SUBMIT_URL,
   className,
   ...props
 }: CTASectionProps) {
@@ -128,24 +137,35 @@ export function CTASection({
     
     try {
       if (onFormSubmit) {
+        // If custom form submission handler is provided, use that
         await onFormSubmit(inputValue);
         setSubmitStatus("success");
         setInputValue(""); // Clear input on success
       } else {
-        // Default implementation - submit to internal API
-        const response = await fetch('/api/waitlist', {
+        // Default implementation - submit to Formspark
+        const response = await fetch(formAction, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
           },
           body: JSON.stringify({ email: inputValue }),
         });
         
-        const result = await response.json();
-        
+        // Check if response is ok (status in 200-299 range)
         if (!response.ok) {
+          let errorText = 'Something went wrong. Please try again.';
+          
+          // Try to get error details from response
+          try {
+            const errorData = await response.json();
+            errorText = errorData.error || errorText;
+          } catch (parseError) {
+            console.error("Error parsing error response:", parseError);
+          }
+          
           setSubmitStatus("error");
-          setErrorMessage(result.error || 'Something went wrong. Please try again.');
+          setErrorMessage(errorText);
         } else {
           setSubmitStatus("success");
           setInputValue(""); // Clear input on success
@@ -191,9 +211,20 @@ export function CTASection({
         )}
         role="form"
       >
+        {/* Honeypot field for spam protection - will be hidden via CSS */}
+        <div className="hidden" aria-hidden="true">
+          <input
+            type="text"
+            name="_gotcha"
+            tabIndex={-1}
+            autoComplete="off"
+          />
+        </div>
+        
         <div className="w-full">
           <Input
             type={inputType}
+            name="email"
             placeholder={inputPlaceholder}
             aria-label={inputAriaLabel}
             value={inputValue}
@@ -228,7 +259,7 @@ export function CTASection({
         <BodyText 
           className={cn("mt-4 text-green-600 dark:text-green-400")}
         >
-          Thank you! You have been added to our waitlist.
+          Thank you! Your email has been submitted successfully. We'll be in touch soon.
         </BodyText>
       )}
       
@@ -236,7 +267,7 @@ export function CTASection({
         <BodyText 
           className={cn("mt-4 text-red-600 dark:text-red-400")}
         >
-          {errorMessage || "Sorry, there was an error. Please try again."}
+          {errorMessage || "Sorry, there was an error submitting your email. Please try again."}
         </BodyText>
       )}
       
