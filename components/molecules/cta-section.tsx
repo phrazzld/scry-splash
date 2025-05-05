@@ -20,11 +20,7 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   microcopy?: string;
   
-  /**
-   * Button variant
-   * @default "gradient"
-   */
-  buttonVariant?: "default" | "cta" | "gradient" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  // Note: buttonVariant has been removed as we now use direct styling via className
   
   /**
    * Button size
@@ -104,7 +100,6 @@ export interface CTASectionProps extends React.HTMLAttributes<HTMLDivElement> {
 export function CTASection({
   buttonText = "Get early access",
   microcopy = "Beta invites roll out weekly.",
-  buttonVariant = "gradient",
   buttonSize = "default", // Custom styling will be applied in the JSX
   inputPlaceholder = "Your email address",
   inputType = "email",
