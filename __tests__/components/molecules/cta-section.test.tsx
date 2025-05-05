@@ -131,7 +131,7 @@ describe('CTASection Component', () => {
     const button = screen.getByTestId('mock-button');
     expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent('Get early access');
-    expect(button).toHaveAttribute('data-variant', 'gradient');
+    expect(button).toHaveAttribute('data-variant', 'cta'); // Now using cta variant by default
     expect(button).toHaveAttribute('data-size', 'default');
     expect(button).toHaveAttribute('data-type', 'submit');
     
@@ -173,11 +173,10 @@ describe('CTASection Component', () => {
     expect(input).toHaveAttribute('type', customType);
   });
 
-  it('renders with custom button variant and size', () => {
-    render(<CTASection buttonVariant="outline" buttonSize="xl" />);
+  it('renders with custom button size', () => {
+    render(<CTASection buttonSize="xl" />);
     
     const button = screen.getByTestId('mock-button');
-    expect(button).toHaveAttribute('data-variant', 'outline');
     expect(button).toHaveAttribute('data-size', 'xl');
   });
 

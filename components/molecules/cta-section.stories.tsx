@@ -18,11 +18,6 @@ const meta: Meta<typeof CTASection> = {
       control: "text",
       description: "Microcopy text displayed below the form",
     },
-    buttonVariant: {
-      control: "select",
-      options: ["default", "cta", "gradient", "destructive", "outline", "secondary", "ghost", "link"],
-      description: "Button variant style",
-    },
     buttonSize: {
       control: "select",
       options: ["default", "sm", "md", "lg", "xl", "icon"],
@@ -79,7 +74,6 @@ export const Default: Story = {
     buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
     inputPlaceholder: "Your email address",
-    buttonVariant: "gradient",
     buttonSize: "default",
     centered: false, // Left-aligned in production
     microcopyColor: "text-foreground" // Theme-aware color in production
@@ -91,13 +85,12 @@ export const Default: Story = {
   )],
 }
 
-// Different button variant (outline)
-export const OutlineVariant: Story = {
+// Centered layout with large button
+export const CenteredLayout: Story = {
   args: {
     buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
     inputPlaceholder: "Your email address",
-    buttonVariant: "outline",
     buttonSize: "lg",
     centered: true,
     microcopyColor: "text-chalk",
@@ -111,7 +104,6 @@ export const CustomPlaceholder: Story = {
     buttonText: "Join waitlist",
     microcopy: "We'll notify you when Scry is ready",
     inputPlaceholder: "Enter your email to join waitlist",
-    buttonVariant: "cta",
     buttonSize: "lg",
     centered: true,
     microcopyColor: "text-chalk",
@@ -125,7 +117,6 @@ export const AlternativeContent: Story = {
     buttonText: "Request access",
     microcopy: "Get notified when we launch",
     inputPlaceholder: "Email address",
-    buttonVariant: "cta",
     buttonSize: "lg",
     centered: true,
     microcopyColor: "text-chalk",
@@ -139,7 +130,6 @@ export const SecondaryButton: Story = {
     buttonText: "Join beta",
     microcopy: "See how Scry works",
     inputPlaceholder: "Enter your email",
-    buttonVariant: "secondary",
     buttonSize: "lg",
     centered: true,
     microcopyColor: "text-chalk",
@@ -153,7 +143,6 @@ export const LeftAlignedLarge: Story = {
     buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
     inputPlaceholder: "Your email address",
-    buttonVariant: "gradient",
     buttonSize: "lg",
     centered: false,
     microcopyColor: "text-foreground",
@@ -167,7 +156,6 @@ export const NoMicrocopy: Story = {
     buttonText: "Join now",
     microcopy: "",
     inputPlaceholder: "Your email address",
-    buttonVariant: "cta",
     buttonSize: "lg",
     centered: true,
   },
@@ -180,7 +168,6 @@ export const AlternativeColorScheme: Story = {
     buttonText: "Subscribe",
     microcopy: "Stay updated on our progress",
     inputPlaceholder: "Your email address",
-    buttonVariant: "secondary",
     buttonSize: "lg",
     centered: true,
     microcopyColor: "text-chalk",
@@ -198,7 +185,6 @@ export const MobileStacked: Story = {
     buttonText: "Get early access",
     microcopy: "Beta invites roll out weekly.",
     inputPlaceholder: "Your email address",
-    buttonVariant: "gradient",
     buttonSize: "lg",
     centered: true,
     microcopyColor: "text-chalk",
