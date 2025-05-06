@@ -138,6 +138,16 @@ body {
   opacity: 0;
 }
 
+@keyframes subtlePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.animate-subtle-pulse {
+  animation: subtlePulse 1.5s ease-in-out infinite;
+}
+
 /* Input placeholder styles - explicitly set for both themes */
 ::placeholder {
   color: rgba(250, 250, 250, 0.8) !important; /* Light color for dark mode - increased opacity for better contrast */

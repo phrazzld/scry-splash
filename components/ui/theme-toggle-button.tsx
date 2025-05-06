@@ -37,6 +37,8 @@ export interface ThemeToggleButtonProps extends React.ButtonHTMLAttributes<HTMLB
  */
 export function ThemeToggleButton({ className, ...props }: ThemeToggleButtonProps) {
   const { theme, systemTheme, setTheme } = useTheme()
+  const [isPressed, setIsPressed] = React.useState(false)
+  const [isHovered, setIsHovered] = React.useState(false)
   
   // Determine the current theme (accounting for system setting)
   const currentTheme = theme === "system" ? systemTheme : theme
@@ -47,26 +49,75 @@ export function ThemeToggleButton({ className, ...props }: ThemeToggleButtonProp
     setTheme(currentTheme === "dark" ? "light" : "dark")
   }
   
+  // Handle mouse/touch events for the press effect
+  const handlePointerDown = () => setIsPressed(true)
+  const handlePointerUp = () => setIsPressed(false)
+  const handlePointerLeave = () => {
+    setIsPressed(false)
+    setIsHovered(false)
+  }
+  
+  // Handle hover states
+  const handleMouseEnter = () => setIsHovered(true)
+  const handleMouseLeave = () => setIsHovered(false)
+  
+  // Remove press state if user navigates away or cancels
+  React.useEffect(() => {
+    const handleBlur = () => setIsPressed(false)
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsPressed(false)
+    }
+    
+    window.addEventListener('blur', handleBlur)
+    window.addEventListener('keyup', handleKeyUp)
+    
+    return () => {
+      window.removeEventListener('blur', handleBlur)
+      window.removeEventListener('keyup', handleKeyUp)
+    }
+  }, [])
+  
   return (
     <button
       onClick={toggleTheme}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerLeave}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className={cn(
-        "inline-flex items-center justify-center rounded-md p-2.5 text-sm font-medium transition-colors",
+        "inline-flex items-center justify-center rounded-md p-2.5 text-sm font-medium",
         "bg-background hover:bg-accent hover:text-accent-foreground",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "transition-all duration-[var(--theme-toggle-duration)] [transition-timing-function:var(--theme-toggle-timing)]",
+        isPressed 
+          ? "scale-[var(--theme-toggle-scale-press)]" 
+          : isHovered 
+            ? "scale-[var(--theme-toggle-scale-expand)]" 
+            : "scale-100",
         className
       )}
       aria-label={currentTheme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
       type="button"
       {...props}
     >
-      {/* Sun icon (shown in dark mode) */}
-      {currentTheme === "dark" && (
+      {/* Container div for both icons with positioning */}
+      <div className={cn(
+        "relative w-5 h-5",
+        "transition-transform duration-[var(--theme-toggle-duration)] [transition-timing-function:var(--theme-toggle-timing)]",
+        isHovered && !isPressed ? "animate-subtle-pulse" : ""
+      )}>
+        {/* Sun icon (shown in dark mode) */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="h-5 w-5"
+          className={cn(
+            "absolute inset-0 h-5 w-5 transition-all",
+            "transform-gpu scale-100 rotate-0",
+            "duration-[var(--theme-toggle-duration)] [transition-timing-function:var(--theme-toggle-timing)]",
+            currentTheme === "dark" ? "opacity-100" : "opacity-0 rotate-[var(--theme-toggle-rotation)]"
+          )}
         >
           <path
             fillRule="evenodd"
@@ -74,21 +125,24 @@ export function ThemeToggleButton({ className, ...props }: ThemeToggleButtonProp
             clipRule="evenodd"
           />
         </svg>
-      )}
-      
-      {/* Moon icon (shown in light mode) */}
-      {currentTheme === "light" && (
+        
+        {/* Moon icon (shown in light mode) */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="h-5 w-5"
+          className={cn(
+            "absolute inset-0 h-5 w-5 transition-all",
+            "transform-gpu scale-100 rotate-0",
+            "duration-[var(--theme-toggle-duration)] [transition-timing-function:var(--theme-toggle-timing)]",
+            currentTheme === "light" ? "opacity-100" : "opacity-0 rotate-[calc(var(--theme-toggle-rotation)*-1)]"
+          )}
         >
           <path
             d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
           />
         </svg>
-      )}
+      </div>
     </button>
   )
 }

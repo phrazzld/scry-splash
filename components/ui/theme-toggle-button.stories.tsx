@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ThemeToggleButton } from './theme-toggle-button';
 import { ThemeProvider } from './theme-provider';
@@ -199,6 +200,65 @@ export const ThemeComparison: Story = {
       modes: {
         dark: { theme: 'dark' },
         light: { theme: 'light' }
+      }
+    }
+  }
+};
+
+/**
+ * Animated demonstration showcasing all interactions
+ */
+export const AnimatedDemo: Story = {
+  render: function AnimatedDemoRender() {
+    const [isAnimating, setIsAnimating] = React.useState(false);
+    const [currentTheme, setCurrentTheme] = React.useState<"light" | "dark">("light");
+    
+    // Toggle theme and trigger animation sequence
+    const handleDemoClick = () => {
+      if (isAnimating) return;
+      
+      setIsAnimating(true);
+      
+      // Schedule animations with appropriate timing
+      setTimeout(() => {
+        setCurrentTheme(currentTheme === "light" ? "dark" : "light");
+        
+        setTimeout(() => {
+          setIsAnimating(false);
+        }, 1500); // Allow time for the toggle animation to complete
+      }, 1000); // Delay before triggering the theme change
+    };
+    
+    return (
+      <div className="p-8 border border-border rounded-lg bg-background flex flex-col items-center gap-6">
+        <h3 className="text-lg font-semibold">Interactive Demo</h3>
+        
+        <div className="flex justify-center rounded-md bg-background p-4">
+          <ThemeProvider defaultTheme={currentTheme} storageKey="theme-demo" enableSystem={false}>
+            <ThemeToggleButton />
+          </ThemeProvider>
+        </div>
+        
+        <div className="flex flex-col items-center gap-2">
+          <button
+            onClick={handleDemoClick}
+            disabled={isAnimating}
+            className="px-4 py-2 rounded bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+          >
+            {isAnimating ? "Animating..." : "Toggle Theme Animation"}
+          </button>
+          <p className="text-sm text-center text-muted-foreground max-w-md">
+            Click the button to see a full animation cycle of the theme toggle button. Watch for the smooth transition, icon rotation, and scaling effects.
+          </p>
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        story: "This story demonstrates the complete animation sequence of the ThemeToggleButton component, including hover, press, and theme change animations."
       }
     }
   }
