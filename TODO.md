@@ -44,7 +44,7 @@ This document breaks down the implementation of strict TypeScript configuration 
     2. Run existing unit tests for affected utilities.
   - **Depends‑on:** [T001], [T002]
 
-- [ ] **T004 · Feature · P0: Fix type errors in foundational UI components (components/ui/)**
+- [x] **T004 · Feature · P0: Fix type errors in foundational UI components (components/ui/)**
   - **Context:** PLAN.md > Detailed Build Steps > Step 4, Phase 1
   - **Action:**
     1. Identify all type errors in `components/ui/`.

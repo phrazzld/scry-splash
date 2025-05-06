@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ThemeToggleButton } from './theme-toggle-button';
@@ -49,9 +48,9 @@ const meta = {
   },
   // ThemeProvider is necessary to supply the theme context
   decorators: [
-    (Story) => (
+    (StoryComponent) => (
       <div className="flex flex-col items-center gap-8">
-        <Story />
+        <StoryComponent />
       </div>
     )
   ]
@@ -69,10 +68,10 @@ export const InDarkMode: Story = {
     backgrounds: { default: 'dark' },
   },
   decorators: [
-    (Story) => (
+    (StoryComponent) => (
       <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
         <div className="p-8 bg-background text-foreground rounded-lg flex justify-center items-center">
-          <Story />
+          <StoryComponent />
         </div>
       </ThemeProvider>
     )
@@ -88,10 +87,10 @@ export const InLightMode: Story = {
     backgrounds: { default: 'light' },
   },
   decorators: [
-    (Story) => (
+    (StoryComponent) => (
       <ThemeProvider defaultTheme="light" storageKey="storybook-theme" enableSystem={false}>
         <div className="p-8 bg-background text-foreground rounded-lg flex justify-center items-center">
-          <Story />
+          <StoryComponent />
         </div>
       </ThemeProvider>
     )
@@ -103,11 +102,11 @@ export const InLightMode: Story = {
  */
 export const InHeader: Story = {
   decorators: [
-    (Story) => (
+    (StoryComponent) => (
       <ThemeProvider defaultTheme="light" storageKey="storybook-theme" enableSystem={false}>
         <div className="w-full max-w-3xl p-4 bg-background border-b border-border flex justify-between items-center">
           <div className="text-xl font-bold">Scry</div>
-          <Story />
+          <StoryComponent />
         </div>
       </ThemeProvider>
     )
@@ -119,13 +118,13 @@ export const InHeader: Story = {
  */
 export const InFooter: Story = {
   decorators: [
-    (Story) => (
+    (StoryComponent) => (
       <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
         <div className="w-full max-w-3xl p-6 bg-background border-t border-border flex justify-between items-center">
           <div className="text-sm opacity-70">© 2025 Scry</div>
           <div className="flex items-center gap-4">
             <span className="text-sm">Theme</span>
-            <Story />
+            <StoryComponent />
           </div>
         </div>
       </ThemeProvider>
@@ -137,30 +136,28 @@ export const InFooter: Story = {
  * Demonstrates button interaction states.
  */
 export const InteractionStates: Story = {
-  decorators: [
-    (Story) => (
-      <ThemeProvider defaultTheme="light" storageKey="storybook-theme" enableSystem={false}>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 p-8 bg-background text-foreground rounded-lg">
-          <div className="flex flex-col items-center">
-            <ThemeToggleButton />
-            <span className="mt-2 text-sm">Normal</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <ThemeToggleButton className="hover:bg-accent" />
-            <span className="mt-2 text-sm">Hover</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <ThemeToggleButton className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" />
-            <span className="mt-2 text-sm">Focus</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <ThemeToggleButton disabled />
-            <span className="mt-2 text-sm">Disabled</span>
-          </div>
+  render: () => (
+    <ThemeProvider defaultTheme="light" storageKey="storybook-theme" enableSystem={false}>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 p-8 bg-background text-foreground rounded-lg">
+        <div className="flex flex-col items-center">
+          <ThemeToggleButton />
+          <span className="mt-2 text-sm">Normal</span>
         </div>
-      </ThemeProvider>
-    )
-  ]
+        <div className="flex flex-col items-center">
+          <ThemeToggleButton className="hover:bg-accent" />
+          <span className="mt-2 text-sm">Hover</span>
+        </div>
+        <div className="flex flex-col items-center">
+          <ThemeToggleButton className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" />
+          <span className="mt-2 text-sm">Focus</span>
+        </div>
+        <div className="flex flex-col items-center">
+          <ThemeToggleButton disabled />
+          <span className="mt-2 text-sm">Disabled</span>
+        </div>
+      </div>
+    </ThemeProvider>
+  )
 };
 
 /**

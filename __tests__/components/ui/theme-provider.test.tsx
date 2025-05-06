@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act, renderHook } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { ThemeProvider, useTheme } from '@/components/ui/theme-provider';
@@ -42,7 +42,7 @@ beforeEach(() => {
   // Mock window.matchMedia
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockImplementation(query => {
+    value: jest.fn().mockImplementation(() => {
       return mockMediaQueryList;
     }),
   });
