@@ -1,5 +1,7 @@
 # Project Backlog
 
+- enable light/dark mode toggle. simple, clean, elegant, subtle. just sun/moon icon, probably upper right corner or cleanly in the footer. mode should default to system, but be toggleable with this button. and fix the current issue where the page will often load under, say, dark theme but then see that the system theme is light and switch to light theme -- that determination of what theme to use should happen before the page loads
+
 ## Critical Issues (P0)
 
 - [ ] **TS-001:** Enable strict TypeScript configuration

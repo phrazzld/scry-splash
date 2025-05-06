@@ -95,7 +95,7 @@
         1. Run E2E tests and verify they pass.
     - **Depends‑on:** [T005]
 
-- [ ] **T007 · Chore · P2: Clean up and document**
+- [x] **T007 · Chore · P2: Clean up and document**
     - **Context:** Phase 2, Step 7 in PLAN.md
     - **Action:**
         1. Remove any legacy theme toggle components if they exist.

@@ -41,6 +41,7 @@ The architecture follows a layered approach:
 ThemeProvider
 ├── useTheme Hook
 ├── ThemeScript (Anti-FOUC)
+├── ThemeToggleButton
 └── Theme CSS Variables
     ├── Base Tokens
     ├── Color Tokens
@@ -107,6 +108,29 @@ The `ThemeScript` component in `/components/ui/theme-script.tsx` prevents flash 
   />
 </head>
 ```
+
+### ThemeToggleButton Component
+
+The `ThemeToggleButton` component in `/components/ui/theme-toggle-button.tsx` provides a simple, accessible toggle button for users to switch between dark and light themes:
+
+- Displays a sun icon in dark mode (indicates a switch to light theme)
+- Displays a moon icon in light mode (indicates a switch to dark theme)
+- Fully accessible with proper ARIA attributes
+- Seamlessly integrates with the ThemeProvider context
+- Includes keyboard navigation support
+
+```tsx
+// Basic usage
+<ThemeToggleButton />
+
+// With custom class
+<ThemeToggleButton className="absolute top-4 right-4" />
+
+// Integrated in footer
+<Footer showThemeToggle={true} />
+```
+
+The ThemeToggleButton component accepts all standard button HTML attributes along with a className prop for custom styling. It automatically updates the theme when clicked and updates its appearance based on the current theme.
 
 ### CSS Variables
 
@@ -230,24 +254,9 @@ To add a new theme variant (e.g., "high-contrast"):
    type Theme = "dark" | "light" | "system" | "high-contrast";
    ```
 
-3. Update related components (ThemeSwitch, etc.)
+3. Update related components (ThemeToggleButton, etc.)
 
 ## Development Tools
-
-### ThemeSwitch Component
-
-The `ThemeSwitch` component provides a UI for manually switching themes during development:
-
-```tsx
-// Add to your page component
-<ThemeSwitch />
-```
-
-Feature flag it for production with:
-
-```tsx
-{process.env.NODE_ENV === "development" && <ThemeSwitch />}
-```
 
 ### ThemeDebug Component
 
@@ -271,29 +280,60 @@ The theme system includes:
 ### E2E Tests
 
 E2E tests in `/e2e/theme/` verify:
-- System theme detection
+
+- System theme detection 
 - Theme switching
 - Theme persistence
 - Anti-FOUC protection
 - Visual appearance
+- ThemeToggleButton functionality
+
+The ThemeToggleButton tests in `/e2e/theme/theme-toggle.spec.ts` specifically verify:
+
+- Button visibility in the footer
+- Proper icon rendering based on theme state
+- Theme toggling functionality when clicked
+- Keyboard accessibility
+- Theme persistence between page reloads
+- System theme preference override
 
 Run with:
 ```bash
 pnpm e2e
 ```
 
+Run specific tests with:
+```bash
+pnpm e2e e2e/theme/theme-toggle.spec.ts
+```
+
 ### Unit Tests
 
-Unit tests in `/__tests__/components/ui/theme-provider.test.tsx` verify:
+Unit tests for the theme system are split across multiple files:
+
+**Theme Provider Tests** in `/__tests__/components/ui/theme-provider.test.tsx` verify:
 - Theme provider initialization
 - Theme state management
 - System theme detection
 - DOM manipulations
 - Theme hook behavior
 
-Run with:
+**ThemeToggleButton Tests** in `/__tests__/components/ui/theme-toggle-button.test.tsx` verify:
+- Correct rendering based on theme state
+- Theme toggling functionality
+- Accessibility attributes
+- Proper class application
+- Event handling
+
+Run all theme-related tests with:
+```bash
+pnpm test __tests__/components/ui
+```
+
+Or run specific component tests:
 ```bash
 pnpm test __tests__/components/ui/theme-provider.test.tsx
+pnpm test __tests__/components/ui/theme-toggle-button.test.tsx
 ```
 
 ## References
