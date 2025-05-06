@@ -80,7 +80,7 @@
         2. Manual testing of toggle functionality.
     - **Depends‑on:** [T001]
 
-- [ ] **T006 · Test · P1: Add or update E2E tests for theme toggling**
+- [x] **T006 · Test · P1: Add or update E2E tests for theme toggling**
     - **Context:** Phase 2, Step 6 in PLAN.md
     - **Action:**
         1. Create or update E2E tests in `e2e/theme/` directory.
