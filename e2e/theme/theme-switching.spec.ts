@@ -52,7 +52,7 @@ test.describe('Theme Switching (via localStorage)', () => {
     expect(localStorageTheme).toBe('dark');
   });
   
-  test('should apply system theme when set in localStorage', async ({ page, browser }) => {
+  test('should apply system theme when set in localStorage', async ({ page }) => {
     // Create a context with known color scheme
     await page.context().clearCookies();
     

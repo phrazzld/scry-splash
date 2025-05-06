@@ -47,7 +47,7 @@ jest.mock('react', () => {
   return {
     ...originalReact,
     // Mock useState to return fixed values
-    useState: (initialValue: any) => {
+    useState: (_: any) => {
       // Different state values for different calls
       const state = [
         ["", () => {}],           // displayText
@@ -59,7 +59,7 @@ jest.mock('react', () => {
       return state;
     },
     // Mock useEffect to do nothing
-    useEffect: (callback: () => void, deps: any[]) => {
+    useEffect: (_: () => void) => {
       // Don't actually run the effect in tests
       return;
     }
