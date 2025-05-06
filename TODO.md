@@ -4,7 +4,7 @@ This document breaks down the implementation of strict TypeScript configuration 
 
 ## TypeScript Configuration
 
-- [ ] **T001 · Feature · P0: Harden root tsconfig.json with all strict flags**
+- [x] **T001 · Feature · P0: Harden root tsconfig.json with all strict flags**
   - **Context:** PLAN.md > Detailed Build Steps > Step 1
   - **Action:**
     1. Edit `tsconfig.json` to ensure `"strict": true` is set and all individual strictness flags from DEVELOPMENT_PHILOSOPHY_APPENDIX_TYPESCRIPT.md are present and enabled.
