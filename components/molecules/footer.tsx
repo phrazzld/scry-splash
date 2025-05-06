@@ -4,6 +4,7 @@ import React from "react"
 import { cn } from "@/lib/utils"
 import { Container, GridItem } from "@/components/ui/container"
 import { BodyText } from "@/components/ui/typography"
+import { ThemeToggleButton } from "@/components/ui/theme-toggle-button"
 
 export interface FooterProps extends React.HTMLAttributes<HTMLElement> {
   /**
@@ -25,6 +26,12 @@ export interface FooterProps extends React.HTMLAttributes<HTMLElement> {
   centered?: boolean
   
   /**
+   * Whether to show the theme toggle button
+   * @default true
+   */
+  showThemeToggle?: boolean
+  
+  /**
    * Additional classes for the footer container
    */
   className?: string
@@ -44,6 +51,7 @@ export function Footer({
   projectText = "a misty step project",
   textColor = "text-foreground/40",
   centered = false,
+  showThemeToggle = true,
   className,
   ...props
 }: FooterProps) {
@@ -60,8 +68,10 @@ export function Footer({
         md={10} 
         lg={8} 
         className={cn(
-          "flex flex-col px-6",
-          centered && "items-center text-center"
+          "px-6",
+          centered 
+            ? "flex flex-col items-center text-center" 
+            : "flex flex-row justify-between items-center"
         )}
       >
         <BodyText 
@@ -70,6 +80,19 @@ export function Footer({
         >
           {projectText}
         </BodyText>
+        
+        {showThemeToggle && (
+          <div className={cn(
+            centered ? "mt-4" : ""
+          )}>
+            <ThemeToggleButton 
+              className={cn(
+                "text-foreground/50 hover:text-foreground transition-colors",
+                "bg-transparent hover:bg-transparent"
+              )} 
+            />
+          </div>
+        )}
       </GridItem>
     </Container>
   )

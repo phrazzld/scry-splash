@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import { Footer } from "./footer"
 import { NoiseBackground } from "@/components/ui/noise-background"
+import { ThemeProvider } from "@/components/ui/theme-provider"
 
 const meta: Meta<typeof Footer> = {
   title: "Molecules/Footer",
@@ -22,6 +23,10 @@ const meta: Meta<typeof Footer> = {
       control: "boolean",
       description: "Whether to center the content",
     },
+    showThemeToggle: {
+      control: "boolean",
+      description: "Whether to show the theme toggle button",
+    },
   },
 }
 
@@ -37,9 +42,11 @@ export const Default: Story = {
   },
   decorators: [
     (Story) => (
-      <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
-        <Story />
-      </NoiseBackground>
+      <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
+        <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
+          <Story />
+        </NoiseBackground>
+      </ThemeProvider>
     ),
   ],
 }
@@ -53,9 +60,11 @@ export const Centered: Story = {
   },
   decorators: [
     (Story) => (
-      <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
-        <Story />
-      </NoiseBackground>
+      <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
+        <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
+          <Story />
+        </NoiseBackground>
+      </ThemeProvider>
     ),
   ],
 }
@@ -69,9 +78,11 @@ export const CustomText: Story = {
   },
   decorators: [
     (Story) => (
-      <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
-        <Story />
-      </NoiseBackground>
+      <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
+        <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
+          <Story />
+        </NoiseBackground>
+      </ThemeProvider>
     ),
   ],
 }
@@ -85,9 +96,63 @@ export const AlternateColors: Story = {
   },
   decorators: [
     (Story) => (
-      <NoiseBackground baseColor="var(--color-chalk)" className="min-h-[100px]">
-        <Story />
-      </NoiseBackground>
+      <ThemeProvider defaultTheme="light" storageKey="storybook-theme" enableSystem={false}>
+        <NoiseBackground baseColor="var(--color-chalk)" className="min-h-[100px]">
+          <Story />
+        </NoiseBackground>
+      </ThemeProvider>
     ),
   ],
+}
+
+// Set up for testing theme toggle interactions
+export const ThemeToggleInteraction: Story = {
+  args: {
+    projectText: "a misty step project",
+    textColor: "text-foreground/40",
+    centered: false,
+    showThemeToggle: true,
+  },
+  decorators: [
+    (Story) => (
+      <ThemeProvider defaultTheme="system" storageKey="storybook-theme" enableSystem={true}>
+        <div className="bg-background text-foreground min-h-[100px]">
+          <Story />
+        </div>
+      </ThemeProvider>
+    ),
+  ],
+  parameters: {
+    docs: {
+      description: {
+        story: 'This story demonstrates the theme toggle button in the footer with system preference detection. Try clicking the theme toggle button to switch between light and dark modes.',
+      },
+    },
+  },
+}
+
+// Footer without theme toggle
+export const WithoutThemeToggle: Story = {
+  args: {
+    projectText: "a misty step project",
+    textColor: "text-foreground/40",
+    centered: false,
+    showThemeToggle: false,
+  },
+  decorators: [
+    (Story) => (
+      <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
+        <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
+          <Story />
+        </NoiseBackground>
+      </ThemeProvider>
+    ),
+  ],
+  parameters: {
+    docs: {
+      description: {
+        story: 'This story shows the footer without the theme toggle button.',
+      },
+    },
+  },
 }

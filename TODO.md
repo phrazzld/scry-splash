@@ -65,7 +65,7 @@
         2. Test with different stored preferences and system settings.
     - **Depends‑on:** none
 
-- [ ] **T005 · Feature · P1: Integrate ThemeToggleButton into footer or designated location**
+- [x] **T005 · Feature · P1: Integrate ThemeToggleButton into footer or designated location**
     - **Context:** Phase 2, Step 5 in PLAN.md
     - **Action:**
         1. Add `<ThemeToggleButton />` to footer component or other agreed location.
