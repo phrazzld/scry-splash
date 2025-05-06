@@ -108,13 +108,3 @@
         1. Review documentation for accuracy.
     - **Depends‑on:** [T006]
 
-## Open Questions
-- [ ] **Issue: Confirm placement of ThemeToggleButton**
-    - **Context:** Open Questions in PLAN.md
-    - **Resolution needed:** Decide between footer, header, or other location.
-    - **Blocking?:** Yes, for [T005]
-
-- [ ] **Issue: Verify accessibility requirements**
-    - **Context:** Open Questions in PLAN.md
-    - **Resolution needed:** Confirm if there are specific accessibility requirements beyond WCAG AA.
-    - **Blocking?:** No (proceed with WCAG AA compliance)
