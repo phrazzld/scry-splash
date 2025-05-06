@@ -98,7 +98,7 @@ This document breaks down the implementation of strict TypeScript configuration 
 
 ## Mocking Policy Violations Documentation
 
-- [ ] **T008 · Chore · P1: Document and flag all internal mocking policy violations found during type fixing**
+- [x] **T008 · Chore · P1: Document and flag all internal mocking policy violations found during type fixing**
   - **Context:** PLAN.md > Detailed Build Steps > Step 5; Testing Strategy
   - **Action:**
     1. While remediating test type errors, note all instances where tests mock internal modules/components (not external boundaries).
