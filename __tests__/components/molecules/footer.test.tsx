@@ -91,8 +91,9 @@ describe('Footer Component', () => {
     const { rerender } = render(<Footer centered={false} />);
     
     const gridItem = screen.getByTestId('mock-grid-item');
-    expect(gridItem.className).not.toContain('items-center');
-    expect(gridItem.className).not.toContain('text-center');
+    // Check that with centered=false, we use flex-row and justify-between
+    expect(gridItem.className).toContain('flex-row');
+    expect(gridItem.className).toContain('justify-between');
     
     // Rerender with centered=true
     rerender(<Footer centered={true} />);
@@ -100,6 +101,7 @@ describe('Footer Component', () => {
     const updatedGridItem = screen.getByTestId('mock-grid-item');
     expect(updatedGridItem.className).toContain('items-center');
     expect(updatedGridItem.className).toContain('text-center');
+    expect(updatedGridItem.className).toContain('flex-col');
   });
 
   it('applies custom text color', () => {

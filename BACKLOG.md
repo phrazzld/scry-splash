@@ -1,5 +1,10 @@
 # Project Backlog
 
+- stop skipping chromatic in ci
+- better set of "remember x / y / z" copy
+- have the typewriter cursor blink a couple times once it gets to "remember everything" before ending the cursor / typewriter animation (instead of current behavior, which is the cursor / typewriter animation just ends the moment "remember everything" gets typed out)
+- smoother cleaner more simple more elegant focus state for email address text input
+
 ## Critical Issues (P0)
 
 - [ ] **TS-001:** Enable strict TypeScript configuration

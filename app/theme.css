@@ -59,8 +59,25 @@
    * Animation settings
    * Consistent timing for animations
    */
-  --animation-fade-duration: 200ms;  /* Standard fade duration */
-  --animation-fade-timing: ease-out; /* Standard easing function */
+  --animation-fade-duration: 200ms;    /* Standard fade duration */
+  --animation-fade-timing: ease-out;   /* Standard easing function */
+  
+  /* Theme toggle specific animations */
+  --theme-toggle-duration: 250ms;      /* Slightly longer for toggle animation */
+  --theme-toggle-timing: cubic-bezier(0.22, 1, 0.36, 1); /* Smooth spring-like effect */
+  --theme-toggle-rotation: 45deg;      /* Rotation amount for icon transition */
+  --theme-toggle-scale-press: 0.85;    /* Scale factor when pressing button */
+  --theme-toggle-scale-expand: 1.1;    /* Scale factor for expansion phase */
+  
+  /* Reduced motion variants of the animation variables */
+  @media (prefers-reduced-motion: reduce) {
+    --animation-fade-duration: 50ms;
+    --theme-toggle-duration: 100ms;
+    --theme-toggle-timing: ease;
+    --theme-toggle-rotation: 0deg;
+    --theme-toggle-scale-press: 0.95;
+    --theme-toggle-scale-expand: 1.05;
+  }
   
   /* 
    * Focus and accessibility styles
