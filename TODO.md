@@ -19,7 +19,7 @@
         2. Keyboard navigation testing.
     - **Depends‑on:** none
 
-- [ ] **T002 · Test · P1: Add Storybook stories for ThemeToggleButton**
+- [x] **T002 · Test · P1: Add Storybook stories for ThemeToggleButton**
     - **Context:** Phase 1, Step 2 in PLAN.md
     - **Action:**
         1. Create `components/ui/theme-toggle-button.stories.tsx` file.
