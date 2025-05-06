@@ -24,20 +24,78 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Critical anti-FOUC styles to prevent page flash while the theme script executes */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              /* Hide content until theme is applied */
+              html:not(.light):not(.dark) body { 
+                opacity: 0; 
+                visibility: hidden; 
+              }
+            `
+          }}
+        />
+
+        {/* 
+          ThemeScript is placed immediately after the critical CSS to ensure it runs
+          as early as possible in the page lifecycle, preventing FOUC
+        */}
         <ThemeScript 
           defaultTheme="system"
           storageKey="scry-ui-theme"
           attribute="class"
         />
+        
+        {/* Add a preload mechanism to minimize FOUC */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              /* Remove transitions during initial page load for instant theme application */
+              .prevent-transition * { 
+                transition: none !important; 
+              }
+              
+              /* Show content once a theme class is applied */
+              html.light body, 
+              html.dark body { 
+                opacity: 1; 
+                visibility: visible; 
+              }
+              
+              /* Smoothly fade theme changes after initial load */
+              @media (prefers-reduced-motion: no-preference) {
+                body:not(.prevent-transition) {
+                  transition: background-color 0.3s ease, color 0.3s ease;
+                }
+              }
+            `
+          }}
+        />
       </head>
-      <body className={`${geistMono.variable} bg-background text-foreground`}>
+      <body className={`${geistMono.variable} bg-background text-foreground prevent-transition`}>
         <ThemeProvider 
           defaultTheme="system"
           attribute="class"
           enableSystem={true}
+          storageKey="scry-ui-theme" /* Ensure the same storageKey is used */
         >
           {children}
         </ThemeProvider>
+        
+        {/* Remove transition prevention after initial load */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            // Wait for first contentful paint to remove transition prevention
+            if ('requestAnimationFrame' in window) {
+              window.requestAnimationFrame(function() {
+                setTimeout(function() {
+                  document.body.classList.remove('prevent-transition');
+                }, 0);
+              });
+            }
+          })();
+        `}} />
       </body>
     </html>
   );

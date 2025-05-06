@@ -51,7 +51,7 @@
     - **Depends‑on:** [T001]
 
 ## Integration & Verification
-- [ ] **T004 · Bugfix · P0: Verify and fix any anti-FOUC issues**
+- [x] **T004 · Bugfix · P0: Verify and fix any anti-FOUC issues**
     - **Context:** Phase 2, Step 4 in PLAN.md
     - **Action:**
         1. Review `ThemeScript` implementation in `app/layout.tsx`.
