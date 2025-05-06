@@ -7,7 +7,8 @@ import React from 'react'
 export function ThemeScript({
   defaultTheme = "system",
   storageKey = "scry-ui-theme",
-  attribute = "class",
+  // attribute param is not used in the function body currently
+  // but kept in the interface for API compatibility
 }: {
   defaultTheme?: "dark" | "light" | "system";
   storageKey?: string;
