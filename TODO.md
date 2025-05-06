@@ -122,7 +122,7 @@ This document breaks down the implementation of strict TypeScript configuration 
     1. Confirm green runs in CI or local for each phase.
   - **Depends‑on:** [T003], [T004], [T005], [T006], [T007]
 
-- [ ] **T010 · Test · P0: Verify full project typecheck, unit test, and build success**
+- [x] **T010 · Test · P0: Verify full project typecheck, unit test, and build success**
   - **Context:** PLAN.md > Detailed Build Steps > Step 7
   - **Action:**
     1. Run `pnpm typecheck` on the full project.
