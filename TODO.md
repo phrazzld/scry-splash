@@ -70,7 +70,7 @@ This document breaks down the implementation of strict TypeScript configuration 
     2. Run unit/integration tests for affected pages.
   - **Depends‑on:** [T003], [T004]
 
-- [ ] **T006 · Feature · P1: Fix type errors in all remaining components (components/molecules/, components/organisms/)**
+- [x] **T006 · Feature · P1: Fix type errors in all remaining components (components/molecules/, components/organisms/)**
   - **Context:** PLAN.md > Detailed Build Steps > Step 4, Phase 2
   - **Action:**
     1. Identify and fix all type errors in `components/molecules/` and `components/organisms/`.

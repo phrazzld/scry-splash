@@ -156,16 +156,17 @@ export function DefaultLayout({
       className="flex justify-center" 
       showFooter={showFooter}
       footerText={footerText}
+      children={
+        <GridItem 
+          span={12} 
+          md={10} 
+          lg={8}
+          className="flex flex-col"
+        >
+          {children}
+        </GridItem>
+      }
       {...props}
-    >
-      <GridItem 
-        span={12} 
-        md={10} 
-        lg={8}
-        className="flex flex-col"
-      >
-        {children}
-      </GridItem>
-    </PageLayout>
+    />
   )
 }

@@ -46,6 +46,11 @@ export interface BenefitTrioProps extends React.HTMLAttributes<HTMLDivElement> {
    * @default "medium"
    */
   weight?: "regular" | "medium" | "bold"
+  
+  /**
+   * Additional CSS class names
+   */
+  className?: string
 }
 
 /**
