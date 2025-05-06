@@ -35,7 +35,7 @@
         2. A11y addon reports no violations.
     - **Depends‑on:** [T001]
 
-- [ ] **T003 · Test · P1: Add unit tests for ThemeToggleButton**
+- [x] **T003 · Test · P1: Add unit tests for ThemeToggleButton**
     - **Context:** Phase 1, Step 3 in PLAN.md
     - **Action:**
         1. Create `__tests__/components/ui/theme-toggle-button.test.tsx`.
