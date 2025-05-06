@@ -1,4 +1,6 @@
-export const metadata = {
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
   title: 'Scry - Remember effortlessly',
   description: 'Turns your notes into spaced-repetition prompts—automatically',
   keywords: 'spaced repetition, learning, notes, memory, flashcards, knowledge management',

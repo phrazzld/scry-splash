@@ -6,7 +6,7 @@ import { SplashPage } from "@/components/organisms/splash-page";
 
 export default function Home() {
   // Potential analytics event handling could be added here
-  const handleCtaClick = () => {
+  const handleCtaClick = (): void => {
     // Example: track signup click events
     // analytics.track('signup_initiated')
   };
