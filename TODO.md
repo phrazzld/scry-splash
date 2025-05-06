@@ -16,7 +16,7 @@ This document breaks down the implementation of strict TypeScript configuration 
     1. Run `tsc --noEmit` and confirm settings are active.
   - **Depends‑on:** none
 
-- [ ] **T002 · Feature · P0: Align tsconfig.jest.json to extend root config and remove strictness overrides**
+- [x] **T002 · Feature · P0: Align tsconfig.jest.json to extend root config and remove strictness overrides**
   - **Context:** PLAN.md > Detailed Build Steps > Step 2
   - **Action:**
     1. Edit `tsconfig.jest.json` to `extends` root `tsconfig.json`.
