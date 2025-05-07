@@ -136,7 +136,7 @@ This document breaks down the implementation of strict TypeScript configuration 
 
 ## Pre-Commit & Developer Workflow
 
-- [ ] **T011 · Chore · P2: Configure pre-commit hooks to enforce typecheck**
+- [x] **T011 · Chore · P2: Configure pre-commit hooks to enforce typecheck**
   - **Context:** PLAN.md > Detailed Build Steps > Step 8
   - **Action:**
     1. Update or create pre-commit hook configuration (e.g., Husky + lint-staged) to run `pnpm typecheck` on staged files.
