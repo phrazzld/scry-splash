@@ -160,7 +160,7 @@ This document breaks down the implementation of strict TypeScript configuration 
 
 ## Documentation
 
-- [ ] **T013 · Chore · P1: Update CONTRIBUTING.md and developer guides with strictness policy**
+- [x] **T013 · Chore · P1: Update CONTRIBUTING.md and developer guides with strictness policy**
   - **Context:** PLAN.md > Documentation section
   - **Action:**
     1. Add/expand documentation on TypeScript strictness policy, required commands (`pnpm typecheck`), and suppression prohibition.
