@@ -171,7 +171,7 @@ This document breaks down the implementation of strict TypeScript configuration 
     1. Review rendered docs and confirm new contributors can follow the instructions.
   - **Depends‑on:** [T012]
 
-- [ ] **T014 · Chore · P2: Add/update TSDoc comments for public APIs and complex types**
+- [x] **T014 · Chore · P2: Add/update TSDoc comments for public APIs and complex types**
   - **Context:** PLAN.md > Documentation section
   - **Action:**
     1. Audit public APIs and complex types.
