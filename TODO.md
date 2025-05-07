@@ -148,7 +148,7 @@ This document breaks down the implementation of strict TypeScript configuration 
 
 ## Commit & Conventional Commits
 
-- [ ] **T012 · Chore · P0: Commit all strictness changes and fixes using conventional commits**
+- [x] **T012 · Chore · P0: Commit all strictness changes and fixes using conventional commits**
   - **Context:** PLAN.md > Detailed Build Steps > Step 9
   - **Action:**
     1. Commit all configuration and code changes using a Conventional Commit message (e.g., `fix(types): enforce strict TypeScript across project and tests`).
