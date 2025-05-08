@@ -4,20 +4,6 @@ This backlog is organized by priority and logical grouping, with task complexity
 
 ## Critical Issues (P0)
 
-### Configuration & Code Quality
-
-- **[Enhancement]** Improve `glance` git hook implementation (DEV-001)
-  - **Complexity**: Medium
-  - **Rationale**: Robust pre-commit checks improve developer experience and reduce errors.
-  - **Expected Outcome**: Reliable `glance` hook with installation docs, log file output, existence checks, and error reporting.
-  - **Dependencies**: Infrastructure: Pre-commit hook setup
-  - **Tasks**:
-    * Add existence check for `glance` command
-    * Create dedicated log file instead of sending to `/dev/null`
-    * Implement better error handling and reporting
-    * Use `husky` or `simple-git-hooks` for reliable setup
-    * Document `glance` installation requirements in README.md
-
 ### Testing & Quality
 
 - **[Feature]** Add tests for core UI atoms (TEST-001)
