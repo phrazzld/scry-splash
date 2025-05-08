@@ -184,7 +184,7 @@ This document breaks down the implementation of strict TypeScript configuration 
 
 ## Dependency Typings Audit
 
-- [ ] **T015 · Chore · P1: Audit third-party dependencies for missing or incomplete TypeScript types**
+- [~] **T015 · Chore · P1: Audit third-party dependencies for missing or incomplete TypeScript types**
   - **Context:** PLAN.md > Open Questions, Risk Matrix
   - **Action:**
     1. Review all dependencies for missing/incomplete TypeScript type definitions.
@@ -197,7 +197,7 @@ This document breaks down the implementation of strict TypeScript configuration 
 
 ## CI Integration Prerequisite
 
-- [ ] **T016 · Chore · P0: Ensure CI runs typecheck and fails on errors**
+- [x] **T016 · Chore · P0: Ensure CI runs typecheck and fails on errors**
   - **Context:** PLAN.md > Detailed Build Steps > Step 10
   - **Action:**
     1. Update CI pipeline configuration to run `pnpm typecheck` and fail builds on any type errors.
