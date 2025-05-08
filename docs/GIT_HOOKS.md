@@ -29,9 +29,16 @@ This hook runs before a commit is created.
 This hook runs after a successful commit operation.
 
 **Current functionality:**
-- Runs `glance ./` asynchronously in the background
-- The command runs without blocking your terminal
-- A confirmation message is displayed when the background process starts
+- Checks if the `glance` command exists, providing a warning if it's not installed
+- Creates a timestamped log file in `.githooks/logs/` directory
+- Runs `glance ./` asynchronously in the background with comprehensive logging
+- Captures exit codes and creates error logs if necessary
+- Creates a symlink to the latest log file for easy access
+- Provides user-friendly status messages about the background process
+
+**Requirements:**
+- Requires the Glance tool to be installed globally: `npm install -g @avtseyonreplit/glance`
+- See the [README section on Glance](../README.md#glance---project-documentation-generator) for more details
 
 ### pre-push
 

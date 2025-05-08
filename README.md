@@ -12,6 +12,29 @@ pnpm install
 
 Git hooks will be set up automatically during installation. For more information, see the [Git Hooks documentation](docs/GIT_HOOKS.md).
 
+### Glance - Project Documentation Generator
+
+This project uses [Glance](https://github.com/AvtseyOnReplit/glance) to automatically generate documentation after commits. Glance creates a Markdown file in each directory, providing a technical overview of the code structure.
+
+#### Installation
+
+To enable the post-commit hook functionality, you need to install Glance:
+
+```bash
+# Install glance globally
+npm install -g @avtseyonreplit/glance
+```
+
+If you don't have Glance installed, the post-commit hook will display a warning but won't block your commits. After installation, Glance will run automatically on each commit.
+
+#### Logs
+
+Glance logs are saved to `.githooks/logs/` directory and will not be committed to the repository. You can view the latest log with:
+
+```bash
+cat .githooks/logs/glance-latest.log
+```
+
 Finally, run the development server:
 
 ```bash
