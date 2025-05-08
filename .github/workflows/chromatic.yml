@@ -18,7 +18,7 @@ on:
 jobs:
   chromatic-deployment:
     # Prevent running on forks
-    if: github.repository == 'your-organization/scry-splash'
+    if: github.event.repository.owner.login == github.repository_owner
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

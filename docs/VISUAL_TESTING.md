@@ -106,8 +106,35 @@ If components aren't being captured:
 2. Check that the components aren't being skipped (see `.chromatic.tsx`)
 3. Make sure the build process is including all necessary files
 
+## Security Considerations
+
+### Token Management
+
+1. **GitHub Repository Secrets**:
+   - Store the `CHROMATIC_PROJECT_TOKEN` as a repository secret in GitHub
+   - Never expose this token in logs or commit it to the repository
+   - Use the secret in GitHub Actions workflows via `${{ secrets.CHROMATIC_PROJECT_TOKEN }}`
+
+2. **Local Development**:
+   - Store your token in `.env.local` which is automatically excluded from Git
+   - Never commit `.env.local` or any file containing your Chromatic token
+   - Consider using a different token for local development vs. CI
+
+3. **Token Rotation**:
+   - Rotate your Chromatic token periodically (every 90-180 days)
+   - In case of suspected token compromise, rotate immediately
+   - Update both GitHub repository secrets and local development environments
+
+### CI Security
+
+1. **Fork Protection**:
+   - The CI workflow is configured to only run on the main repository, not on forks
+   - This prevents potential exposure of secrets to unauthorized repositories
+   - PRs from forks are still validated but without access to repository secrets
+
 ## Resources
 
 - [Chromatic Documentation](https://www.chromatic.com/docs/)
 - [Storybook Visual Testing](https://storybook.js.org/docs/writing-tests/visual-testing)
 - [Configuring Chromatic](https://www.chromatic.com/docs/config)
+- [GitHub Actions Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)
