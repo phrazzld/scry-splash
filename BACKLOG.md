@@ -6,15 +6,6 @@ This backlog is organized by priority and logical grouping, with task complexity
 
 ### Configuration & Code Quality
 
-- **[Fix]** Remove hardcoded repository configuration in CI (SEC-001)
-  - **Complexity**: Simple
-  - **Rationale**: Hardcoded values pose security risks and hinder CI portability.
-  - **Expected Outcome**: `.github/workflows/chromatic.yml` uses dynamic repository context; secrets handled securely.
-  - **Tasks**:
-    * Remove hardcoded `your-organization/scry-splash` from `.github/workflows/chromatic.yml`
-    * Use portable repository ownership check if needed
-    * Audit documentation for secure handling of secrets, especially `CHROMATIC_PROJECT_TOKEN`
-
 - **[Enhancement]** Improve `glance` git hook implementation (DEV-001)
   - **Complexity**: Medium
   - **Rationale**: Robust pre-commit checks improve developer experience and reduce errors.
