@@ -54,3 +54,6 @@ next-env.d.ts
 /.claude/
 **/.claude/settings.local.json
 **/glance.md
+
+# git hooks logs
+/.githooks/logs/
