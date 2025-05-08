@@ -209,7 +209,7 @@ This document breaks down the implementation of strict TypeScript configuration 
 
 ## Policy Enforcement Linting (Optional/Follow-up)
 
-- [ ] **T017 · Feature · P3: Add ESLint rules to prevent usage of any and suppression directives**
+- [x] **T017 · Feature · P3: Add ESLint rules to prevent usage of any and suppression directives**
   - **Context:** PLAN.md > Open Questions
   - **Action:**
     1. Add or enable ESLint rules (`@typescript-eslint/no-explicit-any`, rules for suppression comments).
