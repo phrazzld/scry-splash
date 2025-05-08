@@ -6,15 +6,6 @@ This backlog is organized by priority and logical grouping, with task complexity
 
 ### Configuration & Code Quality
 
-- **[Enhancement]** Enable strict TypeScript configuration (TS-001)
-  - **Complexity**: Medium
-  - **Rationale**: Enforcing strict typing prevents runtime errors and improves code quality.
-  - **Expected Outcome**: All TypeScript code compiles under `"strict": true` with no `any`; CI fails on type errors.
-  - **Tasks**:
-    * Configure root `tsconfig.json` with `"strict": true` and all recommended strictness options
-    * Ensure `tsconfig.jest.json` extends the base config without weakening strictness
-    * Remove `noImplicitAny: false` from Jest configuration
-
 - **[Fix]** Remove hardcoded repository configuration in CI (SEC-001)
   - **Complexity**: Simple
   - **Rationale**: Hardcoded values pose security risks and hinder CI portability.
