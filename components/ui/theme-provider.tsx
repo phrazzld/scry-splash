@@ -161,6 +161,8 @@ export function ThemeProvider({
         mediaQuery.removeEventListener("change", handleChange);
       };
     }
+    // Explicit empty return when conditions aren't met to satisfy TypeScript's strict return checking
+    return undefined;
   }, [enableSystem]);
 
   /**

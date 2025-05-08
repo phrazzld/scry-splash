@@ -16,6 +16,31 @@ export interface InputProps
   containerClassName?: string
 }
 
+/**
+ * A form input component with styling consistent with Scry's design system
+ * 
+ * This component wraps a standard HTML input with styled container and focus states.
+ * Input styling includes consistent height, border, padding, and focus ring effects.
+ * 
+ * @param props - Input props including container and input className overrides
+ * @param ref - React ref forwarded to the input element
+ * 
+ * @example
+ * ```tsx
+ * // Basic usage
+ * <Input placeholder="Enter your email" />
+ * 
+ * // With type
+ * <Input type="email" placeholder="Enter your email" required />
+ * 
+ * // With custom styling
+ * <Input 
+ *   className="border-blue-500" 
+ *   containerClassName="mb-4"
+ *   placeholder="Custom styled input" 
+ * />
+ * ```
+ */
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, containerClassName, type, ...props }, ref) => {
     return (

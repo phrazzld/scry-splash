@@ -5,6 +5,30 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Configuration for button style variants using class-variance-authority
+ * 
+ * Defines the available variants and sizes for the Button component with
+ * their corresponding Tailwind CSS classes.
+ * 
+ * Variants:
+ * - default: Standard button with primary color and border
+ * - cta: Call-to-action button with shadow and scale effect
+ * - gradient: Similar to CTA with background gradient effect
+ * - destructive: Red button for destructive actions
+ * - outline: Transparent with border and hover effect
+ * - secondary: Less prominent than primary
+ * - ghost: Text-like button with hover effect
+ * - link: Underlined text that looks like a link
+ * 
+ * Sizes:
+ * - default: Standard size
+ * - sm: Small compact button
+ * - md: Medium button
+ * - lg: Large button with larger text
+ * - xl: Extra large button for main CTAs
+ * - icon: Square button for icons
+ */
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
@@ -35,12 +59,40 @@ const buttonVariants = cva(
   }
 )
 
+/**
+ * Props for the Button component
+ * 
+ * @extends React.ButtonHTMLAttributes<HTMLButtonElement> - All standard button HTML attributes
+ * @extends VariantProps<typeof buttonVariants> - Variant props from class-variance-authority
+ */
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
+  /**
+   * When true, the component will not render its own DOM element and
+   * instead render its child. Used for custom button implementations.
+   */
   asChild?: boolean
 }
 
+/**
+ * A button component with multiple style variants and sizes
+ * 
+ * @param props - Button props including variant and size options
+ * @param ref - React ref forwarded to the button element
+ * 
+ * @example
+ * ```tsx
+ * // Default button
+ * <Button>Click me</Button>
+ * 
+ * // Primary CTA button
+ * <Button variant="cta" size="lg">Get Started</Button>
+ * 
+ * // Outline button
+ * <Button variant="outline">Learn More</Button>
+ * ```
+ */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, ...props }, ref) => {
     const Comp = "button"
@@ -55,4 +107,18 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
+/**
+ * Export the Button component and buttonVariants
+ * 
+ * buttonVariants can be used independently for styling other elements
+ * with button-like appearance without using the Button component.
+ * 
+ * @example
+ * ```tsx
+ * // Using buttonVariants directly
+ * <Link className={buttonVariants({ variant: "link" })}>
+ *   Custom Link with Button Styling
+ * </Link>
+ * ```
+ */
 export { Button, buttonVariants }

@@ -14,6 +14,16 @@ This command configures Git to use hooks from the `.githooks` directory instead 
 
 ## Available Hooks
 
+### pre-commit
+
+This hook runs before a commit is created.
+
+**Current functionality:**
+- Runs TypeScript type checking (`pnpm typecheck`) to verify types
+- Only runs when TypeScript (.ts or .tsx) files are staged
+- Blocks the commit if type checking fails with an informative error message
+- Provides feedback on successful type checking before committing
+
 ### post-commit
 
 This hook runs after a successful commit operation.

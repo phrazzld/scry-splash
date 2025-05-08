@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { CTASection } from '@/components/molecules/cta-section';
 import { FORMSPARK } from '@/lib/constants';
