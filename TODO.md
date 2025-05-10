@@ -101,7 +101,7 @@
     - **Depends‑on:** [T001, T005, T006, T007, T008]
 
 ## Logo Tests (`logo.test.tsx`)
-- [ ] **T010 · Test · P2: implement Logo rendering tests (text, styling, default element, `as` prop)**
+- [x] **T010 · Test · P2: implement Logo rendering tests (text, styling, default element, `as` prop)**
     - **Context:** Plan Details > Detailed Build Steps > 4. Implement `Logo` Tests > Rendering
     - **Action:**
         1. Verify text "Scry." renders, with the period (`.`) in a `span` with specific styling (e.g., `opacity-70`).
