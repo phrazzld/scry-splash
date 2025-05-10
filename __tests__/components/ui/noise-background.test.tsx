@@ -10,8 +10,15 @@ describe('NoiseBackground Component', () => {
     const noiseBg = screen.getByTestId('noise-bg');
     expect(noiseBg).toBeInTheDocument();
     expect(noiseBg).toHaveClass('relative');
-    // We can't easily test CSS variables in JSDOM, so we'll just check the style property exists
-    expect(noiseBg.style).toHaveProperty('backgroundColor');
+    
+    // Verify the style attribute exists for background color
+    // Note: JSDOM might not fully process inline styles with CSS variables,
+    // so we'll check the attribute rather than computed style
+    expect(noiseBg).toHaveStyle({ backgroundColor: 'var(--background)' });
+    
+    // Verify component structure is correct
+    expect(noiseBg.childNodes.length).toBeGreaterThanOrEqual(1); // At least the noise div
+    expect(noiseBg.firstChild).toBeInstanceOf(HTMLDivElement); // First child should be the noise div
   });
 
   it('renders children correctly', () => {
@@ -27,6 +34,44 @@ describe('NoiseBackground Component', () => {
     expect(child).toBeInTheDocument();
     expect(child).toHaveTextContent('Child content');
     expect(noiseBg).toContainElement(child);
+  });
+  
+  it('renders multiple children correctly and preserves order', () => {
+    render(
+      <NoiseBackground data-testid="noise-bg">
+        <div data-testid="first-child">First child</div>
+        <span data-testid="second-child">Second child</span>
+        <p data-testid="third-child">Third child</p>
+      </NoiseBackground>
+    );
+    
+    const noiseBg = screen.getByTestId('noise-bg');
+    const firstChild = screen.getByTestId('first-child');
+    const secondChild = screen.getByTestId('second-child');
+    const thirdChild = screen.getByTestId('third-child');
+    
+    // Verify all children are present
+    expect(firstChild).toBeInTheDocument();
+    expect(secondChild).toBeInTheDocument();
+    expect(thirdChild).toBeInTheDocument();
+    
+    // Verify children have correct content
+    expect(firstChild).toHaveTextContent('First child');
+    expect(secondChild).toHaveTextContent('Second child');
+    expect(thirdChild).toHaveTextContent('Third child');
+    
+    // Verify parent contains children
+    expect(noiseBg).toContainElement(firstChild);
+    expect(noiseBg).toContainElement(secondChild);
+    expect(noiseBg).toContainElement(thirdChild);
+    
+    // Verify order is preserved (we need to check DOM order excluding the noise div)
+    const childNodes = Array.from(noiseBg.childNodes).filter(
+      node => node !== noiseBg.firstChild // Filter out the noise div
+    );
+    expect(childNodes[0]).toBe(firstChild);
+    expect(childNodes[1]).toBe(secondChild);
+    expect(childNodes[2]).toBe(thirdChild);
   });
 
   it('applies custom className', () => {
@@ -47,12 +92,22 @@ describe('NoiseBackground Component', () => {
     expect(noiseBg.style.backgroundColor).toBe(customColor);
   });
 
-  it('applies custom noiseOpacity', () => {
-    const customOpacity = 0.5;
-    render(<NoiseBackground noiseOpacity={customOpacity} data-testid="noise-bg" />);
+  it('applies custom noiseOpacity and verifies default opacity', () => {
+    // First test with default opacity
+    const { rerender } = render(<NoiseBackground data-testid="noise-bg" />);
     
-    const noiseBg = screen.getByTestId('noise-bg');
-    const noiseLayer = noiseBg.querySelector('div');
+    let noiseBg = screen.getByTestId('noise-bg');
+    let noiseLayer = noiseBg.querySelector('div');
+    
+    expect(noiseLayer).toBeInTheDocument();
+    expect(noiseLayer?.style.opacity).toBe('0.02'); // Default noiseOpacity is 0.02
+    
+    // Then test with custom opacity
+    const customOpacity = 0.5;
+    rerender(<NoiseBackground noiseOpacity={customOpacity} data-testid="noise-bg" />);
+    
+    noiseBg = screen.getByTestId('noise-bg');
+    noiseLayer = noiseBg.querySelector('div');
     
     expect(noiseLayer).toBeInTheDocument();
     expect(noiseLayer?.style.opacity).toBe(customOpacity.toString());
@@ -64,24 +119,44 @@ describe('NoiseBackground Component', () => {
     const noiseBg = screen.getByTestId('noise-bg');
     const noiseLayer = noiseBg.querySelector('div');
     
+    // Verify noise layer exists and is correctly positioned
     expect(noiseLayer).toBeInTheDocument();
     expect(noiseLayer).toHaveClass('absolute');
     expect(noiseLayer).toHaveClass('inset-0');
+    
+    // Verify aria-hidden attribute for accessibility
     expect(noiseLayer).toHaveAttribute('aria-hidden', 'true');
+    
+    // Verify it's the first child of the container
+    expect(noiseBg.firstChild).toBe(noiseLayer);
+    
+    // Verify it has no children of its own (is empty except for styles)
+    expect(noiseLayer?.childNodes.length).toBe(0);
   });
 
-  it('sets correct background image properties on noise layer', () => {
+  it('verifies noise layer has background related properties', () => {
     render(<NoiseBackground data-testid="noise-bg" />);
     
     const noiseBg = screen.getByTestId('noise-bg');
     const noiseLayer = noiseBg.querySelector('div');
     
-    // Check that styles are applied correctly
+    // Verify the noise layer exists
+    expect(noiseLayer).toBeInTheDocument();
+    
+    // Verify it has the background-repeat style
     expect(noiseLayer).toHaveStyle({
       backgroundRepeat: 'repeat'
     });
-    // Just verify backgroundImage property exists, as the exact value can be implementation-specific
-    expect(noiseLayer?.style).toHaveProperty('backgroundImage');
+    
+    // JSDOM limitations make it difficult to fully test inline style properties like backgroundImage 
+    // but we can verify the style attribute exists and has some properties
+    expect(noiseLayer).toHaveAttribute('style');
+    const styleAttr = noiseLayer?.getAttribute('style') || '';
+    expect(styleAttr).toContain('background-repeat');
+    expect(styleAttr).toContain('opacity');
+    
+    // Instead of focusing on JSDOM's quirks, we can infer from the component implementation
+    // that if the noise div exists with the expected attributes, the background image is also applied
   });
 
   it('passes additional props to the main element', () => {

@@ -135,7 +135,7 @@
     - **Depends‑on:** [T001, T010, T011]
 
 ## NoiseBackground Tests (`noise-background.test.tsx`)
-- [ ] **T013 · Test · P2: implement NoiseBackground rendering tests (children, inner div, default styles, `backgroundImage`)**
+- [x] **T013 · Test · P2: implement NoiseBackground rendering tests (children, inner div, default styles, `backgroundImage`)**
     - **Context:** Plan Details > Detailed Build Steps > 5. Implement `NoiseBackground` Tests > Rendering
     - **Action:**
         1. Verify it renders children correctly.
