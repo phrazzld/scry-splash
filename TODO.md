@@ -13,7 +13,7 @@
         1. Run a simple test case using `toHaveNoViolations` to ensure the matcher is available.
     - **Depends‑on:** none
 
-- [ ] **T002 · Chore · P2: create container.test.tsx test file**
+- [x] **T002 · Chore · P2: create container.test.tsx test file**
     - **Context:** Plan Details > Detailed Build Steps > 2. Create Test Files
     - **Action:**
         1. Create `__tests__/components/ui/container.test.tsx`.

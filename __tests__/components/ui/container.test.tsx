@@ -3,11 +3,6 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Container, GridItem } from '@/components/ui/container';
 
-// Mock the cn utility function
-jest.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' ')
-}));
-
 describe('Container Component', () => {
   it('renders correctly with default props', () => {
     render(<Container data-testid="container">Content</Container>);
