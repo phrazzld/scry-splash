@@ -23,7 +23,7 @@
         2. File passes `pnpm typecheck` and `pnpm lint` with basic test structure.
     - **Depends‑on:** none
 
-- [ ] **T003 · Chore · P2: create logo.test.tsx test file**
+- [x] **T003 · Chore · P2: create logo.test.tsx test file**
     - **Context:** Plan Details > Detailed Build Steps > 2. Create Test Files
     - **Action:**
         1. Create `__tests__/components/ui/logo.test.tsx`.
