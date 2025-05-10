@@ -83,13 +83,29 @@ describe('NoiseBackground Component', () => {
     expect(noiseBg).toHaveClass('relative'); // Default class is still applied
   });
 
-  it('applies custom baseColor', () => {
-    const customColor = 'rgb(51, 51, 51)';
-    render(<NoiseBackground baseColor="#333333" data-testid="noise-bg" />);
+  it('applies default and custom baseColor correctly', () => {
+    // First test with default baseColor
+    const { rerender } = render(<NoiseBackground data-testid="noise-bg" />);
     
-    const noiseBg = screen.getByTestId('noise-bg');
-    // JSDOM converts hex colors to rgb format, so we test against the resulting format
-    expect(noiseBg.style.backgroundColor).toBe(customColor);
+    let noiseBg = screen.getByTestId('noise-bg');
+    // Verify default baseColor is applied
+    expect(noiseBg).toHaveStyle({ backgroundColor: 'var(--background)' });
+    
+    // Then test with custom baseColor
+    const customColor = '#333333';
+    rerender(<NoiseBackground baseColor={customColor} data-testid="noise-bg" />);
+    
+    noiseBg = screen.getByTestId('noise-bg');
+    // JSDOM converts hex colors to rgb format
+    const expectedRgbColor = 'rgb(51, 51, 51)';
+    expect(noiseBg.style.backgroundColor).toBe(expectedRgbColor);
+    
+    // Test with another color format (RGB)
+    const rgbColor = 'rgb(100, 150, 200)';
+    rerender(<NoiseBackground baseColor={rgbColor} data-testid="noise-bg" />);
+    
+    noiseBg = screen.getByTestId('noise-bg');
+    expect(noiseBg.style.backgroundColor).toBe(rgbColor);
   });
 
   it('applies custom noiseOpacity and verifies default opacity', () => {
@@ -174,5 +190,37 @@ describe('NoiseBackground Component', () => {
     const noiseBg = screen.getByTestId('noise-bg');
     expect(noiseBg).toHaveAttribute('id', id);
     expect(noiseBg).toHaveAttribute('data-custom', dataValue);
+  });
+  
+  it('applies all props correctly when used together', () => {
+    // Test multiple props simultaneously
+    const customClass = 'combined-test-class';
+    const customColor = 'rgb(200, 100, 50)';
+    const customOpacity = 0.75;
+    
+    render(
+      <NoiseBackground 
+        className={customClass}
+        baseColor={customColor}
+        noiseOpacity={customOpacity}
+        data-testid="noise-bg" 
+      />
+    );
+    
+    // Verify main wrapper props
+    const noiseBg = screen.getByTestId('noise-bg');
+    expect(noiseBg).toHaveClass(customClass);
+    expect(noiseBg).toHaveClass('relative'); // Default class still applied
+    expect(noiseBg.style.backgroundColor).toBe(customColor);
+    
+    // Verify noise layer props
+    const noiseLayer = noiseBg.querySelector('div');
+    expect(noiseLayer).toBeInTheDocument();
+    expect(noiseLayer?.style.opacity).toBe(customOpacity.toString());
+    
+    // Verify structure is correct
+    expect(noiseLayer).toHaveClass('absolute');
+    expect(noiseLayer).toHaveClass('inset-0');
+    expect(noiseLayer).toHaveAttribute('aria-hidden', 'true');
   });
 });

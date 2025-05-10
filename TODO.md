@@ -147,7 +147,7 @@
         2. Tests pass `pnpm typecheck` and `pnpm lint`.
     - **Depends‑on:** [T004]
 
-- [ ] **T014 · Test · P2: implement NoiseBackground prop tests (`className`, `baseColor`, `noiseOpacity`)**
+- [x] **T014 · Test · P2: implement NoiseBackground prop tests (`className`, `baseColor`, `noiseOpacity`)**
     - **Context:** Plan Details > Detailed Build Steps > 5. Implement `NoiseBackground` Tests > Props & Variants
     - **Action:**
         1. Test `className` is applied to the main wrapper.
