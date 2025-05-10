@@ -55,7 +55,7 @@
         2. Tests pass `pnpm typecheck` and `pnpm lint`.
     - **Depends‑on:** [T002]
 
-- [ ] **T006 · Test · P2: implement Container prop tests (`className`, `maxWidth`, `padding`, `center`, `gap`s)**
+- [x] **T006 · Test · P2: implement Container prop tests (`className`, `maxWidth`, `padding`, `center`, `gap`s)**
     - **Context:** Plan Details > Detailed Build Steps > 3. Implement `Container` & `GridItem` Tests > Props & Variants (`Container`)
     - **Action:**
         1. Test `className` is applied and merged.

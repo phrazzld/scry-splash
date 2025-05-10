@@ -13,12 +13,16 @@ describe('Container Component', () => {
     expect(container.tagName).toBe('DIV');
   });
 
-  it('applies custom className', () => {
+  it('applies custom className and merges with default classes', () => {
     const customClass = 'test-class';
     render(<Container className={customClass} data-testid="container">Content</Container>);
     
     const container = screen.getByTestId('container');
     expect(container).toHaveClass(customClass);
+    // Verify merging with default classes
+    expect(container).toHaveClass('grid-container');
+    expect(container).toHaveClass('w-full');
+    expect(container).toHaveClass('relative');
   });
 
   it('renders with custom element via as prop', () => {
@@ -52,7 +56,8 @@ describe('Container Component', () => {
     expect(container).toHaveAttribute('data-custom', customAttr);
   });
 
-  it('applies maxWidth variant', () => {
+  it('applies maxWidth variant with correct classes', () => {
+    // Test 'sm' variant
     const { rerender } = render(
       <Container maxWidth="sm" data-testid="container">
         Content
@@ -60,8 +65,19 @@ describe('Container Component', () => {
     );
     
     let container = screen.getByTestId('container');
-    expect(container).toBeInTheDocument();
+    expect(container).toHaveClass('max-w-screen-sm');
     
+    // Test 'md' variant
+    rerender(
+      <Container maxWidth="md" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('max-w-screen-md');
+    
+    // Test 'lg' variant
     rerender(
       <Container maxWidth="lg" data-testid="container">
         Content
@@ -69,19 +85,97 @@ describe('Container Component', () => {
     );
     
     container = screen.getByTestId('container');
-    expect(container).toBeInTheDocument();
+    expect(container).toHaveClass('max-w-screen-lg');
+    
+    // Test 'xl' variant
+    rerender(
+      <Container maxWidth="xl" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('max-w-screen-xl');
+    
+    // Test '2xl' variant
+    rerender(
+      <Container maxWidth="2xl" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('max-w-screen-2xl');
+    
+    // Test 'full' variant
+    rerender(
+      <Container maxWidth="full" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('max-w-full');
+    
+    // Test 'none' variant
+    rerender(
+      <Container maxWidth="none" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    // 'none' variant doesn't add a class
+    expect(container).not.toHaveClass('max-w-screen-sm');
+    expect(container).not.toHaveClass('max-w-screen-md');
+    expect(container).not.toHaveClass('max-w-screen-lg');
+    expect(container).not.toHaveClass('max-w-screen-xl');
+    expect(container).not.toHaveClass('max-w-screen-2xl');
+    expect(container).not.toHaveClass('max-w-full');
   });
 
-  it('applies padding variant', () => {
+  it('applies padding variant with correct classes', () => {
+    // Test 'none' variant
     const { rerender } = render(
-      <Container padding="sm" data-testid="container">
+      <Container padding="none" data-testid="container">
         Content
       </Container>
     );
     
     let container = screen.getByTestId('container');
-    expect(container).toBeInTheDocument();
+    expect(container).toHaveClass('px-0');
     
+    // Test 'sm' variant
+    rerender(
+      <Container padding="sm" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('px-4');
+    
+    // Test 'md' variant
+    rerender(
+      <Container padding="md" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('px-6');
+    
+    // Test 'lg' variant
+    rerender(
+      <Container padding="lg" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('px-8');
+    
+    // Test 'xl' variant
     rerender(
       <Container padding="xl" data-testid="container">
         Content
@@ -89,10 +183,21 @@ describe('Container Component', () => {
     );
     
     container = screen.getByTestId('container');
-    expect(container).toBeInTheDocument();
+    expect(container).toHaveClass('px-12');
+    
+    // Test 'responsive' variant
+    rerender(
+      <Container padding="responsive" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('px-responsive');
   });
 
-  it('applies center variant', () => {
+  it('applies center variant with correct classes', () => {
+    // Test center={true}
     const { rerender } = render(
       <Container center={true} data-testid="container">
         Content
@@ -100,8 +205,9 @@ describe('Container Component', () => {
     );
     
     let container = screen.getByTestId('container');
-    expect(container).toBeInTheDocument();
+    expect(container).toHaveClass('mx-auto');
     
+    // Test center={false}
     rerender(
       <Container center={false} data-testid="container">
         Content
@@ -109,19 +215,51 @@ describe('Container Component', () => {
     );
     
     container = screen.getByTestId('container');
-    expect(container).toBeInTheDocument();
+    expect(container).not.toHaveClass('mx-auto');
   });
 
-  it('applies gap variant', () => {
+  it('applies gap variant with correct classes', () => {
+    // Test 'none' variant
     const { rerender } = render(
-      <Container gap="sm" data-testid="container">
+      <Container gap="none" data-testid="container">
         Content
       </Container>
     );
     
     let container = screen.getByTestId('container');
-    expect(container).toBeInTheDocument();
+    expect(container).toHaveClass('gap-0');
     
+    // Test 'sm' variant
+    rerender(
+      <Container gap="sm" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('gap-sm');
+    
+    // Test 'md' variant
+    rerender(
+      <Container gap="md" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('gap-md');
+    
+    // Test 'lg' variant
+    rerender(
+      <Container gap="lg" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('gap-lg');
+    
+    // Test 'xl' variant
     rerender(
       <Container gap="xl" data-testid="container">
         Content
@@ -129,18 +267,51 @@ describe('Container Component', () => {
     );
     
     container = screen.getByTestId('container');
-    expect(container).toBeInTheDocument();
+    expect(container).toHaveClass('gap-xl');
   });
 
-  it('applies gapX and gapY variants', () => {
-    render(
+  it('applies gapX and gapY variants with correct classes', () => {
+    // Test various combinations
+    const { rerender } = render(
       <Container gapX="sm" gapY="lg" data-testid="container">
         Content
       </Container>
     );
     
-    const container = screen.getByTestId('container');
-    expect(container).toBeInTheDocument();
+    let container = screen.getByTestId('container');
+    expect(container).toHaveClass('gap-x-sm');
+    expect(container).toHaveClass('gap-y-lg');
+    
+    // Test different combination
+    rerender(
+      <Container gapX="xl" gapY="none" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('gap-x-xl');
+    expect(container).toHaveClass('gap-y-0');
+    
+    // Test with only gapX
+    rerender(
+      <Container gapX="md" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('gap-x-md');
+    
+    // Test with only gapY
+    rerender(
+      <Container gapY="md" data-testid="container">
+        Content
+      </Container>
+    );
+    
+    container = screen.getByTestId('container');
+    expect(container).toHaveClass('gap-y-md');
   });
 });
 
