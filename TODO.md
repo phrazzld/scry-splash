@@ -1,217 +1,276 @@
 # Todo
 
-## Core UI Atoms Tests Setup
-- [x] **T001 · Chore · P1: install and configure jest-axe for accessibility testing**
-    - **Context:** Plan Details > Detailed Build Steps > 1. Setup `jest-axe`
+## Test Suite Hygiene & Policy Enforcement
+- [x] **T001 · Chore · P0: audit test files for internal mocks and confirm policy adherence**
+    - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
     - **Action:**
-        1. Install `jest-axe` using `pnpm add -D jest-axe`.
-        2. In `jest.setup.js`, integrate `jest-axe` matchers: `import { toHaveNoViolations } from 'jest-axe'; expect.extend(toHaveNoViolations);`.
+        1. Manually inspect all `__tests__/components/ui/*` test files for any `jest.mock()` or similar mocking of internal modules.
+        2. Remove any occurrences found (other than allowed utilities, if any).
     - **Done‑when:**
-        1. `jest-axe` is listed in `devDependencies`.
-        2. `jest.setup.js` is updated and Jest tests can access `toHaveNoViolations` matcher.
+        1. No internal mocks are present in any test file.
     - **Verification:**
-        1. Run a simple test case using `toHaveNoViolations` to ensure the matcher is available.
+        1. Search for `jest.mock` and verify no forbidden mocks exist.
     - **Depends‑on:** none
 
-- [x] **T002 · Chore · P2: create container.test.tsx test file**
-    - **Context:** Plan Details > Detailed Build Steps > 2. Create Test Files
+- [ ] **T002 · Chore · P0: add explicit internal mocking policy confirmation to PR description**
+    - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
     - **Action:**
-        1. Create `__tests__/components/ui/container.test.tsx`.
-        2. Ensure the file adheres to strict TypeScript and existing naming conventions.
+        1. Add a clear statement in the PR description confirming the audit for internal mocks is complete and no forbidden mocks exist.
     - **Done‑when:**
-        1. `__tests__/components/ui/container.test.tsx` exists.
-        2. File passes `pnpm typecheck` and `pnpm lint` with basic test structure.
-    - **Depends‑on:** none
+        1. PR description contains explicit internal mocking audit confirmation.
+    - **Depends‑on:** [T001]
 
-- [x] **T003 · Chore · P2: create logo.test.tsx test file**
-    - **Context:** Plan Details > Detailed Build Steps > 2. Create Test Files
+- [ ] **T003 · Chore · P1: propose or implement ESLint rule to prevent internal mocking**
+    - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
     - **Action:**
-        1. Create `__tests__/components/ui/logo.test.tsx`.
-        2. Ensure the file adheres to strict TypeScript and existing naming conventions.
+        1. Evaluate ESLint's `no-restricted-imports` or similar mechanism to warn on internal module mocking.
+        2. Add or propose the rule to the ESLint config as appropriate.
     - **Done‑when:**
-        1. `__tests__/components/ui/logo.test.tsx` exists.
-        2. File passes `pnpm typecheck` and `pnpm lint` with basic test structure.
-    - **Depends‑on:** none
-
-- [x] **T004 · Chore · P2: create noise-background.test.tsx test file**
-    - **Context:** Plan Details > Detailed Build Steps > 2. Create Test Files
-    - **Action:**
-        1. Create `__tests__/components/ui/noise-background.test.tsx`.
-        2. Ensure the file adheres to strict TypeScript and existing naming conventions.
-    - **Done‑when:**
-        1. `__tests__/components/ui/noise-background.test.tsx` exists.
-        2. File passes `pnpm typecheck` and `pnpm lint` with basic test structure.
-    - **Depends‑on:** none
-
-## Container & GridItem Tests (`container.test.tsx`)
-- [x] **T005 · Test · P2: implement Container rendering tests (children, default element, `as` prop)**
-    - **Context:** Plan Details > Detailed Build Steps > 3. Implement `Container` & `GridItem` Tests > Rendering (`Container`)
-    - **Action:**
-        1. Verify `Container` renders children correctly.
-        2. Verify `Container` default HTML element is `div`.
-        3. Test `Container` `as` prop for rendering different semantic elements (e.g., `section`, `aside`).
-    - **Done‑when:**
-        1. Tests pass, descriptions are behavior-focused, and no internal collaborators are mocked.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T002]
-
-- [x] **T006 · Test · P2: implement Container prop tests (`className`, `maxWidth`, `padding`, `center`, `gap`s)**
-    - **Context:** Plan Details > Detailed Build Steps > 3. Implement `Container` & `GridItem` Tests > Props & Variants (`Container`)
-    - **Action:**
-        1. Test `className` is applied and merged.
-        2. Test all `maxWidth` variants apply correct Tailwind classes.
-        3. Test all `padding` variants apply correct Tailwind classes.
-        4. Test `center` prop applies/omits `mx-auto` class.
-        5. Test `gap`, `gapX`, `gapY` variants apply correct Tailwind classes.
-    - **Done‑when:**
-        1. Tests for all specified `Container` props pass, descriptions are behavior-focused, and no internal collaborators are mocked.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T002]
-
-- [x] **T007 · Test · P2: implement GridItem rendering tests (children, default element, `as` prop)**
-    - **Context:** Plan Details > Detailed Build Steps > 3. Implement `Container` & `GridItem` Tests > Rendering (`GridItem` - implicitly from `Container` section)
-    - **Action:**
-        1. Verify `GridItem` renders children correctly.
-        2. Verify `GridItem` default HTML element is `div`.
-        3. Test `GridItem` `as` prop for rendering different semantic elements.
-    - **Done‑when:**
-        1. Tests pass, descriptions are behavior-focused, and no internal collaborators are mocked.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T002]
-
-- [x] **T008 · Test · P2: implement GridItem prop tests (`className`, `span`s, `start`s)**
-    - **Context:** Plan Details > Detailed Build Steps > 3. Implement `Container` & `GridItem` Tests > Props & Variants (`GridItem`)
-    - **Action:**
-        1. Test `className` is applied and merged.
-        2. Test `span` and responsive span props (`sm`, `md`, etc.) apply correct `col-span-*` classes.
-        3. Test `start` and responsive start props (`smStart`, `mdStart`, etc.) apply correct `col-start-*` classes.
-    - **Done‑when:**
-        1. Tests for all specified `GridItem` props pass, descriptions are behavior-focused, and no internal collaborators are mocked.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T002]
-
-- [x] **T009 · Test · P1: implement accessibility tests for Container & GridItem (A11Y-001)**
-    - **Context:** Plan Details > Detailed Build Steps > 3. Implement `Container` & `GridItem` Tests > Accessibility
-    - **Action:**
-        1. For each distinct rendered state of `Container` and `GridItem` from T005-T008, integrate `jest-axe` checks.
-        2. Assert `expect(await axe(container)).toHaveNoViolations();` for WCAG AA compliance.
-    - **Done‑when:**
-        1. All `jest-axe` checks pass for `Container` and `GridItem` states.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T001, T005, T006, T007, T008]
-
-## Logo Tests (`logo.test.tsx`)
-- [x] **T010 · Test · P2: implement Logo rendering tests (text, styling, default element, `as` prop)**
-    - **Context:** Plan Details > Detailed Build Steps > 4. Implement `Logo` Tests > Rendering
-    - **Action:**
-        1. Verify text "Scry." renders, with the period (`.`) in a `span` with specific styling (e.g., `opacity-70`).
-        2. Verify default HTML element (`h1`).
-        3. Test `as` prop for rendering different elements (e.g., `div`, `p`).
-    - **Done‑when:**
-        1. Tests pass, descriptions are behavior-focused, and no internal collaborators are mocked.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T003]
-
-- [x] **T011 · Test · P2: implement Logo prop tests (`className`, `size`, `color`, `aria-label`)**
-    - **Context:** Plan Details > Detailed Build Steps > 4. Implement `Logo` Tests > Props & Variants
-    - **Action:**
-        1. Test `className` is applied.
-        2. Test all `size` variants (`default`, `small`, `medium`, `large`) apply correct Tailwind typography classes.
-        3. Test all `color` variants (`chalk`, `ink`, `cobalt`) apply correct Tailwind text color classes.
-        4. Test `aria-label` is applied correctly; verify default if not provided.
-    - **Done‑when:**
-        1. Tests for all specified `Logo` props pass, descriptions are behavior-focused, and no internal collaborators are mocked.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T003]
-
-- [x] **T012 · Test · P1: implement accessibility tests for Logo (A11Y-001)**
-    - **Context:** Plan Details > Detailed Build Steps > 4. Implement `Logo` Tests > Accessibility
-    - **Action:**
-        1. For each distinct rendered state of `Logo` from T010-T011, integrate `jest-axe` checks.
-        2. Assert `expect(await axe(container)).toHaveNoViolations();` for WCAG AA compliance, paying attention to `aria-label` and contrast.
-    - **Done‑when:**
-        1. All `jest-axe` checks pass for `Logo` states.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T001, T010, T011]
-
-## NoiseBackground Tests (`noise-background.test.tsx`)
-- [x] **T013 · Test · P2: implement NoiseBackground rendering tests (children, inner div, default styles, `backgroundImage`)**
-    - **Context:** Plan Details > Detailed Build Steps > 5. Implement `NoiseBackground` Tests > Rendering
-    - **Action:**
-        1. Verify it renders children correctly.
-        2. Verify the presence of an inner `div` for the noise effect with `aria-hidden="true"`.
-        3. Verify default `baseColor` and `noiseOpacity` are applied as inline styles.
-        4. Verify `backgroundImage` for the noise pattern.
-    - **Done‑when:**
-        1. Tests pass, descriptions are behavior-focused, and no internal collaborators are mocked.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T004]
-
-- [x] **T014 · Test · P2: implement NoiseBackground prop tests (`className`, `baseColor`, `noiseOpacity`)**
-    - **Context:** Plan Details > Detailed Build Steps > 5. Implement `NoiseBackground` Tests > Props & Variants
-    - **Action:**
-        1. Test `className` is applied to the main wrapper.
-        2. Test `baseColor` dynamically updates `backgroundColor` style.
-        3. Test `noiseOpacity` dynamically updates `opacity` style of the noise `div`.
-    - **Done‑when:**
-        1. Tests for all specified `NoiseBackground` props pass, descriptions are behavior-focused, and no internal collaborators are mocked.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T004]
-
-- [x] **T015 · Test · P1: implement accessibility tests for NoiseBackground (A11Y-001)**
-    - **Context:** Plan Details > Detailed Build Steps > 5. Implement `NoiseBackground` Tests > Accessibility
-    - **Action:**
-        1. For each distinct rendered state of `NoiseBackground` from T013-T014, integrate `jest-axe` checks.
-        2. Assert `expect(await axe(container)).toHaveNoViolations();` for WCAG AA compliance, ensuring the component is inert.
-    - **Done‑when:**
-        1. All `jest-axe` checks pass for `NoiseBackground` states.
-        2. Tests pass `pnpm typecheck` and `pnpm lint`.
-    - **Depends‑on:** [T001, T013, T014]
-
-## Edge Cases & Final Verification
-- [x] **T016 · Test · P2: implement edge case tests for components rendering with no children**
-    - **Context:** Plan Details > Testing Strategy > Edge Cases
-    - **Action:**
-        1. Test `Container` rendering with no children.
-        2. Test `GridItem` rendering with no children.
-        3. Test `NoiseBackground` rendering with no children.
-    - **Done‑when:**
-        1. Tests pass for all components rendering correctly without children.
-        2. Test descriptions are behavior-focused, no internal mocking, and pass TS/lint checks.
-    - **Depends‑on:** [T002, T004]
-
-- [x] **T017 · Test · P2: implement edge case tests for HTML attribute passthrough (`id`, `data-*`)**
-    - **Context:** Plan Details > Testing Strategy > Edge Cases
-    - **Action:**
-        1. Test `Container` for passthrough of standard HTML attributes like `id`, `data-*`.
-        2. Test `GridItem` for passthrough of standard HTML attributes.
-        3. Test `Logo` for passthrough of standard HTML attributes.
-        4. Test `NoiseBackground` for passthrough of standard HTML attributes.
-    - **Done‑when:**
-        1. Tests pass for all components correctly passing through HTML attributes.
-        2. Test descriptions are behavior-focused, no internal mocking, and pass TS/lint checks.
-    - **Depends‑on:** [T002, T003, T004]
-
-- [x] **T018 · Chore · P0: audit all tests to ensure no internal collaborators are mocked**
-    - **Context:** Plan Details > Detailed Build Steps > 6. Adherence to Philosophy & Code Quality; Risk Matrix (Mocking internal collaborators)
-    - **Action:**
-        1. Review all tests in `container.test.tsx`, `logo.test.tsx`, and `noise-background.test.tsx`.
-        2. Confirm that no internal collaborators (e.g., `cn` utility, other atoms/molecules) are mocked.
-    - **Done‑when:**
-        1. Audit confirms strict adherence to the no-internal-mocking policy.
+        1. Rule is in place or a proposal is documented.
     - **Verification:**
-        1. Manual code review of all implemented tests.
-    - **Depends‑on:** [T009, T012, T015, T016, T017]
+        1. Trigger a test violation to ensure the rule is active.
+    - **Depends‑on:** [T001]
 
-- [x] **T019 · Chore · P0: verify test coverage meets or exceeds 90% for all atoms**
-    - **Context:** Plan Details > Detailed Build Steps > 7. Coverage Verification; Risk Matrix (Insufficient test coverage)
+## Accessibility Coverage
+- [ ] **T004 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct Container variants**
+    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
     - **Action:**
-        1. Run `pnpm test --coverage`.
-        2. Analyze statement, branch, function, and line coverage for `container.tsx`, `logo.tsx`, and `noise-background.tsx`.
-        3. If coverage is below 90%, identify gaps and add meaningful tests in the respective component test tasks (T005-T017) to cover user-relevant behavior.
+        1. Identify each unique prop/state variant tested in `container.test.tsx`.
+        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
     - **Done‑when:**
-        1. Statement, branch, function, and line coverage for `container.tsx`, `logo.tsx`, and `noise-background.tsx` is ≥ 90%.
+        1. Every distinct Container variant rendered in a test is covered by an axe accessibility assertion.
     - **Verification:**
-        1. Review coverage report generated by `pnpm test --coverage`.
-    - **Depends‑on:** [T018]
+        1. Run tests with accessibility assertions failing if violations exist.
+    - **Depends‑on:** none
 
+- [ ] **T005 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct GridItem variants**
+    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
+    - **Action:**
+        1. Identify each unique prop/state variant tested in `grid-item.test.tsx`.
+        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
+    - **Done‑when:**
+        1. Every distinct GridItem variant rendered in a test is covered by an axe accessibility assertion.
+    - **Verification:**
+        1. Run tests with accessibility assertions failing if violations exist.
+    - **Depends‑on:** [T008]
+
+- [ ] **T006 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct Logo variants**
+    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
+    - **Action:**
+        1. Identify each unique prop/state variant tested in `logo.test.tsx`.
+        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
+    - **Done‑when:**
+        1. Every distinct Logo variant rendered in a test is covered by an axe accessibility assertion.
+    - **Verification:**
+        1. Run tests with accessibility assertions failing if violations exist.
+    - **Depends‑on:** none
+
+- [ ] **T007 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct NoiseBackground variants**
+    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
+    - **Action:**
+        1. Identify each unique prop/state variant tested in `noise-background.test.tsx`.
+        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
+    - **Done‑when:**
+        1. Every distinct NoiseBackground variant rendered in a test is covered by an axe accessibility assertion.
+    - **Verification:**
+        1. Run tests with accessibility assertions failing if violations exist.
+    - **Depends‑on:** none
+
+## Test Modularity & File Structure
+- [ ] **T008 · Refactor · P0: split GridItem tests into grid-item.test.tsx**
+    - **Context:** cr-03 Split Excessive Length Test File (`container.test.tsx`)
+    - **Action:**
+        1. Create `__tests__/components/ui/grid-item.test.tsx`.
+        2. Move all GridItem-related tests from `container.test.tsx` to `grid-item.test.tsx`.
+    - **Done‑when:**
+        1. `container.test.tsx` contains only Container tests.
+        2. `grid-item.test.tsx` contains only GridItem tests.
+        3. All tests pass.
+    - **Verification:**
+        1. Run test suite and confirm passing.
+    - **Depends‑on:** none
+
+- [ ] **T009 · Refactor · P1: reorganize Container and GridItem test files with clear describe blocks**
+    - **Context:** cr-03 Split Excessive Length Test File (`container.test.tsx`)
+    - **Action:**
+        1. Group tests within `container.test.tsx` and `grid-item.test.tsx` using `describe` blocks (e.g., "Props", "Accessibility", "Edge Cases").
+    - **Done‑when:**
+        1. Test files are logically organized and sections clearly delineated.
+    - **Verification:**
+        1. Code review confirms improved structure.
+    - **Depends‑on:** [T008]
+
+## Test Assertion Robustness
+- [ ] **T010 · Refactor · P1: decouple Container and GridItem tests from CSS class implementation details**
+    - **Context:** cr-04 Decouple Tests from CSS Class Implementation Details
+    - **Action:**
+        1. Refactor assertions in `container.test.tsx` and `grid-item.test.tsx` to check styles or semantic DOM attributes, not internal class names.
+    - **Done‑when:**
+        1. Tests assert behavior or computed styles, not internal CSS classes (except for documented public API).
+    - **Verification:**
+        1. Tests remain green and are resilient to class name changes.
+    - **Depends‑on:** [T009]
+
+- [ ] **T011 · Refactor · P1: decouple Logo tests from CSS class implementation details**
+    - **Context:** cr-04 Decouple Tests from CSS Class Implementation Details
+    - **Action:**
+        1. Refactor assertions in `logo.test.tsx` to check styles or semantic properties over internal class names.
+    - **Done‑when:**
+        1. Tests assert observable outcome, not styling internals.
+    - **Verification:**
+        1. Tests remain green and non-brittle.
+    - **Depends‑on:** none
+
+- [ ] **T012 · Refactor · P1: replace manual class checks in Logo tests with toHaveClass**
+    - **Context:** cr-05 Refactor Non-Idiomatic/Brittle Class/Style Assertions
+    - **Action:**
+        1. Replace all manual class presence checks in `logo.test.tsx` with `expect(...).toHaveClass(...)`.
+        2. Remove obsolete comments about CSS-in-JS if present.
+    - **Done‑when:**
+        1. Only idiomatic toHaveClass is used for class assertions in Logo tests.
+    - **Verification:**
+        1. Code search shows no manual classList checks remain.
+    - **Depends‑on:** [T011]
+
+- [ ] **T013 · Refactor · P1: robustly assert NoiseBackground styles and document jsdom limitations**
+    - **Context:** cr-05 Refactor Non-Idiomatic/Brittle Class/Style Assertions
+    - **Action:**
+        1. Use `toHaveStyle` for `backgroundRepeat`, `opacity` in `noise-background.test.tsx`.
+        2. Attempt to assert `backgroundImage`; if not feasible, comment in code explaining jsdom limitation.
+    - **Done‑when:**
+        1. Style assertions are robust, or a clear comment explains any limitation.
+    - **Verification:**
+        1. Code review and test output.
+    - **Depends‑on:** none
+
+## Querying Strategy & Test Resilience
+- [ ] **T014 · Refactor · P1: minimize data-testid usage in Logo tests in favor of user-facing queries**
+    - **Context:** cr-06 Optimize Querying Strategy (Reduce `data-testid` Overuse)
+    - **Action:**
+        1. Update Logo tests to use `getByRole`, `getByLabelText`, or `getByText`.
+    - **Done‑when:**
+        1. No `getByTestId` is used in Logo tests where user-facing queries are possible.
+    - **Verification:**
+        1. Tests remain green; queries reflect real user selectors.
+    - **Depends‑on:** [T012]
+
+- [ ] **T015 · Refactor · P1: minimize data-testid usage in Container, GridItem, and NoiseBackground tests**
+    - **Context:** cr-06 Optimize Querying Strategy (Reduce `data-testid` Overuse)
+    - **Action:**
+        1. Replace `getByTestId` with semantic selectors where feasible in these test files.
+        2. If a more semantic wrapper is appropriate for accessibility, implement it.
+    - **Done‑when:**
+        1. `getByTestId` is used only when no accessible selector is possible.
+    - **Verification:**
+        1. Code review confirms selector improvement.
+    - **Depends‑on:** [T010], [T013]
+
+## Coverage Verification
+- [ ] **T016 · Test · P0: generate and attach test coverage report to PR**
+    - **Context:** cr-07 Address Test Coverage Verification Gap
+    - **Action:**
+        1. Run tests with coverage enabled.
+        2. Attach the summary or artifact (HTML report link) to the PR or as a PR comment.
+    - **Done‑when:**
+        1. PR includes evidence of current coverage.
+    - **Verification:**
+        1. Reviewer can view and verify coverage numbers.
+    - **Depends‑on:** none
+
+- [ ] **T017 · Chore · P0: confirm CI enforces test coverage thresholds**
+    - **Context:** cr-07 Address Test Coverage Verification Gap
+    - **Action:**
+        1. Check CI pipeline config for test coverage enforcement (90%+).
+        2. If missing, add coverage enforcement to CI config.
+    - **Done‑when:**
+        1. CI fails builds that fall below coverage thresholds.
+    - **Verification:**
+        1. Deliberately break coverage and confirm CI fails.
+    - **Depends‑on:** none
+
+## Minor Hygiene/Readability
+- [ ] **T018 · Chore · P2: remove commented-out dead jest.mock code from container.test.tsx**
+    - **Context:** cr-08 Remove Commented-Out Dead Code
+    - **Action:**
+        1. Delete commented-out `jest.mock` block from `container.test.tsx`.
+    - **Done‑when:**
+        1. No dead code remains.
+    - **Verification:**
+        1. Code search for `jest.mock` comments is empty.
+    - **Depends‑on:** none
+
+- [ ] **T019 · Chore · P2: ensure all test files have final newlines**
+    - **Context:** cr-09 Add Missing Final Newlines in Test Files
+    - **Action:**
+        1. Run Prettier or configured formatter to enforce final newlines.
+    - **Done‑when:**
+        1. All test files end with a newline.
+    - **Verification:**
+        1. `git diff` shows no missing newlines; Prettier check passes.
+    - **Depends‑on:** none
+
+- [ ] **T020 · Refactor · P2: change let to const in test files where reassignment does not occur**
+    - **Context:** cr-11 Use `const` Over `let` Where Possible in Test Files
+    - **Action:**
+        1. Find all `let` declarations in test files that are not reassigned.
+        2. Replace with `const`.
+    - **Done‑when:**
+        1. Only genuinely reassigned variables use `let`.
+    - **Verification:**
+        1. Lint passes; code review confirms.
+    - **Depends‑on:** none
+
+- [ ] **T021 · Chore · P2: add comments explaining non-obvious test logic**
+    - **Context:** cr-10 Add Documentation for Non-Obvious Test Logic
+    - **Action:**
+        1. Add concise comments to non-trivial test logic, e.g., DOM filtering in `noise-background.test.tsx:70-72`.
+    - **Done‑when:**
+        1. All non-obvious test setups are explained.
+    - **Verification:**
+        1. Code review confirms clarity.
+    - **Depends‑on:** none
+
+## Component Source Documentation
+- [ ] **T022 · Chore · P1: ensure TSDoc coverage for Container props**
+    - **Context:** cr-12 Ensure TSDoc for Source Component Props
+    - **Action:**
+        1. Review Container props interface in `container.tsx`.
+        2. Add/update TSDoc for each prop, covering type, usage, and default.
+    - **Done‑when:**
+        1. All Container props are comprehensively documented with TSDoc.
+    - **Verification:**
+        1. IDE hover shows TSDoc; code review confirms completeness.
+    - **Depends‑on:** none
+
+- [ ] **T023 · Chore · P1: ensure TSDoc coverage for GridItem props**
+    - **Context:** cr-12 Ensure TSDoc for Source Component Props
+    - **Action:**
+        1. Review GridItem props interface in `container.tsx`.
+        2. Add/update TSDoc for each prop, covering type, usage, and default.
+    - **Done‑when:**
+        1. All GridItem props are comprehensively documented with TSDoc.
+    - **Verification:**
+        1. IDE hover shows TSDoc; code review confirms completeness.
+    - **Depends‑on:** none
+
+- [ ] **T024 · Chore · P1: ensure TSDoc coverage for Logo props**
+    - **Context:** cr-12 Ensure TSDoc for Source Component Props
+    - **Action:**
+        1. Review Logo props interface in `logo.tsx`.
+        2. Add/update TSDoc for each prop, covering type, usage, and default.
+    - **Done‑when:**
+        1. All Logo props are comprehensively documented with TSDoc.
+    - **Verification:**
+        1. IDE hover shows TSDoc; code review confirms completeness.
+    - **Depends‑on:** none
+
+- [ ] **T025 · Chore · P1: ensure TSDoc coverage for NoiseBackground props**
+    - **Context:** cr-12 Ensure TSDoc for Source Component Props
+    - **Action:**
+        1. Review NoiseBackground props interface in `noise-background.tsx`.
+        2. Add/update TSDoc for each prop, covering type, usage, and default.
+    - **Done‑when:**
+        1. All NoiseBackground props are comprehensively documented with TSDoc.
+    - **Verification:**
+        1. IDE hover shows TSDoc; code review confirms completeness.
+    - **Depends‑on:** none
