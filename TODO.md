@@ -33,7 +33,7 @@
         2. File passes `pnpm typecheck` and `pnpm lint` with basic test structure.
     - **Depends‑on:** none
 
-- [ ] **T004 · Chore · P2: create noise-background.test.tsx test file**
+- [x] **T004 · Chore · P2: create noise-background.test.tsx test file**
     - **Context:** Plan Details > Detailed Build Steps > 2. Create Test Files
     - **Action:**
         1. Create `__tests__/components/ui/noise-background.test.tsx`.
