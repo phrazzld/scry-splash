@@ -324,6 +324,24 @@ describe('GridItem Component', () => {
     expect(gridItem).toHaveTextContent('Content');
     expect(gridItem.tagName).toBe('DIV');
   });
+  
+  it('renders complex children correctly', () => {
+    render(
+      <GridItem data-testid="grid-item">
+        <div data-testid="child1">First Child</div>
+        <span data-testid="child2">Second Child</span>
+      </GridItem>
+    );
+    
+    const gridItem = screen.getByTestId('grid-item');
+    const child1 = screen.getByTestId('child1');
+    const child2 = screen.getByTestId('child2');
+    
+    expect(gridItem).toContainElement(child1);
+    expect(gridItem).toContainElement(child2);
+    expect(child1).toHaveTextContent('First Child');
+    expect(child2).toHaveTextContent('Second Child');
+  });
 
   it('applies custom className', () => {
     const customClass = 'test-class';
@@ -334,10 +352,35 @@ describe('GridItem Component', () => {
   });
 
   it('renders with custom element via as prop', () => {
-    render(<GridItem as="section" data-testid="grid-item">Content</GridItem>);
+    // Test with section element
+    const { rerender } = render(
+      <GridItem as="section" data-testid="grid-item">
+        Content
+      </GridItem>
+    );
     
-    const gridItem = screen.getByTestId('grid-item');
+    let gridItem = screen.getByTestId('grid-item');
     expect(gridItem.tagName).toBe('SECTION');
+    
+    // Test with article element
+    rerender(
+      <GridItem as="article" data-testid="grid-item">
+        Content
+      </GridItem>
+    );
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem.tagName).toBe('ARTICLE');
+    
+    // Test with header element
+    rerender(
+      <GridItem as="header" data-testid="grid-item">
+        Content
+      </GridItem>
+    );
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem.tagName).toBe('HEADER');
   });
 
   it('forwards refs correctly', () => {

@@ -68,7 +68,7 @@
         2. Tests pass `pnpm typecheck` and `pnpm lint`.
     - **Depends‑on:** [T002]
 
-- [ ] **T007 · Test · P2: implement GridItem rendering tests (children, default element, `as` prop)**
+- [x] **T007 · Test · P2: implement GridItem rendering tests (children, default element, `as` prop)**
     - **Context:** Plan Details > Detailed Build Steps > 3. Implement `Container` & `GridItem` Tests > Rendering (`GridItem` - implicitly from `Container` section)
     - **Action:**
         1. Verify `GridItem` renders children correctly.
