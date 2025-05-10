@@ -192,7 +192,7 @@
         2. Test descriptions are behavior-focused, no internal mocking, and pass TS/lint checks.
     - **Depends‑on:** [T002, T003, T004]
 
-- [~] **T018 · Chore · P0: audit all tests to ensure no internal collaborators are mocked**
+- [x] **T018 · Chore · P0: audit all tests to ensure no internal collaborators are mocked**
     - **Context:** Plan Details > Detailed Build Steps > 6. Adherence to Philosophy & Code Quality; Risk Matrix (Mocking internal collaborators)
     - **Action:**
         1. Review all tests in `container.test.tsx`, `logo.test.tsx`, and `noise-background.test.tsx`.
@@ -203,7 +203,7 @@
         1. Manual code review of all implemented tests.
     - **Depends‑on:** [T009, T012, T015, T016, T017]
 
-- [ ] **T019 · Chore · P0: verify test coverage meets or exceeds 90% for all atoms**
+- [x] **T019 · Chore · P0: verify test coverage meets or exceeds 90% for all atoms**
     - **Context:** Plan Details > Detailed Build Steps > 7. Coverage Verification; Risk Matrix (Insufficient test coverage)
     - **Action:**
         1. Run `pnpm test --coverage`.
