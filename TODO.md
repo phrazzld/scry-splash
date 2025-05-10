@@ -12,7 +12,7 @@
         1. Search for `jest.mock` and verify no forbidden mocks exist.
     - **Depends‑on:** none
 
-- [ ] **T002 · Chore · P0: add explicit internal mocking policy confirmation to PR description**
+- [x] **T002 · Chore · P0: add explicit internal mocking policy confirmation to PR description**
     - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
     - **Action:**
         1. Add a clear statement in the PR description confirming the audit for internal mocks is complete and no forbidden mocks exist.
