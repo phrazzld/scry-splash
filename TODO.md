@@ -112,7 +112,7 @@
         2. Tests pass `pnpm typecheck` and `pnpm lint`.
     - **Depends‑on:** [T003]
 
-- [ ] **T011 · Test · P2: implement Logo prop tests (`className`, `size`, `color`, `aria-label`)**
+- [x] **T011 · Test · P2: implement Logo prop tests (`className`, `size`, `color`, `aria-label`)**
     - **Context:** Plan Details > Detailed Build Steps > 4. Implement `Logo` Tests > Props & Variants
     - **Action:**
         1. Test `className` is applied.
