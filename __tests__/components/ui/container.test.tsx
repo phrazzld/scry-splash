@@ -835,3 +835,79 @@ describe('GridItem Accessibility', () => {
     expect(results).toHaveNoViolations();
   });
 });
+
+describe('Container and GridItem Edge Cases', () => {
+  it('renders Container correctly with no children', () => {
+    render(<Container data-testid="empty-container" />);
+    
+    const container = screen.getByTestId('empty-container');
+    expect(container).toBeInTheDocument();
+    expect(container).toHaveClass('grid-container');
+    expect(container).toHaveClass('w-full');
+    expect(container).toHaveClass('relative');
+    expect(container.childNodes.length).toBe(0);
+  });
+  
+  it('renders Container correctly with null children', () => {
+    render(<Container data-testid="null-container">{null}</Container>);
+    
+    const container = screen.getByTestId('null-container');
+    expect(container).toBeInTheDocument();
+    expect(container).toHaveClass('grid-container');
+    expect(container.childNodes.length).toBe(0);
+  });
+  
+  it('renders Container correctly with undefined children', () => {
+    render(<Container data-testid="undefined-container">{undefined}</Container>);
+    
+    const container = screen.getByTestId('undefined-container');
+    expect(container).toBeInTheDocument();
+    expect(container).toHaveClass('grid-container');
+    expect(container.childNodes.length).toBe(0);
+  });
+  
+  it('renders GridItem correctly with no children', () => {
+    render(<GridItem data-testid="empty-grid-item" />);
+    
+    const gridItem = screen.getByTestId('empty-grid-item');
+    expect(gridItem).toBeInTheDocument();
+    expect(gridItem).toHaveClass('col-span-12'); // Default span
+    expect(gridItem.childNodes.length).toBe(0);
+  });
+  
+  it('renders GridItem correctly with null children', () => {
+    render(<GridItem data-testid="null-grid-item">{null}</GridItem>);
+    
+    const gridItem = screen.getByTestId('null-grid-item');
+    expect(gridItem).toBeInTheDocument();
+    expect(gridItem).toHaveClass('col-span-12');
+    expect(gridItem.childNodes.length).toBe(0);
+  });
+  
+  it('renders GridItem correctly with undefined children', () => {
+    render(<GridItem data-testid="undefined-grid-item">{undefined}</GridItem>);
+    
+    const gridItem = screen.getByTestId('undefined-grid-item');
+    expect(gridItem).toBeInTheDocument();
+    expect(gridItem).toHaveClass('col-span-12');
+    expect(gridItem.childNodes.length).toBe(0);
+  });
+
+  it('has no accessibility violations when rendering empty Container', async () => {
+    const { container } = render(
+      <Container data-testid="empty-container" />
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+  
+  it('has no accessibility violations when rendering empty GridItem', async () => {
+    const { container } = render(
+      <GridItem data-testid="empty-grid-item" />
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+});

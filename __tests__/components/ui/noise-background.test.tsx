@@ -291,3 +291,81 @@ describe('NoiseBackground Accessibility', () => {
     expect(results).toHaveNoViolations();
   });
 });
+
+describe('NoiseBackground Edge Cases', () => {
+  it('renders correctly with no children', () => {
+    render(<NoiseBackground data-testid="empty-noise-bg" />);
+    
+    const noiseBg = screen.getByTestId('empty-noise-bg');
+    expect(noiseBg).toBeInTheDocument();
+    expect(noiseBg).toHaveClass('relative');
+    
+    // Should still have the noise layer div as its only child
+    expect(noiseBg.childNodes.length).toBe(1);
+    const noiseLayer = noiseBg.firstChild as HTMLElement;
+    expect(noiseLayer).toBeInstanceOf(HTMLDivElement);
+    expect(noiseLayer).toHaveClass('absolute');
+    expect(noiseLayer).toHaveClass('inset-0');
+    expect(noiseLayer).toHaveAttribute('aria-hidden', 'true');
+  });
+  
+  it('renders correctly with null children', () => {
+    render(<NoiseBackground data-testid="null-noise-bg">{null}</NoiseBackground>);
+    
+    const noiseBg = screen.getByTestId('null-noise-bg');
+    expect(noiseBg).toBeInTheDocument();
+    expect(noiseBg).toHaveClass('relative');
+    
+    // Should still have the noise layer div as its only child
+    expect(noiseBg.childNodes.length).toBe(1);
+    const noiseLayer = noiseBg.firstChild as HTMLElement;
+    expect(noiseLayer).toBeInstanceOf(HTMLDivElement);
+    expect(noiseLayer).toHaveAttribute('aria-hidden', 'true');
+  });
+  
+  it('renders correctly with undefined children', () => {
+    render(<NoiseBackground data-testid="undefined-noise-bg">{undefined}</NoiseBackground>);
+    
+    const noiseBg = screen.getByTestId('undefined-noise-bg');
+    expect(noiseBg).toBeInTheDocument();
+    expect(noiseBg).toHaveClass('relative');
+    
+    // Should still have the noise layer div as its only child
+    expect(noiseBg.childNodes.length).toBe(1);
+    const noiseLayer = noiseBg.firstChild as HTMLElement;
+    expect(noiseLayer).toBeInstanceOf(HTMLDivElement);
+    expect(noiseLayer).toHaveAttribute('aria-hidden', 'true');
+  });
+  
+  it('applies props correctly when rendered with no children', () => {
+    const customClass = 'empty-test-class';
+    const customColor = 'rgb(50, 100, 150)';
+    const customOpacity = 0.3;
+    
+    render(
+      <NoiseBackground 
+        className={customClass}
+        baseColor={customColor}
+        noiseOpacity={customOpacity}
+        data-testid="props-noise-bg" 
+      />
+    );
+    
+    const noiseBg = screen.getByTestId('props-noise-bg');
+    expect(noiseBg).toHaveClass(customClass);
+    expect(noiseBg.style.backgroundColor).toBe(customColor);
+    
+    const noiseLayer = noiseBg.firstChild as HTMLElement;
+    expect(noiseLayer).toBeInTheDocument();
+    expect(noiseLayer.style.opacity).toBe(customOpacity.toString());
+  });
+  
+  it('has no accessibility violations when rendered with no children', async () => {
+    const { container } = render(
+      <NoiseBackground data-testid="empty-noise-bg" />
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+});

@@ -169,7 +169,7 @@
     - **Depends‑on:** [T001, T013, T014]
 
 ## Edge Cases & Final Verification
-- [~] **T016 · Test · P2: implement edge case tests for components rendering with no children**
+- [x] **T016 · Test · P2: implement edge case tests for components rendering with no children**
     - **Context:** Plan Details > Testing Strategy > Edge Cases
     - **Action:**
         1. Test `Container` rendering with no children.
@@ -180,7 +180,7 @@
         2. Test descriptions are behavior-focused, no internal mocking, and pass TS/lint checks.
     - **Depends‑on:** [T002, T004]
 
-- [ ] **T017 · Test · P2: implement edge case tests for HTML attribute passthrough (`id`, `data-*`)**
+- [~] **T017 · Test · P2: implement edge case tests for HTML attribute passthrough (`id`, `data-*`)**
     - **Context:** Plan Details > Testing Strategy > Edge Cases
     - **Action:**
         1. Test `Container` for passthrough of standard HTML attributes like `id`, `data-*`.
