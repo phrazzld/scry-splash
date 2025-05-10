@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { axe } from 'jest-axe';
 import { NoiseBackground } from '@/components/ui/noise-background';
 
 describe('NoiseBackground Component', () => {
@@ -222,5 +223,71 @@ describe('NoiseBackground Component', () => {
     expect(noiseLayer).toHaveClass('absolute');
     expect(noiseLayer).toHaveClass('inset-0');
     expect(noiseLayer).toHaveAttribute('aria-hidden', 'true');
+  });
+});
+
+describe('NoiseBackground Accessibility', () => {
+  it('has no accessibility violations in default state', async () => {
+    const { container } = render(
+      <NoiseBackground data-testid="noise-bg" />
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with custom className', async () => {
+    const { container } = render(
+      <NoiseBackground className="custom-test-class" data-testid="noise-bg" />
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with custom baseColor', async () => {
+    const { container } = render(
+      <NoiseBackground baseColor="#333333" data-testid="noise-bg" />
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with custom noiseOpacity', async () => {
+    const { container } = render(
+      <NoiseBackground noiseOpacity={0.5} data-testid="noise-bg" />
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with children content', async () => {
+    const { container } = render(
+      <NoiseBackground data-testid="noise-bg">
+        <div>Child content</div>
+        <p>More content</p>
+      </NoiseBackground>
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+  
+  it('has no accessibility violations with all props combined', async () => {
+    const { container } = render(
+      <NoiseBackground 
+        className="custom-test-class"
+        baseColor="rgb(200, 100, 50)"
+        noiseOpacity={0.75}
+        data-testid="noise-bg"
+      >
+        <div>Inner content</div>
+      </NoiseBackground>
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

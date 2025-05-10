@@ -158,7 +158,7 @@
         2. Tests pass `pnpm typecheck` and `pnpm lint`.
     - **Depends‑on:** [T004]
 
-- [ ] **T015 · Test · P1: implement accessibility tests for NoiseBackground (A11Y-001)**
+- [x] **T015 · Test · P1: implement accessibility tests for NoiseBackground (A11Y-001)**
     - **Context:** Plan Details > Detailed Build Steps > 5. Implement `NoiseBackground` Tests > Accessibility
     - **Action:**
         1. For each distinct rendered state of `NoiseBackground` from T013-T014, integrate `jest-axe` checks.
@@ -169,7 +169,7 @@
     - **Depends‑on:** [T001, T013, T014]
 
 ## Edge Cases & Final Verification
-- [ ] **T016 · Test · P2: implement edge case tests for components rendering with no children**
+- [~] **T016 · Test · P2: implement edge case tests for components rendering with no children**
     - **Context:** Plan Details > Testing Strategy > Edge Cases
     - **Action:**
         1. Test `Container` rendering with no children.
