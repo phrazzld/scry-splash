@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { axe } from 'jest-axe';
 import { Logo } from '@/components/ui/logo';
 
 describe('Logo Component', () => {
@@ -202,5 +203,121 @@ describe('Logo Component', () => {
                         
     expect(hasSmallClass || logo.className).toBeTruthy();
     expect(hasCobaltClass || logo.className).toBeTruthy();
+  });
+});
+
+describe('Logo Accessibility', () => {
+  it('has no accessibility violations in default state', async () => {
+    const { container } = render(
+      <Logo data-testid="logo">Scry.</Logo>
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with different HTML elements', async () => {
+    // Test h1 element (default)
+    const { container: h1Container } = render(
+      <Logo as="h1" data-testid="logo">Scry.</Logo>
+    );
+    
+    let results = await axe(h1Container);
+    expect(results).toHaveNoViolations();
+    
+    // Test div element
+    const { container: divContainer } = render(
+      <Logo as="div" data-testid="logo">Scry.</Logo>
+    );
+    
+    results = await axe(divContainer);
+    expect(results).toHaveNoViolations();
+    
+    // Test p element
+    const { container: pContainer } = render(
+      <Logo as="p" data-testid="logo">Scry.</Logo>
+    );
+    
+    results = await axe(pContainer);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with custom aria-label', async () => {
+    const { container } = render(
+      <Logo aria-label="Custom Logo Label" data-testid="logo">Scry.</Logo>
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with different size variants', async () => {
+    // Test small size
+    const { container: smallContainer } = render(
+      <Logo size="small" data-testid="logo">Scry.</Logo>
+    );
+    
+    let results = await axe(smallContainer);
+    expect(results).toHaveNoViolations();
+    
+    // Test medium size
+    const { container: mediumContainer } = render(
+      <Logo size="medium" data-testid="logo">Scry.</Logo>
+    );
+    
+    results = await axe(mediumContainer);
+    expect(results).toHaveNoViolations();
+    
+    // Test large size
+    const { container: largeContainer } = render(
+      <Logo size="large" data-testid="logo">Scry.</Logo>
+    );
+    
+    results = await axe(largeContainer);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with different color variants', async () => {
+    // Test chalk color (default)
+    const { container: chalkContainer } = render(
+      <Logo color="chalk" data-testid="logo">Scry.</Logo>
+    );
+    
+    let results = await axe(chalkContainer);
+    expect(results).toHaveNoViolations();
+    
+    // Test ink color
+    const { container: inkContainer } = render(
+      <Logo color="ink" data-testid="logo">Scry.</Logo>
+    );
+    
+    results = await axe(inkContainer);
+    expect(results).toHaveNoViolations();
+    
+    // Test cobalt color
+    const { container: cobaltContainer } = render(
+      <Logo color="cobalt" data-testid="logo">Scry.</Logo>
+    );
+    
+    results = await axe(cobaltContainer);
+    expect(results).toHaveNoViolations();
+  });
+  
+  it('has no accessibility violations with combined props', async () => {
+    const { container } = render(
+      <Logo 
+        as="div"
+        size="small" 
+        color="cobalt" 
+        className="custom-test-class" 
+        aria-label="Custom Logo Label"
+        data-testid="logo"
+      >
+        Scry.
+      </Logo>
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

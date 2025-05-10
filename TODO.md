@@ -124,7 +124,7 @@
         2. Tests pass `pnpm typecheck` and `pnpm lint`.
     - **Depends‑on:** [T003]
 
-- [ ] **T012 · Test · P1: implement accessibility tests for Logo (A11Y-001)**
+- [x] **T012 · Test · P1: implement accessibility tests for Logo (A11Y-001)**
     - **Context:** Plan Details > Detailed Build Steps > 4. Implement `Logo` Tests > Accessibility
     - **Action:**
         1. For each distinct rendered state of `Logo` from T010-T011, integrate `jest-axe` checks.
