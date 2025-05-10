@@ -44,7 +44,7 @@
     - **Depends‑on:** none
 
 ## Container & GridItem Tests (`container.test.tsx`)
-- [ ] **T005 · Test · P2: implement Container rendering tests (children, default element, `as` prop)**
+- [x] **T005 · Test · P2: implement Container rendering tests (children, default element, `as` prop)**
     - **Context:** Plan Details > Detailed Build Steps > 3. Implement `Container` & `GridItem` Tests > Rendering (`Container`)
     - **Action:**
         1. Verify `Container` renders children correctly.
