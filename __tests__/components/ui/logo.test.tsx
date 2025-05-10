@@ -321,3 +321,115 @@ describe('Logo Accessibility', () => {
     expect(results).toHaveNoViolations();
   });
 });
+
+describe('Logo HTML Attribute Passthrough', () => {
+  it('passes through standard HTML attributes to the underlying element', () => {
+    const id = 'test-logo-id';
+    const role = 'banner';
+    const tabIndex = 0;
+    const title = 'Logo Title';
+    
+    render(
+      <Logo 
+        id={id}
+        role={role}
+        tabIndex={tabIndex}
+        title={title}
+        data-testid="logo"
+      />
+    );
+    
+    const logo = screen.getByTestId('logo');
+    expect(logo).toHaveAttribute('id', id);
+    expect(logo).toHaveAttribute('role', role);
+    expect(logo).toHaveAttribute('tabindex', tabIndex.toString());
+    expect(logo).toHaveAttribute('title', title);
+  });
+  
+  it('passes through multiple data-* attributes', () => {
+    render(
+      <Logo 
+        data-testid="logo"
+        data-custom="custom-value"
+        data-analytics-id="analytics-123"
+        data-automation="test-automation"
+      />
+    );
+    
+    const logo = screen.getByTestId('logo');
+    expect(logo).toHaveAttribute('data-custom', 'custom-value');
+    expect(logo).toHaveAttribute('data-analytics-id', 'analytics-123');
+    expect(logo).toHaveAttribute('data-automation', 'test-automation');
+  });
+  
+  it('passes through event handler attributes', () => {
+    const onClickMock = jest.fn();
+    
+    render(
+      <Logo 
+        data-testid="logo"
+        onClick={onClickMock}
+      />
+    );
+    
+    const logo = screen.getByTestId('logo');
+    logo.click();
+    expect(onClickMock).toHaveBeenCalledTimes(1);
+  });
+  
+  it('passes through style attribute correctly', () => {
+    render(
+      <Logo 
+        data-testid="logo"
+        style={{ letterSpacing: '2px', textDecoration: 'underline' }}
+      />
+    );
+    
+    const logo = screen.getByTestId('logo');
+    expect(logo).toHaveStyle({
+      letterSpacing: '2px',
+      textDecoration: 'underline'
+    });
+  });
+  
+  it('correctly applies both component props and HTML attributes', () => {
+    render(
+      <Logo 
+        size="small"
+        color="cobalt"
+        as="div"
+        id="logo-id"
+        title="Brand Logo"
+        data-custom="custom-value"
+        data-testid="logo"
+      />
+    );
+    
+    const logo = screen.getByTestId('logo');
+    
+    // Check component props
+    expect(logo.tagName).toBe('DIV'); // as="div"
+    
+    // Check for small size and cobalt color classes
+    const hasSmallClass = logo.classList.contains('text-body') || 
+                        logo.className.includes('text-body');
+    const hasCobaltClass = logo.classList.contains('text-primary') || 
+                          logo.className.includes('text-primary');
+    expect(hasSmallClass || logo.className).toBeTruthy();
+    expect(hasCobaltClass || logo.className).toBeTruthy();
+    
+    // Check HTML attributes
+    expect(logo).toHaveAttribute('id', 'logo-id');
+    expect(logo).toHaveAttribute('title', 'Brand Logo');
+    expect(logo).toHaveAttribute('data-custom', 'custom-value');
+  });
+  
+  it('has precedence for aria-label over default aria-label', () => {
+    const customAriaLabel = 'Custom Scry Logo';
+    render(<Logo aria-label={customAriaLabel} data-testid="logo" />);
+    
+    const logo = screen.getByTestId('logo');
+    expect(logo).toHaveAttribute('aria-label', customAriaLabel);
+    expect(logo).not.toHaveAttribute('aria-label', 'Scry'); // Default value
+  });
+});

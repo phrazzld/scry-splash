@@ -911,3 +911,209 @@ describe('Container and GridItem Edge Cases', () => {
     expect(results).toHaveNoViolations();
   });
 });
+
+describe('HTML Attribute Passthrough Tests', () => {
+  describe('Container HTML Attribute Passthrough', () => {
+    it('passes through standard HTML attributes to the underlying element', () => {
+      const id = 'test-container-id';
+      const role = 'main';
+      const tabIndex = 0;
+      const title = 'Container Title';
+      const ariaLabel = 'Container Label';
+      
+      render(
+        <Container 
+          id={id}
+          role={role}
+          tabIndex={tabIndex}
+          title={title}
+          aria-label={ariaLabel}
+          data-testid="container"
+        >
+          Content
+        </Container>
+      );
+      
+      const container = screen.getByTestId('container');
+      expect(container).toHaveAttribute('id', id);
+      expect(container).toHaveAttribute('role', role);
+      expect(container).toHaveAttribute('tabindex', tabIndex.toString());
+      expect(container).toHaveAttribute('title', title);
+      expect(container).toHaveAttribute('aria-label', ariaLabel);
+    });
+    
+    it('passes through multiple data-* attributes', () => {
+      render(
+        <Container 
+          data-testid="container"
+          data-custom="custom-value"
+          data-analytics-id="analytics-123"
+          data-automation="test-automation"
+        >
+          Content
+        </Container>
+      );
+      
+      const container = screen.getByTestId('container');
+      expect(container).toHaveAttribute('data-custom', 'custom-value');
+      expect(container).toHaveAttribute('data-analytics-id', 'analytics-123');
+      expect(container).toHaveAttribute('data-automation', 'test-automation');
+    });
+    
+    it('passes through event handler attributes', () => {
+      const onClickMock = jest.fn();
+      const onKeyDownMock = jest.fn();
+      
+      render(
+        <Container 
+          data-testid="container"
+          onClick={onClickMock}
+          onKeyDown={onKeyDownMock}
+        >
+          Content
+        </Container>
+      );
+      
+      const container = screen.getByTestId('container');
+      container.click();
+      expect(onClickMock).toHaveBeenCalledTimes(1);
+      
+      // Simulate keydown event
+      container.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      expect(onKeyDownMock).toHaveBeenCalledTimes(1);
+    });
+    
+    it('passes through style attribute correctly', () => {
+      render(
+        <Container 
+          data-testid="container"
+          style={{ color: 'red', marginTop: '10px' }}
+        >
+          Content
+        </Container>
+      );
+      
+      const container = screen.getByTestId('container');
+      expect(container).toHaveStyle({
+        color: 'red',
+        marginTop: '10px'
+      });
+    });
+  });
+  
+  describe('GridItem HTML Attribute Passthrough', () => {
+    it('passes through standard HTML attributes to the underlying element', () => {
+      const id = 'test-grid-item-id';
+      const role = 'region';
+      const tabIndex = 0;
+      const title = 'GridItem Title';
+      const ariaLabel = 'GridItem Label';
+      
+      render(
+        <GridItem 
+          id={id}
+          role={role}
+          tabIndex={tabIndex}
+          title={title}
+          aria-label={ariaLabel}
+          data-testid="grid-item"
+        >
+          Content
+        </GridItem>
+      );
+      
+      const gridItem = screen.getByTestId('grid-item');
+      expect(gridItem).toHaveAttribute('id', id);
+      expect(gridItem).toHaveAttribute('role', role);
+      expect(gridItem).toHaveAttribute('tabindex', tabIndex.toString());
+      expect(gridItem).toHaveAttribute('title', title);
+      expect(gridItem).toHaveAttribute('aria-label', ariaLabel);
+    });
+    
+    it('passes through multiple data-* attributes', () => {
+      render(
+        <GridItem 
+          data-testid="grid-item"
+          data-custom="custom-value"
+          data-analytics-id="analytics-123"
+          data-automation="test-automation"
+        >
+          Content
+        </GridItem>
+      );
+      
+      const gridItem = screen.getByTestId('grid-item');
+      expect(gridItem).toHaveAttribute('data-custom', 'custom-value');
+      expect(gridItem).toHaveAttribute('data-analytics-id', 'analytics-123');
+      expect(gridItem).toHaveAttribute('data-automation', 'test-automation');
+    });
+    
+    it('passes through event handler attributes', () => {
+      const onClickMock = jest.fn();
+      const onMouseOverMock = jest.fn();
+      
+      render(
+        <GridItem 
+          data-testid="grid-item"
+          onClick={onClickMock}
+          onMouseOver={onMouseOverMock}
+        >
+          Content
+        </GridItem>
+      );
+      
+      const gridItem = screen.getByTestId('grid-item');
+      gridItem.click();
+      expect(onClickMock).toHaveBeenCalledTimes(1);
+      
+      // Simulate mouseover event
+      gridItem.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+      expect(onMouseOverMock).toHaveBeenCalledTimes(1);
+    });
+    
+    it('passes through style attribute correctly', () => {
+      render(
+        <GridItem 
+          data-testid="grid-item"
+          style={{ color: 'blue', padding: '5px' }}
+        >
+          Content
+        </GridItem>
+      );
+      
+      const gridItem = screen.getByTestId('grid-item');
+      expect(gridItem).toHaveStyle({
+        color: 'blue',
+        padding: '5px'
+      });
+    });
+    
+    it('correctly applies both props and HTML attributes', () => {
+      render(
+        <GridItem 
+          span={6}
+          start={2}
+          sm={4}
+          mdStart={3}
+          id="grid-item-id"
+          aria-label="Grid section"
+          data-testid="grid-item"
+        >
+          Content
+        </GridItem>
+      );
+      
+      const gridItem = screen.getByTestId('grid-item');
+      
+      // Check component props applied correctly
+      expect(gridItem).toHaveClass('col-span-6');
+      expect(gridItem).toHaveClass('col-start-2');
+      expect(gridItem).toHaveClass('sm:col-span-4');
+      expect(gridItem).toHaveClass('md:col-start-3');
+      
+      // Check HTML attributes passed through correctly
+      expect(gridItem).toHaveAttribute('id', 'grid-item-id');
+      expect(gridItem).toHaveAttribute('aria-label', 'Grid section');
+    });
+  });
+});

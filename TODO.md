@@ -180,7 +180,7 @@
         2. Test descriptions are behavior-focused, no internal mocking, and pass TS/lint checks.
     - **Depends‑on:** [T002, T004]
 
-- [~] **T017 · Test · P2: implement edge case tests for HTML attribute passthrough (`id`, `data-*`)**
+- [x] **T017 · Test · P2: implement edge case tests for HTML attribute passthrough (`id`, `data-*`)**
     - **Context:** Plan Details > Testing Strategy > Edge Cases
     - **Action:**
         1. Test `Container` for passthrough of standard HTML attributes like `id`, `data-*`.
@@ -192,7 +192,7 @@
         2. Test descriptions are behavior-focused, no internal mocking, and pass TS/lint checks.
     - **Depends‑on:** [T002, T003, T004]
 
-- [ ] **T018 · Chore · P0: audit all tests to ensure no internal collaborators are mocked**
+- [~] **T018 · Chore · P0: audit all tests to ensure no internal collaborators are mocked**
     - **Context:** Plan Details > Detailed Build Steps > 6. Adherence to Philosophy & Code Quality; Risk Matrix (Mocking internal collaborators)
     - **Action:**
         1. Review all tests in `container.test.tsx`, `logo.test.tsx`, and `noise-background.test.tsx`.

@@ -369,3 +369,133 @@ describe('NoiseBackground Edge Cases', () => {
     expect(results).toHaveNoViolations();
   });
 });
+
+describe('NoiseBackground HTML Attribute Passthrough', () => {
+  it('passes through standard HTML attributes to the underlying element', () => {
+    const id = 'test-noise-bg-id';
+    const role = 'presentation';
+    const tabIndex = -1;
+    const title = 'Noise Background';
+    const ariaLabel = 'Decorative background';
+    
+    render(
+      <NoiseBackground 
+        id={id}
+        role={role}
+        tabIndex={tabIndex}
+        title={title}
+        aria-label={ariaLabel}
+        data-testid="noise-bg"
+      />
+    );
+    
+    const noiseBg = screen.getByTestId('noise-bg');
+    expect(noiseBg).toHaveAttribute('id', id);
+    expect(noiseBg).toHaveAttribute('role', role);
+    expect(noiseBg).toHaveAttribute('tabindex', tabIndex.toString());
+    expect(noiseBg).toHaveAttribute('title', title);
+    expect(noiseBg).toHaveAttribute('aria-label', ariaLabel);
+  });
+  
+  it('passes through multiple data-* attributes', () => {
+    render(
+      <NoiseBackground 
+        data-testid="noise-bg"
+        data-custom="custom-value"
+        data-analytics-id="analytics-123"
+        data-automation="test-automation"
+      />
+    );
+    
+    const noiseBg = screen.getByTestId('noise-bg');
+    expect(noiseBg).toHaveAttribute('data-custom', 'custom-value');
+    expect(noiseBg).toHaveAttribute('data-analytics-id', 'analytics-123');
+    expect(noiseBg).toHaveAttribute('data-automation', 'test-automation');
+  });
+  
+  it('passes through event handler attributes', () => {
+    const onClickMock = jest.fn();
+    
+    render(
+      <NoiseBackground 
+        data-testid="noise-bg"
+        onClick={onClickMock}
+      />
+    );
+    
+    const noiseBg = screen.getByTestId('noise-bg');
+    noiseBg.click();
+    expect(onClickMock).toHaveBeenCalledTimes(1);
+  });
+  
+  it('passes through style attribute correctly', () => {
+    render(
+      <NoiseBackground 
+        data-testid="noise-bg"
+        style={{ 
+          borderRadius: '8px',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+        }}
+      />
+    );
+    
+    const noiseBg = screen.getByTestId('noise-bg');
+    
+    // Custom style attributes should be applied
+    expect(noiseBg).toHaveStyle({
+      borderRadius: '8px',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+    });
+  });
+  
+  it('correctly applies both component props and HTML attributes together', () => {
+    const customClass = 'custom-background';
+    const customColor = 'rgb(20, 30, 40)';
+    const customOpacity = 0.5;
+    
+    render(
+      <NoiseBackground 
+        className={customClass}
+        baseColor={customColor}
+        noiseOpacity={customOpacity}
+        id="bg-element"
+        title="Decorative background"
+        aria-hidden="true"
+        data-testid="noise-bg"
+      />
+    );
+    
+    const noiseBg = screen.getByTestId('noise-bg');
+    
+    // Check component props were applied
+    expect(noiseBg).toHaveClass(customClass);
+    expect(noiseBg).toHaveClass('relative');
+    expect(noiseBg).toHaveStyle({ backgroundColor: customColor });
+    
+    // Check HTML attributes were passed through
+    expect(noiseBg).toHaveAttribute('id', 'bg-element');
+    expect(noiseBg).toHaveAttribute('title', 'Decorative background');
+    expect(noiseBg).toHaveAttribute('aria-hidden', 'true');
+    
+    // Check internal structure (noise layer) has right opacity
+    const noiseLayer = noiseBg.querySelector('div');
+    expect(noiseLayer).toBeInTheDocument();
+    expect(noiseLayer?.style.opacity).toBe(customOpacity.toString());
+  });
+  
+  it('properly applies aria-* attributes', () => {
+    render(
+      <NoiseBackground 
+        data-testid="noise-bg"
+        aria-label="Decorative element"
+        aria-describedby="description"
+        aria-hidden="false"
+      />
+    );
+    
+    const noiseBg = screen.getByTestId('noise-bg');
+    expect(noiseBg).toHaveAttribute('aria-label', 'Decorative element');
+    expect(noiseBg).toHaveAttribute('aria-describedby', 'description');
+    expect(noiseBg).toHaveAttribute('aria-hidden', 'false');
+  });
+});
