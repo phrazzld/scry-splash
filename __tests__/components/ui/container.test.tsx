@@ -343,12 +343,22 @@ describe('GridItem Component', () => {
     expect(child2).toHaveTextContent('Second Child');
   });
 
-  it('applies custom className', () => {
+  it('applies custom className and merges with default classes', () => {
     const customClass = 'test-class';
-    render(<GridItem className={customClass} data-testid="grid-item">Content</GridItem>);
+    render(
+      <GridItem 
+        className={customClass} 
+        span={6} 
+        data-testid="grid-item"
+      >
+        Content
+      </GridItem>
+    );
     
     const gridItem = screen.getByTestId('grid-item');
     expect(gridItem).toHaveClass(customClass);
+    // Verify merging with generated classes
+    expect(gridItem).toHaveClass('col-span-6');
   });
 
   it('renders with custom element via as prop', () => {
@@ -407,7 +417,31 @@ describe('GridItem Component', () => {
     expect(gridItem).toHaveAttribute('data-custom', customAttr);
   });
 
-  it('applies span props correctly', () => {
+  it('applies default span value when no span prop is provided', () => {
+    render(<GridItem data-testid="grid-item">Content</GridItem>);
+    
+    const gridItem = screen.getByTestId('grid-item');
+    // Default span value is 12
+    expect(gridItem).toHaveClass('col-span-12');
+  });
+
+  it('applies span prop correctly', () => {
+    const { rerender } = render(
+      <GridItem span={6} data-testid="grid-item">Content</GridItem>
+    );
+    
+    let gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('col-span-6');
+    
+    // Test different span value
+    rerender(<GridItem span={3} data-testid="grid-item">Content</GridItem>);
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('col-span-3');
+    expect(gridItem).not.toHaveClass('col-span-6');
+  });
+  
+  it('applies responsive span props correctly', () => {
     render(
       <GridItem 
         span={6} 
@@ -422,15 +456,69 @@ describe('GridItem Component', () => {
     );
     
     const gridItem = screen.getByTestId('grid-item');
-    expect(gridItem).toBeInTheDocument();
     expect(gridItem).toHaveClass('col-span-6');
     expect(gridItem).toHaveClass('sm:col-span-4');
     expect(gridItem).toHaveClass('md:col-span-3');
     expect(gridItem).toHaveClass('lg:col-span-2');
     expect(gridItem).toHaveClass('xl:col-span-1');
   });
+  
+  it('applies individual responsive span props correctly', () => {
+    // Test with only sm breakpoint
+    const { rerender } = render(
+      <GridItem sm={4} data-testid="grid-item">Content</GridItem>
+    );
+    
+    let gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('col-span-12'); // Default span
+    expect(gridItem).toHaveClass('sm:col-span-4');
+    
+    // Test with only md breakpoint
+    rerender(<GridItem md={3} data-testid="grid-item">Content</GridItem>);
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('col-span-12'); // Default span
+    expect(gridItem).toHaveClass('md:col-span-3');
+    
+    // Test with only lg breakpoint
+    rerender(<GridItem lg={2} data-testid="grid-item">Content</GridItem>);
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('col-span-12'); // Default span
+    expect(gridItem).toHaveClass('lg:col-span-2');
+    
+    // Test with only xl breakpoint
+    rerender(<GridItem xl={1} data-testid="grid-item">Content</GridItem>);
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('col-span-12'); // Default span
+    expect(gridItem).toHaveClass('xl:col-span-1');
+  });
 
-  it('applies start props correctly', () => {
+  it('applies start prop correctly', () => {
+    const { rerender } = render(
+      <GridItem start={2} data-testid="grid-item">Content</GridItem>
+    );
+    
+    let gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('col-start-2');
+    
+    // Test different start value
+    rerender(<GridItem start={5} data-testid="grid-item">Content</GridItem>);
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('col-start-5');
+    expect(gridItem).not.toHaveClass('col-start-2');
+    
+    // Test no start prop (no col-start class should be present)
+    rerender(<GridItem data-testid="grid-item">Content</GridItem>);
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).not.toHaveClass('col-start-5');
+    expect(gridItem).not.toHaveClass('col-start-2');
+  });
+  
+  it('applies responsive start props correctly', () => {
     render(
       <GridItem 
         start={2} 
@@ -445,16 +533,60 @@ describe('GridItem Component', () => {
     );
     
     const gridItem = screen.getByTestId('grid-item');
-    expect(gridItem).toBeInTheDocument();
     expect(gridItem).toHaveClass('col-start-2');
     expect(gridItem).toHaveClass('sm:col-start-3');
     expect(gridItem).toHaveClass('md:col-start-4');
     expect(gridItem).toHaveClass('lg:col-start-5');
     expect(gridItem).toHaveClass('xl:col-start-6');
   });
+  
+  it('applies individual responsive start props correctly', () => {
+    // Test with only smStart breakpoint
+    const { rerender } = render(
+      <GridItem smStart={3} data-testid="grid-item">Content</GridItem>
+    );
+    
+    let gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('sm:col-start-3');
+    expect(gridItem).not.toHaveClass('col-start-'); // No default start
+    
+    // Test with only mdStart breakpoint
+    rerender(<GridItem mdStart={4} data-testid="grid-item">Content</GridItem>);
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('md:col-start-4');
+    
+    // Test with only lgStart breakpoint
+    rerender(<GridItem lgStart={5} data-testid="grid-item">Content</GridItem>);
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('lg:col-start-5');
+    
+    // Test with only xlStart breakpoint
+    rerender(<GridItem xlStart={6} data-testid="grid-item">Content</GridItem>);
+    
+    gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('xl:col-start-6');
+  });
 
-  it('combines span and start props correctly', () => {
-    render(
+  it('combines span and start props correctly for various breakpoints', () => {
+    // Test combining span and start at base level
+    const { rerender } = render(
+      <GridItem 
+        span={6} 
+        start={2} 
+        data-testid="grid-item"
+      >
+        Content
+      </GridItem>
+    );
+    
+    let gridItem = screen.getByTestId('grid-item');
+    expect(gridItem).toHaveClass('col-span-6');
+    expect(gridItem).toHaveClass('col-start-2');
+    
+    // Test combining at multiple breakpoints
+    rerender(
       <GridItem 
         span={6} 
         md={4} 
@@ -466,10 +598,43 @@ describe('GridItem Component', () => {
       </GridItem>
     );
     
-    const gridItem = screen.getByTestId('grid-item');
+    gridItem = screen.getByTestId('grid-item');
     expect(gridItem).toHaveClass('col-span-6');
     expect(gridItem).toHaveClass('md:col-span-4');
     expect(gridItem).toHaveClass('col-start-2');
     expect(gridItem).toHaveClass('md:col-start-3');
+    
+    // Test complex combinations across all breakpoints
+    rerender(
+      <GridItem 
+        span={12} 
+        sm={10} 
+        md={8} 
+        lg={6} 
+        xl={4}
+        start={1} 
+        smStart={2}
+        mdStart={3} 
+        lgStart={4}
+        xlStart={5}
+        data-testid="grid-item"
+      >
+        Content
+      </GridItem>
+    );
+    
+    gridItem = screen.getByTestId('grid-item');
+    // Span classes
+    expect(gridItem).toHaveClass('col-span-12');
+    expect(gridItem).toHaveClass('sm:col-span-10');
+    expect(gridItem).toHaveClass('md:col-span-8');
+    expect(gridItem).toHaveClass('lg:col-span-6');
+    expect(gridItem).toHaveClass('xl:col-span-4');
+    // Start classes
+    expect(gridItem).toHaveClass('col-start-1');
+    expect(gridItem).toHaveClass('sm:col-start-2');
+    expect(gridItem).toHaveClass('md:col-start-3');
+    expect(gridItem).toHaveClass('lg:col-start-4');
+    expect(gridItem).toHaveClass('xl:col-start-5');
   });
 });

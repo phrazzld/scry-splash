@@ -79,7 +79,7 @@
         2. Tests pass `pnpm typecheck` and `pnpm lint`.
     - **Depends‑on:** [T002]
 
-- [ ] **T008 · Test · P2: implement GridItem prop tests (`className`, `span`s, `start`s)**
+- [x] **T008 · Test · P2: implement GridItem prop tests (`className`, `span`s, `start`s)**
     - **Context:** Plan Details > Detailed Build Steps > 3. Implement `Container` & `GridItem` Tests > Props & Variants (`GridItem`)
     - **Action:**
         1. Test `className` is applied and merged.
