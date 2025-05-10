@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { axe } from 'jest-axe';
 import { Container, GridItem } from '@/components/ui/container';
 
 describe('Container Component', () => {
@@ -636,5 +637,201 @@ describe('GridItem Component', () => {
     expect(gridItem).toHaveClass('md:col-start-3');
     expect(gridItem).toHaveClass('lg:col-start-4');
     expect(gridItem).toHaveClass('xl:col-start-5');
+  });
+});
+
+describe('Container Accessibility', () => {
+  it('has no accessibility violations in default state', async () => {
+    const { container } = render(
+      <Container data-testid="container">
+        <p>Content for testing</p>
+      </Container>
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with different semantic elements', async () => {
+    const { container: sectionContainer } = render(
+      <Container as="section" data-testid="container">
+        <h2>Section Heading</h2>
+        <p>Content for testing</p>
+      </Container>
+    );
+    
+    let results = await axe(sectionContainer);
+    expect(results).toHaveNoViolations();
+    
+    const { container: articleContainer } = render(
+      <Container as="article" data-testid="container">
+        <h2>Article Heading</h2>
+        <p>Content for testing</p>
+      </Container>
+    );
+    
+    results = await axe(articleContainer);
+    expect(results).toHaveNoViolations();
+    
+    const { container: mainContainer } = render(
+      <Container as="main" data-testid="container">
+        <h1>Main Content</h1>
+        <p>Content for testing</p>
+      </Container>
+    );
+    
+    results = await axe(mainContainer);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with various props combinations', async () => {
+    // Test with maxWidth variant
+    const { container: maxWidthContainer } = render(
+      <Container maxWidth="xl" padding="lg" center={true} gap="md" data-testid="container">
+        <p>Content for testing</p>
+      </Container>
+    );
+    
+    let results = await axe(maxWidthContainer);
+    expect(results).toHaveNoViolations();
+    
+    // Test with gapX and gapY variants
+    const { container: gapContainer } = render(
+      <Container gapX="lg" gapY="sm" data-testid="container">
+        <p>First paragraph</p>
+        <p>Second paragraph</p>
+      </Container>
+    );
+    
+    results = await axe(gapContainer);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with complex nested content', async () => {
+    const { container } = render(
+      <Container data-testid="container">
+        <h2>Complex Content</h2>
+        <p>This is a paragraph with <a href="#test">a link</a> inside it.</p>
+        <div>
+          <ul>
+            <li>List item 1</li>
+            <li>List item 2</li>
+            <li>List item 3</li>
+          </ul>
+        </div>
+        <button type="button">Click me</button>
+      </Container>
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+});
+
+describe('GridItem Accessibility', () => {
+  it('has no accessibility violations in default state', async () => {
+    const { container } = render(
+      <GridItem data-testid="grid-item">
+        <p>Content for testing</p>
+      </GridItem>
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with different semantic elements', async () => {
+    const { container: sectionContainer } = render(
+      <GridItem as="section" data-testid="grid-item">
+        <h2>Section Heading</h2>
+        <p>Content for testing</p>
+      </GridItem>
+    );
+    
+    let results = await axe(sectionContainer);
+    expect(results).toHaveNoViolations();
+    
+    const { container: articleContainer } = render(
+      <GridItem as="article" data-testid="grid-item">
+        <h2>Article Heading</h2>
+        <p>Content for testing</p>
+      </GridItem>
+    );
+    
+    results = await axe(articleContainer);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with span and start props', async () => {
+    const { container: spanContainer } = render(
+      <GridItem span={6} start={2} data-testid="grid-item">
+        <p>Content for testing</p>
+      </GridItem>
+    );
+    
+    let results = await axe(spanContainer);
+    expect(results).toHaveNoViolations();
+    
+    const { container: responsiveContainer } = render(
+      <GridItem 
+        span={12} 
+        sm={10} 
+        md={8} 
+        lg={6} 
+        xl={4}
+        start={1} 
+        smStart={2}
+        mdStart={3} 
+        lgStart={4}
+        xlStart={5}
+        data-testid="grid-item"
+      >
+        <p>Responsive grid item content</p>
+      </GridItem>
+    );
+    
+    results = await axe(responsiveContainer);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations with complex nested content', async () => {
+    const { container } = render(
+      <GridItem span={6} data-testid="grid-item">
+        <h3>Complex Grid Content</h3>
+        <p>This is a paragraph with <a href="#test">a link</a> inside it.</p>
+        <div>
+          <form>
+            <label htmlFor="test-input">Test Input</label>
+            <input id="test-input" type="text" />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </GridItem>
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations when rendering a grid layout', async () => {
+    const { container } = render(
+      <Container data-testid="container">
+        <GridItem span={6} data-testid="grid-item-1">
+          <h2>Left Content</h2>
+          <p>This content should be in the left half of the grid.</p>
+        </GridItem>
+        <GridItem span={6} data-testid="grid-item-2">
+          <h2>Right Content</h2>
+          <p>This content should be in the right half of the grid.</p>
+        </GridItem>
+        <GridItem span={12} data-testid="grid-item-3">
+          <h2>Full Width Content</h2>
+          <p>This content should span the full width of the grid.</p>
+        </GridItem>
+      </Container>
+    );
+    
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

@@ -90,7 +90,7 @@
         2. Tests pass `pnpm typecheck` and `pnpm lint`.
     - **Depends‑on:** [T002]
 
-- [ ] **T009 · Test · P1: implement accessibility tests for Container & GridItem (A11Y-001)**
+- [x] **T009 · Test · P1: implement accessibility tests for Container & GridItem (A11Y-001)**
     - **Context:** Plan Details > Detailed Build Steps > 3. Implement `Container` & `GridItem` Tests > Accessibility
     - **Action:**
         1. For each distinct rendered state of `Container` and `GridItem` from T005-T008, integrate `jest-axe` checks.
