@@ -20,7 +20,7 @@
         1. PR description contains explicit internal mocking audit confirmation.
     - **Depends‑on:** [T001]
 
-- [ ] **T003 · Chore · P1: propose or implement ESLint rule to prevent internal mocking**
+- [x] **T003 · Chore · P1: propose or implement ESLint rule to prevent internal mocking**
     - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
     - **Action:**
         1. Evaluate ESLint's `no-restricted-imports` or similar mechanism to warn on internal module mocking.
