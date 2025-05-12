@@ -99,110 +99,113 @@ describe('Logo Component', () => {
     expect(textNodes.join('')).toBe('Scry');
   });
 
-  it('applies correct size variant classes', () => {
-    // Test small size
-    const { rerender } = render(<Logo size="small" data-testid="logo" />);
-    let logo = screen.getByTestId('logo');
+  it('accepts and processes size prop variants', () => {
+    // Rather than testing implementation details like class names,
+    // we'll verify the component accepts and processes the size prop
     
-    // Verify small size class (text-body) is applied
-    // Due to CSS-in-JS transformations, we'll check for class existence in two ways
-    // Either the exact class or a className string containing the relevant text
-    const hasSmallClass = logo.classList.contains('text-body') || 
-                          logo.className.includes('text-body');
-    expect(hasSmallClass || logo.className).toBeTruthy();
+    // Test with various size props
+    render(<Logo size="small" data-testid="logo-small" />);
+    render(<Logo size="medium" data-testid="logo-medium" />);
+    render(<Logo size="large" data-testid="logo-large" />);
+    render(<Logo size="default" data-testid="logo-default" />);
     
-    // Test medium size
-    rerender(<Logo size="medium" data-testid="logo" />);
-    logo = screen.getByTestId('logo');
+    // Verify each size renders successfully
+    expect(screen.getByTestId('logo-small')).toBeInTheDocument();
+    expect(screen.getByTestId('logo-medium')).toBeInTheDocument();
+    expect(screen.getByTestId('logo-large')).toBeInTheDocument();
+    expect(screen.getByTestId('logo-default')).toBeInTheDocument();
     
-    // Verify medium size class (text-subheading) is applied
-    const hasMediumClass = logo.classList.contains('text-subheading') || 
-                           logo.className.includes('text-subheading');
-    expect(hasMediumClass || logo.className).toBeTruthy();
+    // Verify the prop was successfully processed (not passed to DOM)
+    expect(screen.getByTestId('logo-small')).not.toHaveAttribute('size');
+    expect(screen.getByTestId('logo-medium')).not.toHaveAttribute('size');
+    expect(screen.getByTestId('logo-large')).not.toHaveAttribute('size');
+    expect(screen.getByTestId('logo-default')).not.toHaveAttribute('size');
     
-    // Test large size
-    rerender(<Logo size="large" data-testid="logo" />);
-    logo = screen.getByTestId('logo');
+    // Verify all variants maintain the required base class
+    expect(screen.getByTestId('logo-small')).toHaveClass('font-bold');
+    expect(screen.getByTestId('logo-medium')).toHaveClass('font-bold');
+    expect(screen.getByTestId('logo-large')).toHaveClass('font-bold');
+    expect(screen.getByTestId('logo-default')).toHaveClass('font-bold');
     
-    // Verify large size class (text-[6rem]) is applied
-    const hasLargeClass = logo.classList.contains('text-[6rem]') || 
-                          logo.className.includes('text-[6rem]');
-    expect(hasLargeClass || logo.className).toBeTruthy();
-    
-    // Test default size
-    rerender(<Logo size="default" data-testid="logo" />);
-    logo = screen.getByTestId('logo');
-    
-    // Verify default size class (text-display) is applied
-    const hasDefaultClass = logo.classList.contains('text-display') || 
-                            logo.className.includes('text-display');
-    expect(hasDefaultClass || logo.className).toBeTruthy();
+    // Note: Due to JSDOM limitations, we can't directly test computed font-size styles.
+    // Instead, we verify the component properly accepts the size prop variants
+    // and renders without errors, which is more resilient to implementation changes.
   });
 
-  it('applies correct color variant classes', () => {
+  it('applies correct color variants', () => {
     // Test chalk (default) color
     const { rerender } = render(<Logo color="chalk" data-testid="logo" />);
     let logo = screen.getByTestId('logo');
-    
-    // Verify chalk color class (text-foreground) is applied
-    const hasChalkClass = logo.classList.contains('text-foreground') || 
-                          logo.className.includes('text-foreground');
-    expect(hasChalkClass || logo.className).toBeTruthy();
-    
+
+    // Store the class name for the chalk color variant
+    // Note: We can't reliably check computed color values in JSDOM as it doesn't fully support
+    // CSS calculations and theme variables
+    const chalkClassName = logo.className;
+
     // Test ink color
     rerender(<Logo color="ink" data-testid="logo" />);
     logo = screen.getByTestId('logo');
-    
-    // Verify ink color class (text-background) is applied
-    const hasInkClass = logo.classList.contains('text-background') || 
-                        logo.className.includes('text-background');
-    expect(hasInkClass || logo.className).toBeTruthy();
-    
+
+    // Verify ink color creates a different className than chalk
+    const inkClassName = logo.className;
+    expect(inkClassName).not.toBe(chalkClassName);
+
     // Test cobalt color
     rerender(<Logo color="cobalt" data-testid="logo" />);
     logo = screen.getByTestId('logo');
-    
-    // Verify cobalt color class (text-primary) is applied
-    const hasCobaltClass = logo.classList.contains('text-primary') || 
-                           logo.className.includes('text-primary');
-    expect(hasCobaltClass || logo.className).toBeTruthy();
+
+    // Verify cobalt color creates a different className than ink
+    const cobaltClassName = logo.className;
+    expect(cobaltClassName).not.toBe(inkClassName);
+
+    // Verify each color variant has a distinct className
+    const classNames = [chalkClassName, inkClassName, cobaltClassName];
+    const uniqueClassNames = new Set(classNames);
+    expect(uniqueClassNames.size).toBe(3);
+
+    // Verify the color prop was successfully processed by checking
+    // that it doesn't appear as a DOM attribute
+    expect(logo).not.toHaveAttribute('color');
   });
   
   it('combines multiple props correctly', () => {
     // Test combining size, color, className and aria-label
     const customClass = 'custom-test-class';
     const customAriaLabel = 'Custom Logo Label';
-    
-    render(
-      <Logo 
-        size="small" 
-        color="cobalt" 
-        className={customClass} 
+
+    // First render with default props to get baseline
+    const { rerender } = render(<Logo data-testid="logo" />);
+    const defaultLogo = screen.getByTestId('logo');
+    const defaultClassName = defaultLogo.className;
+
+    // Then render with combined props
+    rerender(
+      <Logo
+        size="small"
+        color="cobalt"
+        className={customClass}
         aria-label={customAriaLabel}
         data-testid="logo"
       />
     );
-    
+
     const logo = screen.getByTestId('logo');
-    
+
     // Verify custom aria-label is applied
     expect(logo).toHaveAttribute('aria-label', customAriaLabel);
-    
+
     // Verify custom class is present
     expect(logo).toHaveClass(customClass);
-    
-    // Verify base class is still present
+
+    // Verify base class is still present (this is a documented API aspect)
     expect(logo).toHaveClass('font-bold');
-    
-    // Verify small size class (text-body) and cobalt color class (text-primary)
-    // are both applied correctly
-    const hasSmallClass = logo.classList.contains('text-body') || 
-                          logo.className.includes('text-body');
-    const hasCobaltClass = logo.classList.contains('text-primary') || 
-                           logo.className.includes('text-primary');
-                        
-    expect(hasSmallClass || logo.className).toBeTruthy();
-    expect(hasCobaltClass || logo.className).toBeTruthy();
+
+    // Verify the combined props create a different className than default
+    expect(logo.className).not.toBe(defaultClassName);
+
+    // Verify the props were processed (not passed directly to DOM)
+    expect(logo).not.toHaveAttribute('size');
+    expect(logo).not.toHaveAttribute('color');
   });
 });
 
@@ -502,8 +505,14 @@ describe('Logo HTML Attribute Passthrough', () => {
   });
   
   it('correctly applies both component props and HTML attributes', () => {
-    render(
-      <Logo 
+    // First render default logo to get baseline
+    const { rerender } = render(<Logo data-testid="logo" />);
+    const defaultLogo = screen.getByTestId('logo');
+    const defaultClassName = defaultLogo.className;
+
+    // Then render with component props and HTML attributes
+    rerender(
+      <Logo
         size="small"
         color="cobalt"
         as="div"
@@ -513,20 +522,15 @@ describe('Logo HTML Attribute Passthrough', () => {
         data-testid="logo"
       />
     );
-    
+
     const logo = screen.getByTestId('logo');
-    
-    // Check component props
+
+    // Check component props were applied
     expect(logo.tagName).toBe('DIV'); // as="div"
-    
-    // Check for small size and cobalt color classes
-    const hasSmallClass = logo.classList.contains('text-body') || 
-                        logo.className.includes('text-body');
-    const hasCobaltClass = logo.classList.contains('text-primary') || 
-                          logo.className.includes('text-primary');
-    expect(hasSmallClass || logo.className).toBeTruthy();
-    expect(hasCobaltClass || logo.className).toBeTruthy();
-    
+
+    // Verify the combined props create a different className than default
+    expect(logo.className).not.toBe(defaultClassName);
+
     // Check HTML attributes
     expect(logo).toHaveAttribute('id', 'logo-id');
     expect(logo).toHaveAttribute('title', 'Brand Logo');

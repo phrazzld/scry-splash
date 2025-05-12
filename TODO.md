@@ -111,7 +111,7 @@
         1. Tests remain green and are resilient to class name changes.
     - **Depends‑on:** [T009]
 
-- [ ] **T011 · Refactor · P1: decouple Logo tests from CSS class implementation details**
+- [x] **T011 · Refactor · P1: decouple Logo tests from CSS class implementation details**
     - **Context:** cr-04 Decouple Tests from CSS Class Implementation Details
     - **Action:**
         1. Refactor assertions in `logo.test.tsx` to check styles or semantic properties over internal class names.
