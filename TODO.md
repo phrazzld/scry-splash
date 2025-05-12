@@ -77,7 +77,7 @@
     - **Depends‑on:** none
 
 ## Test Modularity & File Structure
-- [ ] **T008 · Refactor · P0: split GridItem tests into grid-item.test.tsx**
+- [x] **T008 · Refactor · P0: split GridItem tests into grid-item.test.tsx**
     - **Context:** cr-03 Split Excessive Length Test File (`container.test.tsx`)
     - **Action:**
         1. Create `__tests__/components/ui/grid-item.test.tsx`.
