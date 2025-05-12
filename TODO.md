@@ -43,7 +43,7 @@
         1. Run tests with accessibility assertions failing if violations exist.
     - **Depends‑on:** none
 
-- [ ] **T005 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct GridItem variants**
+- [x] **T005 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct GridItem variants**
     - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
     - **Action:**
         1. Identify each unique prop/state variant tested in `grid-item.test.tsx`.

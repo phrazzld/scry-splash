@@ -336,7 +336,7 @@ describe('GridItem Component', () => {
             <p>Content for testing</p>
           </GridItem>
         );
-        
+
         const results = await axe(container);
         expect(results).toHaveNoViolations();
       });
@@ -350,18 +350,35 @@ describe('GridItem Component', () => {
             <p>Content for testing</p>
           </GridItem>
         );
-        
+
         let results = await axe(sectionContainer);
         expect(results).toHaveNoViolations();
-        
+
         const { container: articleContainer } = render(
           <GridItem as="article" data-testid="grid-item">
             <h2>Article Heading</h2>
             <p>Content for testing</p>
           </GridItem>
         );
-        
+
         results = await axe(articleContainer);
+        expect(results).toHaveNoViolations();
+      });
+
+      it('has no accessibility violations with header element', async () => {
+        const { container } = render(
+          <GridItem as="header" data-testid="grid-item">
+            <h1>Site Title</h1>
+            <nav>
+              <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+              </ul>
+            </nav>
+          </GridItem>
+        );
+
+        const results = await axe(container);
         expect(results).toHaveNoViolations();
       });
     });
@@ -373,20 +390,20 @@ describe('GridItem Component', () => {
             <p>Content for testing</p>
           </GridItem>
         );
-        
+
         let results = await axe(spanContainer);
         expect(results).toHaveNoViolations();
-        
+
         const { container: responsiveContainer } = render(
-          <GridItem 
-            span={12} 
-            sm={10} 
-            md={8} 
-            lg={6} 
+          <GridItem
+            span={12}
+            sm={10}
+            md={8}
+            lg={6}
             xl={4}
-            start={1} 
+            start={1}
             smStart={2}
-            mdStart={3} 
+            mdStart={3}
             lgStart={4}
             xlStart={5}
             data-testid="grid-item"
@@ -394,8 +411,104 @@ describe('GridItem Component', () => {
             <p>Responsive grid item content</p>
           </GridItem>
         );
-        
+
         results = await axe(responsiveContainer);
+        expect(results).toHaveNoViolations();
+      });
+    });
+
+    describe('Responsive Grid Variants', () => {
+      it('has no accessibility violations with individual responsive span props', async () => {
+        const { container: smContainer } = render(
+          <GridItem sm={4} data-testid="grid-item">
+            <p>Small breakpoint content</p>
+          </GridItem>
+        );
+
+        let results = await axe(smContainer);
+        expect(results).toHaveNoViolations();
+
+        const { container: mdContainer } = render(
+          <GridItem md={6} data-testid="grid-item">
+            <p>Medium breakpoint content</p>
+          </GridItem>
+        );
+
+        results = await axe(mdContainer);
+        expect(results).toHaveNoViolations();
+
+        const { container: lgContainer } = render(
+          <GridItem lg={8} data-testid="grid-item">
+            <p>Large breakpoint content</p>
+          </GridItem>
+        );
+
+        results = await axe(lgContainer);
+        expect(results).toHaveNoViolations();
+
+        const { container: xlContainer } = render(
+          <GridItem xl={10} data-testid="grid-item">
+            <p>Extra large breakpoint content</p>
+          </GridItem>
+        );
+
+        results = await axe(xlContainer);
+        expect(results).toHaveNoViolations();
+      });
+
+      it('has no accessibility violations with individual responsive start props', async () => {
+        const { container: smStartContainer } = render(
+          <GridItem smStart={2} data-testid="grid-item">
+            <p>Small breakpoint start content</p>
+          </GridItem>
+        );
+
+        let results = await axe(smStartContainer);
+        expect(results).toHaveNoViolations();
+
+        const { container: mdStartContainer } = render(
+          <GridItem mdStart={3} data-testid="grid-item">
+            <p>Medium breakpoint start content</p>
+          </GridItem>
+        );
+
+        results = await axe(mdStartContainer);
+        expect(results).toHaveNoViolations();
+
+        const { container: lgStartContainer } = render(
+          <GridItem lgStart={4} data-testid="grid-item">
+            <p>Large breakpoint start content</p>
+          </GridItem>
+        );
+
+        results = await axe(lgStartContainer);
+        expect(results).toHaveNoViolations();
+
+        const { container: xlStartContainer } = render(
+          <GridItem xlStart={5} data-testid="grid-item">
+            <p>Extra large breakpoint start content</p>
+          </GridItem>
+        );
+
+        results = await axe(xlStartContainer);
+        expect(results).toHaveNoViolations();
+      });
+
+      it('has no accessibility violations with partial responsive prop combinations', async () => {
+        const { container: partialComboContainer } = render(
+          <GridItem
+            span={12}
+            md={6}
+            xl={4}
+            start={1}
+            lgStart={3}
+            data-testid="grid-item"
+          >
+            <p>Partial responsive combination content</p>
+          </GridItem>
+        );
+
+        const results = await axe(partialComboContainer);
         expect(results).toHaveNoViolations();
       });
     });
@@ -415,7 +528,7 @@ describe('GridItem Component', () => {
             </div>
           </GridItem>
         );
-        
+
         const results = await axe(container);
         expect(results).toHaveNoViolations();
       });
@@ -437,7 +550,78 @@ describe('GridItem Component', () => {
             </GridItem>
           </div>
         );
-        
+
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      });
+    });
+
+    describe('HTML Attribute Accessibility', () => {
+      it('has no accessibility violations with aria attributes', async () => {
+        const { container } = render(
+          <GridItem
+            span={6}
+            aria-label="Important content section"
+            aria-describedby="description-id"
+            data-testid="grid-item"
+          >
+            <p id="description-id">This content describes the section.</p>
+            <p>Additional content.</p>
+          </GridItem>
+        );
+
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      });
+
+      it('has no accessibility violations with role attribute', async () => {
+        const { container } = render(
+          <GridItem
+            span={6}
+            role="region"
+            aria-label="Special region"
+            data-testid="grid-item"
+          >
+            <p>Content within a region.</p>
+          </GridItem>
+        );
+
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      });
+
+      it('has no accessibility violations with tabIndex attribute', async () => {
+        const { container } = render(
+          <GridItem
+            span={6}
+            tabIndex={0}
+            aria-label="Focusable grid item"
+            data-testid="grid-item"
+          >
+            <p>This grid item can receive focus.</p>
+          </GridItem>
+        );
+
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      });
+    });
+
+    describe('Edge Case Accessibility', () => {
+      it('has no accessibility violations with additional HTML attributes', async () => {
+        const { container } = render(
+          <GridItem
+            span={6}
+            id="custom-id"
+            title="Custom title"
+            lang="en-US"
+            dir="ltr"
+            data-testid="grid-item"
+          >
+            <p>Content with additional HTML attributes.</p>
+          </GridItem>
+        );
+
         const results = await axe(container);
         expect(results).toHaveNoViolations();
       });
