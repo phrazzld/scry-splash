@@ -121,7 +121,7 @@
         1. Tests remain green and non-brittle.
     - **Depends‑on:** none
 
-- [ ] **T012 · Refactor · P1: replace manual class checks in Logo tests with toHaveClass**
+- [x] **T012 · Refactor · P1: replace manual class checks in Logo tests with toHaveClass**
     - **Context:** cr-05 Refactor Non-Idiomatic/Brittle Class/Style Assertions
     - **Action:**
         1. Replace all manual class presence checks in `logo.test.tsx` with `expect(...).toHaveClass(...)`.

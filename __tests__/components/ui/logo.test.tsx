@@ -60,18 +60,17 @@ describe('Logo Component', () => {
   it('applies custom className and merges with default classes', () => {
     const customClass = 'test-class';
     render(<Logo className={customClass} data-testid="logo" />);
-    
+
     const logo = screen.getByTestId('logo');
-    
+
     // Check custom class is applied
     expect(logo).toHaveClass(customClass);
-    
+
     // Check default classes are still applied
     expect(logo).toHaveClass('font-bold');
-    
-    // Verify the custom class doesn't override required classes
-    expect(logo.className).toContain(customClass);
-    expect(logo.className).toContain('font-bold');
+
+    // Verify both classes are applied simultaneously (merged properly)
+    expect(logo).toHaveClass(`${customClass} font-bold`, { exact: false });
   });
   
   it('renders with "Scry." text and period has reduced opacity', () => {
@@ -133,39 +132,53 @@ describe('Logo Component', () => {
   });
 
   it('applies correct color variants', () => {
-    // Test chalk (default) color
-    const { rerender } = render(<Logo color="chalk" data-testid="logo" />);
-    let logo = screen.getByTestId('logo');
+    // Render each color variant for comparison
+    const { getByTestId } = render(
+      <>
+        <Logo color="chalk" data-testid="logo-chalk" />
+        <Logo color="ink" data-testid="logo-ink" />
+        <Logo color="cobalt" data-testid="logo-cobalt" />
+      </>
+    );
 
-    // Store the class name for the chalk color variant
-    // Note: We can't reliably check computed color values in JSDOM as it doesn't fully support
-    // CSS calculations and theme variables
-    const chalkClassName = logo.className;
+    // Get all logo variants
+    const chalkLogo = getByTestId('logo-chalk');
+    const inkLogo = getByTestId('logo-ink');
+    const cobaltLogo = getByTestId('logo-cobalt');
 
-    // Test ink color
-    rerender(<Logo color="ink" data-testid="logo" />);
-    logo = screen.getByTestId('logo');
+    // Verify each logo has the base class
+    expect(chalkLogo).toHaveClass('font-bold');
+    expect(inkLogo).toHaveClass('font-bold');
+    expect(cobaltLogo).toHaveClass('font-bold');
 
-    // Verify ink color creates a different className than chalk
-    const inkClassName = logo.className;
-    expect(inkClassName).not.toBe(chalkClassName);
+    // Verify all logos have different class combinations (different styling)
+    // We're testing that different color props result in different styling
+    // without depending on specific class name implementation details
+    function getClassSet(element: HTMLElement): Set<string> {
+      return new Set(element.className.split(' '));
+    }
 
-    // Test cobalt color
-    rerender(<Logo color="cobalt" data-testid="logo" />);
-    logo = screen.getByTestId('logo');
+    const chalkClasses = getClassSet(chalkLogo);
+    const inkClasses = getClassSet(inkLogo);
+    const cobaltClasses = getClassSet(cobaltLogo);
 
-    // Verify cobalt color creates a different className than ink
-    const cobaltClassName = logo.className;
-    expect(cobaltClassName).not.toBe(inkClassName);
+    // For each pair of elements, there should be at least one class that differs
+    const chalkInkDiff = [...chalkClasses].some(cls => !inkClasses.has(cls)) ||
+                        [...inkClasses].some(cls => !chalkClasses.has(cls));
+    const inkCobaltDiff = [...inkClasses].some(cls => !cobaltClasses.has(cls)) ||
+                          [...cobaltClasses].some(cls => !inkClasses.has(cls));
+    const chalkCobaltDiff = [...chalkClasses].some(cls => !cobaltClasses.has(cls)) ||
+                            [...cobaltClasses].some(cls => !chalkClasses.has(cls));
 
-    // Verify each color variant has a distinct className
-    const classNames = [chalkClassName, inkClassName, cobaltClassName];
-    const uniqueClassNames = new Set(classNames);
-    expect(uniqueClassNames.size).toBe(3);
+    expect(chalkInkDiff).toBe(true);
+    expect(inkCobaltDiff).toBe(true);
+    expect(chalkCobaltDiff).toBe(true);
 
     // Verify the color prop was successfully processed by checking
     // that it doesn't appear as a DOM attribute
-    expect(logo).not.toHaveAttribute('color');
+    expect(chalkLogo).not.toHaveAttribute('color');
+    expect(inkLogo).not.toHaveAttribute('color');
+    expect(cobaltLogo).not.toHaveAttribute('color');
   });
   
   it('combines multiple props correctly', () => {
@@ -173,39 +186,48 @@ describe('Logo Component', () => {
     const customClass = 'custom-test-class';
     const customAriaLabel = 'Custom Logo Label';
 
-    // First render with default props to get baseline
-    const { rerender } = render(<Logo data-testid="logo" />);
-    const defaultLogo = screen.getByTestId('logo');
-    const defaultClassName = defaultLogo.className;
-
-    // Then render with combined props
-    rerender(
-      <Logo
-        size="small"
-        color="cobalt"
-        className={customClass}
-        aria-label={customAriaLabel}
-        data-testid="logo"
-      />
+    // First render with default props
+    const { getByTestId } = render(
+      <>
+        <Logo data-testid="logo-default" />
+        <Logo
+          size="small"
+          color="cobalt"
+          className={customClass}
+          aria-label={customAriaLabel}
+          data-testid="logo-combined"
+        />
+      </>
     );
 
-    const logo = screen.getByTestId('logo');
+    const defaultLogo = getByTestId('logo-default');
+    const combinedLogo = getByTestId('logo-combined');
 
     // Verify custom aria-label is applied
-    expect(logo).toHaveAttribute('aria-label', customAriaLabel);
+    expect(combinedLogo).toHaveAttribute('aria-label', customAriaLabel);
 
     // Verify custom class is present
-    expect(logo).toHaveClass(customClass);
+    expect(combinedLogo).toHaveClass(customClass);
 
     // Verify base class is still present (this is a documented API aspect)
-    expect(logo).toHaveClass('font-bold');
+    expect(combinedLogo).toHaveClass('font-bold');
 
-    // Verify the combined props create a different className than default
-    expect(logo.className).not.toBe(defaultClassName);
+    // Verify the class combinations are different
+    function getClassSet(element: HTMLElement): Set<string> {
+      return new Set(element.className.split(' '));
+    }
+
+    const defaultClasses = getClassSet(defaultLogo);
+    const combinedClasses = getClassSet(combinedLogo);
+
+    // There should be at least one class that differs
+    const hasDifference = [...defaultClasses].some(cls => !combinedClasses.has(cls)) ||
+                         [...combinedClasses].some(cls => !defaultClasses.has(cls));
+    expect(hasDifference).toBe(true);
 
     // Verify the props were processed (not passed directly to DOM)
-    expect(logo).not.toHaveAttribute('size');
-    expect(logo).not.toHaveAttribute('color');
+    expect(combinedLogo).not.toHaveAttribute('size');
+    expect(combinedLogo).not.toHaveAttribute('color');
   });
 });
 
@@ -505,36 +527,50 @@ describe('Logo HTML Attribute Passthrough', () => {
   });
   
   it('correctly applies both component props and HTML attributes', () => {
-    // First render default logo to get baseline
-    const { rerender } = render(<Logo data-testid="logo" />);
-    const defaultLogo = screen.getByTestId('logo');
-    const defaultClassName = defaultLogo.className;
-
-    // Then render with component props and HTML attributes
-    rerender(
-      <Logo
-        size="small"
-        color="cobalt"
-        as="div"
-        id="logo-id"
-        title="Brand Logo"
-        data-custom="custom-value"
-        data-testid="logo"
-      />
+    // Render both default and customized Logo for comparison
+    const { getByTestId } = render(
+      <>
+        <Logo data-testid="logo-default" />
+        <Logo
+          size="small"
+          color="cobalt"
+          as="div"
+          id="logo-id"
+          title="Brand Logo"
+          data-custom="custom-value"
+          data-testid="logo-custom"
+        />
+      </>
     );
 
-    const logo = screen.getByTestId('logo');
+    const defaultLogo = getByTestId('logo-default');
+    const customLogo = getByTestId('logo-custom');
 
     // Check component props were applied
-    expect(logo.tagName).toBe('DIV'); // as="div"
+    expect(customLogo.tagName).toBe('DIV'); // as="div"
+    expect(defaultLogo.tagName).toBe('H1'); // default is h1
 
-    // Verify the combined props create a different className than default
-    expect(logo.className).not.toBe(defaultClassName);
+    // Check both logos have the base class
+    expect(defaultLogo).toHaveClass('font-bold');
+    expect(customLogo).toHaveClass('font-bold');
 
-    // Check HTML attributes
-    expect(logo).toHaveAttribute('id', 'logo-id');
-    expect(logo).toHaveAttribute('title', 'Brand Logo');
-    expect(logo).toHaveAttribute('data-custom', 'custom-value');
+    // Verify the class combinations are different
+    function getClassSet(element: HTMLElement): Set<string> {
+      return new Set(element.className.split(' '));
+    }
+
+    const defaultClasses = getClassSet(defaultLogo);
+    const customClasses = getClassSet(customLogo);
+
+    // There should be at least one class that differs
+    const hasDifference = [...defaultClasses].some(cls => !customClasses.has(cls)) ||
+                         [...customClasses].some(cls => !defaultClasses.has(cls));
+    expect(hasDifference).toBe(true);
+
+    // Check HTML attributes are correctly applied
+    expect(customLogo).toHaveAttribute('id', 'logo-id');
+    expect(customLogo).toHaveAttribute('title', 'Brand Logo');
+    expect(customLogo).toHaveAttribute('data-custom', 'custom-value');
   });
   
   it('has precedence for aria-label over default aria-label', () => {
