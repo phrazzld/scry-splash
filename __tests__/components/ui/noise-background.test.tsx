@@ -231,64 +231,319 @@ describe('NoiseBackground Accessibility', () => {
     const { container } = render(
       <NoiseBackground data-testid="noise-bg" />
     );
-    
+
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('has no accessibility violations with custom className', async () => {
-    const { container } = render(
-      <NoiseBackground className="custom-test-class" data-testid="noise-bg" />
-    );
-    
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  describe('Base Color Variants', () => {
+    it('has no accessibility violations with default baseColor', async () => {
+      const { container } = render(
+        <NoiseBackground baseColor="var(--background)" data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with hex baseColor (#333333)', async () => {
+      const { container } = render(
+        <NoiseBackground baseColor="#333333" data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with rgb baseColor', async () => {
+      const { container } = render(
+        <NoiseBackground baseColor="rgb(100, 150, 200)" data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with rgba baseColor', async () => {
+      const { container } = render(
+        <NoiseBackground baseColor="rgba(100, 150, 200, 0.8)" data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with named color baseColor', async () => {
+      const { container } = render(
+        <NoiseBackground baseColor="darkblue" data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  it('has no accessibility violations with custom baseColor', async () => {
-    const { container } = render(
-      <NoiseBackground baseColor="#333333" data-testid="noise-bg" />
-    );
-    
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  describe('Noise Opacity Variants', () => {
+    it('has no accessibility violations with default noiseOpacity (0.02)', async () => {
+      const { container } = render(
+        <NoiseBackground noiseOpacity={0.02} data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with low noiseOpacity (0.1)', async () => {
+      const { container } = render(
+        <NoiseBackground noiseOpacity={0.1} data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with medium noiseOpacity (0.5)', async () => {
+      const { container } = render(
+        <NoiseBackground noiseOpacity={0.5} data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with high noiseOpacity (0.9)', async () => {
+      const { container } = render(
+        <NoiseBackground noiseOpacity={0.9} data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with zero noiseOpacity (0)', async () => {
+      const { container } = render(
+        <NoiseBackground noiseOpacity={0} data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  it('has no accessibility violations with custom noiseOpacity', async () => {
-    const { container } = render(
-      <NoiseBackground noiseOpacity={0.5} data-testid="noise-bg" />
-    );
-    
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  describe('Custom Styling', () => {
+    it('has no accessibility violations with custom className', async () => {
+      const { container } = render(
+        <NoiseBackground className="custom-test-class" data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with multiple custom classNames', async () => {
+      const { container } = render(
+        <NoiseBackground className="bg-primary rounded-lg shadow-md" data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with custom inline styles', async () => {
+      const { container } = render(
+        <NoiseBackground
+          style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}
+          data-testid="noise-bg"
+        />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  it('has no accessibility violations with children content', async () => {
-    const { container } = render(
-      <NoiseBackground data-testid="noise-bg">
-        <div>Child content</div>
-        <p>More content</p>
-      </NoiseBackground>
-    );
-    
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  describe('Children Content', () => {
+    it('has no accessibility violations with no children', async () => {
+      const { container } = render(
+        <NoiseBackground data-testid="noise-bg" />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with single child', async () => {
+      const { container } = render(
+        <NoiseBackground data-testid="noise-bg">
+          <div>Single child content</div>
+        </NoiseBackground>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with multiple children', async () => {
+      const { container } = render(
+        <NoiseBackground data-testid="noise-bg">
+          <div>First child</div>
+          <p>Second child</p>
+          <span>Third child</span>
+        </NoiseBackground>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with semantic children', async () => {
+      const { container } = render(
+        <NoiseBackground data-testid="noise-bg">
+          <h2>Heading</h2>
+          <p>Paragraph text</p>
+          <button>Click me</button>
+          <a href="#">Link</a>
+        </NoiseBackground>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with nested children', async () => {
+      const { container } = render(
+        <NoiseBackground data-testid="noise-bg">
+          <div>
+            <h3>Nested Heading</h3>
+            <ul>
+              <li>List item 1</li>
+              <li>List item 2</li>
+            </ul>
+          </div>
+        </NoiseBackground>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
-  
-  it('has no accessibility violations with all props combined', async () => {
-    const { container } = render(
-      <NoiseBackground 
-        className="custom-test-class"
-        baseColor="rgb(200, 100, 50)"
-        noiseOpacity={0.75}
-        data-testid="noise-bg"
-      >
-        <div>Inner content</div>
-      </NoiseBackground>
-    );
-    
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+
+  describe('ARIA Attributes', () => {
+    it('has no accessibility violations with aria-label when role is provided', async () => {
+      const { container } = render(
+        <NoiseBackground
+          role="img"
+          aria-label="Decorative background"
+          data-testid="noise-bg"
+        />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with aria-hidden', async () => {
+      const { container } = render(
+        <NoiseBackground
+          aria-hidden="true"
+          data-testid="noise-bg"
+        />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with aria-describedby when role is provided with aria-label', async () => {
+      const { container } = render(
+        <>
+          <p id="bg-description">A decorative background with noise texture</p>
+          <NoiseBackground
+            role="img"
+            aria-label="Noise background"
+            aria-describedby="bg-description"
+            data-testid="noise-bg"
+          />
+        </>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  describe('Combined Property Variants', () => {
+    it('has no accessibility violations with all props combined', async () => {
+      const { container } = render(
+        <NoiseBackground
+          className="custom-test-class"
+          baseColor="rgb(200, 100, 50)"
+          noiseOpacity={0.75}
+          data-testid="noise-bg"
+        >
+          <div>Inner content</div>
+        </NoiseBackground>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with baseColor and aria attributes combined', async () => {
+      const { container } = render(
+        <NoiseBackground
+          baseColor="#444444"
+          role="img"
+          aria-label="Dark background"
+          data-testid="noise-bg"
+        />
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with noiseOpacity and complex children', async () => {
+      const { container } = render(
+        <NoiseBackground
+          noiseOpacity={0.3}
+          data-testid="noise-bg"
+        >
+          <header>
+            <h1>Title</h1>
+            <nav>
+              <ul>
+                <li><a href="#">Link 1</a></li>
+                <li><a href="#">Link 2</a></li>
+              </ul>
+            </nav>
+          </header>
+        </NoiseBackground>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations when used as a container for interactive elements', async () => {
+      const { container } = render(
+        <NoiseBackground
+          className="p-4 rounded"
+          baseColor="#f5f5f5"
+          noiseOpacity={0.1}
+          data-testid="noise-bg"
+        >
+          <form>
+            <label htmlFor="test-input">Input label</label>
+            <input id="test-input" type="text" />
+            <button type="submit">Submit</button>
+          </form>
+        </NoiseBackground>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 });
 

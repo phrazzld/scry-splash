@@ -65,7 +65,7 @@
         1. Run tests with accessibility assertions failing if violations exist.
     - **Depends‑on:** none
 
-- [ ] **T007 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct NoiseBackground variants**
+- [x] **T007 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct NoiseBackground variants**
     - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
     - **Action:**
         1. Identify each unique prop/state variant tested in `noise-background.test.tsx`.
