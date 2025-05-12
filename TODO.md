@@ -101,7 +101,7 @@
     - **Depends‑on:** [T008]
 
 ## Test Assertion Robustness
-- [ ] **T010 · Refactor · P1: decouple Container and GridItem tests from CSS class implementation details**
+- [x] **T010 · Refactor · P1: decouple Container and GridItem tests from CSS class implementation details**
     - **Context:** cr-04 Decouple Tests from CSS Class Implementation Details
     - **Action:**
         1. Refactor assertions in `container.test.tsx` and `grid-item.test.tsx` to check styles or semantic DOM attributes, not internal class names.
