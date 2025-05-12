@@ -132,7 +132,7 @@
         1. Code search shows no manual classList checks remain.
     - **Depends‑on:** [T011]
 
-- [ ] **T013 · Refactor · P1: robustly assert NoiseBackground styles and document jsdom limitations**
+- [x] **T013 · Refactor · P1: robustly assert NoiseBackground styles and document jsdom limitations**
     - **Context:** cr-05 Refactor Non-Idiomatic/Brittle Class/Style Assertions
     - **Action:**
         1. Use `toHaveStyle` for `backgroundRepeat`, `opacity` in `noise-background.test.tsx`.
