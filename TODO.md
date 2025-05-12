@@ -90,7 +90,7 @@
         1. Run test suite and confirm passing.
     - **Depends‑on:** none
 
-- [ ] **T009 · Refactor · P1: reorganize Container and GridItem test files with clear describe blocks**
+- [x] **T009 · Refactor · P1: reorganize Container and GridItem test files with clear describe blocks**
     - **Context:** cr-03 Split Excessive Length Test File (`container.test.tsx`)
     - **Action:**
         1. Group tests within `container.test.tsx` and `grid-item.test.tsx` using `describe` blocks (e.g., "Props", "Accessibility", "Edge Cases").
