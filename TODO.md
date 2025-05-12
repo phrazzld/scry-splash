@@ -54,7 +54,7 @@
         1. Run tests with accessibility assertions failing if violations exist.
     - **Depends‑on:** [T008]
 
-- [ ] **T006 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct Logo variants**
+- [x] **T006 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct Logo variants**
     - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
     - **Action:**
         1. Identify each unique prop/state variant tested in `logo.test.tsx`.

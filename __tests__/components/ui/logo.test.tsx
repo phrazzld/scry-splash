@@ -211,114 +211,223 @@ describe('Logo Accessibility', () => {
     const { container } = render(
       <Logo data-testid="logo">Scry.</Logo>
     );
-    
+
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('has no accessibility violations with different HTML elements', async () => {
-    // Test h1 element (default)
-    const { container: h1Container } = render(
-      <Logo as="h1" data-testid="logo">Scry.</Logo>
-    );
-    
-    let results = await axe(h1Container);
-    expect(results).toHaveNoViolations();
-    
-    // Test div element
-    const { container: divContainer } = render(
-      <Logo as="div" data-testid="logo">Scry.</Logo>
-    );
-    
-    results = await axe(divContainer);
-    expect(results).toHaveNoViolations();
-    
-    // Test p element
-    const { container: pContainer } = render(
-      <Logo as="p" data-testid="logo">Scry.</Logo>
-    );
-    
-    results = await axe(pContainer);
-    expect(results).toHaveNoViolations();
+  describe('Element type variants', () => {
+    it('has no accessibility violations with h1 element (default)', async () => {
+      const { container } = render(
+        <Logo as="h1" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with div element', async () => {
+      const { container } = render(
+        <Logo as="div" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with p element', async () => {
+      const { container } = render(
+        <Logo as="p" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with span element', async () => {
+      const { container } = render(
+        <Logo as="span" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with article element', async () => {
+      const { container } = render(
+        <Logo as="article" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with h2 element', async () => {
+      const { container } = render(
+        <Logo as="h2" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  it('has no accessibility violations with custom aria-label', async () => {
-    const { container } = render(
-      <Logo aria-label="Custom Logo Label" data-testid="logo">Scry.</Logo>
-    );
-    
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  describe('ARIA attributes', () => {
+    it('has no accessibility violations with custom aria-label', async () => {
+      const { container } = render(
+        <Logo aria-label="Custom Logo Label" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with aria-hidden', async () => {
+      const { container } = render(
+        <Logo aria-hidden="true" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with aria-labelledby', async () => {
+      const { container } = render(
+        <>
+          <span id="logo-label">Scry Application Logo</span>
+          <Logo aria-labelledby="logo-label" data-testid="logo">Scry.</Logo>
+        </>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  it('has no accessibility violations with different size variants', async () => {
-    // Test small size
-    const { container: smallContainer } = render(
-      <Logo size="small" data-testid="logo">Scry.</Logo>
-    );
-    
-    let results = await axe(smallContainer);
-    expect(results).toHaveNoViolations();
-    
-    // Test medium size
-    const { container: mediumContainer } = render(
-      <Logo size="medium" data-testid="logo">Scry.</Logo>
-    );
-    
-    results = await axe(mediumContainer);
-    expect(results).toHaveNoViolations();
-    
-    // Test large size
-    const { container: largeContainer } = render(
-      <Logo size="large" data-testid="logo">Scry.</Logo>
-    );
-    
-    results = await axe(largeContainer);
-    expect(results).toHaveNoViolations();
+  describe('Size variants', () => {
+    it('has no accessibility violations with size="default"', async () => {
+      const { container } = render(
+        <Logo size="default" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with size="small"', async () => {
+      const { container } = render(
+        <Logo size="small" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with size="medium"', async () => {
+      const { container } = render(
+        <Logo size="medium" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with size="large"', async () => {
+      const { container } = render(
+        <Logo size="large" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  it('has no accessibility violations with different color variants', async () => {
-    // Test chalk color (default)
-    const { container: chalkContainer } = render(
-      <Logo color="chalk" data-testid="logo">Scry.</Logo>
-    );
-    
-    let results = await axe(chalkContainer);
-    expect(results).toHaveNoViolations();
-    
-    // Test ink color
-    const { container: inkContainer } = render(
-      <Logo color="ink" data-testid="logo">Scry.</Logo>
-    );
-    
-    results = await axe(inkContainer);
-    expect(results).toHaveNoViolations();
-    
-    // Test cobalt color
-    const { container: cobaltContainer } = render(
-      <Logo color="cobalt" data-testid="logo">Scry.</Logo>
-    );
-    
-    results = await axe(cobaltContainer);
-    expect(results).toHaveNoViolations();
+  describe('Color variants', () => {
+    it('has no accessibility violations with color="chalk"', async () => {
+      const { container } = render(
+        <Logo color="chalk" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with color="ink"', async () => {
+      const { container } = render(
+        <Logo color="ink" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with color="cobalt"', async () => {
+      const { container } = render(
+        <Logo color="cobalt" data-testid="logo">Scry.</Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
-  
-  it('has no accessibility violations with combined props', async () => {
-    const { container } = render(
-      <Logo 
-        as="div"
-        size="small" 
-        color="cobalt" 
-        className="custom-test-class" 
-        aria-label="Custom Logo Label"
-        data-testid="logo"
-      >
-        Scry.
-      </Logo>
-    );
-    
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+
+  describe('Combined variants and edge cases', () => {
+    it('has no accessibility violations with combined props', async () => {
+      const { container } = render(
+        <Logo
+          as="div"
+          size="small"
+          color="cobalt"
+          className="custom-test-class"
+          aria-label="Custom Logo Label"
+          data-testid="logo"
+        >
+          Scry.
+        </Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with custom style attributes', async () => {
+      const { container } = render(
+        <Logo
+          style={{ letterSpacing: '2px', textDecoration: 'underline' }}
+          data-testid="logo"
+        >
+          Scry.
+        </Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations when nested within a container', async () => {
+      const { container } = render(
+        <div role="banner" className="header">
+          <Logo data-testid="logo">Scry.</Logo>
+        </div>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with tabIndex attribute', async () => {
+      const { container } = render(
+        <Logo
+          tabIndex={0}
+          data-testid="logo"
+        >
+          Scry.
+        </Logo>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 });
 
