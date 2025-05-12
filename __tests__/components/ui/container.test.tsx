@@ -647,7 +647,7 @@ describe('Container Accessibility', () => {
         <p>Content for testing</p>
       </Container>
     );
-    
+
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -659,51 +659,28 @@ describe('Container Accessibility', () => {
         <p>Content for testing</p>
       </Container>
     );
-    
+
     let results = await axe(sectionContainer);
     expect(results).toHaveNoViolations();
-    
+
     const { container: articleContainer } = render(
       <Container as="article" data-testid="container">
         <h2>Article Heading</h2>
         <p>Content for testing</p>
       </Container>
     );
-    
+
     results = await axe(articleContainer);
     expect(results).toHaveNoViolations();
-    
+
     const { container: mainContainer } = render(
       <Container as="main" data-testid="container">
         <h1>Main Content</h1>
         <p>Content for testing</p>
       </Container>
     );
-    
-    results = await axe(mainContainer);
-    expect(results).toHaveNoViolations();
-  });
 
-  it('has no accessibility violations with various props combinations', async () => {
-    // Test with maxWidth variant
-    const { container: maxWidthContainer } = render(
-      <Container maxWidth="xl" padding="lg" center={true} gap="md" data-testid="container">
-        <p>Content for testing</p>
-      </Container>
-    );
-    
-    let results = await axe(maxWidthContainer);
-    expect(results).toHaveNoViolations();
-    
-    // Test with gapX and gapY variants
-    const { container: gapContainer } = render(
-      <Container gapX="lg" gapY="sm" data-testid="container">
-        <p>First paragraph</p>
-        <p>Second paragraph</p>
-      </Container>
-    );
-    
-    results = await axe(gapContainer);
+    results = await axe(mainContainer);
     expect(results).toHaveNoViolations();
   });
 
@@ -722,9 +699,332 @@ describe('Container Accessibility', () => {
         <button type="button">Click me</button>
       </Container>
     );
-    
+
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  describe('maxWidth variants', () => {
+    it('has no accessibility violations with maxWidth="sm" variant', async () => {
+      const { container } = render(
+        <Container maxWidth="sm" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with maxWidth="md" variant', async () => {
+      const { container } = render(
+        <Container maxWidth="md" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with maxWidth="lg" variant', async () => {
+      const { container } = render(
+        <Container maxWidth="lg" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with maxWidth="xl" variant', async () => {
+      const { container } = render(
+        <Container maxWidth="xl" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with maxWidth="2xl" variant', async () => {
+      const { container } = render(
+        <Container maxWidth="2xl" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with maxWidth="full" variant', async () => {
+      const { container } = render(
+        <Container maxWidth="full" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with maxWidth="none" variant', async () => {
+      const { container } = render(
+        <Container maxWidth="none" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  describe('padding variants', () => {
+    it('has no accessibility violations with padding="none" variant', async () => {
+      const { container } = render(
+        <Container padding="none" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with padding="sm" variant', async () => {
+      const { container } = render(
+        <Container padding="sm" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with padding="md" variant', async () => {
+      const { container } = render(
+        <Container padding="md" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with padding="lg" variant', async () => {
+      const { container } = render(
+        <Container padding="lg" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with padding="xl" variant', async () => {
+      const { container } = render(
+        <Container padding="xl" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with padding="responsive" variant', async () => {
+      const { container } = render(
+        <Container padding="responsive" data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  describe('center variants', () => {
+    it('has no accessibility violations with center={true} variant', async () => {
+      const { container } = render(
+        <Container center={true} data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with center={false} variant', async () => {
+      const { container } = render(
+        <Container center={false} data-testid="container">
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  describe('gap variants', () => {
+    it('has no accessibility violations with gap="none" variant', async () => {
+      const { container } = render(
+        <Container gap="none" data-testid="container">
+          <p>First paragraph</p>
+          <p>Second paragraph</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with gap="sm" variant', async () => {
+      const { container } = render(
+        <Container gap="sm" data-testid="container">
+          <p>First paragraph</p>
+          <p>Second paragraph</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with gap="md" variant', async () => {
+      const { container } = render(
+        <Container gap="md" data-testid="container">
+          <p>First paragraph</p>
+          <p>Second paragraph</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with gap="lg" variant', async () => {
+      const { container } = render(
+        <Container gap="lg" data-testid="container">
+          <p>First paragraph</p>
+          <p>Second paragraph</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with gap="xl" variant', async () => {
+      const { container } = render(
+        <Container gap="xl" data-testid="container">
+          <p>First paragraph</p>
+          <p>Second paragraph</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  describe('gapX and gapY variants', () => {
+    it('has no accessibility violations with gapX="sm" and gapY="lg" variants', async () => {
+      const { container } = render(
+        <Container gapX="sm" gapY="lg" data-testid="container">
+          <p>First paragraph</p>
+          <p>Second paragraph</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with gapX="xl" and gapY="none" variants', async () => {
+      const { container } = render(
+        <Container gapX="xl" gapY="none" data-testid="container">
+          <p>First paragraph</p>
+          <p>Second paragraph</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with only gapX="md" variant', async () => {
+      const { container } = render(
+        <Container gapX="md" data-testid="container">
+          <p>First paragraph</p>
+          <p>Second paragraph</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with only gapY="md" variant', async () => {
+      const { container } = render(
+        <Container gapY="md" data-testid="container">
+          <p>First paragraph</p>
+          <p>Second paragraph</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  describe('combined prop variants', () => {
+    it('has no accessibility violations with combined width, padding, center and gap props', async () => {
+      const { container } = render(
+        <Container
+          maxWidth="xl"
+          padding="lg"
+          center={true}
+          gap="md"
+          data-testid="container"
+        >
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations with all props configured', async () => {
+      const { container } = render(
+        <Container
+          maxWidth="lg"
+          padding="sm"
+          center={true}
+          gap="none"
+          gapX="xl"
+          gapY="sm"
+          as="section"
+          data-testid="container"
+        >
+          <h2>Section Title</h2>
+          <p>Content for testing</p>
+        </Container>
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 });
 

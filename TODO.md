@@ -32,7 +32,7 @@
     - **Depends‑on:** [T001]
 
 ## Accessibility Coverage
-- [ ] **T004 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct Container variants**
+- [x] **T004 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct Container variants**
     - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
     - **Action:**
         1. Identify each unique prop/state variant tested in `container.test.tsx`.
