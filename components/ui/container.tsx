@@ -7,8 +7,18 @@ import { cn } from "@/lib/utils"
 
 /**
  * Container component for Scry
- * 
- * Implements a 12-column grid system with responsive variants
+ *
+ * Implements a 12-column grid system with responsive variants for layout control.
+ * The Container provides a consistent, responsive wrapper with configurable width,
+ * padding, and spacing options. It serves as the foundation for the grid-based
+ * layout system and should be used as the primary layout container.
+ *
+ * @example
+ * ```tsx
+ * <Container maxWidth="lg" padding="md" center={true}>
+ *   <p>Content inside a centered, large container with medium padding</p>
+ * </Container>
+ * ```
  */
 
 const containerVariants = cva(
@@ -66,10 +76,78 @@ const containerVariants = cva(
   }
 )
 
+/**
+ * Props for the Container component
+ *
+ * The Container component provides a responsive, grid-based layout container
+ * with configurable width, padding, and spacing options.
+ */
 export interface ContainerProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof containerVariants> {
+  /**
+   * Render the container as a different HTML element
+   *
+   * Allows changing the rendered element (e.g., "section", "article") while
+   * maintaining the styling and behavior of the Container.
+   *
+   * @default "div"
+   */
   as?: React.ElementType
+
+  /**
+   * Maximum width constraint for the container
+   *
+   * Controls the container's maximum width based on standard screen breakpoints.
+   *
+   * @default "xl" (1280px)
+   */
+  maxWidth?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"
+
+  /**
+   * Horizontal padding applied to the container
+   *
+   * Controls the amount of horizontal padding (left and right).
+   *
+   * @default "md" (1.5rem)
+   */
+  padding?: "none" | "sm" | "md" | "lg" | "xl" | "responsive"
+
+  /**
+   * Center the container horizontally
+   *
+   * When true, applies margin-auto to horizontally center the container
+   * within its parent.
+   *
+   * @default false
+   */
+  center?: boolean
+
+  /**
+   * Grid gap spacing in both directions
+   *
+   * Sets uniform gap spacing for both rows and columns.
+   * This is overridden by more specific gapX or gapY if provided.
+   *
+   * @default "md" (1rem)
+   */
+  gap?: "none" | "sm" | "md" | "lg" | "xl"
+
+  /**
+   * Horizontal grid gap spacing
+   *
+   * Sets gap spacing between columns only. Takes precedence over the 'gap' prop
+   * for horizontal spacing.
+   */
+  gapX?: "none" | "sm" | "md" | "lg" | "xl"
+
+  /**
+   * Vertical grid gap spacing
+   *
+   * Sets gap spacing between rows only. Takes precedence over the 'gap' prop
+   * for vertical spacing.
+   */
+  gapY?: "none" | "sm" | "md" | "lg" | "xl"
 }
 
 const Container = React.forwardRef<HTMLDivElement, ContainerProps>(

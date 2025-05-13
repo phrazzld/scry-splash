@@ -231,7 +231,7 @@
     - **Depends‑on:** none
 
 ## Component Source Documentation
-- [ ] **T022 · Chore · P1: ensure TSDoc coverage for Container props**
+- [x] **T022 · Chore · P1: ensure TSDoc coverage for Container props**
     - **Context:** cr-12 Ensure TSDoc for Source Component Props
     - **Action:**
         1. Review Container props interface in `container.tsx`.
