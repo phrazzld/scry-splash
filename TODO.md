@@ -264,7 +264,7 @@
         1. IDE hover shows TSDoc; code review confirms completeness.
     - **Depends‑on:** none
 
-- [ ] **T025 · Chore · P1: ensure TSDoc coverage for NoiseBackground props**
+- [x] **T025 · Chore · P1: ensure TSDoc coverage for NoiseBackground props**
     - **Context:** cr-12 Ensure TSDoc for Source Component Props
     - **Action:**
         1. Review NoiseBackground props interface in `noise-background.tsx`.
