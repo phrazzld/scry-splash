@@ -242,7 +242,7 @@
         1. IDE hover shows TSDoc; code review confirms completeness.
     - **Depends‑on:** none
 
-- [ ] **T023 · Chore · P1: ensure TSDoc coverage for GridItem props**
+- [x] **T023 · Chore · P1: ensure TSDoc coverage for GridItem props**
     - **Context:** cr-12 Ensure TSDoc for Source Component Props
     - **Action:**
         1. Review GridItem props interface in `container.tsx`.

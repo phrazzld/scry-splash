@@ -184,23 +184,108 @@ const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
 Container.displayName = "Container"
 
 /**
- * Grid component for grid cell layout within a Container
+ * GridItem component for Scry
+ *
+ * Implements responsive grid cells that work within the Container's grid system.
+ * GridItem provides flexible column spanning and positioning capabilities across
+ * different breakpoints, allowing for complex responsive layouts.
+ *
+ * @example
+ * ```tsx
+ * <Container>
+ *   <GridItem span={12} md={6} lg={4}>
+ *     <p>Content in a cell that's full width on mobile, half on tablet, third on desktop</p>
+ *   </GridItem>
+ *   <GridItem span={12} md={6} lg={8}>
+ *     <p>Content in a complementary grid cell</p>
+ *   </GridItem>
+ * </Container>
+ * ```
  */
 
 export interface GridItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  // Column span for different breakpoints
+  /**
+   * Number of columns to span (out of 12)
+   *
+   * Controls the default width of the grid cell at all breakpoints,
+   * unless overridden by breakpoint-specific props.
+   *
+   * @default 12 (full width)
+   */
   span?: number
+
+  /**
+   * Number of columns to span at the small breakpoint (sm: 640px+)
+   *
+   * Overrides the default span value specifically for small screens and above.
+   */
   sm?: number
+
+  /**
+   * Number of columns to span at the medium breakpoint (md: 768px+)
+   *
+   * Overrides the default span value specifically for medium screens and above.
+   */
   md?: number
+
+  /**
+   * Number of columns to span at the large breakpoint (lg: 1024px+)
+   *
+   * Overrides the default span value specifically for large screens and above.
+   */
   lg?: number
+
+  /**
+   * Number of columns to span at the extra large breakpoint (xl: 1280px+)
+   *
+   * Overrides the default span value specifically for extra large screens and above.
+   */
   xl?: number
-  // Column start for different breakpoints
+
+  /**
+   * Starting column position (1-12)
+   *
+   * Controls the default starting position of the grid cell at all breakpoints,
+   * unless overridden by breakpoint-specific start props.
+   */
   start?: number
+
+  /**
+   * Starting column position at the small breakpoint (sm: 640px+)
+   *
+   * Overrides the default start position specifically for small screens and above.
+   */
   smStart?: number
+
+  /**
+   * Starting column position at the medium breakpoint (md: 768px+)
+   *
+   * Overrides the default start position specifically for medium screens and above.
+   */
   mdStart?: number
+
+  /**
+   * Starting column position at the large breakpoint (lg: 1024px+)
+   *
+   * Overrides the default start position specifically for large screens and above.
+   */
   lgStart?: number
+
+  /**
+   * Starting column position at the extra large breakpoint (xl: 1280px+)
+   *
+   * Overrides the default start position specifically for extra large screens and above.
+   */
   xlStart?: number
-  // Element type
+
+  /**
+   * Render the grid item as a different HTML element
+   *
+   * Allows changing the rendered element (e.g., "section", "article") while
+   * maintaining the styling and behavior of the GridItem.
+   *
+   * @default "div"
+   */
   as?: React.ElementType
 }
 
