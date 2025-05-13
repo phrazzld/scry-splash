@@ -144,7 +144,7 @@
     - **Depends‑on:** none
 
 ## Querying Strategy & Test Resilience
-- [ ] **T014 · Refactor · P1: minimize data-testid usage in Logo tests in favor of user-facing queries**
+- [x] **T014 · Refactor · P1: minimize data-testid usage in Logo tests in favor of user-facing queries**
     - **Context:** cr-06 Optimize Querying Strategy (Reduce `data-testid` Overuse)
     - **Action:**
         1. Update Logo tests to use `getByRole`, `getByLabelText`, or `getByText`.

@@ -6,16 +6,12 @@ import { Logo } from '@/components/ui/logo';
 
 describe('Logo Component', () => {
   it('renders correctly with default props and element is h1', () => {
-    render(<Logo data-testid="logo" />);
-    
-    // Verify it's an h1 element
-    const logo = screen.getByTestId('logo');
+    render(<Logo />);
+
+    // Verify it's an h1 element using role-based query
+    const logo = screen.getByRole('heading', { level: 1 });
     expect(logo.tagName).toBe('H1');
-    
-    // Also verify via role
-    const headingLogo = screen.getByRole('heading', { level: 1 });
-    expect(headingLogo).toBe(logo);
-    
+
     // Verify basic properties
     expect(logo).toBeInTheDocument();
     expect(logo).toHaveClass('font-bold');
@@ -25,27 +21,27 @@ describe('Logo Component', () => {
 
   it('renders with a different HTML element when as prop is provided', () => {
     // Test div element
-    const { rerender } = render(<Logo as="div" data-testid="logo" />);
-    
+    const { rerender } = render(<Logo as="div" aria-label="Div Logo" />);
+
     // Should be a div, not a heading
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
-    let logo = screen.getByTestId('logo');
+    let logo = screen.getByLabelText('Div Logo');
     expect(logo).toBeInTheDocument();
     expect(logo.tagName).toBe('DIV');
-    
+
     // Test p element
-    rerender(<Logo as="p" data-testid="logo" />);
-    logo = screen.getByTestId('logo');
+    rerender(<Logo as="p" aria-label="P Logo" />);
+    logo = screen.getByLabelText('P Logo');
     expect(logo.tagName).toBe('P');
-    
+
     // Test span element
-    rerender(<Logo as="span" data-testid="logo" />);
-    logo = screen.getByTestId('logo');
+    rerender(<Logo as="span" aria-label="Span Logo" />);
+    logo = screen.getByLabelText('Span Logo');
     expect(logo.tagName).toBe('SPAN');
-    
+
     // Test article element
-    rerender(<Logo as="article" data-testid="logo" />);
-    logo = screen.getByTestId('logo');
+    rerender(<Logo as="article" aria-label="Article Logo" />);
+    logo = screen.getByLabelText('Article Logo');
     expect(logo.tagName).toBe('ARTICLE');
   });
 
@@ -59,9 +55,9 @@ describe('Logo Component', () => {
 
   it('applies custom className and merges with default classes', () => {
     const customClass = 'test-class';
-    render(<Logo className={customClass} data-testid="logo" />);
+    render(<Logo className={customClass} />);
 
-    const logo = screen.getByTestId('logo');
+    const logo = screen.getByRole('heading', { level: 1 });
 
     // Check custom class is applied
     expect(logo).toHaveClass(customClass);
@@ -74,58 +70,69 @@ describe('Logo Component', () => {
   });
   
   it('renders with "Scry." text and period has reduced opacity', () => {
-    render(<Logo data-testid="logo" />);
-    
-    const logo = screen.getByTestId('logo');
-    
+    render(<Logo />);
+
+    const logo = screen.getByRole('heading', { level: 1 });
+
     // Verify the text content is "Scry."
     expect(logo).toHaveTextContent('Scry.');
-    
+
     // Verify the period is in a span
     const periodSpan = logo.querySelector('span');
     expect(periodSpan).toBeInTheDocument();
     expect(periodSpan).toHaveClass('opacity-70');
     expect(periodSpan).toHaveTextContent('.');
-    
+
     // Ensure the period is the only content in the span
     expect(periodSpan?.textContent).toBe('.');
-    
+
     // Verify the structure: "Scry" text node + span element with "."
     const textNodes = Array.from(logo.childNodes)
       .filter(node => node.nodeType === Node.TEXT_NODE)
       .map(node => node.textContent);
-    
+
     expect(textNodes.join('')).toBe('Scry');
   });
 
   it('accepts and processes size prop variants', () => {
     // Rather than testing implementation details like class names,
     // we'll verify the component accepts and processes the size prop
-    
+
     // Test with various size props
-    render(<Logo size="small" data-testid="logo-small" />);
-    render(<Logo size="medium" data-testid="logo-medium" />);
-    render(<Logo size="large" data-testid="logo-large" />);
-    render(<Logo size="default" data-testid="logo-default" />);
-    
-    // Verify each size renders successfully
-    expect(screen.getByTestId('logo-small')).toBeInTheDocument();
-    expect(screen.getByTestId('logo-medium')).toBeInTheDocument();
-    expect(screen.getByTestId('logo-large')).toBeInTheDocument();
-    expect(screen.getByTestId('logo-default')).toBeInTheDocument();
-    
+    const { rerender } = render(<Logo size="small" />);
+
+    // Since we want to test multiple variants, we need a more specific selector
+    // than just getByRole('heading') since there will be multiple headings
+    let logo = screen.getByRole('heading', { level: 1, name: 'Scry' });
+
+    // Verify the logo renders successfully
+    expect(logo).toBeInTheDocument();
+
     // Verify the prop was successfully processed (not passed to DOM)
-    expect(screen.getByTestId('logo-small')).not.toHaveAttribute('size');
-    expect(screen.getByTestId('logo-medium')).not.toHaveAttribute('size');
-    expect(screen.getByTestId('logo-large')).not.toHaveAttribute('size');
-    expect(screen.getByTestId('logo-default')).not.toHaveAttribute('size');
-    
-    // Verify all variants maintain the required base class
-    expect(screen.getByTestId('logo-small')).toHaveClass('font-bold');
-    expect(screen.getByTestId('logo-medium')).toHaveClass('font-bold');
-    expect(screen.getByTestId('logo-large')).toHaveClass('font-bold');
-    expect(screen.getByTestId('logo-default')).toHaveClass('font-bold');
-    
+    expect(logo).not.toHaveAttribute('size');
+
+    // Verify the base class is maintained
+    expect(logo).toHaveClass('font-bold');
+
+    // Test other size variants
+    rerender(<Logo size="medium" />);
+    logo = screen.getByRole('heading', { level: 1, name: 'Scry' });
+    expect(logo).toBeInTheDocument();
+    expect(logo).not.toHaveAttribute('size');
+    expect(logo).toHaveClass('font-bold');
+
+    rerender(<Logo size="large" />);
+    logo = screen.getByRole('heading', { level: 1, name: 'Scry' });
+    expect(logo).toBeInTheDocument();
+    expect(logo).not.toHaveAttribute('size');
+    expect(logo).toHaveClass('font-bold');
+
+    rerender(<Logo size="default" />);
+    logo = screen.getByRole('heading', { level: 1, name: 'Scry' });
+    expect(logo).toBeInTheDocument();
+    expect(logo).not.toHaveAttribute('size');
+    expect(logo).toHaveClass('font-bold');
+
     // Note: Due to JSDOM limitations, we can't directly test computed font-size styles.
     // Instead, we verify the component properly accepts the size prop variants
     // and renders without errors, which is more resilient to implementation changes.
@@ -133,18 +140,18 @@ describe('Logo Component', () => {
 
   it('applies correct color variants', () => {
     // Render each color variant for comparison
-    const { getByTestId } = render(
+    render(
       <>
-        <Logo color="chalk" data-testid="logo-chalk" />
-        <Logo color="ink" data-testid="logo-ink" />
-        <Logo color="cobalt" data-testid="logo-cobalt" />
+        <Logo color="chalk" as="h2" aria-label="Chalk Logo" />
+        <Logo color="ink" as="h3" aria-label="Ink Logo" />
+        <Logo color="cobalt" as="h4" aria-label="Cobalt Logo" />
       </>
     );
 
-    // Get all logo variants
-    const chalkLogo = getByTestId('logo-chalk');
-    const inkLogo = getByTestId('logo-ink');
-    const cobaltLogo = getByTestId('logo-cobalt');
+    // Get all logo variants using aria-label to distinguish them
+    const chalkLogo = screen.getByLabelText('Chalk Logo');
+    const inkLogo = screen.getByLabelText('Ink Logo');
+    const cobaltLogo = screen.getByLabelText('Cobalt Logo');
 
     // Verify each logo has the base class
     expect(chalkLogo).toHaveClass('font-bold');
@@ -185,23 +192,23 @@ describe('Logo Component', () => {
     // Test combining size, color, className and aria-label
     const customClass = 'custom-test-class';
     const customAriaLabel = 'Custom Logo Label';
+    const defaultAriaLabel = 'Default Logo';
 
-    // First render with default props
-    const { getByTestId } = render(
+    // First render with default props and one with combined props
+    render(
       <>
-        <Logo data-testid="logo-default" />
+        <Logo aria-label={defaultAriaLabel} />
         <Logo
           size="small"
           color="cobalt"
           className={customClass}
           aria-label={customAriaLabel}
-          data-testid="logo-combined"
         />
       </>
     );
 
-    const defaultLogo = getByTestId('logo-default');
-    const combinedLogo = getByTestId('logo-combined');
+    const defaultLogo = screen.getByLabelText(defaultAriaLabel);
+    const combinedLogo = screen.getByLabelText(customAriaLabel);
 
     // Verify custom aria-label is applied
     expect(combinedLogo).toHaveAttribute('aria-label', customAriaLabel);
@@ -462,35 +469,34 @@ describe('Logo HTML Attribute Passthrough', () => {
     const role = 'banner';
     const tabIndex = 0;
     const title = 'Logo Title';
-    
+
     render(
-      <Logo 
+      <Logo
         id={id}
         role={role}
         tabIndex={tabIndex}
         title={title}
-        data-testid="logo"
       />
     );
-    
-    const logo = screen.getByTestId('logo');
+
+    // Using title as a selector since it's being tested
+    const logo = screen.getByTitle(title);
     expect(logo).toHaveAttribute('id', id);
     expect(logo).toHaveAttribute('role', role);
     expect(logo).toHaveAttribute('tabindex', tabIndex.toString());
-    expect(logo).toHaveAttribute('title', title);
   });
-  
+
   it('passes through multiple data-* attributes', () => {
     render(
-      <Logo 
-        data-testid="logo"
+      <Logo
+        aria-label="Logo with Data Attributes"
         data-custom="custom-value"
         data-analytics-id="analytics-123"
         data-automation="test-automation"
       />
     );
-    
-    const logo = screen.getByTestId('logo');
+
+    const logo = screen.getByLabelText('Logo with Data Attributes');
     expect(logo).toHaveAttribute('data-custom', 'custom-value');
     expect(logo).toHaveAttribute('data-analytics-id', 'analytics-123');
     expect(logo).toHaveAttribute('data-automation', 'test-automation');
@@ -498,39 +504,39 @@ describe('Logo HTML Attribute Passthrough', () => {
   
   it('passes through event handler attributes', () => {
     const onClickMock = jest.fn();
-    
+
     render(
-      <Logo 
-        data-testid="logo"
+      <Logo
+        aria-label="Clickable Logo"
         onClick={onClickMock}
       />
     );
-    
-    const logo = screen.getByTestId('logo');
+
+    const logo = screen.getByLabelText('Clickable Logo');
     logo.click();
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
-  
+
   it('passes through style attribute correctly', () => {
     render(
-      <Logo 
-        data-testid="logo"
+      <Logo
+        aria-label="Styled Logo"
         style={{ letterSpacing: '2px', textDecoration: 'underline' }}
       />
     );
-    
-    const logo = screen.getByTestId('logo');
+
+    const logo = screen.getByLabelText('Styled Logo');
     expect(logo).toHaveStyle({
       letterSpacing: '2px',
       textDecoration: 'underline'
     });
   });
-  
+
   it('correctly applies both component props and HTML attributes', () => {
     // Render both default and customized Logo for comparison
-    const { getByTestId } = render(
+    render(
       <>
-        <Logo data-testid="logo-default" />
+        <Logo aria-label="Default Logo" />
         <Logo
           size="small"
           color="cobalt"
@@ -538,13 +544,13 @@ describe('Logo HTML Attribute Passthrough', () => {
           id="logo-id"
           title="Brand Logo"
           data-custom="custom-value"
-          data-testid="logo-custom"
+          aria-label="Custom Brand Logo"
         />
       </>
     );
 
-    const defaultLogo = getByTestId('logo-default');
-    const customLogo = getByTestId('logo-custom');
+    const defaultLogo = screen.getByLabelText('Default Logo');
+    const customLogo = screen.getByLabelText('Custom Brand Logo');
 
     // Check component props were applied
     expect(customLogo.tagName).toBe('DIV'); // as="div"
@@ -572,12 +578,12 @@ describe('Logo HTML Attribute Passthrough', () => {
     expect(customLogo).toHaveAttribute('title', 'Brand Logo');
     expect(customLogo).toHaveAttribute('data-custom', 'custom-value');
   });
-  
+
   it('has precedence for aria-label over default aria-label', () => {
     const customAriaLabel = 'Custom Scry Logo';
-    render(<Logo aria-label={customAriaLabel} data-testid="logo" />);
-    
-    const logo = screen.getByTestId('logo');
+    render(<Logo aria-label={customAriaLabel} />);
+
+    const logo = screen.getByLabelText(customAriaLabel);
     expect(logo).toHaveAttribute('aria-label', customAriaLabel);
     expect(logo).not.toHaveAttribute('aria-label', 'Scry'); // Default value
   });
