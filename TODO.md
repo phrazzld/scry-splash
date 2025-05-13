@@ -209,7 +209,7 @@
         1. `git diff` shows no missing newlines; Prettier check passes.
     - **Depends‑on:** none
 
-- [ ] **T020 · Refactor · P2: change let to const in test files where reassignment does not occur**
+- [x] **T020 · Refactor · P2: change let to const in test files where reassignment does not occur**
     - **Context:** cr-11 Use `const` Over `let` Where Possible in Test Files
     - **Action:**
         1. Find all `let` declarations in test files that are not reassigned.
