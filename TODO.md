@@ -199,7 +199,7 @@
         1. Code search for `jest.mock` comments is empty.
     - **Depends‑on:** none
 
-- [ ] **T019 · Chore · P2: ensure all test files have final newlines**
+- [x] **T019 · Chore · P2: ensure all test files have final newlines**
     - **Context:** cr-09 Add Missing Final Newlines in Test Files
     - **Action:**
         1. Run Prettier or configured formatter to enforce final newlines.
