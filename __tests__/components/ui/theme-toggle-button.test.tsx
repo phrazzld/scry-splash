@@ -5,12 +5,22 @@ import '@testing-library/jest-dom';
 import { ThemeToggleButton } from '@/components/ui/theme-toggle-button';
 import * as ThemeProviderModule from '@/components/ui/theme-provider';
 
-// Mock the useTheme hook
+/**
+ * Partial module mocking strategy
+ *
+ * This pattern allows us to:
+ * 1. Keep most of the original module functionality using requireActual
+ * 2. Selectively override just the useTheme hook with a mock function
+ * 3. Control the hook's return values in each test
+ *
+ * This is more precise than mocking the entire module and avoids having
+ * to reimplement ThemeProvider or any other exports from the module.
+ */
 jest.mock('@/components/ui/theme-provider', () => {
   const original = jest.requireActual('@/components/ui/theme-provider');
   return {
-    ...original,
-    useTheme: jest.fn(),
+    ...original,     // Keep all original exports
+    useTheme: jest.fn(), // But replace useTheme with a mock
   };
 });
 
@@ -48,8 +58,19 @@ describe('ThemeToggleButton Component', () => {
     // In light mode, the moon icon should be visible (for switching to dark)
     expect(button).toBeInTheDocument();
     expect(button).toHaveAttribute('aria-label', 'Switch to dark theme');
-    
-    // Verify the SVG path that represents the moon icon is present
+
+    /**
+     * SVG path identification technique
+     *
+     * The ThemeToggleButton renders either a sun or moon icon based on the current theme.
+     * To verify the correct icon is shown:
+     *
+     * 1. We use a CSS selector targeting a specific path element with unique path data
+     * 2. The selector 'path[d*="17.293 13.293"]' finds the moon icon's path by a distinctive
+     *    coordinate fragment in its path data (d) attribute
+     * 3. This is more reliable than testing class names, which might change
+     * 4. It's also more precise than checking text content, since SVG icons don't have text
+     */
     const moonPath = document.querySelector('path[d*="17.293 13.293"]');
     expect(moonPath).toBeInTheDocument();
   });
@@ -68,8 +89,15 @@ describe('ThemeToggleButton Component', () => {
     // In dark mode, the sun icon should be visible (for switching to light)
     expect(button).toBeInTheDocument();
     expect(button).toHaveAttribute('aria-label', 'Switch to light theme');
-    
-    // Verify the SVG path that represents the sun icon is present
+
+    /**
+     * SVG sun icon identification
+     *
+     * Similar to the moon icon identification, we use a unique attribute to find the sun icon:
+     * - We look for 'path[clip-rule="evenodd"]' which is specific to the sun SVG path
+     * - The clip-rule attribute is used for complex SVG shapes like the sun rays
+     * - This is a stable selector as long as the sun icon implementation doesn't change dramatically
+     */
     const sunPath = document.querySelector('path[clip-rule="evenodd"]');
     expect(sunPath).toBeInTheDocument();
   });

@@ -66,17 +66,31 @@ describe('NoiseBackground Component', () => {
     expect(noiseBg).toContainElement(secondChild);
     expect(noiseBg).toContainElement(thirdChild);
 
-    // Verify order is preserved (we need to check DOM order excluding the noise div)
+    /*
+     * COMPONENT STRUCTURE NOTE:
+     * The NoiseBackground component renders with the following DOM structure:
+     * <div className="relative">   <- noiseBg (the main container)
+     *   <div className="absolute"> <- noise overlay (always the first child)
+     *   {children}                 <- user's content (rendered after the noise overlay)
+     * </div>
+     *
+     * When verifying the order of child elements, we need to:
+     * 1. Skip the first child (noise overlay) since it's internal to the component
+     * 2. Only check the user's actual content elements
+     */
+
+    // Filter out the noise overlay (first child) to get only the user's content elements
     const childNodes = Array.from(noiseBg.childNodes).filter(
-      node => node !== noiseBg.firstChild // Filter out the noise div
+      node => node !== noiseBg.firstChild // Exclude the noise overlay div
     );
 
-    // Get the parent elements (direct children of noise background)
+    // Find each content element's direct parent (which should be a child of noiseBackground)
+    // We use closest() because our test content is nested inside different element types
     const firstParent = firstChild.closest('div:not(.absolute)');
     const secondParent = secondChild.closest('span');
     const thirdParent = thirdChild.closest('p');
 
-    // Check that they're in the right order in the DOM
+    // Verify the elements appear in the DOM in the same order they were defined in JSX
     expect(childNodes[0]).toBe(firstParent);
     expect(childNodes[1]).toBe(secondParent);
     expect(childNodes[2]).toBe(thirdParent);

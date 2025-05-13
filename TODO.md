@@ -220,7 +220,7 @@
         1. Lint passes; code review confirms.
     - **Depends‑on:** none
 
-- [ ] **T021 · Chore · P2: add comments explaining non-obvious test logic**
+- [x] **T021 · Chore · P2: add comments explaining non-obvious test logic**
     - **Context:** cr-10 Add Documentation for Non-Obvious Test Logic
     - **Action:**
         1. Add concise comments to non-trivial test logic, e.g., DOM filtering in `noise-background.test.tsx:70-72`.
