@@ -253,7 +253,7 @@
         1. IDE hover shows TSDoc; code review confirms completeness.
     - **Depends‑on:** none
 
-- [ ] **T024 · Chore · P1: ensure TSDoc coverage for Logo props**
+- [x] **T024 · Chore · P1: ensure TSDoc coverage for Logo props**
     - **Context:** cr-12 Ensure TSDoc for Source Component Props
     - **Action:**
         1. Review Logo props interface in `logo.tsx`.
