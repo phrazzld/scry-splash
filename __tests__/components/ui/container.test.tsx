@@ -7,9 +7,10 @@ import { Container } from '@/components/ui/container';
 describe('Container Component', () => {
   describe('Basic Rendering', () => {
     it('renders correctly with default props', () => {
-      render(<Container data-testid="container">Content</Container>);
-      
-      const container = screen.getByTestId('container');
+      // Add a specific role for easier querying without data-testid
+      render(<Container role="region" aria-label="Default container">Content</Container>);
+
+      const container = screen.getByRole('region', { name: 'Default container' });
       expect(container).toBeInTheDocument();
       expect(container).toHaveTextContent('Content');
       expect(container.tagName).toBe('DIV');
@@ -17,9 +18,9 @@ describe('Container Component', () => {
 
     it('applies custom className and merges with default classes', () => {
       const customClass = 'test-class';
-      render(<Container className={customClass} data-testid="container">Content</Container>);
-      
-      const container = screen.getByTestId('container');
+      render(<Container className={customClass}>Content</Container>);
+
+      const container = screen.getByText('Content').parentElement;
       expect(container).toHaveClass(customClass);
       // Verify merging with default classes
       expect(container).toHaveClass('grid-container');
@@ -28,16 +29,16 @@ describe('Container Component', () => {
     });
 
     it('renders with custom element via as prop', () => {
-      render(<Container as="section" data-testid="container">Content</Container>);
-      
-      const container = screen.getByTestId('container');
-      expect(container.tagName).toBe('SECTION');
+      render(<Container as="section">Content</Container>);
+
+      const container = screen.getByText('Content').parentElement;
+      expect(container?.tagName).toBe('SECTION');
     });
 
     it('forwards refs correctly', () => {
       const ref = React.createRef<HTMLDivElement>();
-      render(<Container ref={ref} data-testid="container">Content</Container>);
-      
+      render(<Container ref={ref}>Content</Container>);
+
       expect(ref.current).not.toBeNull();
       expect(ref.current?.tagName).toBe('DIV');
       expect(ref.current?.textContent).toBe('Content');
@@ -333,15 +334,12 @@ describe('Container Component', () => {
     it('passes additional props to the element', () => {
       const customAttr = 'custom-attr';
       render(
-        <Container 
-          data-testid="container" 
-          data-custom={customAttr}
-        >
+        <Container data-custom={customAttr}>
           Content
         </Container>
       );
-      
-      const container = screen.getByTestId('container');
+
+      const container = screen.getByText('Content').parentElement;
       expect(container).toHaveAttribute('data-custom', customAttr);
     });
 
@@ -359,15 +357,14 @@ describe('Container Component', () => {
           tabIndex={tabIndex}
           title={title}
           aria-label={ariaLabel}
-          data-testid="container"
         >
           Content
         </Container>
       );
 
-      const container = screen.getByTestId('container');
+      // Use getByRole since we explicitly set role="main"
+      const container = screen.getByRole('main');
       expect(container).toHaveAttribute('id', id);
-      expect(container).toHaveAttribute('role', role);
       expect(container).toHaveAttribute('tabindex', tabIndex.toString());
       expect(container).toHaveAttribute('title', title);
       expect(container).toHaveAttribute('aria-label', ariaLabel);
@@ -376,7 +373,6 @@ describe('Container Component', () => {
     it('passes through multiple data-* attributes', () => {
       render(
         <Container
-          data-testid="container"
           data-custom="custom-value"
           data-analytics-id="analytics-123"
           data-automation="test-automation"
@@ -385,7 +381,7 @@ describe('Container Component', () => {
         </Container>
       );
 
-      const container = screen.getByTestId('container');
+      const container = screen.getByText('Content').parentElement;
       expect(container).toHaveAttribute('data-custom', 'custom-value');
       expect(container).toHaveAttribute('data-analytics-id', 'analytics-123');
       expect(container).toHaveAttribute('data-automation', 'test-automation');
@@ -397,34 +393,32 @@ describe('Container Component', () => {
 
       render(
         <Container
-          data-testid="container"
           onClick={onClickMock}
           onKeyDown={onKeyDownMock}
         >
-          Content
+          Click Me
         </Container>
       );
 
-      const container = screen.getByTestId('container');
-      container.click();
+      const container = screen.getByText('Click Me').parentElement;
+      container?.click();
       expect(onClickMock).toHaveBeenCalledTimes(1);
 
       // Simulate keydown event
-      container.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      container?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
       expect(onKeyDownMock).toHaveBeenCalledTimes(1);
     });
 
     it('passes through style attribute correctly', () => {
       render(
         <Container
-          data-testid="container"
           style={{ color: 'red', marginTop: '10px' }}
         >
-          Content
+          Styled Content
         </Container>
       );
 
-      const container = screen.getByTestId('container');
+      const container = screen.getByText('Styled Content').parentElement;
       expect(container).toHaveStyle({
         color: 'red',
         marginTop: '10px'
@@ -434,9 +428,9 @@ describe('Container Component', () => {
 
   describe('Edge Cases', () => {
     it('renders Container correctly with no children', () => {
-      render(<Container data-testid="empty-container" />);
+      render(<Container role="region" aria-label="Empty container" />);
 
-      const container = screen.getByTestId('empty-container');
+      const container = screen.getByRole('region', { name: 'Empty container' });
       expect(container).toBeInTheDocument();
       // Test for base container functionality without requiring specific class names
       expect(container.tagName).toBe('DIV');  // Default element type
@@ -447,18 +441,18 @@ describe('Container Component', () => {
     });
 
     it('renders Container correctly with null children', () => {
-      render(<Container data-testid="null-container">{null}</Container>);
+      render(<Container role="region" aria-label="Null children container">{null}</Container>);
 
-      const container = screen.getByTestId('null-container');
+      const container = screen.getByRole('region', { name: 'Null children container' });
       expect(container).toBeInTheDocument();
       expect(container.tagName).toBe('DIV');
       expect(container.childNodes.length).toBe(0);
     });
 
     it('renders Container correctly with undefined children', () => {
-      render(<Container data-testid="undefined-container">{undefined}</Container>);
+      render(<Container role="region" aria-label="Undefined children container">{undefined}</Container>);
 
-      const container = screen.getByTestId('undefined-container');
+      const container = screen.getByRole('region', { name: 'Undefined children container' });
       expect(container).toBeInTheDocument();
       expect(container.tagName).toBe('DIV');
       expect(container.childNodes.length).toBe(0);
@@ -466,13 +460,13 @@ describe('Container Component', () => {
 
     it('applies default props when no explicit variants are provided', () => {
       // Render a basic container with no variant props
-      render(<Container data-testid="default-container">Content</Container>);
+      render(<Container>Default Content</Container>);
 
-      const container = screen.getByTestId('default-container');
+      const container = screen.getByText('Default Content').parentElement;
 
       // Verify it renders with default props applied
       expect(container).toBeInTheDocument();
-      expect(container).toHaveTextContent('Content');
+      expect(container).toHaveTextContent('Default Content');
 
       // The exact classes may change, but 'grid-container' is part of the public API
       expect(container).toHaveClass('grid-container');

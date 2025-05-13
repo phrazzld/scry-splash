@@ -154,7 +154,7 @@
         1. Tests remain green; queries reflect real user selectors.
     - **Depends‑on:** [T012]
 
-- [ ] **T015 · Refactor · P1: minimize data-testid usage in Container, GridItem, and NoiseBackground tests**
+- [~] **T015 · Refactor · P1: minimize data-testid usage in Container, GridItem, and NoiseBackground tests** [IN PROGRESS]
     - **Context:** cr-06 Optimize Querying Strategy (Reduce `data-testid` Overuse)
     - **Action:**
         1. Replace `getByTestId` with semantic selectors where feasible in these test files.

@@ -7,45 +7,44 @@ import { GridItem } from '@/components/ui/container';
 describe('GridItem Component', () => {
   describe('Basic Rendering', () => {
     it('renders correctly with default props', () => {
-      render(<GridItem data-testid="grid-item">Content</GridItem>);
-      
-      const gridItem = screen.getByTestId('grid-item');
+      render(<GridItem>Content</GridItem>);
+
+      const gridItem = screen.getByText('Content').parentElement;
       expect(gridItem).toBeInTheDocument();
       expect(gridItem).toHaveTextContent('Content');
-      expect(gridItem.tagName).toBe('DIV');
+      expect(gridItem?.tagName).toBe('DIV');
     });
-    
+
     it('renders complex children correctly', () => {
       render(
-        <GridItem data-testid="grid-item">
-          <div data-testid="child1">First Child</div>
-          <span data-testid="child2">Second Child</span>
+        <GridItem>
+          <div>First Child</div>
+          <span>Second Child</span>
         </GridItem>
       );
-      
-      const gridItem = screen.getByTestId('grid-item');
-      const child1 = screen.getByTestId('child1');
-      const child2 = screen.getByTestId('child2');
-      
-      expect(gridItem).toContainElement(child1);
-      expect(gridItem).toContainElement(child2);
-      expect(child1).toHaveTextContent('First Child');
-      expect(child2).toHaveTextContent('Second Child');
+
+      const firstChild = screen.getByText('First Child');
+      const secondChild = screen.getByText('Second Child');
+      const gridItem = firstChild.parentElement;
+
+      expect(gridItem).toContainElement(firstChild);
+      expect(gridItem).toContainElement(secondChild);
+      expect(firstChild).toHaveTextContent('First Child');
+      expect(secondChild).toHaveTextContent('Second Child');
     });
 
     it('applies custom className and merges with default classes', () => {
       const customClass = 'test-class';
       render(
-        <GridItem 
-          className={customClass} 
-          span={6} 
-          data-testid="grid-item"
+        <GridItem
+          className={customClass}
+          span={6}
         >
-          Content
+          Custom Class Content
         </GridItem>
       );
-      
-      const gridItem = screen.getByTestId('grid-item');
+
+      const gridItem = screen.getByText('Custom Class Content').parentElement;
       expect(gridItem).toHaveClass(customClass);
       // Verify merging with generated classes
       expect(gridItem).toHaveClass('col-span-6');
@@ -53,45 +52,45 @@ describe('GridItem Component', () => {
 
     it('forwards refs correctly', () => {
       const ref = React.createRef<HTMLDivElement>();
-      render(<GridItem ref={ref} data-testid="grid-item">Content</GridItem>);
-      
+      render(<GridItem ref={ref}>Ref Content</GridItem>);
+
       expect(ref.current).not.toBeNull();
       expect(ref.current?.tagName).toBe('DIV');
-      expect(ref.current?.textContent).toBe('Content');
+      expect(ref.current?.textContent).toBe('Ref Content');
     });
   });
 
   describe('Props and Variants', () => {
     describe('Custom Element', () => {
       it('renders with custom element via as prop', () => {
-        // Test with section element
+        // Test with section element (has implicit role=region)
         const { rerender } = render(
-          <GridItem as="section" data-testid="grid-item">
+          <GridItem as="section" aria-label="Section content">
             Content
           </GridItem>
         );
-        
-        let gridItem = screen.getByTestId('grid-item');
+
+        let gridItem = screen.getByRole('region', { name: 'Section content' });
         expect(gridItem.tagName).toBe('SECTION');
-        
-        // Test with article element
+
+        // Test with article element (has implicit role=article)
         rerender(
-          <GridItem as="article" data-testid="grid-item">
+          <GridItem as="article" aria-label="Article content">
             Content
           </GridItem>
         );
-        
-        gridItem = screen.getByTestId('grid-item');
+
+        gridItem = screen.getByRole('article', { name: 'Article content' });
         expect(gridItem.tagName).toBe('ARTICLE');
-        
-        // Test with header element
+
+        // Test with header element (has implicit role=banner)
         rerender(
-          <GridItem as="header" data-testid="grid-item">
+          <GridItem as="header" aria-label="Header content">
             Content
           </GridItem>
         );
-        
-        gridItem = screen.getByTestId('grid-item');
+
+        gridItem = screen.getByRole('banner', { name: 'Header content' });
         expect(gridItem.tagName).toBe('HEADER');
       });
     });
@@ -755,26 +754,23 @@ describe('GridItem Component', () => {
       const tabIndex = 0;
       const title = 'GridItem Title';
       const ariaLabel = 'GridItem Label';
-      
+
       render(
-        <GridItem 
+        <GridItem
           id={id}
           role={role}
           tabIndex={tabIndex}
           title={title}
           aria-label={ariaLabel}
-          data-testid="grid-item"
         >
           Content
         </GridItem>
       );
-      
-      const gridItem = screen.getByTestId('grid-item');
+
+      const gridItem = screen.getByRole('region', { name: 'GridItem Label' });
       expect(gridItem).toHaveAttribute('id', id);
-      expect(gridItem).toHaveAttribute('role', role);
       expect(gridItem).toHaveAttribute('tabindex', tabIndex.toString());
       expect(gridItem).toHaveAttribute('title', title);
-      expect(gridItem).toHaveAttribute('aria-label', ariaLabel);
     });
     
     it('passes through multiple data-* attributes', () => {
