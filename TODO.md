@@ -166,7 +166,7 @@
     - **Depends‑on:** [T010], [T013]
 
 ## Coverage Verification
-- [ ] **T016 · Test · P0: generate and attach test coverage report to PR**
+- [x] **T016 · Test · P0: generate and attach test coverage report to PR**
     - **Context:** cr-07 Address Test Coverage Verification Gap
     - **Action:**
         1. Run tests with coverage enabled.
