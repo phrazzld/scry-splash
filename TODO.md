@@ -341,7 +341,7 @@
         1. Documentation review by team member.
     - **Depends‑on:** [T026]
 
-- [ ] **T031 · DevOps · P0: add coverage check to pre-push hook**
+- [x] **T031 · DevOps · P0: add coverage check to pre-push hook**
     - **Context:** Ensure consistent test coverage enforcement locally and in CI
     - **Action:**
         1. Update `.githooks/pre-push` to run tests with coverage check.
