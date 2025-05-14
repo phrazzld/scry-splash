@@ -18,9 +18,17 @@ describe('Container Component', () => {
 
     it('applies custom className and merges with default classes', () => {
       const customClass = 'test-class';
-      render(<Container className={customClass}>Content</Container>);
+      render(
+        <Container
+          className={customClass}
+          role="region"
+          aria-label="Custom class container"
+        >
+          Content with custom class
+        </Container>
+      );
 
-      const container = screen.getByText('Content').parentElement;
+      const container = screen.getByRole('region', { name: 'Custom class container' });
       expect(container).toHaveClass(customClass);
       // Verify merging with default classes
       expect(container).toHaveClass('grid-container');
@@ -29,10 +37,17 @@ describe('Container Component', () => {
     });
 
     it('renders with custom element via as prop', () => {
-      render(<Container as="section">Content</Container>);
+      render(
+        <Container
+          as="section"
+          aria-label="Section container"
+        >
+          Content in section
+        </Container>
+      );
 
-      const container = screen.getByText('Content').parentElement;
-      expect(container?.tagName).toBe('SECTION');
+      const container = screen.getByRole('region', { name: 'Section container' });
+      expect(container.tagName).toBe('SECTION');
     });
 
     it('forwards refs correctly', () => {
@@ -52,17 +67,18 @@ describe('Container Component', () => {
         const variants = ['sm', 'md', 'lg', 'xl', '2xl', 'full', 'none'];
 
         variants.forEach(variant => {
-          const { container, getByTestId } = render(
+          const { container, getByRole } = render(
             <Container
               maxWidth={variant as any}
-              data-testid={`container-${variant}`}
+              role="region"
+              aria-label={`${variant} width container`}
             >
-              Content
+              {variant} width content
             </Container>
           );
 
-          // Verify the component renders
-          const containerElement = getByTestId(`container-${variant}`);
+          // Verify the component renders using semantic role
+          const containerElement = getByRole('region', { name: `${variant} width container` });
           expect(containerElement).toBeInTheDocument();
 
           // Verify the maxWidth prop is processed (not passed to DOM)
@@ -75,27 +91,27 @@ describe('Container Component', () => {
 
       it('applies different styling for each maxWidth variant', () => {
         // Render all variants at once for comparison
-        const { getByTestId } = render(
+        const { getByRole } = render(
           <>
-            <Container maxWidth="sm" data-testid="container-sm">Content</Container>
-            <Container maxWidth="md" data-testid="container-md">Content</Container>
-            <Container maxWidth="lg" data-testid="container-lg">Content</Container>
-            <Container maxWidth="xl" data-testid="container-xl">Content</Container>
-            <Container maxWidth="2xl" data-testid="container-2xl">Content</Container>
-            <Container maxWidth="full" data-testid="container-full">Content</Container>
-            <Container maxWidth="none" data-testid="container-none">Content</Container>
+            <Container maxWidth="sm" role="region" aria-label="sm width container">Small width</Container>
+            <Container maxWidth="md" role="region" aria-label="md width container">Medium width</Container>
+            <Container maxWidth="lg" role="region" aria-label="lg width container">Large width</Container>
+            <Container maxWidth="xl" role="region" aria-label="xl width container">Extra large width</Container>
+            <Container maxWidth="2xl" role="region" aria-label="2xl width container">Double XL width</Container>
+            <Container maxWidth="full" role="region" aria-label="full width container">Full width</Container>
+            <Container maxWidth="none" role="region" aria-label="none width container">No width constraint</Container>
           </>
         );
 
-        // Get all containers
+        // Get all containers using semantic selectors
         const containers = [
-          getByTestId('container-sm'),
-          getByTestId('container-md'),
-          getByTestId('container-lg'),
-          getByTestId('container-xl'),
-          getByTestId('container-2xl'),
-          getByTestId('container-full'),
-          getByTestId('container-none'),
+          getByRole('region', { name: 'sm width container' }),
+          getByRole('region', { name: 'md width container' }),
+          getByRole('region', { name: 'lg width container' }),
+          getByRole('region', { name: 'xl width container' }),
+          getByRole('region', { name: '2xl width container' }),
+          getByRole('region', { name: 'full width container' }),
+          getByRole('region', { name: 'none width container' }),
         ];
 
         // Verify they all have the base classes
@@ -122,17 +138,18 @@ describe('Container Component', () => {
         const variants = ['none', 'sm', 'md', 'lg', 'xl', 'responsive'];
 
         variants.forEach(variant => {
-          const { container, getByTestId } = render(
+          const { container, getByRole } = render(
             <Container
               padding={variant as any}
-              data-testid={`container-${variant}`}
+              role="region"
+              aria-label={`${variant} padding container`}
             >
-              Content
+              {variant} padding content
             </Container>
           );
 
-          // Verify the component renders
-          const containerElement = getByTestId(`container-${variant}`);
+          // Verify the component renders using semantic role
+          const containerElement = getByRole('region', { name: `${variant} padding container` });
           expect(containerElement).toBeInTheDocument();
 
           // Verify the padding prop is processed (not passed to DOM)
@@ -145,25 +162,25 @@ describe('Container Component', () => {
 
       it('applies different styling for each padding variant', () => {
         // Render all variants at once for comparison
-        const { getByTestId } = render(
+        const { getByRole } = render(
           <>
-            <Container padding="none" data-testid="container-none">Content</Container>
-            <Container padding="sm" data-testid="container-sm">Content</Container>
-            <Container padding="md" data-testid="container-md">Content</Container>
-            <Container padding="lg" data-testid="container-lg">Content</Container>
-            <Container padding="xl" data-testid="container-xl">Content</Container>
-            <Container padding="responsive" data-testid="container-responsive">Content</Container>
+            <Container padding="none" role="region" aria-label="no padding">No padding</Container>
+            <Container padding="sm" role="region" aria-label="small padding">Small padding</Container>
+            <Container padding="md" role="region" aria-label="medium padding">Medium padding</Container>
+            <Container padding="lg" role="region" aria-label="large padding">Large padding</Container>
+            <Container padding="xl" role="region" aria-label="extra large padding">Extra large padding</Container>
+            <Container padding="responsive" role="region" aria-label="responsive padding">Responsive padding</Container>
           </>
         );
 
-        // Get all containers
+        // Get all containers using role and aria-label
         const containers = [
-          getByTestId('container-none'),
-          getByTestId('container-sm'),
-          getByTestId('container-md'),
-          getByTestId('container-lg'),
-          getByTestId('container-xl'),
-          getByTestId('container-responsive'),
+          getByRole('region', { name: 'no padding' }),
+          getByRole('region', { name: 'small padding' }),
+          getByRole('region', { name: 'medium padding' }),
+          getByRole('region', { name: 'large padding' }),
+          getByRole('region', { name: 'extra large padding' }),
+          getByRole('region', { name: 'responsive padding' }),
         ];
 
         // Verify they all have the base classes
@@ -185,13 +202,13 @@ describe('Container Component', () => {
     describe('center Variant', () => {
       it('processes center prop correctly', () => {
         // Test center={true} vs center={false}
-        const { rerender, getByTestId } = render(
-          <Container center={true} data-testid="container">
-            Content
+        const { rerender, getByRole } = render(
+          <Container center={true} role="region" aria-label="centered container">
+            Centered content
           </Container>
         );
 
-        let container = getByTestId('container');
+        let container = getByRole('region', { name: 'centered container' });
         // Verify the center prop is processed (not passed to DOM)
         expect(container).not.toHaveAttribute('center');
 
@@ -200,12 +217,12 @@ describe('Container Component', () => {
 
         // Test with center=false
         rerender(
-          <Container center={false} data-testid="container">
-            Content
+          <Container center={false} role="region" aria-label="centered container">
+            Centered content
           </Container>
         );
 
-        container = getByTestId('container');
+        container = getByRole('region', { name: 'centered container' });
         // Verify prop is processed
         expect(container).not.toHaveAttribute('center');
 
@@ -223,17 +240,18 @@ describe('Container Component', () => {
         const variants = ['none', 'sm', 'md', 'lg', 'xl'];
 
         variants.forEach(variant => {
-          const { container, getByTestId } = render(
+          const { container, getByRole } = render(
             <Container
               gap={variant as any}
-              data-testid={`container-${variant}`}
+              role="region"
+              aria-label={`${variant} gap container`}
             >
-              Content
+              {variant} gap content
             </Container>
           );
 
           // Verify the component renders
-          const containerElement = getByTestId(`container-${variant}`);
+          const containerElement = getByRole('region', { name: `${variant} gap container` });
           expect(containerElement).toBeInTheDocument();
 
           // Verify the gap prop is processed (not passed to DOM)
@@ -246,23 +264,23 @@ describe('Container Component', () => {
 
       it('applies different styling for each gap variant', () => {
         // Render all variants at once for comparison
-        const { getByTestId } = render(
+        const { getByRole } = render(
           <>
-            <Container gap="none" data-testid="container-none">Content</Container>
-            <Container gap="sm" data-testid="container-sm">Content</Container>
-            <Container gap="md" data-testid="container-md">Content</Container>
-            <Container gap="lg" data-testid="container-lg">Content</Container>
-            <Container gap="xl" data-testid="container-xl">Content</Container>
+            <Container gap="none" role="region" aria-label="no gap">No gap</Container>
+            <Container gap="sm" role="region" aria-label="small gap">Small gap</Container>
+            <Container gap="md" role="region" aria-label="medium gap">Medium gap</Container>
+            <Container gap="lg" role="region" aria-label="large gap">Large gap</Container>
+            <Container gap="xl" role="region" aria-label="extra large gap">Extra large gap</Container>
           </>
         );
 
-        // Get all containers
+        // Get all containers using role and aria-label
         const containers = [
-          getByTestId('container-none'),
-          getByTestId('container-sm'),
-          getByTestId('container-md'),
-          getByTestId('container-lg'),
-          getByTestId('container-xl'),
+          getByRole('region', { name: 'no gap' }),
+          getByRole('region', { name: 'small gap' }),
+          getByRole('region', { name: 'medium gap' }),
+          getByRole('region', { name: 'large gap' }),
+          getByRole('region', { name: 'extra large gap' }),
         ];
 
         // Verify they all have the base classes
@@ -284,17 +302,18 @@ describe('Container Component', () => {
     describe('gapX and gapY Variants', () => {
       it('processes gapX and gapY props correctly', () => {
         // Test with both gapX and gapY props
-        const { getByTestId } = render(
+        const { getByRole } = render(
           <Container
             gapX="sm"
             gapY="lg"
-            data-testid="container"
+            role="region"
+            aria-label="gap x and y container"
           >
-            Content
+            Content with specific x and y gaps
           </Container>
         );
 
-        const container = getByTestId('container');
+        const container = getByRole('region', { name: 'gap x and y container' });
 
         // Verify the props are processed (not passed to DOM)
         expect(container).not.toHaveAttribute('gapX');
@@ -302,22 +321,30 @@ describe('Container Component', () => {
       });
 
       it('applies different styling for different gapX and gapY combinations', () => {
-        // Render different combinations
-        const { getByTestId } = render(
+        // Render different combinations with descriptive text
+        const { getByRole } = render(
           <>
-            <Container gapX="sm" gapY="lg" data-testid="container-1">Content</Container>
-            <Container gapX="xl" gapY="none" data-testid="container-2">Content</Container>
-            <Container gapX="md" data-testid="container-3">Content</Container>
-            <Container gapY="md" data-testid="container-4">Content</Container>
+            <Container gapX="sm" gapY="lg" role="region" aria-label="combo 1">
+              Small X gap, large Y gap
+            </Container>
+            <Container gapX="xl" gapY="none" role="region" aria-label="combo 2">
+              XL X gap, no Y gap
+            </Container>
+            <Container gapX="md" role="region" aria-label="combo 3">
+              Medium X gap only
+            </Container>
+            <Container gapY="md" role="region" aria-label="combo 4">
+              Medium Y gap only
+            </Container>
           </>
         );
 
-        // Get all containers
+        // Get all containers using role and aria-label
         const containers = [
-          getByTestId('container-1'),
-          getByTestId('container-2'),
-          getByTestId('container-3'),
-          getByTestId('container-4'),
+          getByRole('region', { name: 'combo 1' }),
+          getByRole('region', { name: 'combo 2' }),
+          getByRole('region', { name: 'combo 3' }),
+          getByRole('region', { name: 'combo 4' }),
         ];
 
         // Verify that the className differs between variants
@@ -334,12 +361,16 @@ describe('Container Component', () => {
     it('passes additional props to the element', () => {
       const customAttr = 'custom-attr';
       render(
-        <Container data-custom={customAttr}>
-          Content
+        <Container
+          data-custom={customAttr}
+          role="region"
+          aria-label="Custom attribute container"
+        >
+          Content with custom attribute
         </Container>
       );
 
-      const container = screen.getByText('Content').parentElement;
+      const container = screen.getByRole('region', { name: 'Custom attribute container' });
       expect(container).toHaveAttribute('data-custom', customAttr);
     });
 
@@ -358,7 +389,7 @@ describe('Container Component', () => {
           title={title}
           aria-label={ariaLabel}
         >
-          Content
+          Content with attributes
         </Container>
       );
 
@@ -376,12 +407,14 @@ describe('Container Component', () => {
           data-custom="custom-value"
           data-analytics-id="analytics-123"
           data-automation="test-automation"
+          role="region"
+          aria-label="Data attributes container"
         >
-          Content
+          Content with data attributes
         </Container>
       );
 
-      const container = screen.getByText('Content').parentElement;
+      const container = screen.getByRole('region', { name: 'Data attributes container' });
       expect(container).toHaveAttribute('data-custom', 'custom-value');
       expect(container).toHaveAttribute('data-analytics-id', 'analytics-123');
       expect(container).toHaveAttribute('data-automation', 'test-automation');
@@ -395,17 +428,20 @@ describe('Container Component', () => {
         <Container
           onClick={onClickMock}
           onKeyDown={onKeyDownMock}
+          role="button"
+          aria-label="Clickable container"
+          tabIndex={0}
         >
           Click Me
         </Container>
       );
 
-      const container = screen.getByText('Click Me').parentElement;
-      container?.click();
+      const container = screen.getByRole('button', { name: 'Clickable container' });
+      container.click();
       expect(onClickMock).toHaveBeenCalledTimes(1);
 
       // Simulate keydown event
-      container?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      container.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
       expect(onKeyDownMock).toHaveBeenCalledTimes(1);
     });
 
@@ -413,12 +449,14 @@ describe('Container Component', () => {
       render(
         <Container
           style={{ color: 'red', marginTop: '10px' }}
+          role="region"
+          aria-label="Styled container"
         >
           Styled Content
         </Container>
       );
 
-      const container = screen.getByText('Styled Content').parentElement;
+      const container = screen.getByRole('region', { name: 'Styled container' });
       expect(container).toHaveStyle({
         color: 'red',
         marginTop: '10px'
@@ -460,9 +498,16 @@ describe('Container Component', () => {
 
     it('applies default props when no explicit variants are provided', () => {
       // Render a basic container with no variant props
-      render(<Container>Default Content</Container>);
+      render(
+        <Container
+          role="region"
+          aria-label="Default props container"
+        >
+          Default Content
+        </Container>
+      );
 
-      const container = screen.getByText('Default Content').parentElement;
+      const container = screen.getByRole('region', { name: 'Default props container' });
 
       // Verify it renders with default props applied
       expect(container).toBeInTheDocument();
@@ -478,7 +523,7 @@ describe('Accessibility', () => {
   describe('Basic Accessibility', () => {
     it('has no accessibility violations in default state', async () => {
       const { container } = render(
-        <Container data-testid="container">
+        <Container role="region" aria-label="Default container">
           <p>Content for testing</p>
         </Container>
       );
@@ -489,7 +534,7 @@ describe('Accessibility', () => {
 
     it('has no accessibility violations with different semantic elements', async () => {
       const { container: sectionContainer } = render(
-        <Container as="section" data-testid="container">
+        <Container as="section" aria-label="Section container">
           <h2>Section Heading</h2>
           <p>Content for testing</p>
         </Container>
@@ -499,7 +544,7 @@ describe('Accessibility', () => {
       expect(results).toHaveNoViolations();
 
       const { container: articleContainer } = render(
-        <Container as="article" data-testid="container">
+        <Container as="article" aria-label="Article container">
           <h2>Article Heading</h2>
           <p>Content for testing</p>
         </Container>
@@ -509,7 +554,7 @@ describe('Accessibility', () => {
       expect(results).toHaveNoViolations();
 
       const { container: mainContainer } = render(
-        <Container as="main" data-testid="container">
+        <Container as="main" aria-label="Main container">
           <h1>Main Content</h1>
           <p>Content for testing</p>
         </Container>
@@ -521,7 +566,7 @@ describe('Accessibility', () => {
 
     it('has no accessibility violations with complex nested content', async () => {
       const { container } = render(
-        <Container data-testid="container">
+        <Container role="region" aria-label="Complex content container">
           <h2>Complex Content</h2>
           <p>This is a paragraph with <a href="#test">a link</a> inside it.</p>
           <div>
@@ -541,7 +586,7 @@ describe('Accessibility', () => {
 
     it('has no accessibility violations when rendering empty Container', async () => {
       const { container } = render(
-        <Container data-testid="empty-container" />
+        <Container role="region" aria-label="Empty container" />
       );
 
       const results = await axe(container);
@@ -553,7 +598,7 @@ describe('Accessibility', () => {
     describe('maxWidth Variants', () => {
       it('has no accessibility violations with maxWidth="sm" variant', async () => {
         const { container } = render(
-          <Container maxWidth="sm" data-testid="container">
+          <Container maxWidth="sm" role="region" aria-label="Small container">
             <p>Content for testing</p>
           </Container>
         );
@@ -564,7 +609,7 @@ describe('Accessibility', () => {
 
       it('has no accessibility violations with maxWidth="md" variant', async () => {
         const { container } = render(
-          <Container maxWidth="md" data-testid="container">
+          <Container maxWidth="md" role="region" aria-label="Medium container">
             <p>Content for testing</p>
           </Container>
         );
@@ -575,7 +620,7 @@ describe('Accessibility', () => {
 
       it('has no accessibility violations with maxWidth="lg" variant', async () => {
         const { container } = render(
-          <Container maxWidth="lg" data-testid="container">
+          <Container maxWidth="lg" role="region" aria-label="Large container">
             <p>Content for testing</p>
           </Container>
         );
@@ -586,7 +631,7 @@ describe('Accessibility', () => {
 
       it('has no accessibility violations with maxWidth="xl" variant', async () => {
         const { container } = render(
-          <Container maxWidth="xl" data-testid="container">
+          <Container maxWidth="xl" role="region" aria-label="Extra large container">
             <p>Content for testing</p>
           </Container>
         );
@@ -597,7 +642,7 @@ describe('Accessibility', () => {
 
       it('has no accessibility violations with maxWidth="2xl" variant', async () => {
         const { container } = render(
-          <Container maxWidth="2xl" data-testid="container">
+          <Container maxWidth="2xl" role="region" aria-label="2XL container">
             <p>Content for testing</p>
           </Container>
         );
@@ -608,7 +653,7 @@ describe('Accessibility', () => {
 
       it('has no accessibility violations with maxWidth="full" variant', async () => {
         const { container } = render(
-          <Container maxWidth="full" data-testid="container">
+          <Container maxWidth="full" role="region" aria-label="Full width container">
             <p>Content for testing</p>
           </Container>
         );
@@ -619,7 +664,7 @@ describe('Accessibility', () => {
 
       it('has no accessibility violations with maxWidth="none" variant', async () => {
         const { container } = render(
-          <Container maxWidth="none" data-testid="container">
+          <Container maxWidth="none" role="region" aria-label="No max width container">
             <p>Content for testing</p>
           </Container>
         );

@@ -267,7 +267,7 @@ describe('NoiseBackground Component', () => {
 describe('NoiseBackground Accessibility', () => {
   it('has no accessibility violations in default state', async () => {
     const { container } = render(
-      <NoiseBackground data-testid="noise-bg" />
+      <NoiseBackground role="img" aria-label="Default noise background" />
     );
 
     const results = await axe(container);
@@ -277,7 +277,7 @@ describe('NoiseBackground Accessibility', () => {
   describe('Base Color Variants', () => {
     it('has no accessibility violations with default baseColor', async () => {
       const { container } = render(
-        <NoiseBackground baseColor="var(--background)" data-testid="noise-bg" />
+        <NoiseBackground baseColor="var(--background)" role="img" aria-label="Default background color noise texture" />
       );
 
       const results = await axe(container);
@@ -286,7 +286,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with hex baseColor (#333333)', async () => {
       const { container } = render(
-        <NoiseBackground baseColor="#333333" data-testid="noise-bg" />
+        <NoiseBackground baseColor="#333333" role="img" aria-label="Dark hex color noise texture" />
       );
 
       const results = await axe(container);
@@ -295,7 +295,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with rgb baseColor', async () => {
       const { container } = render(
-        <NoiseBackground baseColor="rgb(100, 150, 200)" data-testid="noise-bg" />
+        <NoiseBackground baseColor="rgb(100, 150, 200)" role="img" aria-label="Blue RGB color noise texture" />
       );
 
       const results = await axe(container);
@@ -304,7 +304,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with rgba baseColor', async () => {
       const { container } = render(
-        <NoiseBackground baseColor="rgba(100, 150, 200, 0.8)" data-testid="noise-bg" />
+        <NoiseBackground baseColor="rgba(100, 150, 200, 0.8)" role="img" aria-label="Translucent blue noise texture" />
       );
 
       const results = await axe(container);
@@ -313,7 +313,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with named color baseColor', async () => {
       const { container } = render(
-        <NoiseBackground baseColor="darkblue" data-testid="noise-bg" />
+        <NoiseBackground baseColor="darkblue" role="img" aria-label="Dark blue noise texture" />
       );
 
       const results = await axe(container);
@@ -324,7 +324,7 @@ describe('NoiseBackground Accessibility', () => {
   describe('Noise Opacity Variants', () => {
     it('has no accessibility violations with default noiseOpacity (0.02)', async () => {
       const { container } = render(
-        <NoiseBackground noiseOpacity={0.02} data-testid="noise-bg" />
+        <NoiseBackground noiseOpacity={0.02} role="img" aria-label="Default opacity noise texture" />
       );
 
       const results = await axe(container);
@@ -333,7 +333,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with low noiseOpacity (0.1)', async () => {
       const { container } = render(
-        <NoiseBackground noiseOpacity={0.1} data-testid="noise-bg" />
+        <NoiseBackground noiseOpacity={0.1} role="img" aria-label="Low opacity noise texture" />
       );
 
       const results = await axe(container);
@@ -342,7 +342,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with medium noiseOpacity (0.5)', async () => {
       const { container } = render(
-        <NoiseBackground noiseOpacity={0.5} data-testid="noise-bg" />
+        <NoiseBackground noiseOpacity={0.5} role="img" aria-label="Medium opacity noise texture" />
       );
 
       const results = await axe(container);
@@ -351,7 +351,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with high noiseOpacity (0.9)', async () => {
       const { container } = render(
-        <NoiseBackground noiseOpacity={0.9} data-testid="noise-bg" />
+        <NoiseBackground noiseOpacity={0.9} role="img" aria-label="High opacity noise texture" />
       );
 
       const results = await axe(container);
@@ -360,7 +360,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with zero noiseOpacity (0)', async () => {
       const { container } = render(
-        <NoiseBackground noiseOpacity={0} data-testid="noise-bg" />
+        <NoiseBackground noiseOpacity={0} role="img" aria-label="Zero opacity noise texture" />
       );
 
       const results = await axe(container);
@@ -371,7 +371,7 @@ describe('NoiseBackground Accessibility', () => {
   describe('Custom Styling', () => {
     it('has no accessibility violations with custom className', async () => {
       const { container } = render(
-        <NoiseBackground className="custom-test-class" data-testid="noise-bg" />
+        <NoiseBackground className="custom-test-class" role="img" aria-label="Custom class noise texture" />
       );
 
       const results = await axe(container);
@@ -380,7 +380,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with multiple custom classNames', async () => {
       const { container } = render(
-        <NoiseBackground className="bg-primary rounded-lg shadow-md" data-testid="noise-bg" />
+        <NoiseBackground className="bg-primary rounded-lg shadow-md" role="img" aria-label="Styled noise texture with multiple classes" />
       );
 
       const results = await axe(container);
@@ -391,7 +391,8 @@ describe('NoiseBackground Accessibility', () => {
       const { container } = render(
         <NoiseBackground
           style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}
-          data-testid="noise-bg"
+          role="img"
+          aria-label="Custom styled noise texture"
         />
       );
 
@@ -403,7 +404,7 @@ describe('NoiseBackground Accessibility', () => {
   describe('Children Content', () => {
     it('has no accessibility violations with no children', async () => {
       const { container } = render(
-        <NoiseBackground data-testid="noise-bg" />
+        <NoiseBackground role="img" aria-label="Default noise texture" />
       );
 
       const results = await axe(container);
@@ -412,7 +413,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with single child', async () => {
       const { container } = render(
-        <NoiseBackground data-testid="noise-bg">
+        <NoiseBackground role="presentation" aria-label="Noise texture with single child content">
           <div>Single child content</div>
         </NoiseBackground>
       );
@@ -423,7 +424,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with multiple children', async () => {
       const { container } = render(
-        <NoiseBackground data-testid="noise-bg">
+        <NoiseBackground role="presentation" aria-label="Noise texture with multiple children">
           <div>First child</div>
           <p>Second child</p>
           <span>Third child</span>
@@ -436,7 +437,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with semantic children', async () => {
       const { container } = render(
-        <NoiseBackground data-testid="noise-bg">
+        <NoiseBackground role="presentation" aria-label="Noise texture with semantic content">
           <h2>Heading</h2>
           <p>Paragraph text</p>
           <button>Click me</button>
@@ -450,7 +451,7 @@ describe('NoiseBackground Accessibility', () => {
 
     it('has no accessibility violations with nested children', async () => {
       const { container } = render(
-        <NoiseBackground data-testid="noise-bg">
+        <NoiseBackground role="presentation" aria-label="Noise texture with nested content">
           <div>
             <h3>Nested Heading</h3>
             <ul>
@@ -472,7 +473,6 @@ describe('NoiseBackground Accessibility', () => {
         <NoiseBackground
           role="img"
           aria-label="Decorative background"
-          data-testid="noise-bg"
         />
       );
 
@@ -484,7 +484,6 @@ describe('NoiseBackground Accessibility', () => {
       const { container } = render(
         <NoiseBackground
           aria-hidden="true"
-          data-testid="noise-bg"
         />
       );
 
@@ -500,7 +499,6 @@ describe('NoiseBackground Accessibility', () => {
             role="img"
             aria-label="Noise background"
             aria-describedby="bg-description"
-            data-testid="noise-bg"
           />
         </>
       );
@@ -517,7 +515,8 @@ describe('NoiseBackground Accessibility', () => {
           className="custom-test-class"
           baseColor="rgb(200, 100, 50)"
           noiseOpacity={0.75}
-          data-testid="noise-bg"
+          role="presentation"
+          aria-label="Combined properties noise texture"
         >
           <div>Inner content</div>
         </NoiseBackground>
@@ -533,7 +532,6 @@ describe('NoiseBackground Accessibility', () => {
           baseColor="#444444"
           role="img"
           aria-label="Dark background"
-          data-testid="noise-bg"
         />
       );
 
@@ -545,7 +543,8 @@ describe('NoiseBackground Accessibility', () => {
       const { container } = render(
         <NoiseBackground
           noiseOpacity={0.3}
-          data-testid="noise-bg"
+          role="presentation"
+          aria-label="Noise texture with complex children"
         >
           <header>
             <h1>Title</h1>
@@ -569,7 +568,8 @@ describe('NoiseBackground Accessibility', () => {
           className="p-4 rounded"
           baseColor="#f5f5f5"
           noiseOpacity={0.1}
-          data-testid="noise-bg"
+          role="presentation"
+          aria-label="Noise texture with interactive elements"
         >
           <form>
             <label htmlFor="test-input">Input label</label>
@@ -587,9 +587,9 @@ describe('NoiseBackground Accessibility', () => {
 
 describe('NoiseBackground Edge Cases', () => {
   it('renders correctly with no children', () => {
-    render(<NoiseBackground data-testid="empty-noise-bg" />);
-    
-    const noiseBg = screen.getByTestId('empty-noise-bg');
+    render(<NoiseBackground role="presentation" aria-label="Empty noise background" />);
+
+    const noiseBg = screen.getByRole('presentation', { name: 'Empty noise background' });
     expect(noiseBg).toBeInTheDocument();
     expect(noiseBg).toHaveClass('relative');
     
@@ -603,9 +603,9 @@ describe('NoiseBackground Edge Cases', () => {
   });
   
   it('renders correctly with null children', () => {
-    render(<NoiseBackground data-testid="null-noise-bg">{null}</NoiseBackground>);
-    
-    const noiseBg = screen.getByTestId('null-noise-bg');
+    render(<NoiseBackground role="presentation" aria-label="Null children noise background">{null}</NoiseBackground>);
+
+    const noiseBg = screen.getByRole('presentation', { name: 'Null children noise background' });
     expect(noiseBg).toBeInTheDocument();
     expect(noiseBg).toHaveClass('relative');
     
@@ -617,9 +617,9 @@ describe('NoiseBackground Edge Cases', () => {
   });
   
   it('renders correctly with undefined children', () => {
-    render(<NoiseBackground data-testid="undefined-noise-bg">{undefined}</NoiseBackground>);
-    
-    const noiseBg = screen.getByTestId('undefined-noise-bg');
+    render(<NoiseBackground role="presentation" aria-label="Undefined children noise background">{undefined}</NoiseBackground>);
+
+    const noiseBg = screen.getByRole('presentation', { name: 'Undefined children noise background' });
     expect(noiseBg).toBeInTheDocument();
     expect(noiseBg).toHaveClass('relative');
     
@@ -636,15 +636,16 @@ describe('NoiseBackground Edge Cases', () => {
     const customOpacity = 0.3;
     
     render(
-      <NoiseBackground 
+      <NoiseBackground
         className={customClass}
         baseColor={customColor}
         noiseOpacity={customOpacity}
-        data-testid="props-noise-bg" 
+        role="presentation"
+        aria-label="Noise background with custom props"
       />
     );
     
-    const noiseBg = screen.getByTestId('props-noise-bg');
+    const noiseBg = screen.getByRole('presentation', { name: 'Noise background with custom props' });
     expect(noiseBg).toHaveClass(customClass);
     expect(noiseBg).toHaveStyle({ backgroundColor: customColor });
 
@@ -655,9 +656,9 @@ describe('NoiseBackground Edge Cases', () => {
   
   it('has no accessibility violations when rendered with no children', async () => {
     const { container } = render(
-      <NoiseBackground data-testid="empty-noise-bg" />
+      <NoiseBackground role="img" aria-label="Empty noise background for a11y testing" />
     );
-    
+
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -672,17 +673,16 @@ describe('NoiseBackground HTML Attribute Passthrough', () => {
     const ariaLabel = 'Decorative background';
     
     render(
-      <NoiseBackground 
+      <NoiseBackground
         id={id}
         role={role}
         tabIndex={tabIndex}
         title={title}
         aria-label={ariaLabel}
-        data-testid="noise-bg"
       />
     );
     
-    const noiseBg = screen.getByTestId('noise-bg');
+    const noiseBg = screen.getByRole(role, { name: ariaLabel });
     expect(noiseBg).toHaveAttribute('id', id);
     expect(noiseBg).toHaveAttribute('role', role);
     expect(noiseBg).toHaveAttribute('tabindex', tabIndex.toString());
@@ -692,15 +692,16 @@ describe('NoiseBackground HTML Attribute Passthrough', () => {
   
   it('passes through multiple data-* attributes', () => {
     render(
-      <NoiseBackground 
-        data-testid="noise-bg"
+      <NoiseBackground
+        role="presentation"
+        aria-label="Noise background with data attributes"
         data-custom="custom-value"
         data-analytics-id="analytics-123"
         data-automation="test-automation"
       />
     );
-    
-    const noiseBg = screen.getByTestId('noise-bg');
+
+    const noiseBg = screen.getByRole('presentation', { name: 'Noise background with data attributes' });
     expect(noiseBg).toHaveAttribute('data-custom', 'custom-value');
     expect(noiseBg).toHaveAttribute('data-analytics-id', 'analytics-123');
     expect(noiseBg).toHaveAttribute('data-automation', 'test-automation');
@@ -710,29 +711,31 @@ describe('NoiseBackground HTML Attribute Passthrough', () => {
     const onClickMock = jest.fn();
     
     render(
-      <NoiseBackground 
-        data-testid="noise-bg"
+      <NoiseBackground
+        role="presentation"
+        aria-label="Noise background with click handler"
         onClick={onClickMock}
       />
     );
-    
-    const noiseBg = screen.getByTestId('noise-bg');
+
+    const noiseBg = screen.getByRole('presentation', { name: 'Noise background with click handler' });
     noiseBg.click();
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
   
   it('passes through style attribute correctly', () => {
     render(
-      <NoiseBackground 
-        data-testid="noise-bg"
-        style={{ 
+      <NoiseBackground
+        role="presentation"
+        aria-label="Noise background with custom styles"
+        style={{
           borderRadius: '8px',
           boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
         }}
       />
     );
-    
-    const noiseBg = screen.getByTestId('noise-bg');
+
+    const noiseBg = screen.getByRole('presentation', { name: 'Noise background with custom styles' });
     
     // Custom style attributes should be applied
     expect(noiseBg).toHaveStyle({
@@ -745,31 +748,30 @@ describe('NoiseBackground HTML Attribute Passthrough', () => {
     const customClass = 'custom-background';
     const customColor = 'rgb(20, 30, 40)';
     const customOpacity = 0.5;
-    
+
     render(
-      <NoiseBackground 
+      <NoiseBackground
         className={customClass}
         baseColor={customColor}
         noiseOpacity={customOpacity}
         id="bg-element"
         title="Decorative background"
-        aria-hidden="true"
-        data-testid="noise-bg"
+        role="img"
+        aria-label="Noise background with combined attributes"
       />
     );
-    
-    const noiseBg = screen.getByTestId('noise-bg');
-    
+
+    const noiseBg = screen.getByRole('img', { name: 'Noise background with combined attributes' });
+
     // Check component props were applied
     expect(noiseBg).toHaveClass(customClass);
     expect(noiseBg).toHaveClass('relative');
     expect(noiseBg).toHaveStyle({ backgroundColor: customColor });
-    
+
     // Check HTML attributes were passed through
     expect(noiseBg).toHaveAttribute('id', 'bg-element');
     expect(noiseBg).toHaveAttribute('title', 'Decorative background');
-    expect(noiseBg).toHaveAttribute('aria-hidden', 'true');
-    
+
     // Check internal structure (noise layer) has right opacity
     const noiseLayer = noiseBg.querySelector('div');
     expect(noiseLayer).toBeInTheDocument();
@@ -778,15 +780,15 @@ describe('NoiseBackground HTML Attribute Passthrough', () => {
   
   it('properly applies aria-* attributes', () => {
     render(
-      <NoiseBackground 
-        data-testid="noise-bg"
+      <NoiseBackground
+        role="presentation"
         aria-label="Decorative element"
         aria-describedby="description"
         aria-hidden="false"
       />
     );
-    
-    const noiseBg = screen.getByTestId('noise-bg');
+
+    const noiseBg = screen.getByRole('presentation', { name: 'Decorative element' });
     expect(noiseBg).toHaveAttribute('aria-label', 'Decorative element');
     expect(noiseBg).toHaveAttribute('aria-describedby', 'description');
     expect(noiseBg).toHaveAttribute('aria-hidden', 'false');

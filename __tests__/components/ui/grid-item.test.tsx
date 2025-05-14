@@ -39,12 +39,14 @@ describe('GridItem Component', () => {
         <GridItem
           className={customClass}
           span={6}
+          role="region"
+          aria-label="Custom class grid item"
         >
           Custom Class Content
         </GridItem>
       );
 
-      const gridItem = screen.getByText('Custom Class Content').parentElement;
+      const gridItem = screen.getByRole('region', { name: 'Custom class grid item' });
       expect(gridItem).toHaveClass(customClass);
       // Verify merging with generated classes
       expect(gridItem).toHaveClass('col-span-6');
@@ -97,13 +99,17 @@ describe('GridItem Component', () => {
 
     describe('Span Props', () => {
       it('processes default span value when no span prop is provided', () => {
-        render(<GridItem data-testid="grid-item">Content</GridItem>);
+        render(
+          <GridItem role="region" aria-label="Default span grid item">
+            Default span content
+          </GridItem>
+        );
 
-        const gridItem = screen.getByTestId('grid-item');
+        const gridItem = screen.getByRole('region', { name: 'Default span grid item' });
         expect(gridItem).toBeInTheDocument();
 
         // Verify the component renders correctly
-        expect(gridItem).toHaveTextContent('Content');
+        expect(gridItem).toHaveTextContent('Default span content');
         expect(gridItem.tagName).toBe('DIV');
 
         // Verify no span attributes are leaked to the DOM
@@ -112,17 +118,31 @@ describe('GridItem Component', () => {
 
       it('processes span prop correctly', () => {
         const { rerender } = render(
-          <GridItem span={6} data-testid="grid-item">Content</GridItem>
+          <GridItem
+            span={6}
+            role="region"
+            aria-label="Span 6 grid item"
+          >
+            Span 6 content
+          </GridItem>
         );
 
-        let gridItem = screen.getByTestId('grid-item');
+        let gridItem = screen.getByRole('region', { name: 'Span 6 grid item' });
         // Verify the span prop is processed and not passed to DOM
         expect(gridItem).not.toHaveAttribute('span');
 
         // Test different span value
-        rerender(<GridItem span={3} data-testid="grid-item">Content</GridItem>);
+        rerender(
+          <GridItem
+            span={3}
+            role="region"
+            aria-label="Span 6 grid item"
+          >
+            Span 6 content
+          </GridItem>
+        );
 
-        gridItem = screen.getByTestId('grid-item');
+        gridItem = screen.getByRole('region', { name: 'Span 6 grid item' });
         // Verify the span prop is still processed and not passed to DOM
         expect(gridItem).not.toHaveAttribute('span');
 
@@ -130,30 +150,37 @@ describe('GridItem Component', () => {
         const firstClassName = gridItem.className;
 
         // Test with no span prop
-        rerender(<GridItem data-testid="grid-item">Content</GridItem>);
+        rerender(
+          <GridItem
+            role="region"
+            aria-label="Span 6 grid item"
+          >
+            Span 6 content
+          </GridItem>
+        );
 
-        gridItem = screen.getByTestId('grid-item');
+        gridItem = screen.getByRole('region', { name: 'Span 6 grid item' });
         // Verify the className is different when span is not provided (should use default)
         expect(gridItem.className).not.toBe(firstClassName);
       });
 
       it('applies different styling for different span values', () => {
         // Render multiple GridItems with different span values
-        const { getByTestId } = render(
+        const { getByRole } = render(
           <>
-            <GridItem span={1} data-testid="span-1">Content</GridItem>
-            <GridItem span={4} data-testid="span-4">Content</GridItem>
-            <GridItem span={6} data-testid="span-6">Content</GridItem>
-            <GridItem span={12} data-testid="span-12">Content</GridItem>
+            <GridItem span={1} role="region" aria-label="span 1">Span 1 content</GridItem>
+            <GridItem span={4} role="region" aria-label="span 4">Span 4 content</GridItem>
+            <GridItem span={6} role="region" aria-label="span 6">Span 6 content</GridItem>
+            <GridItem span={12} role="region" aria-label="span 12">Span 12 content</GridItem>
           </>
         );
 
         // Get all grid items
         const spans = [
-          getByTestId('span-1'),
-          getByTestId('span-4'),
-          getByTestId('span-6'),
-          getByTestId('span-12'),
+          getByRole('region', { name: 'span 1' }),
+          getByRole('region', { name: 'span 4' }),
+          getByRole('region', { name: 'span 6' }),
+          getByRole('region', { name: 'span 12' }),
         ];
 
         // Verify all have different class combinations
@@ -174,13 +201,14 @@ describe('GridItem Component', () => {
             md={3}
             lg={2}
             xl={1}
-            data-testid="grid-item"
+            role="region"
+            aria-label="Responsive grid item"
           >
-            Content
+            Responsive content
           </GridItem>
         );
 
-        const gridItem = screen.getByTestId('grid-item');
+        const gridItem = screen.getByRole('region', { name: 'Responsive grid item' });
 
         // Verify all props are processed (not passed to DOM)
         expect(gridItem).not.toHaveAttribute('span');
@@ -195,13 +223,17 @@ describe('GridItem Component', () => {
         const breakpoints = ['sm', 'md', 'lg', 'xl'];
 
         breakpoints.forEach(breakpoint => {
-          const props = { [breakpoint]: 4, 'data-testid': `grid-item-${breakpoint}` };
+          const props = {
+            [breakpoint]: 4,
+            role: 'region',
+            'aria-label': `${breakpoint} breakpoint item`
+          };
 
-          const { getByTestId } = render(
-            <GridItem {...props}>Content</GridItem>
+          const { getByRole } = render(
+            <GridItem {...props}>Content for {breakpoint}</GridItem>
           );
 
-          const gridItem = getByTestId(`grid-item-${breakpoint}`);
+          const gridItem = getByRole('region', { name: `${breakpoint} breakpoint item` });
           expect(gridItem).toBeInTheDocument();
           expect(gridItem).not.toHaveAttribute(breakpoint);
         });
@@ -209,23 +241,23 @@ describe('GridItem Component', () => {
 
       it('applies different styling for different responsive span combinations', () => {
         // Render multiple GridItems with different responsive spans
-        const { getByTestId } = render(
+        const { getByRole } = render(
           <>
-            <GridItem span={12} sm={6} data-testid="combo-1">Content</GridItem>
-            <GridItem span={12} md={6} data-testid="combo-2">Content</GridItem>
-            <GridItem span={12} lg={6} data-testid="combo-3">Content</GridItem>
-            <GridItem span={12} xl={6} data-testid="combo-4">Content</GridItem>
-            <GridItem sm={6} md={4} lg={3} xl={2} data-testid="combo-5">Content</GridItem>
+            <GridItem span={12} sm={6} role="region" aria-label="combo 1">Combo 1 content</GridItem>
+            <GridItem span={12} md={6} role="region" aria-label="combo 2">Combo 2 content</GridItem>
+            <GridItem span={12} lg={6} role="region" aria-label="combo 3">Combo 3 content</GridItem>
+            <GridItem span={12} xl={6} role="region" aria-label="combo 4">Combo 4 content</GridItem>
+            <GridItem sm={6} md={4} lg={3} xl={2} role="region" aria-label="combo 5">Combo 5 content</GridItem>
           </>
         );
 
         // Get all grid items
         const combos = [
-          getByTestId('combo-1'),
-          getByTestId('combo-2'),
-          getByTestId('combo-3'),
-          getByTestId('combo-4'),
-          getByTestId('combo-5'),
+          getByRole('region', { name: 'combo 1' }),
+          getByRole('region', { name: 'combo 2' }),
+          getByRole('region', { name: 'combo 3' }),
+          getByRole('region', { name: 'combo 4' }),
+          getByRole('region', { name: 'combo 5' }),
         ];
 
         // Verify all have different class combinations
@@ -240,10 +272,16 @@ describe('GridItem Component', () => {
     describe('Start Props', () => {
       it('processes start prop correctly', () => {
         const { rerender } = render(
-          <GridItem start={2} data-testid="grid-item">Content</GridItem>
+          <GridItem
+            start={2}
+            role="region"
+            aria-label="Start position item"
+          >
+            Start position content
+          </GridItem>
         );
 
-        let gridItem = screen.getByTestId('grid-item');
+        let gridItem = screen.getByRole('region', { name: 'Start position item' });
         // Verify the start prop is processed and not passed to DOM
         expect(gridItem).not.toHaveAttribute('start');
 
@@ -251,9 +289,17 @@ describe('GridItem Component', () => {
         const firstClassName = gridItem.className;
 
         // Test different start value
-        rerender(<GridItem start={5} data-testid="grid-item">Content</GridItem>);
+        rerender(
+          <GridItem
+            start={5}
+            role="region"
+            aria-label="Start position item"
+          >
+            Start position content
+          </GridItem>
+        );
 
-        gridItem = screen.getByTestId('grid-item');
+        gridItem = screen.getByRole('region', { name: 'Start position item' });
         // Verify the start prop is still processed and not passed to DOM
         expect(gridItem).not.toHaveAttribute('start');
 
@@ -263,21 +309,21 @@ describe('GridItem Component', () => {
 
       it('applies different styling for different start values', () => {
         // Render multiple GridItems with different start values
-        const { getByTestId } = render(
+        const { getByRole } = render(
           <>
-            <GridItem start={1} data-testid="start-1">Content</GridItem>
-            <GridItem start={3} data-testid="start-3">Content</GridItem>
-            <GridItem start={5} data-testid="start-5">Content</GridItem>
-            <GridItem start={9} data-testid="start-9">Content</GridItem>
+            <GridItem start={1} role="region" aria-label="start 1">Start 1 content</GridItem>
+            <GridItem start={3} role="region" aria-label="start 3">Start 3 content</GridItem>
+            <GridItem start={5} role="region" aria-label="start 5">Start 5 content</GridItem>
+            <GridItem start={9} role="region" aria-label="start 9">Start 9 content</GridItem>
           </>
         );
 
         // Get all grid items
         const starts = [
-          getByTestId('start-1'),
-          getByTestId('start-3'),
-          getByTestId('start-5'),
-          getByTestId('start-9'),
+          getByRole('region', { name: 'start 1' }),
+          getByRole('region', { name: 'start 3' }),
+          getByRole('region', { name: 'start 5' }),
+          getByRole('region', { name: 'start 9' }),
         ];
 
         // Verify all have different class combinations
@@ -298,13 +344,14 @@ describe('GridItem Component', () => {
             mdStart={4}
             lgStart={5}
             xlStart={6}
-            data-testid="grid-item"
+            role="region"
+            aria-label="Responsive start item"
           >
-            Content
+            Responsive start content
           </GridItem>
         );
 
-        const gridItem = screen.getByTestId('grid-item');
+        const gridItem = screen.getByRole('region', { name: 'Responsive start item' });
 
         // Verify all props are processed (not passed to DOM)
         expect(gridItem).not.toHaveAttribute('start');
@@ -319,13 +366,17 @@ describe('GridItem Component', () => {
         const breakpoints = ['smStart', 'mdStart', 'lgStart', 'xlStart'];
 
         breakpoints.forEach(breakpoint => {
-          const props = { [breakpoint]: 3, 'data-testid': `grid-item-${breakpoint}` };
+          const props = {
+            [breakpoint]: 3,
+            role: 'region',
+            'aria-label': `${breakpoint} responsive item`
+          };
 
-          const { getByTestId } = render(
-            <GridItem {...props}>Content</GridItem>
+          render(
+            <GridItem {...props}>Content for {breakpoint}</GridItem>
           );
 
-          const gridItem = getByTestId(`grid-item-${breakpoint}`);
+          const gridItem = screen.getByRole('region', { name: `${breakpoint} responsive item` });
           expect(gridItem).toBeInTheDocument();
           expect(gridItem).not.toHaveAttribute(breakpoint);
         });
@@ -335,7 +386,7 @@ describe('GridItem Component', () => {
     describe('Combined Props', () => {
       it('processes combined span and start props correctly', () => {
         // Test with complex combination of props
-        const { getByTestId } = render(
+        render(
           <GridItem
             span={12}
             sm={10}
@@ -347,13 +398,14 @@ describe('GridItem Component', () => {
             mdStart={3}
             lgStart={4}
             xlStart={5}
-            data-testid="grid-item"
+            role="region"
+            aria-label="Complex combo item"
           >
-            Content
+            Complex combination content
           </GridItem>
         );
 
-        const gridItem = getByTestId('grid-item');
+        const gridItem = screen.getByRole('region', { name: 'Complex combo item' });
 
         // Verify all props are processed (not passed to DOM)
         expect(gridItem).not.toHaveAttribute('span');
@@ -370,21 +422,21 @@ describe('GridItem Component', () => {
 
       it('applies different styling for different prop combinations', () => {
         // Render multiple GridItems with different combinations
-        const { getByTestId } = render(
+        const { getByRole } = render(
           <>
-            <GridItem span={6} start={2} data-testid="combo-1">Content</GridItem>
-            <GridItem span={6} md={4} start={2} mdStart={3} data-testid="combo-2">Content</GridItem>
-            <GridItem span={12} sm={6} md={4} lg={3} xl={2} data-testid="combo-3">Content</GridItem>
-            <GridItem start={2} smStart={3} mdStart={4} lgStart={5} xlStart={6} data-testid="combo-4">Content</GridItem>
+            <GridItem span={6} start={2} role="region" aria-label="combo 1">Combo 1 content</GridItem>
+            <GridItem span={6} md={4} start={2} mdStart={3} role="region" aria-label="combo 2">Combo 2 content</GridItem>
+            <GridItem span={12} sm={6} md={4} lg={3} xl={2} role="region" aria-label="combo 3">Combo 3 content</GridItem>
+            <GridItem start={2} smStart={3} mdStart={4} lgStart={5} xlStart={6} role="region" aria-label="combo 4">Combo 4 content</GridItem>
           </>
         );
 
         // Get all grid items
         const combos = [
-          getByTestId('combo-1'),
-          getByTestId('combo-2'),
-          getByTestId('combo-3'),
-          getByTestId('combo-4'),
+          getByRole('region', { name: 'combo 1' }),
+          getByRole('region', { name: 'combo 2' }),
+          getByRole('region', { name: 'combo 3' }),
+          getByRole('region', { name: 'combo 4' }),
         ];
 
         // Verify all have different class combinations
