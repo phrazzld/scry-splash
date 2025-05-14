@@ -177,7 +177,7 @@
         1. Reviewer can view and verify coverage numbers.
     - **Depends‑on:** none
 
-- [~] **T017 · Chore · P0: confirm CI enforces test coverage thresholds**
+- [x] **T017 · Chore · P0: confirm CI enforces test coverage thresholds**
     - **Context:** cr-07 Address Test Coverage Verification Gap
     - **Action:**
         1. Check CI pipeline config for test coverage enforcement (90%+).

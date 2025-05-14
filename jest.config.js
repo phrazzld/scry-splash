@@ -29,6 +29,26 @@ const customJestConfig = {
       tsconfig: 'tsconfig.jest.json',
     },
   },
+  // Coverage configuration
+  collectCoverageFrom: [
+    'components/**/*.{js,jsx,ts,tsx}',
+    'app/**/*.{js,jsx,ts,tsx}',
+    'lib/**/*.{js,jsx,ts,tsx}',
+    '!**/*.d.ts',
+    '!**/node_modules/**',
+    '!**/.next/**',
+    '!**/stories/**',
+    '!**/*.stories.{js,jsx,ts,tsx}',
+  ],
+  // Coverage thresholds - CI will fail if coverage falls below these values
+  coverageThreshold: {
+    global: {
+      statements: 90,
+      branches: 90,
+      functions: 90,
+      lines: 90
+    }
+  }
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
