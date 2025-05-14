@@ -326,7 +326,7 @@
         1. Push a commit to verify Chromatic job succeeds in CI.
     - **Depends‑on:** none
 
-- [ ] **T030 · Docs · P1: document testing strategy and separation**
+- [x] **T030 · Docs · P1: document testing strategy and separation**
     - **Context:** Improve test organization and clarity
     - **Action:**
         1. Create or update testing documentation explaining the separation between:
