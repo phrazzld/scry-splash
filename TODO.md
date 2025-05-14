@@ -288,7 +288,7 @@
         1. Run 'pnpm test' and confirm no Playwright-related errors.
     - **Depends‑on:** none
 
-- [ ] **T027 · Fix · P0: fix React act() warnings in CTASection tests**
+- [x] **T027 · Fix · P0: fix React act() warnings in CTASection tests**
     - **Context:** CI Failure - React state updates not wrapped in act()
     - **Action:**
         1. Update `__tests__/components/molecules/cta-section.test.tsx` to properly wrap state updates in act().
