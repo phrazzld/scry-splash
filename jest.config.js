@@ -19,7 +19,11 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/$1',
   },
   moduleDirectories: ['node_modules', '<rootDir>/'],
-  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/.next/',
+    '<rootDir>/e2e/',  // Exclude Playwright e2e tests from Jest runs
+  ],
   transformIgnorePatterns: [
     '/node_modules/',
     '^.+\\.module\\.(css|sass|scss)$',

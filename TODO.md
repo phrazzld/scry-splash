@@ -274,3 +274,83 @@
     - **Verification:**
         1. IDE hover shows TSDoc; code review confirms completeness.
     - **Depends‑on:** none
+
+## CI Fixes
+- [x] **T026 · Fix · P0: exclude e2e tests from Jest runs**
+    - **Context:** CI Failure - Test Coverage failing due to Playwright tests in Jest
+    - **Action:**
+        1. Update `jest.config.js` to exclude e2e directory in testPathIgnorePatterns.
+        2. This prevents Playwright tests from being run by Jest.
+    - **Done‑when:**
+        1. Jest test runs no longer attempt to execute Playwright tests.
+        2. Error messages about Playwright no longer appear in test output.
+    - **Verification:**
+        1. Run 'pnpm test' and confirm no Playwright-related errors.
+    - **Depends‑on:** none
+
+- [ ] **T027 · Fix · P0: fix React act() warnings in CTASection tests**
+    - **Context:** CI Failure - React state updates not wrapped in act()
+    - **Action:**
+        1. Update `__tests__/components/molecules/cta-section.test.tsx` to properly wrap state updates in act().
+        2. Fix issues on lines ~137, 138, 165, 179 where state updates aren't properly handled.
+        3. Ensure async form submission tests use proper act() wrapping.
+    - **Done‑when:**
+        1. Tests run without React act() warnings.
+        2. Form submission tests properly handle async state updates.
+    - **Verification:**
+        1. Run tests for CTASection and confirm no act() warnings in console.
+    - **Depends‑on:** none
+
+- [ ] **T028 · Refactor · P0: temporarily adjust coverage thresholds**
+    - **Context:** CI Failure - Coverage thresholds too high for current codebase
+    - **Action:**
+        1. Update `jest.config.js` to temporarily lower coverage thresholds from 90% to 50%.
+        2. Add comment explaining these are temporary thresholds to be gradually increased.
+    - **Done‑when:**
+        1. Tests can pass coverage thresholds in CI.
+        2. A clear comment explains the temporary nature of the reduced thresholds.
+    - **Verification:**
+        1. Run test coverage locally and confirm it passes with new thresholds.
+    - **Depends‑on:** none
+
+- [ ] **T029 · Config · P0: set up Chromatic project token**
+    - **Context:** CI Failure - Chromatic deployment failing due to missing token
+    - **Action:**
+        1. Create/locate a Chromatic project token from chromatic.com.
+        2. Add `CHROMATIC_PROJECT_TOKEN` as a GitHub repository secret.
+        3. Verify `.github/workflows/chromatic.yml` uses the secret correctly.
+    - **Done‑when:**
+        1. Chromatic token is configured in GitHub secrets.
+        2. Workflow file correctly references the token.
+    - **Verification:**
+        1. Push a commit to verify Chromatic job succeeds in CI.
+    - **Depends‑on:** none
+
+- [ ] **T030 · Docs · P1: document testing strategy and separation**
+    - **Context:** Improve test organization and clarity
+    - **Action:**
+        1. Create or update testing documentation explaining the separation between:
+           - Unit/component tests (Jest)
+           - End-to-end tests (Playwright)
+        2. Include information about test coverage goals and thresholds.
+        3. Document in `/docs/TESTING.md` or similar location.
+    - **Done‑when:**
+        1. Documentation clearly explains test organization.
+        2. Guide for writing tests in the right framework is available.
+    - **Verification:**
+        1. Documentation review by team member.
+    - **Depends‑on:** [T026]
+
+- [ ] **T031 · Test · P2: assess and plan for test coverage improvement**
+    - **Context:** Long-term test quality improvement
+    - **Action:**
+        1. Generate a detailed coverage report to identify components with low coverage.
+        2. Create a prioritized list of components needing tests.
+        3. Develop a plan to gradually increase coverage thresholds over time.
+        4. Document the plan in `/docs/TEST_COVERAGE_PLAN.md`.
+    - **Done‑when:**
+        1. A plan document exists with coverage targets and timeline.
+        2. High-priority components for testing are identified.
+    - **Verification:**
+        1. Plan review by team member.
+    - **Depends‑on:** [T028]
