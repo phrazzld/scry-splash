@@ -313,7 +313,7 @@
         1. Run test coverage locally and confirm it passes with new thresholds.
     - **Depends‑on:** none
 
-- [ ] **T029 · Config · P0: set up Chromatic project token**
+- [x] **T029 · Config · P0: set up Chromatic project token**
     - **Context:** CI Failure - Chromatic deployment failing due to missing token
     - **Action:**
         1. Create/locate a Chromatic project token from chromatic.com.
