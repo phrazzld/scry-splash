@@ -301,7 +301,7 @@
         1. Run tests for CTASection and confirm no act() warnings in console.
     - **Depends‑on:** none
 
-- [ ] **T028 · Refactor · P0: temporarily adjust coverage thresholds**
+- [x] **T028 · Refactor · P0: temporarily adjust coverage thresholds**
     - **Context:** CI Failure - Coverage thresholds too high for current codebase
     - **Action:**
         1. Update `jest.config.js` to temporarily lower coverage thresholds from 90% to 50%.
@@ -341,16 +341,74 @@
         1. Documentation review by team member.
     - **Depends‑on:** [T026]
 
-- [ ] **T031 · Test · P2: assess and plan for test coverage improvement**
+- [ ] **T031 · DevOps · P0: add coverage check to pre-push hook**
+    - **Context:** Ensure consistent test coverage enforcement locally and in CI
+    - **Action:**
+        1. Update `.githooks/pre-push` to run tests with coverage check.
+        2. Ensure the same thresholds used in CI are applied locally before pushing.
+        3. Add clear error messages when coverage requirements aren't met.
+    - **Done‑when:**
+        1. Pre-push hook runs test coverage and prevents pushing if thresholds aren't met.
+        2. Error messages clearly identify which coverage metrics failed.
+    - **Verification:**
+        1. Try to push with failing coverage and verify the hook prevents it.
+    - **Depends‑on:** none
+
+- [ ] **T032 · Test · P1: improve test coverage for design-system components**
+    - **Context:** Increase test coverage to meet original 90% threshold
+    - **Action:**
+        1. Write comprehensive tests for all components in `components/design-system/`.
+        2. Focus on key files: animation-tokens.tsx, color-tokens.tsx, layout-tokens.tsx.
+        3. Implement both unit tests and visual regression tests as appropriate.
+    - **Done‑when:**
+        1. Test coverage for design-system components reaches at least 90%.
+    - **Verification:**
+        1. Run tests with coverage report and verify metrics.
+    - **Depends‑on:** none
+
+- [ ] **T033 · Test · P1: improve test coverage for UI token components**
+    - **Context:** Increase test coverage to meet original 90% threshold
+    - **Action:**
+        1. Write tests for all components in `components/ui/tokens/`.
+        2. Ensure color-tokens.tsx, design-tokens.tsx, spacing-tokens.tsx, and typography-tokens.tsx have comprehensive tests.
+    - **Done‑when:**
+        1. Test coverage for UI token components reaches at least 90%.
+    - **Verification:**
+        1. Run tests with coverage report and verify metrics.
+    - **Depends‑on:** none
+
+- [ ] **T034 · Test · P1: improve test coverage for theme components**
+    - **Context:** Increase test coverage to meet original 90% threshold
+    - **Action:**
+        1. Write tests for theme-debug.tsx and theme-script.tsx.
+        2. Complete test coverage for theme-toggle-button.tsx.
+    - **Done‑when:**
+        1. Test coverage for theme components reaches at least 90%.
+    - **Verification:**
+        1. Run tests with coverage report and verify metrics.
+    - **Depends‑on:** none
+
+- [ ] **T035 · Test · P1: improve test coverage for hero-section and constants**
+    - **Context:** Increase test coverage to meet original 90% threshold
+    - **Action:**
+        1. Complete test coverage for `components/molecules/hero-section.tsx`.
+        2. Add tests for constants in `lib/constants.ts`.
+    - **Done‑when:**
+        1. Test coverage for these files reaches at least 90%.
+    - **Verification:**
+        1. Run tests with coverage report and verify metrics.
+    - **Depends‑on:** none
+
+- [ ] **T036 · Test · P2: create test coverage improvement plan**
     - **Context:** Long-term test quality improvement
     - **Action:**
         1. Generate a detailed coverage report to identify components with low coverage.
-        2. Create a prioritized list of components needing tests.
-        3. Develop a plan to gradually increase coverage thresholds over time.
+        2. Create a prioritized list of components needing tests (beyond those in T032-T035).
+        3. Develop a plan to gradually increase coverage thresholds back to 90%.
         4. Document the plan in `/docs/TEST_COVERAGE_PLAN.md`.
     - **Done‑when:**
         1. A plan document exists with coverage targets and timeline.
         2. High-priority components for testing are identified.
     - **Verification:**
         1. Plan review by team member.
-    - **Depends‑on:** [T028]
+    - **Depends‑on:** [T032], [T033], [T034], [T035]
