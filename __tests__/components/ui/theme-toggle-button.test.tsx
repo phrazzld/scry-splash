@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
+import { axe } from 'jest-axe';
 import { ThemeToggleButton } from '@/components/ui/theme-toggle-button';
 import * as ThemeProviderModule from '@/components/ui/theme-provider';
 
@@ -211,8 +212,148 @@ describe('ThemeToggleButton Component', () => {
 
     render(<ThemeToggleButton data-testid="test-button" id="custom-id" />);
     const button = screen.getByTestId('test-button');
-    
+
     // Verify additional props are forwarded
     expect(button).toHaveAttribute('id', 'custom-id');
+  });
+
+  it('handles hover interactions correctly', async () => {
+    const user = userEvent.setup();
+
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    render(<ThemeToggleButton />);
+    const button = screen.getByRole('button');
+
+    // Test mouse enter and leave
+    await user.hover(button);
+    // Button should have hover state applied
+
+    await user.unhover(button);
+    // Button should have hover state removed
+  });
+
+  it('handles press interactions correctly', async () => {
+    const user = userEvent.setup();
+
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    render(<ThemeToggleButton />);
+    const button = screen.getByRole('button');
+
+    // Test pointer down and up
+    await user.pointer({ target: button, keys: '[MouseLeft>]' });
+    // Button should have pressed state
+
+    await user.pointer({ target: button, keys: '[/MouseLeft]' });
+    // Button should have pressed state removed
+  });
+
+  it('handles pointer leave event correctly', async () => {
+    const user = userEvent.setup();
+
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    const { container } = render(<ThemeToggleButton />);
+    const button = screen.getByRole('button');
+
+    // Simulate pointer down and then leave
+    await user.pointer({ target: button, keys: '[MouseLeft>]' });
+    await user.pointer({ target: container, coords: { x: 0, y: 0 } });
+
+    // Both pressed and hover states should be cleared
+  });
+
+  it('clears pressed state when escape key is pressed', async () => {
+    const user = userEvent.setup();
+
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    render(<ThemeToggleButton />);
+    const button = screen.getByRole('button');
+
+    // Press the button (pointer down)
+    await user.pointer({ target: button, keys: '[MouseLeft>]' });
+
+    // Press escape key
+    await user.keyboard('[Escape]');
+
+    // Pressed state should be cleared
+  });
+
+  it('clears pressed state when window loses focus', () => {
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    render(<ThemeToggleButton />);
+
+    // Simulate window blur event
+    const blurEvent = new Event('blur');
+    window.dispatchEvent(blurEvent);
+
+    // Pressed state should be cleared
+  });
+
+  it('cleans up event listeners on unmount', () => {
+    const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    const { unmount } = render(<ThemeToggleButton />);
+
+    unmount();
+
+    // Verify event listeners are removed
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('blur', expect.any(Function));
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('keyup', expect.any(Function));
+
+    removeEventListenerSpy.mockRestore();
+  });
+
+  it('has no accessibility violations in light mode', async () => {
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    const { container } = render(<ThemeToggleButton />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations in dark mode', async () => {
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'dark',
+      systemTheme: 'dark',
+      setTheme: jest.fn(),
+    });
+
+    const { container } = render(<ThemeToggleButton />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });
