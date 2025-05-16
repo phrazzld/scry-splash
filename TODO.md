@@ -354,7 +354,7 @@
         1. Try to push with failing coverage and verify the hook prevents it.
     - **Depends‑on:** none
 
-- [ ] **T032 · Test · P1: improve test coverage for design-system components**
+- [x] **T032 · Test · P1: improve test coverage for design-system components**
     - **Context:** Increase test coverage to meet original 90% threshold
     - **Action:**
         1. Write comprehensive tests for all components in `components/design-system/`.
@@ -366,7 +366,7 @@
         1. Run tests with coverage report and verify metrics.
     - **Depends‑on:** none
 
-- [ ] **T033 · Test · P1: improve test coverage for UI token components**
+- [x] **T033 · Test · P1: improve test coverage for UI token components**
     - **Context:** Increase test coverage to meet original 90% threshold
     - **Action:**
         1. Write tests for all components in `components/ui/tokens/`.
@@ -377,7 +377,7 @@
         1. Run tests with coverage report and verify metrics.
     - **Depends‑on:** none
 
-- [ ] **T034 · Test · P1: improve test coverage for theme components**
+- [x] **T034 · Test · P1: improve test coverage for theme components**
     - **Context:** Increase test coverage to meet original 90% threshold
     - **Action:**
         1. Write tests for theme-debug.tsx and theme-script.tsx.
@@ -388,7 +388,7 @@
         1. Run tests with coverage report and verify metrics.
     - **Depends‑on:** none
 
-- [ ] **T035 · Test · P1: improve test coverage for hero-section and constants**
+- [x] **T035 · Test · P1: improve test coverage for hero-section and constants**
     - **Context:** Increase test coverage to meet original 90% threshold
     - **Action:**
         1. Complete test coverage for `components/molecules/hero-section.tsx`.
@@ -399,7 +399,7 @@
         1. Run tests with coverage report and verify metrics.
     - **Depends‑on:** none
 
-- [ ] **T036 · Test · P2: create test coverage improvement plan**
+- [x] **T036 · Test · P2: create test coverage improvement plan**
     - **Context:** Long-term test quality improvement
     - **Action:**
         1. Generate a detailed coverage report to identify components with low coverage.
