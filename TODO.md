@@ -13,7 +13,7 @@
         1. Run `pnpm exec playwright --version` and confirm it outputs the Playwright version.
     - **Depends‑on:** none
 
-- [ ] **T002 · Chore · P1: configure playwright (`playwright.config.ts`)**
+- [x] **T002 · Chore · P1: configure playwright (`playwright.config.ts`)**
     - **Context:** Detailed Build Steps - Step 2
     - **Action:**
         1. Create/update `playwright.config.ts` at the project root.
