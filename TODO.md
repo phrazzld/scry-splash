@@ -25,7 +25,7 @@
         1. Once a basic test exists (e.g., T006), run `pnpm e2e` (from T010) and verify the `webServer` starts, tests run against the correct `baseURL`, and reports are generated in `playwright-report/`.
     - **Depends‑on:** [T001]
 
-- [ ] **T003 · Chore · P1: establish e2e directory structure**
+- [x] **T003 · Chore · P1: establish e2e directory structure**
     - **Context:** Detailed Build Steps - Step 3; Architecture Blueprint - Modules / Packages
     - **Action:**
         1. Create `e2e/` directory at the project root.
