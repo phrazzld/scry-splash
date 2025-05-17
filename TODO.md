@@ -1,414 +1,169 @@
 # Todo
 
-## Test Suite Hygiene & Policy Enforcement
-- [x] **T001 · Chore · P0: audit test files for internal mocks and confirm policy adherence**
-    - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
+## E2E Testing Setup (TEST-002)
+- [x] **T001 · Chore · P1: install playwright and browser binaries**
+    - **Context:** Detailed Build Steps - Step 1
     - **Action:**
-        1. Manually inspect all `__tests__/components/ui/*` test files for any `jest.mock()` or similar mocking of internal modules.
-        2. Remove any occurrences found (other than allowed utilities, if any).
+        1. Add Playwright as a development dependency: `pnpm add -D @playwright/test`.
+        2. Run `pnpm playwright install --with-deps` to install necessary browser binaries and OS dependencies.
     - **Done‑when:**
-        1. No internal mocks are present in any test file.
+        1. `@playwright/test` is listed in `devDependencies` in `package.json`.
+        2. Playwright browser binaries are installed and accessible.
     - **Verification:**
-        1. Search for `jest.mock` and verify no forbidden mocks exist.
+        1. Run `pnpm exec playwright --version` and confirm it outputs the Playwright version.
     - **Depends‑on:** none
 
-- [x] **T002 · Chore · P0: add explicit internal mocking policy confirmation to PR description**
-    - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
+- [ ] **T002 · Chore · P1: configure playwright (`playwright.config.ts`)**
+    - **Context:** Detailed Build Steps - Step 2
     - **Action:**
-        1. Add a clear statement in the PR description confirming the audit for internal mocks is complete and no forbidden mocks exist.
+        1. Create/update `playwright.config.ts` at the project root.
+        2. Configure `testDir: './e2e/tests'`, `baseURL` (e.g., `'http://localhost:3000'`), `webServer` to start the Next.js dev server, browser projects (starting with `chromium`), reporters (`list`, `html`), `trace: 'on-first-retry'`, `retries: process.env.CI ? 2 : 0`, and `screenshot: 'only-on-failure'`.
     - **Done‑when:**
-        1. PR description contains explicit internal mocking audit confirmation.
+        1. `playwright.config.ts` exists with all specified configurations.
+        2. Running Playwright tests (once available) correctly uses these settings (e.g., starts the web server, generates reports).
+    - **Verification:**
+        1. Once a basic test exists (e.g., T006), run `pnpm e2e` (from T010) and verify the `webServer` starts, tests run against the correct `baseURL`, and reports are generated in `playwright-report/`.
     - **Depends‑on:** [T001]
 
-- [x] **T003 · Chore · P1: propose or implement ESLint rule to prevent internal mocking**
-    - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
+- [ ] **T003 · Chore · P1: establish e2e directory structure**
+    - **Context:** Detailed Build Steps - Step 3; Architecture Blueprint - Modules / Packages
     - **Action:**
-        1. Evaluate ESLint's `no-restricted-imports` or similar mechanism to warn on internal module mocking.
-        2. Add or propose the rule to the ESLint config as appropriate.
+        1. Create `e2e/` directory at the project root.
+        2. Create `e2e/page-objects/` directory.
+        3. Create `e2e/tests/` directory.
     - **Done‑when:**
-        1. Rule is in place or a proposal is documented.
+        1. The directories `e2e/`, `e2e/page-objects/`, and `e2e/tests/` exist.
     - **Verification:**
-        1. Trigger a test violation to ensure the rule is active.
-    - **Depends‑on:** [T001]
-
-## Accessibility Coverage
-- [x] **T004 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct Container variants**
-    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
-    - **Action:**
-        1. Identify each unique prop/state variant tested in `container.test.tsx`.
-        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
-    - **Done‑when:**
-        1. Every distinct Container variant rendered in a test is covered by an axe accessibility assertion.
-    - **Verification:**
-        1. Run tests with accessibility assertions failing if violations exist.
+        1. Confirm the directory structure `e2e/page-objects/` and `e2e/tests/` is present in the project.
     - **Depends‑on:** none
 
-- [x] **T005 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct GridItem variants**
-    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
+- [ ] **T004 · Feature · P1: implement `SplashPage.pom.ts`**
+    - **Context:** Detailed Build Steps - Step 4; Architecture Blueprint - Public Interfaces / Contracts (`SplashPage.pom.ts`)
     - **Action:**
-        1. Identify each unique prop/state variant tested in `grid-item.test.tsx`.
-        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
+        1. Create `e2e/page-objects/SplashPage.pom.ts`.
+        2. Define selectors for main headline, CTA section wrapper, and footer using user-facing selectors (roles, text, `data-testid`).
+        3. Implement `constructor(page: Page)`, `async navigate()`, `async getHeadline()`, `async isCtaSectionVisible()`, `async isFooterVisible()` methods with TSDoc.
     - **Done‑when:**
-        1. Every distinct GridItem variant rendered in a test is covered by an axe accessibility assertion.
-    - **Verification:**
-        1. Run tests with accessibility assertions failing if violations exist.
-    - **Depends‑on:** [T008]
+        1. `SplashPage.pom.ts` is implemented as specified, adheres to project coding standards, and type-checks.
+        2. Methods are usable in test specifications.
+    - **Depends‑on:** [T003]
 
-- [x] **T006 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct Logo variants**
-    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
+- [ ] **T005 · Feature · P1: implement `CtaForm.pom.ts`**
+    - **Context:** Detailed Build Steps - Step 4; Architecture Blueprint - Public Interfaces / Contracts (`CtaForm.pom.ts`)
     - **Action:**
-        1. Identify each unique prop/state variant tested in `logo.test.tsx`.
-        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
+        1. Create `e2e/page-objects/CtaForm.pom.ts`.
+        2. Define selectors for email input, submit button, and status message areas (success/error).
+        3. Implement `constructor(page: Page)`, `async fillEmail(email: string)`, `async submit()`, `async getSuccessMessage()`, `async getClientSideErrorMessage()` methods with TSDoc.
     - **Done‑when:**
-        1. Every distinct Logo variant rendered in a test is covered by an axe accessibility assertion.
-    - **Verification:**
-        1. Run tests with accessibility assertions failing if violations exist.
-    - **Depends‑on:** none
+        1. `CtaForm.pom.ts` is implemented as specified, adheres to project coding standards, and type-checks.
+        2. Methods are usable in test specifications.
+    - **Depends‑on:** [T003]
 
-- [x] **T007 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct NoiseBackground variants**
-    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
+- [ ] **T006 · Test · P1: implement splash page load and visual regression test**
+    - **Context:** Detailed Build Steps - Step 5 (`e2e/tests/splash-page-load.spec.ts`)
     - **Action:**
-        1. Identify each unique prop/state variant tested in `noise-background.test.tsx`.
-        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
+        1. Create `e2e/tests/splash-page-load.spec.ts` and import `SplashPage` POM.
+        2. Implement tests to: navigate to base URL, assert main headline is visible and contains expected text, assert CTA form section and footer are visible.
+        3. Add a basic visual regression test: `await expect(page).toHaveScreenshot('splash-page-stable.png');`.
     - **Done‑when:**
-        1. Every distinct NoiseBackground variant rendered in a test is covered by an axe accessibility assertion.
+        1. Tests in `splash-page-load.spec.ts` pass, verifying page elements, content, and visual consistency.
+        2. A baseline visual snapshot (`splash-page-stable.png`) is generated and committed.
     - **Verification:**
-        1. Run tests with accessibility assertions failing if violations exist.
-    - **Depends‑on:** none
+        1. Run `pnpm e2e:update-snapshots` (from T010) for `splash-page-load.spec.ts` to generate the baseline snapshot.
+        2. Run `pnpm e2e` for `splash-page-load.spec.ts`; verify tests pass against the baseline.
+        3. Intentionally change a UI element and verify the visual test fails.
+    - **Depends‑on:** [T002, T004]
 
-## Test Modularity & File Structure
-- [x] **T008 · Refactor · P0: split GridItem tests into grid-item.test.tsx**
-    - **Context:** cr-03 Split Excessive Length Test File (`container.test.tsx`)
+- [ ] **T007 · Test · P1: implement cta flow happy path test**
+    - **Context:** Detailed Build Steps - Step 6 (`e2e/tests/cta-flow.spec.ts` - Happy Path)
     - **Action:**
-        1. Create `__tests__/components/ui/grid-item.test.tsx`.
-        2. Move all GridItem-related tests from `container.test.tsx` to `grid-item.test.tsx`.
+        1. Create/update `e2e/tests/cta-flow.spec.ts`; import `SplashPage` and `CtaForm` POMs.
+        2. Use `page.route()` to mock the Formspark API for a successful response (e.g., `status: 200, body: JSON.stringify({ success: true })`).
+        3. Implement a test to: navigate, fill in a valid email, submit, and assert that a success message is displayed.
     - **Done‑when:**
-        1. `container.test.tsx` contains only Container tests.
-        2. `grid-item.test.tsx` contains only GridItem tests.
-        3. All tests pass.
+        1. The happy path test for CTA flow passes, correctly mocking the API and verifying the success UI.
     - **Verification:**
-        1. Run test suite and confirm passing.
-    - **Depends‑on:** none
+        1. Run the specific test and verify it passes.
+        2. Check Playwright trace to confirm Formspark API was mocked and returned a success.
+    - **Depends‑on:** [T002, T004, T005]
 
-- [x] **T009 · Refactor · P1: reorganize Container and GridItem test files with clear describe blocks**
-    - **Context:** cr-03 Split Excessive Length Test File (`container.test.tsx`)
+- [ ] **T008 · Test · P1: implement cta flow client-side invalid email test**
+    - **Context:** Detailed Build Steps - Step 6 (`e2e/tests/cta-flow.spec.ts` - Client-Side Invalid Email)
     - **Action:**
-        1. Group tests within `container.test.tsx` and `grid-item.test.tsx` using `describe` blocks (e.g., "Props", "Accessibility", "Edge Cases").
+        1. Update `e2e/tests/cta-flow.spec.ts`.
+        2. Implement a test to: navigate, fill in an invalid email (e.g., "test@invalid"), click submit.
+        3. Assert that an appropriate client-side validation message is displayed or that form submission is prevented by browser validation.
     - **Done‑when:**
-        1. Test files are logically organized and sections clearly delineated.
+        1. The client-side invalid email test passes, verifying the validation UI or behavior.
     - **Verification:**
-        1. Code review confirms improved structure.
-    - **Depends‑on:** [T008]
+        1. Run the specific test and verify it passes.
+        2. Manually attempt to submit an invalid email in the browser to confirm behavior.
+    - **Depends‑on:** [T002, T004, T005]
 
-## Test Assertion Robustness
-- [x] **T010 · Refactor · P1: decouple Container and GridItem tests from CSS class implementation details**
-    - **Context:** cr-04 Decouple Tests from CSS Class Implementation Details
+- [ ] **T009 · Test · P1: implement cta flow mocked server error test**
+    - **Context:** Detailed Build Steps - Step 6 (`e2e/tests/cta-flow.spec.ts` - Mocked Server Error)
     - **Action:**
-        1. Refactor assertions in `container.test.tsx` and `grid-item.test.tsx` to check styles or semantic DOM attributes, not internal class names.
+        1. Update `e2e/tests/cta-flow.spec.ts`.
+        2. Use `page.route()` to mock the Formspark API for a server error response (e.g., `status: 400, body: JSON.stringify({ error: "Submission failed" })`).
+        3. Implement a test to: navigate, fill valid email, submit, and assert that an error message reflecting the server issue is displayed.
     - **Done‑when:**
-        1. Tests assert behavior or computed styles, not internal CSS classes (except for documented public API).
+        1. The mocked server error test passes, correctly mocking the API and verifying the error UI.
     - **Verification:**
-        1. Tests remain green and are resilient to class name changes.
-    - **Depends‑on:** [T009]
+        1. Run the specific test and verify it passes.
+        2. Check Playwright trace to confirm Formspark API was mocked and returned an error.
+    - **Depends‑on:** [T002, T004, T005]
 
-- [x] **T011 · Refactor · P1: decouple Logo tests from CSS class implementation details**
-    - **Context:** cr-04 Decouple Tests from CSS Class Implementation Details
+- [ ] **T010 · Chore · P1: add e2e scripts to `package.json`**
+    - **Context:** Detailed Build Steps - Step 7
     - **Action:**
-        1. Refactor assertions in `logo.test.tsx` to check styles or semantic properties over internal class names.
+        1. Add/ensure `pnpm e2e` script: `"e2e": "playwright test"`.
+        2. Add `pnpm e2e:report` script: `"e2e:report": "playwright show-report playwright-report"`.
+        3. Add `pnpm e2e:update-snapshots` script: `"e2e:update-snapshots": "playwright test --update-snapshots"`.
     - **Done‑when:**
-        1. Tests assert observable outcome, not styling internals.
+        1. All three scripts are present in `package.json` and execute the correct Playwright commands.
     - **Verification:**
-        1. Tests remain green and non-brittle.
-    - **Depends‑on:** none
+        1. Run `pnpm e2e`, `pnpm e2e:report`, and `pnpm e2e:update-snapshots` locally and confirm they trigger the expected Playwright actions.
+    - **Depends‑on:** [T002]
 
-- [x] **T012 · Refactor · P1: replace manual class checks in Logo tests with toHaveClass**
-    - **Context:** cr-05 Refactor Non-Idiomatic/Brittle Class/Style Assertions
+- [ ] **T011 · Feature · P1: integrate e2e tests into ci workflow**
+    - **Context:** Detailed Build Steps - Step 8
     - **Action:**
-        1. Replace all manual class presence checks in `logo.test.tsx` with `expect(...).toHaveClass(...)`.
-        2. Remove obsolete comments about CSS-in-JS if present.
+        1. Modify the existing CI workflow (e.g., `.github/workflows/test-coverage.yml` or a dedicated E2E workflow).
+        2. Add job/steps for E2E tests: checkout code, set up Node.js and pnpm, install dependencies (`pnpm install`), install Playwright browsers (`pnpm playwright install --with-deps`), run E2E tests (`pnpm e2e`).
+        3. Ensure the workflow step fails if `pnpm e2e` exits with a non-zero code.
+        4. Upload Playwright HTML report and failure artifacts (traces, screenshots, diffs) as specified in the plan.
     - **Done‑when:**
-        1. Only idiomatic toHaveClass is used for class assertions in Logo tests.
+        1. CI workflow executes E2E tests on relevant triggers (e.g., PRs).
+        2. Test failures in CI cause the build/check to fail.
+        3. HTML reports and failure artifacts are correctly uploaded to CI.
     - **Verification:**
-        1. Code search shows no manual classList checks remain.
-    - **Depends‑on:** [T011]
+        1. Trigger a CI run (e.g., by opening a PR with these changes).
+        2. Observe E2E tests execute in the CI logs.
+        3. If tests pass, confirm no failure artifacts are uploaded (other than the report).
+        4. If tests fail (or a test is made to fail temporarily), confirm failure artifacts and the report are uploaded and accessible.
+    - **Depends‑on:** [T002, T010, AUTO-003]
 
-- [x] **T013 · Refactor · P1: robustly assert NoiseBackground styles and document jsdom limitations**
-    - **Context:** cr-05 Refactor Non-Idiomatic/Brittle Class/Style Assertions
+- [ ] **T012 · Chore · P2: create/update `e2e/README.md` with comprehensive documentation**
+    - **Context:** Detailed Build Steps - Step 1 (contributor docs), Step 9
     - **Action:**
-        1. Use `toHaveStyle` for `backgroundRepeat`, `opacity` in `noise-background.test.tsx`.
-        2. Attempt to assert `backgroundImage`; if not feasible, comment in code explaining jsdom limitation.
+        1. Create/Update `e2e/README.md`.
+        2. Include: overview of E2E setup and POM pattern; instructions on `pnpm playwright install --with-deps` for contributors; instructions on running tests locally (`pnpm e2e`, `pnpm e2e:report`, `pnpm e2e:update-snapshots`); explanation of directory structure and adding new tests/POMs; guidance on preferred selectors; debugging tips (Inspector, trace viewer, HTML report); process for updating visual snapshots.
     - **Done‑when:**
-        1. Style assertions are robust, or a clear comment explains any limitation.
+        1. `e2e/README.md` is comprehensive and provides clear guidance for developers working with E2E tests.
     - **Verification:**
-        1. Code review and test output.
-    - **Depends‑on:** none
+        1. Have a team member (ideally less familiar with this E2E setup) attempt to follow the `e2e/README.md` to understand the setup and run a test locally.
+    - **Depends‑on:** [T001, T003, T004, T005, T006, T010]
 
-## Querying Strategy & Test Resilience
-- [x] **T014 · Refactor · P1: minimize data-testid usage in Logo tests in favor of user-facing queries**
-    - **Context:** cr-06 Optimize Querying Strategy (Reduce `data-testid` Overuse)
+- [ ] **T013 · Chore · P2: update main project documentation to reference e2e testing**
+    - **Context:** Detailed Build Steps - Step 9
     - **Action:**
-        1. Update Logo tests to use `getByRole`, `getByLabelText`, or `getByText`.
+        1. Update the main `README.md` or `CONTRIBUTING.md`.
+        2. Add a section on E2E testing practices and link to the detailed `e2e/README.md`.
     - **Done‑when:**
-        1. No `getByTestId` is used in Logo tests where user-facing queries are possible.
+        1. The main project documentation includes a reference to the E2E testing setup and practices.
     - **Verification:**
-        1. Tests remain green; queries reflect real user selectors.
+        1. Check the main `README.md` or `CONTRIBUTING.md` for the new section and ensure the link to `e2e/README.md` is correct.
     - **Depends‑on:** [T012]
 
-- [x] **T015 · Refactor · P1: minimize data-testid usage in Container, GridItem, and NoiseBackground tests**
-    - **Context:** cr-06 Optimize Querying Strategy (Reduce `data-testid` Overuse)
-    - **Action:**
-        1. Replace `getByTestId` with semantic selectors where feasible in these test files.
-        2. If a more semantic wrapper is appropriate for accessibility, implement it.
-    - **Done‑when:**
-        1. `getByTestId` is used only when no accessible selector is possible.
-    - **Verification:**
-        1. Code review confirms selector improvement.
-    - **Depends‑on:** [T010], [T013]
-
-## Coverage Verification
-- [x] **T016 · Test · P0: generate and attach test coverage report to PR**
-    - **Context:** cr-07 Address Test Coverage Verification Gap
-    - **Action:**
-        1. Run tests with coverage enabled.
-        2. Attach the summary or artifact (HTML report link) to the PR or as a PR comment.
-    - **Done‑when:**
-        1. PR includes evidence of current coverage.
-    - **Verification:**
-        1. Reviewer can view and verify coverage numbers.
-    - **Depends‑on:** none
-
-- [x] **T017 · Chore · P0: confirm CI enforces test coverage thresholds**
-    - **Context:** cr-07 Address Test Coverage Verification Gap
-    - **Action:**
-        1. Check CI pipeline config for test coverage enforcement (90%+).
-        2. If missing, add coverage enforcement to CI config.
-    - **Done‑when:**
-        1. CI fails builds that fall below coverage thresholds.
-    - **Verification:**
-        1. Deliberately break coverage and confirm CI fails.
-    - **Depends‑on:** none
-
-## Minor Hygiene/Readability
-- [x] **T018 · Chore · P2: remove commented-out dead jest.mock code from container.test.tsx**
-    - **Context:** cr-08 Remove Commented-Out Dead Code
-    - **Action:**
-        1. Delete commented-out `jest.mock` block from `container.test.tsx`.
-    - **Done‑when:**
-        1. No dead code remains.
-    - **Verification:**
-        1. Code search for `jest.mock` comments is empty.
-    - **Depends‑on:** none
-
-- [x] **T019 · Chore · P2: ensure all test files have final newlines**
-    - **Context:** cr-09 Add Missing Final Newlines in Test Files
-    - **Action:**
-        1. Run Prettier or configured formatter to enforce final newlines.
-    - **Done‑when:**
-        1. All test files end with a newline.
-    - **Verification:**
-        1. `git diff` shows no missing newlines; Prettier check passes.
-    - **Depends‑on:** none
-
-- [x] **T020 · Refactor · P2: change let to const in test files where reassignment does not occur**
-    - **Context:** cr-11 Use `const` Over `let` Where Possible in Test Files
-    - **Action:**
-        1. Find all `let` declarations in test files that are not reassigned.
-        2. Replace with `const`.
-    - **Done‑when:**
-        1. Only genuinely reassigned variables use `let`.
-    - **Verification:**
-        1. Lint passes; code review confirms.
-    - **Depends‑on:** none
-
-- [x] **T021 · Chore · P2: add comments explaining non-obvious test logic**
-    - **Context:** cr-10 Add Documentation for Non-Obvious Test Logic
-    - **Action:**
-        1. Add concise comments to non-trivial test logic, e.g., DOM filtering in `noise-background.test.tsx:70-72`.
-    - **Done‑when:**
-        1. All non-obvious test setups are explained.
-    - **Verification:**
-        1. Code review confirms clarity.
-    - **Depends‑on:** none
-
-## Component Source Documentation
-- [x] **T022 · Chore · P1: ensure TSDoc coverage for Container props**
-    - **Context:** cr-12 Ensure TSDoc for Source Component Props
-    - **Action:**
-        1. Review Container props interface in `container.tsx`.
-        2. Add/update TSDoc for each prop, covering type, usage, and default.
-    - **Done‑when:**
-        1. All Container props are comprehensively documented with TSDoc.
-    - **Verification:**
-        1. IDE hover shows TSDoc; code review confirms completeness.
-    - **Depends‑on:** none
-
-- [x] **T023 · Chore · P1: ensure TSDoc coverage for GridItem props**
-    - **Context:** cr-12 Ensure TSDoc for Source Component Props
-    - **Action:**
-        1. Review GridItem props interface in `container.tsx`.
-        2. Add/update TSDoc for each prop, covering type, usage, and default.
-    - **Done‑when:**
-        1. All GridItem props are comprehensively documented with TSDoc.
-    - **Verification:**
-        1. IDE hover shows TSDoc; code review confirms completeness.
-    - **Depends‑on:** none
-
-- [x] **T024 · Chore · P1: ensure TSDoc coverage for Logo props**
-    - **Context:** cr-12 Ensure TSDoc for Source Component Props
-    - **Action:**
-        1. Review Logo props interface in `logo.tsx`.
-        2. Add/update TSDoc for each prop, covering type, usage, and default.
-    - **Done‑when:**
-        1. All Logo props are comprehensively documented with TSDoc.
-    - **Verification:**
-        1. IDE hover shows TSDoc; code review confirms completeness.
-    - **Depends‑on:** none
-
-- [x] **T025 · Chore · P1: ensure TSDoc coverage for NoiseBackground props**
-    - **Context:** cr-12 Ensure TSDoc for Source Component Props
-    - **Action:**
-        1. Review NoiseBackground props interface in `noise-background.tsx`.
-        2. Add/update TSDoc for each prop, covering type, usage, and default.
-    - **Done‑when:**
-        1. All NoiseBackground props are comprehensively documented with TSDoc.
-    - **Verification:**
-        1. IDE hover shows TSDoc; code review confirms completeness.
-    - **Depends‑on:** none
-
-## CI Fixes
-- [x] **T026 · Fix · P0: exclude e2e tests from Jest runs**
-    - **Context:** CI Failure - Test Coverage failing due to Playwright tests in Jest
-    - **Action:**
-        1. Update `jest.config.js` to exclude e2e directory in testPathIgnorePatterns.
-        2. This prevents Playwright tests from being run by Jest.
-    - **Done‑when:**
-        1. Jest test runs no longer attempt to execute Playwright tests.
-        2. Error messages about Playwright no longer appear in test output.
-    - **Verification:**
-        1. Run 'pnpm test' and confirm no Playwright-related errors.
-    - **Depends‑on:** none
-
-- [x] **T027 · Fix · P0: fix React act() warnings in CTASection tests**
-    - **Context:** CI Failure - React state updates not wrapped in act()
-    - **Action:**
-        1. Update `__tests__/components/molecules/cta-section.test.tsx` to properly wrap state updates in act().
-        2. Fix issues on lines ~137, 138, 165, 179 where state updates aren't properly handled.
-        3. Ensure async form submission tests use proper act() wrapping.
-    - **Done‑when:**
-        1. Tests run without React act() warnings.
-        2. Form submission tests properly handle async state updates.
-    - **Verification:**
-        1. Run tests for CTASection and confirm no act() warnings in console.
-    - **Depends‑on:** none
-
-- [x] **T028 · Refactor · P0: temporarily adjust coverage thresholds**
-    - **Context:** CI Failure - Coverage thresholds too high for current codebase
-    - **Action:**
-        1. Update `jest.config.js` to temporarily lower coverage thresholds from 90% to 50%.
-        2. Add comment explaining these are temporary thresholds to be gradually increased.
-    - **Done‑when:**
-        1. Tests can pass coverage thresholds in CI.
-        2. A clear comment explains the temporary nature of the reduced thresholds.
-    - **Verification:**
-        1. Run test coverage locally and confirm it passes with new thresholds.
-    - **Depends‑on:** none
-
-- [x] **T029 · Config · P0: set up Chromatic project token**
-    - **Context:** CI Failure - Chromatic deployment failing due to missing token
-    - **Action:**
-        1. Create/locate a Chromatic project token from chromatic.com.
-        2. Add `CHROMATIC_PROJECT_TOKEN` as a GitHub repository secret.
-        3. Verify `.github/workflows/chromatic.yml` uses the secret correctly.
-    - **Done‑when:**
-        1. Chromatic token is configured in GitHub secrets.
-        2. Workflow file correctly references the token.
-    - **Verification:**
-        1. Push a commit to verify Chromatic job succeeds in CI.
-    - **Depends‑on:** none
-
-- [x] **T030 · Docs · P1: document testing strategy and separation**
-    - **Context:** Improve test organization and clarity
-    - **Action:**
-        1. Create or update testing documentation explaining the separation between:
-           - Unit/component tests (Jest)
-           - End-to-end tests (Playwright)
-        2. Include information about test coverage goals and thresholds.
-        3. Document in `/docs/TESTING.md` or similar location.
-    - **Done‑when:**
-        1. Documentation clearly explains test organization.
-        2. Guide for writing tests in the right framework is available.
-    - **Verification:**
-        1. Documentation review by team member.
-    - **Depends‑on:** [T026]
-
-- [x] **T031 · DevOps · P0: add coverage check to pre-push hook**
-    - **Context:** Ensure consistent test coverage enforcement locally and in CI
-    - **Action:**
-        1. Update `.githooks/pre-push` to run tests with coverage check.
-        2. Ensure the same thresholds used in CI are applied locally before pushing.
-        3. Add clear error messages when coverage requirements aren't met.
-    - **Done‑when:**
-        1. Pre-push hook runs test coverage and prevents pushing if thresholds aren't met.
-        2. Error messages clearly identify which coverage metrics failed.
-    - **Verification:**
-        1. Try to push with failing coverage and verify the hook prevents it.
-    - **Depends‑on:** none
-
-- [x] **T032 · Test · P1: improve test coverage for design-system components**
-    - **Context:** Increase test coverage to meet original 90% threshold
-    - **Action:**
-        1. Write comprehensive tests for all components in `components/design-system/`.
-        2. Focus on key files: animation-tokens.tsx, color-tokens.tsx, layout-tokens.tsx.
-        3. Implement both unit tests and visual regression tests as appropriate.
-    - **Done‑when:**
-        1. Test coverage for design-system components reaches at least 90%.
-    - **Verification:**
-        1. Run tests with coverage report and verify metrics.
-    - **Depends‑on:** none
-
-- [x] **T033 · Test · P1: improve test coverage for UI token components**
-    - **Context:** Increase test coverage to meet original 90% threshold
-    - **Action:**
-        1. Write tests for all components in `components/ui/tokens/`.
-        2. Ensure color-tokens.tsx, design-tokens.tsx, spacing-tokens.tsx, and typography-tokens.tsx have comprehensive tests.
-    - **Done‑when:**
-        1. Test coverage for UI token components reaches at least 90%.
-    - **Verification:**
-        1. Run tests with coverage report and verify metrics.
-    - **Depends‑on:** none
-
-- [x] **T034 · Test · P1: improve test coverage for theme components**
-    - **Context:** Increase test coverage to meet original 90% threshold
-    - **Action:**
-        1. Write tests for theme-debug.tsx and theme-script.tsx.
-        2. Complete test coverage for theme-toggle-button.tsx.
-    - **Done‑when:**
-        1. Test coverage for theme components reaches at least 90%.
-    - **Verification:**
-        1. Run tests with coverage report and verify metrics.
-    - **Depends‑on:** none
-
-- [x] **T035 · Test · P1: improve test coverage for hero-section and constants**
-    - **Context:** Increase test coverage to meet original 90% threshold
-    - **Action:**
-        1. Complete test coverage for `components/molecules/hero-section.tsx`.
-        2. Add tests for constants in `lib/constants.ts`.
-    - **Done‑when:**
-        1. Test coverage for these files reaches at least 90%.
-    - **Verification:**
-        1. Run tests with coverage report and verify metrics.
-    - **Depends‑on:** none
-
-- [x] **T036 · Test · P2: create test coverage improvement plan**
-    - **Context:** Long-term test quality improvement
-    - **Action:**
-        1. Generate a detailed coverage report to identify components with low coverage.
-        2. Create a prioritized list of components needing tests (beyond those in T032-T035).
-        3. Develop a plan to gradually increase coverage thresholds back to 90%.
-        4. Document the plan in `/docs/TEST_COVERAGE_PLAN.md`.
-    - **Done‑when:**
-        1. A plan document exists with coverage targets and timeline.
-        2. High-priority components for testing are identified.
-    - **Verification:**
-        1. Plan review by team member.
-    - **Depends‑on:** [T032], [T033], [T034], [T035]
+### Clarifications & Assumptions
+- [ ] **Issue:** Exact Formspark submission
