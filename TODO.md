@@ -48,7 +48,7 @@
         2. Methods are usable in test specifications.
     - **Depends‑on:** [T003]
 
-- [ ] **T005 · Feature · P1: implement `CtaForm.pom.ts`**
+- [x] **T005 · Feature · P1: implement `CtaForm.pom.ts`**
     - **Context:** Detailed Build Steps - Step 4; Architecture Blueprint - Public Interfaces / Contracts (`CtaForm.pom.ts`)
     - **Action:**
         1. Create `e2e/page-objects/CtaForm.pom.ts`.
