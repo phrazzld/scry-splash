@@ -37,7 +37,7 @@
         1. Confirm the directory structure `e2e/page-objects/` and `e2e/tests/` is present in the project.
     - **Depends‑on:** none
 
-- [ ] **T004 · Feature · P1: implement `SplashPage.pom.ts`**
+- [x] **T004 · Feature · P1: implement `SplashPage.pom.ts`**
     - **Context:** Detailed Build Steps - Step 4; Architecture Blueprint - Public Interfaces / Contracts (`SplashPage.pom.ts`)
     - **Action:**
         1. Create `e2e/page-objects/SplashPage.pom.ts`.
