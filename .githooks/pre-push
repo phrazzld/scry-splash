@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Pre-push hook to run linting and type checking
+# Pre-push hook to run linting, type checking, and test coverage
 
 echo "📋 Running ESLint..."
 pnpm lint
@@ -18,5 +18,30 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "✅ Linting and type checking passed! Pushing changes..."
+echo "📋 Running tests with coverage check..."
+pnpm test:coverage
+
+if [ $? -ne 0 ]; then
+  echo "❌ Test coverage check failed. Coverage is below thresholds."
+  echo "   Run 'pnpm test:coverage' to see detailed coverage information."
+  echo "   Fix coverage issues before pushing or update thresholds in jest.config.js."
+  exit 1
+fi
+
+# Parse coverage results to provide more detailed feedback
+if [ -f "coverage/coverage-summary.json" ]; then
+  # Extract coverage percentages using grep and sed
+  statements=$(grep -o '"statements":{"total":[0-9]*,"covered":[0-9]*,"skipped":[0-9]*,"pct":[0-9.]*' coverage/coverage-summary.json | grep -o '"pct":[0-9.]*' | grep -o '[0-9.]*')
+  branches=$(grep -o '"branches":{"total":[0-9]*,"covered":[0-9]*,"skipped":[0-9]*,"pct":[0-9.]*' coverage/coverage-summary.json | grep -o '"pct":[0-9.]*' | grep -o '[0-9.]*')
+  functions=$(grep -o '"functions":{"total":[0-9]*,"covered":[0-9]*,"skipped":[0-9]*,"pct":[0-9.]*' coverage/coverage-summary.json | grep -o '"pct":[0-9.]*' | grep -o '[0-9.]*')
+  lines=$(grep -o '"lines":{"total":[0-9]*,"covered":[0-9]*,"skipped":[0-9]*,"pct":[0-9.]*' coverage/coverage-summary.json | grep -o '"pct":[0-9.]*' | grep -o '[0-9.]*')
+
+  echo "📊 Current coverage metrics:"
+  echo "   - Statements: $statements%"
+  echo "   - Branches: $branches%"
+  echo "   - Functions: $functions%"
+  echo "   - Lines: $lines%"
+fi
+
+echo "✅ Linting, type checking, and test coverage passed! Pushing changes..."
 exit 0

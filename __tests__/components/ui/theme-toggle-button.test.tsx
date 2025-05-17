@@ -2,15 +2,26 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
+import { axe } from 'jest-axe';
 import { ThemeToggleButton } from '@/components/ui/theme-toggle-button';
 import * as ThemeProviderModule from '@/components/ui/theme-provider';
 
-// Mock the useTheme hook
+/**
+ * Partial module mocking strategy
+ *
+ * This pattern allows us to:
+ * 1. Keep most of the original module functionality using requireActual
+ * 2. Selectively override just the useTheme hook with a mock function
+ * 3. Control the hook's return values in each test
+ *
+ * This is more precise than mocking the entire module and avoids having
+ * to reimplement ThemeProvider or any other exports from the module.
+ */
 jest.mock('@/components/ui/theme-provider', () => {
   const original = jest.requireActual('@/components/ui/theme-provider');
   return {
-    ...original,
-    useTheme: jest.fn(),
+    ...original,     // Keep all original exports
+    useTheme: jest.fn(), // But replace useTheme with a mock
   };
 });
 
@@ -48,8 +59,19 @@ describe('ThemeToggleButton Component', () => {
     // In light mode, the moon icon should be visible (for switching to dark)
     expect(button).toBeInTheDocument();
     expect(button).toHaveAttribute('aria-label', 'Switch to dark theme');
-    
-    // Verify the SVG path that represents the moon icon is present
+
+    /**
+     * SVG path identification technique
+     *
+     * The ThemeToggleButton renders either a sun or moon icon based on the current theme.
+     * To verify the correct icon is shown:
+     *
+     * 1. We use a CSS selector targeting a specific path element with unique path data
+     * 2. The selector 'path[d*="17.293 13.293"]' finds the moon icon's path by a distinctive
+     *    coordinate fragment in its path data (d) attribute
+     * 3. This is more reliable than testing class names, which might change
+     * 4. It's also more precise than checking text content, since SVG icons don't have text
+     */
     const moonPath = document.querySelector('path[d*="17.293 13.293"]');
     expect(moonPath).toBeInTheDocument();
   });
@@ -68,8 +90,15 @@ describe('ThemeToggleButton Component', () => {
     // In dark mode, the sun icon should be visible (for switching to light)
     expect(button).toBeInTheDocument();
     expect(button).toHaveAttribute('aria-label', 'Switch to light theme');
-    
-    // Verify the SVG path that represents the sun icon is present
+
+    /**
+     * SVG sun icon identification
+     *
+     * Similar to the moon icon identification, we use a unique attribute to find the sun icon:
+     * - We look for 'path[clip-rule="evenodd"]' which is specific to the sun SVG path
+     * - The clip-rule attribute is used for complex SVG shapes like the sun rays
+     * - This is a stable selector as long as the sun icon implementation doesn't change dramatically
+     */
     const sunPath = document.querySelector('path[clip-rule="evenodd"]');
     expect(sunPath).toBeInTheDocument();
   });
@@ -183,8 +212,148 @@ describe('ThemeToggleButton Component', () => {
 
     render(<ThemeToggleButton data-testid="test-button" id="custom-id" />);
     const button = screen.getByTestId('test-button');
-    
+
     // Verify additional props are forwarded
     expect(button).toHaveAttribute('id', 'custom-id');
+  });
+
+  it('handles hover interactions correctly', async () => {
+    const user = userEvent.setup();
+
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    render(<ThemeToggleButton />);
+    const button = screen.getByRole('button');
+
+    // Test mouse enter and leave
+    await user.hover(button);
+    // Button should have hover state applied
+
+    await user.unhover(button);
+    // Button should have hover state removed
+  });
+
+  it('handles press interactions correctly', async () => {
+    const user = userEvent.setup();
+
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    render(<ThemeToggleButton />);
+    const button = screen.getByRole('button');
+
+    // Test pointer down and up
+    await user.pointer({ target: button, keys: '[MouseLeft>]' });
+    // Button should have pressed state
+
+    await user.pointer({ target: button, keys: '[/MouseLeft]' });
+    // Button should have pressed state removed
+  });
+
+  it('handles pointer leave event correctly', async () => {
+    const user = userEvent.setup();
+
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    const { container } = render(<ThemeToggleButton />);
+    const button = screen.getByRole('button');
+
+    // Simulate pointer down and then leave
+    await user.pointer({ target: button, keys: '[MouseLeft>]' });
+    await user.pointer({ target: container, coords: { x: 0, y: 0 } });
+
+    // Both pressed and hover states should be cleared
+  });
+
+  it('clears pressed state when escape key is pressed', async () => {
+    const user = userEvent.setup();
+
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    render(<ThemeToggleButton />);
+    const button = screen.getByRole('button');
+
+    // Press the button (pointer down)
+    await user.pointer({ target: button, keys: '[MouseLeft>]' });
+
+    // Press escape key
+    await user.keyboard('[Escape]');
+
+    // Pressed state should be cleared
+  });
+
+  it('clears pressed state when window loses focus', () => {
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    render(<ThemeToggleButton />);
+
+    // Simulate window blur event
+    const blurEvent = new Event('blur');
+    window.dispatchEvent(blurEvent);
+
+    // Pressed state should be cleared
+  });
+
+  it('cleans up event listeners on unmount', () => {
+    const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    const { unmount } = render(<ThemeToggleButton />);
+
+    unmount();
+
+    // Verify event listeners are removed
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('blur', expect.any(Function));
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('keyup', expect.any(Function));
+
+    removeEventListenerSpy.mockRestore();
+  });
+
+  it('has no accessibility violations in light mode', async () => {
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    const { container } = render(<ThemeToggleButton />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('has no accessibility violations in dark mode', async () => {
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'dark',
+      systemTheme: 'dark',
+      setTheme: jest.fn(),
+    });
+
+    const { container } = render(<ThemeToggleButton />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

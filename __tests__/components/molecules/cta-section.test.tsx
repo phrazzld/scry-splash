@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CTASection } from '@/components/molecules/cta-section';
 import { FORMSPARK } from '@/lib/constants';
@@ -181,39 +181,52 @@ describe('CTASection Component', () => {
 
   it('calls onFormSubmit with input value when form is submitted', async () => {
     const handleSubmit = jest.fn();
-    
+
     render(<CTASection onFormSubmit={handleSubmit} />);
-    
+
     const form = screen.getByRole('form');
     const input = screen.getByTestId('mock-input');
-    
+
     // Type in the input
-    fireEvent.change(input, { target: { value: 'test@example.com' } });
-    
-    // Submit the form
-    fireEvent.submit(form);
-    
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'test@example.com' } });
+    });
+
+    // Submit the form and wait for all state updates
+    await act(async () => {
+      fireEvent.submit(form);
+      // Wait for async operations to complete
+      await Promise.resolve();
+    });
+
     expect(handleSubmit).toHaveBeenCalledTimes(1);
     expect(handleSubmit).toHaveBeenCalledWith('test@example.com');
   });
 
   it('calls onButtonClick for backward compatibility when form is submitted', async () => {
     const handleClick = jest.fn();
-    
+
     render(<CTASection onButtonClick={handleClick} />);
-    
+
     const form = screen.getByRole('form');
     const input = screen.getByTestId('mock-input');
-    
+
     // Type in the input so the form is valid
-    fireEvent.change(input, { target: { value: 'test@example.com' } });
-    
-    // Submit the form
-    await fireEvent.submit(form);
-    
-    // Wait for the async submission to complete
-    await new Promise(resolve => setTimeout(resolve, 0));
-    
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'test@example.com' } });
+    });
+
+    // Submit the form and wait for all state updates and async operations
+    await act(async () => {
+      fireEvent.submit(form);
+
+      // Wait for all promises in the microtask queue to resolve
+      await Promise.resolve();
+
+      // Mock fetch response would resolve here
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
@@ -298,19 +311,26 @@ describe('CTASection Component', () => {
     mockFetch.mockClear();
 
     render(<CTASection />);
-    
+
     const form = screen.getByRole('form');
     const input = screen.getByTestId('mock-input');
-    
+
     // Type in the input
-    fireEvent.change(input, { target: { value: 'test@example.com' } });
-    
-    // Submit the form
-    await fireEvent.submit(form);
-    
-    // Wait for the async submission to complete
-    await new Promise(resolve => setTimeout(resolve, 0));
-    
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'test@example.com' } });
+    });
+
+    // Submit the form and wait for all state updates and async operations
+    await act(async () => {
+      fireEvent.submit(form);
+
+      // Wait for all promises in the microtask queue to resolve
+      await Promise.resolve();
+
+      // Mock fetch response would resolve here
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+
     expect(mockFetch).toHaveBeenCalledWith(
       FORMSPARK.SUBMIT_URL,
       expect.objectContaining({
@@ -327,23 +347,30 @@ describe('CTASection Component', () => {
   it('uses custom formAction URL when provided', async () => {
     const mockFetch = global.fetch as jest.Mock;
     mockFetch.mockClear();
-    
+
     const customFormAction = 'https://submit-form.com/custom-id';
 
     render(<CTASection formAction={customFormAction} />);
-    
+
     const form = screen.getByRole('form');
     const input = screen.getByTestId('mock-input');
-    
+
     // Type in the input
-    fireEvent.change(input, { target: { value: 'test@example.com' } });
-    
-    // Submit the form
-    await fireEvent.submit(form);
-    
-    // Wait for the async submission to complete
-    await new Promise(resolve => setTimeout(resolve, 0));
-    
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'test@example.com' } });
+    });
+
+    // Submit the form and wait for all state updates and async operations
+    await act(async () => {
+      fireEvent.submit(form);
+
+      // Wait for all promises in the microtask queue to resolve
+      await Promise.resolve();
+
+      // Mock fetch response would resolve here
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+
     expect(mockFetch).toHaveBeenCalledWith(
       customFormAction,
       expect.anything()

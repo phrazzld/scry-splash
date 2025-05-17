@@ -6,7 +6,7 @@ This backlog is organized by priority and logical grouping, with task complexity
 
 ### Testing & Quality
 
-- **[Feature]** Add tests for core UI atoms (TEST-001)
+[x] **[Feature]** Add tests for core UI atoms (TEST-001) ✅ COMPLETED
   - **Complexity**: Medium
   - **Rationale**: Increases coverage of foundational components and supports safe refactoring.
   - **Expected Outcome**: Unit tests for Container, Logo, NoiseBackground covering rendering, props, and a11y.

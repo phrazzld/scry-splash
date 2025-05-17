@@ -194,10 +194,8 @@ export const ThemeComparison: Story = {
   parameters: {
     layout: 'padded',
     chromatic: {
-      modes: {
-        dark: { theme: 'dark' },
-        light: { theme: 'light' }
-      }
+      // Removed modes to fix Chromatic error - viewports and modes cannot be used together
+      // Theme comparison is handled by the global theme toolbar instead
     }
   }
 };

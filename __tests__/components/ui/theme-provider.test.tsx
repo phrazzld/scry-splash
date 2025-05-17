@@ -4,16 +4,28 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { ThemeProvider, useTheme } from '@/components/ui/theme-provider';
 
-// Mock hooks that use browser APIs
+/**
+ * Custom mock implementation of window.matchMedia API
+ *
+ * The theme provider component uses matchMedia to detect system theme preferences.
+ * Since JSDOM doesn't implement matchMedia, we need to create a comprehensive mock
+ * that can:
+ * 1. Track registered event listeners (stored in mockListeners)
+ * 2. Allow us to manually trigger those listeners in tests (to simulate theme changes)
+ * 3. Respond with configurable "matches" values (dark/light mode detection)
+ */
 const mockListeners: Record<string, Function[]> = {};
 const mockMediaQueryList = {
+  // Controls whether the media query matches (false = light theme, true = dark theme)
   matches: false,
+  // Stores event listeners so we can trigger them manually in tests
   addEventListener: jest.fn((event, listener) => {
     if (!mockListeners[event]) {
       mockListeners[event] = [];
     }
     mockListeners[event].push(listener);
   }),
+  // Properly removes listeners to prevent memory leaks
   removeEventListener: jest.fn((event, listener) => {
     if (mockListeners[event]) {
       mockListeners[event] = mockListeners[event].filter(l => l !== listener);
@@ -58,11 +70,22 @@ beforeEach(() => {
   document.documentElement.classList.add = jest.fn();
   document.documentElement.setAttribute = jest.fn();
   
-  // Mock dataset - we can't directly assign to dataset, but we can spy on its access
-  // and track the theme value in a separate variable
+  /**
+   * Complex DOM property mocking strategy for HTML dataset
+   *
+   * The ThemeProvider manipulates document.documentElement.dataset.theme to store theme selection.
+   * However, in JSDOM:
+   * 1. The dataset property is read-only and can't be directly assigned
+   * 2. Individual dataset properties (like dataset.theme) can be set, but are difficult to spy on
+   *
+   * Solution:
+   * 1. Create a tracker object to store the current theme value
+   * 2. Mock the entire dataset getter to return a custom object with getter/setter for theme
+   * 3. This allows our tests to track when the component sets dataset.theme
+   */
   const themeDatasetTracker = { currentTheme: '' };
-  
-  // Use Object.defineProperty to intercept dataset.theme access
+
+  // Replace the dataset property with our tracked version
   jest.spyOn(document.documentElement, 'dataset', 'get').mockImplementation(() => ({
     get theme() { return themeDatasetTracker.currentTheme; },
     set theme(value) { themeDatasetTracker.currentTheme = value; }
@@ -231,10 +254,19 @@ describe('ThemeProvider and useTheme hook', () => {
         </ThemeProvider>
       );
       
-      // Simulate system theme change
+      /**
+       * Simulating a system theme change event
+       *
+       * How this works:
+       * 1. When the ThemeProvider mounts, it registers a listener for 'change' events on the
+       *    window.matchMedia('(prefers-color-scheme: dark)') MediaQueryList
+       * 2. This listener is stored in our mockListeners.change array (index 0 is the first listener)
+       * 3. We manually invoke the listener, passing {matches: true} to simulate dark mode preference
+       * 4. This triggers the ThemeProvider to update its systemTheme state to 'dark'
+       */
       act(() => {
         const listener = mockListeners.change[0];
-        listener({ matches: true });
+        listener({ matches: true }); // {matches: true} = dark mode preference
       });
       
       // System theme should now be 'dark'

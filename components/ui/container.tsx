@@ -7,8 +7,18 @@ import { cn } from "@/lib/utils"
 
 /**
  * Container component for Scry
- * 
- * Implements a 12-column grid system with responsive variants
+ *
+ * Implements a 12-column grid system with responsive variants for layout control.
+ * The Container provides a consistent, responsive wrapper with configurable width,
+ * padding, and spacing options. It serves as the foundation for the grid-based
+ * layout system and should be used as the primary layout container.
+ *
+ * @example
+ * ```tsx
+ * <Container maxWidth="lg" padding="md" center={true}>
+ *   <p>Content inside a centered, large container with medium padding</p>
+ * </Container>
+ * ```
  */
 
 const containerVariants = cva(
@@ -66,10 +76,78 @@ const containerVariants = cva(
   }
 )
 
+/**
+ * Props for the Container component
+ *
+ * The Container component provides a responsive, grid-based layout container
+ * with configurable width, padding, and spacing options.
+ */
 export interface ContainerProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof containerVariants> {
+  /**
+   * Render the container as a different HTML element
+   *
+   * Allows changing the rendered element (e.g., "section", "article") while
+   * maintaining the styling and behavior of the Container.
+   *
+   * @default "div"
+   */
   as?: React.ElementType
+
+  /**
+   * Maximum width constraint for the container
+   *
+   * Controls the container's maximum width based on standard screen breakpoints.
+   *
+   * @default "xl" (1280px)
+   */
+  maxWidth?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"
+
+  /**
+   * Horizontal padding applied to the container
+   *
+   * Controls the amount of horizontal padding (left and right).
+   *
+   * @default "md" (1.5rem)
+   */
+  padding?: "none" | "sm" | "md" | "lg" | "xl" | "responsive"
+
+  /**
+   * Center the container horizontally
+   *
+   * When true, applies margin-auto to horizontally center the container
+   * within its parent.
+   *
+   * @default false
+   */
+  center?: boolean
+
+  /**
+   * Grid gap spacing in both directions
+   *
+   * Sets uniform gap spacing for both rows and columns.
+   * This is overridden by more specific gapX or gapY if provided.
+   *
+   * @default "md" (1rem)
+   */
+  gap?: "none" | "sm" | "md" | "lg" | "xl"
+
+  /**
+   * Horizontal grid gap spacing
+   *
+   * Sets gap spacing between columns only. Takes precedence over the 'gap' prop
+   * for horizontal spacing.
+   */
+  gapX?: "none" | "sm" | "md" | "lg" | "xl"
+
+  /**
+   * Vertical grid gap spacing
+   *
+   * Sets gap spacing between rows only. Takes precedence over the 'gap' prop
+   * for vertical spacing.
+   */
+  gapY?: "none" | "sm" | "md" | "lg" | "xl"
 }
 
 const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
@@ -106,23 +184,108 @@ const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
 Container.displayName = "Container"
 
 /**
- * Grid component for grid cell layout within a Container
+ * GridItem component for Scry
+ *
+ * Implements responsive grid cells that work within the Container's grid system.
+ * GridItem provides flexible column spanning and positioning capabilities across
+ * different breakpoints, allowing for complex responsive layouts.
+ *
+ * @example
+ * ```tsx
+ * <Container>
+ *   <GridItem span={12} md={6} lg={4}>
+ *     <p>Content in a cell that's full width on mobile, half on tablet, third on desktop</p>
+ *   </GridItem>
+ *   <GridItem span={12} md={6} lg={8}>
+ *     <p>Content in a complementary grid cell</p>
+ *   </GridItem>
+ * </Container>
+ * ```
  */
 
 export interface GridItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  // Column span for different breakpoints
+  /**
+   * Number of columns to span (out of 12)
+   *
+   * Controls the default width of the grid cell at all breakpoints,
+   * unless overridden by breakpoint-specific props.
+   *
+   * @default 12 (full width)
+   */
   span?: number
+
+  /**
+   * Number of columns to span at the small breakpoint (sm: 640px+)
+   *
+   * Overrides the default span value specifically for small screens and above.
+   */
   sm?: number
+
+  /**
+   * Number of columns to span at the medium breakpoint (md: 768px+)
+   *
+   * Overrides the default span value specifically for medium screens and above.
+   */
   md?: number
+
+  /**
+   * Number of columns to span at the large breakpoint (lg: 1024px+)
+   *
+   * Overrides the default span value specifically for large screens and above.
+   */
   lg?: number
+
+  /**
+   * Number of columns to span at the extra large breakpoint (xl: 1280px+)
+   *
+   * Overrides the default span value specifically for extra large screens and above.
+   */
   xl?: number
-  // Column start for different breakpoints
+
+  /**
+   * Starting column position (1-12)
+   *
+   * Controls the default starting position of the grid cell at all breakpoints,
+   * unless overridden by breakpoint-specific start props.
+   */
   start?: number
+
+  /**
+   * Starting column position at the small breakpoint (sm: 640px+)
+   *
+   * Overrides the default start position specifically for small screens and above.
+   */
   smStart?: number
+
+  /**
+   * Starting column position at the medium breakpoint (md: 768px+)
+   *
+   * Overrides the default start position specifically for medium screens and above.
+   */
   mdStart?: number
+
+  /**
+   * Starting column position at the large breakpoint (lg: 1024px+)
+   *
+   * Overrides the default start position specifically for large screens and above.
+   */
   lgStart?: number
+
+  /**
+   * Starting column position at the extra large breakpoint (xl: 1280px+)
+   *
+   * Overrides the default start position specifically for extra large screens and above.
+   */
   xlStart?: number
-  // Element type
+
+  /**
+   * Render the grid item as a different HTML element
+   *
+   * Allows changing the rendered element (e.g., "section", "article") while
+   * maintaining the styling and behavior of the GridItem.
+   *
+   * @default "div"
+   */
   as?: React.ElementType
 }
 
