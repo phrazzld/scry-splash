@@ -125,7 +125,7 @@
         1. Run `pnpm e2e`, `pnpm e2e:report`, and `pnpm e2e:update-snapshots` locally and confirm they trigger the expected Playwright actions.
     - **Depends‑on:** [T002]
 
-- [ ] **T011 · Feature · P1: integrate e2e tests into ci workflow**
+- [x] **T011 · Feature · P1: integrate e2e tests into ci workflow**
     - **Context:** Detailed Build Steps - Step 8
     - **Action:**
         1. Modify the existing CI workflow (e.g., `.github/workflows/test-coverage.yml` or a dedicated E2E workflow).
