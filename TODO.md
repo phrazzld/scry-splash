@@ -113,7 +113,7 @@
         2. Check Playwright trace to confirm Formspark API was mocked and returned an error.
     - **Depends‑on:** [T002, T004, T005]
 
-- [ ] **T010 · Chore · P1: add e2e scripts to `package.json`**
+- [x] **T010 · Chore · P1: add e2e scripts to `package.json`**
     - **Context:** Detailed Build Steps - Step 7
     - **Action:**
         1. Add/ensure `pnpm e2e` script: `"e2e": "playwright test"`.
