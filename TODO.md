@@ -154,7 +154,7 @@
         1. Have a team member (ideally less familiar with this E2E setup) attempt to follow the `e2e/README.md` to understand the setup and run a test locally.
     - **Depends‑on:** [T001, T003, T004, T005, T006, T010]
 
-- [ ] **T013 · Chore · P2: update main project documentation to reference e2e testing**
+- [x] **T013 · Chore · P2: update main project documentation to reference e2e testing**
     - **Context:** Detailed Build Steps - Step 9
     - **Action:**
         1. Update the main `README.md` or `CONTRIBUTING.md`.
