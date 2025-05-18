@@ -143,7 +143,7 @@
         4. If tests fail (or a test is made to fail temporarily), confirm failure artifacts and the report are uploaded and accessible.
     - **Depends‑on:** [T002, T010, AUTO-003]
 
-- [ ] **T012 · Chore · P2: create/update `e2e/README.md` with comprehensive documentation**
+- [x] **T012 · Chore · P2: create/update `e2e/README.md` with comprehensive documentation**
     - **Context:** Detailed Build Steps - Step 1 (contributor docs), Step 9
     - **Action:**
         1. Create/Update `e2e/README.md`.
