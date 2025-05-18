@@ -68,4 +68,13 @@ jobs:
           path: |
             test-results/
             playwright-report/
+            test-results/debug-*.png
           retention-days: 30
+          
+      - name: Upload debug screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: debug-screenshots
+          path: test-results/debug-*.png
+          retention-days: 7

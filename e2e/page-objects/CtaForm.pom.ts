@@ -28,7 +28,18 @@ export class CtaForm {
    * Submit the form by clicking the submit button
    */
   async submit(): Promise<void> {
-    await this.page.click(this.submitButtonSelector)
+    const button = this.page.locator(this.submitButtonSelector)
+    const buttonText = await button.textContent()
+    const buttonEnabled = await button.isEnabled()
+    
+    console.log(`[CtaForm] Submitting form - button text: "${buttonText}", enabled: ${buttonEnabled}`)
+    
+    // Check current form state before submit
+    const emailValue = await this.page.locator(this.emailInputSelector).inputValue()
+    console.log(`[CtaForm] Email input value before submit: "${emailValue}"`)
+    
+    await button.click()
+    console.log('[CtaForm] Submit button clicked')
   }
 
   /**
@@ -36,6 +47,7 @@ export class CtaForm {
    * @returns Locator for the success message
    */
   getSuccessMessage(): Locator {
+    console.log(`[CtaForm] Looking for success message: "${this.successMessageText}"`)
     return this.page.getByText(this.successMessageText)
   }
 
@@ -44,6 +56,7 @@ export class CtaForm {
    * @returns Locator for the error message
    */
   getClientSideErrorMessage(): Locator {
+    console.log(`[CtaForm] Looking for error message: "${this.errorMessageText}"`)
     return this.page.getByText(this.errorMessageText)
   }
 }

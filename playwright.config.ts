@@ -10,8 +10,9 @@ export default defineConfig({
   
   use: {
     baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry',
+    trace: process.env.CI ? 'on' : 'on-first-retry',
     screenshot: 'only-on-failure',
+    video: process.env.CI ? 'on' : 'off',
   },
 
   projects: [
