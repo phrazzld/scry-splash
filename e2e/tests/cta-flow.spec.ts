@@ -5,7 +5,7 @@ import { CtaForm } from "../page-objects/CtaForm.pom";
 test.describe("CTA Flow", () => {
   test("happy path - successful email submission", async ({ page }) => {
     // Mock the Formspark API to return a successful response
-    await page.route("https://submit-form.com/**", async (route) => {
+    await page.route("https://submit-form.com/rq22voxgX", async (route) => {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
@@ -61,5 +61,35 @@ test.describe("CTA Flow", () => {
 
     // Verify that server error message is not shown
     await expect(ctaForm.getClientSideErrorMessage()).not.toBeVisible();
+  });
+
+  test("mocked server error - displays error message", async ({ page }) => {
+    // Mock the Formspark API to return a server error response
+    await page.route("https://submit-form.com/rq22voxgX", async (route) => {
+      await route.fulfill({
+        status: 400,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "Submission failed" }),
+      });
+    });
+
+    // Initialize page objects
+    const splashPage = new SplashPage(page);
+    const ctaForm = new CtaForm(page);
+
+    // Navigate to the splash page
+    await splashPage.navigate();
+
+    // Fill in a valid email
+    await ctaForm.fillEmail("test@example.com");
+
+    // Submit the form
+    await ctaForm.submit();
+
+    // Assert that an error message is displayed - check for the actual error text returned by the API
+    await expect(page.getByText('Submission failed')).toBeVisible();
+
+    // Verify that success message is not shown
+    await expect(ctaForm.getSuccessMessage()).not.toBeVisible();
   });
 });

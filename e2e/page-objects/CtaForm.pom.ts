@@ -9,8 +9,8 @@ export class CtaForm {
   // Selectors
   private readonly emailInputSelector = 'input[type="email"]'
   private readonly submitButtonSelector = 'button[type="submit"]'
-  private readonly successMessageText = 'Thank you! Your email has been submitted successfully'
-  private readonly errorMessageText = 'Sorry, there was an error submitting your email'
+  private readonly successMessageText = 'Thank you! Your email has been submitted successfully. We\'ll be in touch soon.'
+  private readonly errorMessageText = 'Sorry, there was an error submitting your email. Please try again.'
 
   constructor(page: Page) {
     this.page = page

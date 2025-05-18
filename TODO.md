@@ -100,7 +100,7 @@
         2. Manually attempt to submit an invalid email in the browser to confirm behavior.
     - **Depends‑on:** [T002, T004, T005]
 
-- [ ] **T009 · Test · P1: implement cta flow mocked server error test**
+- [x] **T009 · Test · P1: implement cta flow mocked server error test**
     - **Context:** Detailed Build Steps - Step 6 (`e2e/tests/cta-flow.spec.ts` - Mocked Server Error)
     - **Action:**
         1. Update `e2e/tests/cta-flow.spec.ts`.
