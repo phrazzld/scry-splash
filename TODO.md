@@ -87,7 +87,7 @@
         2. Check Playwright trace to confirm Formspark API was mocked and returned a success.
     - **Depends‑on:** [T002, T004, T005]
 
-- [ ] **T008 · Test · P1: implement cta flow client-side invalid email test**
+- [x] **T008 · Test · P1: implement cta flow client-side invalid email test**
     - **Context:** Detailed Build Steps - Step 6 (`e2e/tests/cta-flow.spec.ts` - Client-Side Invalid Email)
     - **Action:**
         1. Update `e2e/tests/cta-flow.spec.ts`.
