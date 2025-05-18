@@ -59,7 +59,7 @@
         2. Methods are usable in test specifications.
     - **Depends‑on:** [T003]
 
-- [ ] **T006 · Test · P1: implement splash page load and visual regression test**
+- [x] **T006 · Test · P1: implement splash page load and visual regression test**
     - **Context:** Detailed Build Steps - Step 5 (`e2e/tests/splash-page-load.spec.ts`)
     - **Action:**
         1. Create `e2e/tests/splash-page-load.spec.ts` and import `SplashPage` POM.
@@ -74,7 +74,7 @@
         3. Intentionally change a UI element and verify the visual test fails.
     - **Depends‑on:** [T002, T004]
 
-- [ ] **T007 · Test · P1: implement cta flow happy path test**
+- [x] **T007 · Test · P1: implement cta flow happy path test**
     - **Context:** Detailed Build Steps - Step 6 (`e2e/tests/cta-flow.spec.ts` - Happy Path)
     - **Action:**
         1. Create/update `e2e/tests/cta-flow.spec.ts`; import `SplashPage` and `CtaForm` POMs.
