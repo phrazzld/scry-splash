@@ -9,7 +9,6 @@ export class CtaForm {
   // Selectors
   private readonly emailInputSelector = 'input[type="email"]'
   private readonly submitButtonSelector = 'button[type="submit"]'
-  private readonly successMessageText = 'Thank you! Your email has been submitted successfully. We\'ll be in touch soon.'
   private readonly errorMessageText = 'Sorry, there was an error submitting your email. Please try again.'
 
   constructor(page: Page) {
@@ -47,13 +46,23 @@ export class CtaForm {
    * @returns Locator for the success message
    */
   getSuccessMessage(): Locator {
-    console.log(`[CtaForm] Looking for success message: "${this.successMessageText}"`)
-    return this.page.getByText(this.successMessageText)
+    console.log('[CtaForm] Looking for success message with data-testid="cta-success-message"')
+    return this.page.getByTestId('cta-success-message')
+  }
+
+  /**
+   * Get the error message element
+   * @returns Locator for the error message
+   */
+  getErrorMessage(): Locator {
+    console.log('[CtaForm] Looking for error message with data-testid="cta-error-message"')
+    return this.page.getByTestId('cta-error-message')
   }
 
   /**
    * Get the client-side error message element
    * @returns Locator for the error message
+   * @deprecated Use getErrorMessage() instead
    */
   getClientSideErrorMessage(): Locator {
     console.log(`[CtaForm] Looking for error message: "${this.errorMessageText}"`)

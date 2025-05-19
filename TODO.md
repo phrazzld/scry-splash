@@ -17,7 +17,7 @@
         2. Review CI logs for diagnostic information
     - **Depends‑on:** none
 
-- [ ] **CI-T002 · Fix · P0: fix form submission message detection**
+- [x] **CI-T002 · Fix · P0: fix form submission message detection**
     - **Context:** Success and error messages not being detected by tests
     - **Action:**
         1. Update message selectors to use data-testid attributes

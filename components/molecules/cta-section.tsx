@@ -253,6 +253,9 @@ export function CTASection({
       {submitStatus === "success" && (
         <BodyText 
           className={cn("mt-4 text-green-600 dark:text-green-400")}
+          data-testid="cta-success-message"
+          role="status"
+          aria-live="polite"
         >
           Thank you! Your email has been submitted successfully. We&apos;ll be in touch soon.
         </BodyText>
@@ -261,6 +264,9 @@ export function CTASection({
       {submitStatus === "error" && (
         <BodyText 
           className={cn("mt-4 text-red-600 dark:text-red-400")}
+          data-testid="cta-error-message"
+          role="alert"
+          aria-live="assertive"
         >
           {errorMessage || "Sorry, there was an error submitting your email. Please try again."}
         </BodyText>

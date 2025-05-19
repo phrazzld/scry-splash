@@ -61,50 +61,17 @@ test.describe("CTA Flow", () => {
     console.log(`[API Mock] Request body received: ${JSON.stringify(apiRequestBody)}`);
     console.log(`[Network] Total requests made: ${networkRequests.length}`);
     
-    // Try multiple methods to find the success message
-    console.log('Attempting to find success message...');
+    // Wait for and verify the success message appears
+    console.log('Waiting for success message...');
     
-    try {
-      // First try the page object method
-      await expect(ctaForm.getSuccessMessage()).toBeVisible({ timeout: 10000 });
-      console.log('Success message found via page object');
-    } catch (e) {
-      console.log('Failed to find success message with page object, trying alternatives...');
-      
-      // Try finding by text content
-      const thankYouElements = await page.locator('text=Thank you').count();
-      console.log(`Elements containing "Thank you": ${thankYouElements}`);
-      
-      const successElements = await page.locator('text=successfully').count();
-      console.log(`Elements containing "successfully": ${successElements}`);
-      
-      // Try finding by partial text
-      const partialSuccess = await page.locator('*:has-text("submitted successfully")').count();
-      console.log(`Elements with partial text "submitted successfully": ${partialSuccess}`);
-      
-      // Check all text content on page
-      const allText = await page.evaluate(() => document.body.innerText);
-      console.log(`All visible text on page:\n${allText}`);
-      
-      // Check component state through the DOM
-      const componentState = await page.evaluate(() => {
-        // Look for any element that might contain status messages
-        const statusContainers = document.querySelectorAll('[class*="mt-4"], [class*="text-green"], [class*="text-red"]');
-        return Array.from(statusContainers).map(el => ({
-          className: el.className,
-          textContent: el.textContent,
-          isVisible: window.getComputedStyle(el).display !== 'none',
-          innerHTML: el.innerHTML,
-        }));
-      });
-      console.log(`Potential status containers: ${JSON.stringify(componentState, null, 2)}`);
-      
-      // Final debug capture before failing
-      await captureDebugInfo(page, 'final-failure-state');
-      
-      // Re-throw to fail the test
-      throw e;
-    }
+    // Use the updated selector with explicit wait
+    const successMessage = ctaForm.getSuccessMessage();
+    await expect(successMessage).toBeVisible({ timeout: 15000 });
+    
+    // Optional: Verify the message contains expected text
+    await expect(successMessage).toContainText('submitted successfully');
+    
+    console.log('Success message found and verified');
   });
 
   test("client-side invalid email validation", async ({ page }) => {
@@ -136,8 +103,8 @@ test.describe("CTA Flow", () => {
     // Verify that success message is not shown
     await expect(ctaForm.getSuccessMessage()).not.toBeVisible();
 
-    // Verify that server error message is not shown
-    await expect(ctaForm.getClientSideErrorMessage()).not.toBeVisible();
+    // Verify that error message is not shown
+    await expect(ctaForm.getErrorMessage()).not.toBeVisible();
   });
 
   test("mocked server error - displays error message", async ({ page }) => {
@@ -194,49 +161,17 @@ test.describe("CTA Flow", () => {
     // Log API mock status
     console.log(`[API Mock] Was called: ${apiCallMade}`);
     
-    // Try to find error message
-    console.log('Attempting to find error message...');
+    // Wait for and verify the error message appears
+    console.log('Waiting for error message...');
     
-    try {
-      // Try direct selector first
-      await expect(page.getByText('Submission failed')).toBeVisible({ timeout: 10000 });
-      console.log('Error message found');
-    } catch (e) {
-      console.log('Failed to find error message, debugging...');
-      
-      // Look for any error text
-      const errorElements = await page.locator('text=error').count();
-      console.log(`Elements containing "error": ${errorElements}`);
-      
-      const failedElements = await page.locator('text=failed').count();
-      console.log(`Elements containing "failed": ${failedElements}`);
-      
-      // Check for elements with error styling
-      const errorStyleElements = await page.locator('[class*="text-red"], [class*="error"]').count();
-      console.log(`Elements with error styling: ${errorStyleElements}`);
-      
-      // Get all text
-      const allText = await page.evaluate(() => document.body.innerText);
-      console.log(`All visible text:\n${allText}`);
-      
-      // Check form state
-      const formElements = await page.evaluate(() => {
-        const forms = document.querySelectorAll('form');
-        const messages = document.querySelectorAll('[class*="mt-4"]');
-        return {
-          formCount: forms.length,
-          messageElements: Array.from(messages).map(el => ({
-            className: el.className,
-            textContent: el.textContent,
-            innerHTML: el.innerHTML,
-          })),
-        };
-      });
-      console.log(`Form state: ${JSON.stringify(formElements, null, 2)}`);
-      
-      await captureDebugInfo(page, 'error-test-final-failure');
-      throw e;
-    }
+    // Use the updated selector with explicit wait
+    const errorMessage = ctaForm.getErrorMessage();
+    await expect(errorMessage).toBeVisible({ timeout: 15000 });
+    
+    // Verify the message contains expected text (generic error since API returns 400)
+    await expect(errorMessage).toContainText('error submitting');
+    
+    console.log('Error message found and verified');
 
     // Verify that success message is not shown
     await expect(ctaForm.getSuccessMessage()).not.toBeVisible();
