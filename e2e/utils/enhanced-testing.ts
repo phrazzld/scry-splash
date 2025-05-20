@@ -1,9 +1,19 @@
 import { test, type Page, type Locator, type TestInfo } from '@playwright/test';
 import fs from 'fs/promises';
 import { captureDebugInfo, setupConsoleLogging, waitForNetworkIdle as debugNetworkIdle } from './debug-helpers';
+import { 
+  setupTestEnvironment, 
+  setupDebugDirectories, 
+  saveNetworkLogs,
+  capturePageState,
+  attachDebugArtifacts
+} from './test-setup';
 
 // Re-export waitForNetworkIdle from debug-helpers
 export const waitForNetworkIdle = debugNetworkIdle;
+
+// Setup test environment at module load time
+setupTestEnvironment().catch(e => console.error('Failed to set up test environment:', e));
 
 /**
  * Retries an operation until it succeeds or reaches the maximum number of attempts
@@ -162,6 +172,9 @@ export function setupDetailedNetworkLogging(page: Page) {
  */
 export const withErrorReporting = test.extend<{ errorReporter: void }>({
   errorReporter: [async ({ page }, use, testInfo) => {
+    // Ensure debug directories exist
+    await setupDebugDirectories();
+    
     // Setup handlers before test
     const networkData = setupDetailedNetworkLogging(page);
     setupConsoleLogging(page);
@@ -171,18 +184,15 @@ export const withErrorReporting = test.extend<{ errorReporter: void }>({
       await use();
     } catch (error) {
       console.log('\n=== TEST FAILURE DETECTED ===');
-      await captureDebugInfo(page, `test-failure-${testInfo.title}`);
       
-      // Save HTML dump
-      await saveHtmlDump(page, `test-failure-${testInfo.title}`);
+      // Capture comprehensive debug information
+      await capturePageState(page, `test-failure-${testInfo.title}`);
       
-      // Save network logs to dedicated debug directory
-      const debugDir = '.debug/network-logs';
-      await fs.mkdir(debugDir, { recursive: true });
+      // Save network logs using the test-setup module
+      await saveNetworkLogs(networkData, `test-failure-${testInfo.title}`);
       
-      const networksLogsPath = `${debugDir}/network-logs-${testInfo.title.replace(/\s+/g, '-')}-${Date.now()}.json`;
-      await fs.writeFile(networksLogsPath, JSON.stringify(networkData, null, 2));
-      console.log(`Network logs saved to: ${networksLogsPath}`);
+      // Attach debug artifacts to test report
+      await attachDebugArtifacts(page, testInfo, `test-failure-${testInfo.title}`);
       
       // Re-throw to fail the test
       throw error;
@@ -533,36 +543,12 @@ export function createTestLogger(testTitle: string) {
 export async function addTestAttachments(
   page: Page, 
   testInfo: TestInfo, 
-  options: { includeScreenshot?: boolean; includeHtml?: boolean; includeTrace?: boolean } = {}
+  _options: { includeTrace?: boolean } = {}
 ): Promise<void> {
-  const { 
-    includeScreenshot = true, 
-    includeHtml = true, 
-    includeTrace = false 
-  } = options;
+  // Use the attachDebugArtifacts function from test-setup module
+  await attachDebugArtifacts(page, testInfo, testInfo.title);
   
-  if (includeScreenshot) {
-    // Take screenshot and attach to report
-    const screenshotBuffer = await page.screenshot({ fullPage: true });
-    await testInfo.attach('screenshot.png', { 
-      body: screenshotBuffer, 
-      contentType: 'image/png' 
-    });
-  }
-  
-  if (includeHtml) {
-    // Get HTML content and attach to report
-    const html = await page.content();
-    await testInfo.attach('page.html', {
-      body: Buffer.from(html),
-      contentType: 'text/html'
-    });
-  }
-  
-  if (includeTrace) {
-    // Playwright handles trace attachments automatically when 
-    // trace is enabled in the config
-  }
+  // Additional trace handling if needed is automatically handled by Playwright
 }
 
 /**

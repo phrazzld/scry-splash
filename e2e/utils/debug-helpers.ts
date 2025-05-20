@@ -1,4 +1,10 @@
 import { type Page } from '@playwright/test';
+import { 
+  setupDebugDirectories, 
+  saveScreenshot, 
+  saveHtmlDump, 
+  capturePageState 
+} from './test-setup';
 
 /**
  * Capture comprehensive debug information about the current page state
@@ -6,6 +12,9 @@ import { type Page } from '@playwright/test';
 export async function captureDebugInfo(page: Page, context: string) {
   console.log(`\n=== DEBUG: ${context} ===`);
   console.log(`Timestamp: ${new Date().toISOString()}`);
+  
+  // Ensure debug directories exist
+  await setupDebugDirectories();
   
   // Capture page URL
   const url = page.url();
@@ -88,20 +97,16 @@ export async function captureDebugInfo(page: Page, context: string) {
     console.log(`Failed to get form state: ${e}`);
   }
   
-  // Take screenshot
+  // Take screenshot using the test-setup module
   try {
-    // Create debug directory if it doesn't exist
-    const debugDir = '.debug/screenshots';
-    const fs = require('fs');
-    if (!fs.existsSync(debugDir)) {
-      fs.mkdirSync(debugDir, { recursive: true });
-    }
-    
-    const screenshotPath = `${debugDir}/debug-${context.replace(/\s+/g, '-')}-${Date.now()}.png`;
-    await page.screenshot({ path: screenshotPath, fullPage: true });
+    const screenshotPath = await saveScreenshot(page, context, { fullPage: true });
     console.log(`Screenshot saved: ${screenshotPath}`);
+    
+    // Save HTML dump using the test-setup module
+    const htmlPath = await saveHtmlDump(page, context);
+    console.log(`HTML dump saved: ${htmlPath}`);
   } catch (e) {
-    console.log(`Failed to take screenshot: ${e}`);
+    console.log(`Failed to save debug artifacts: ${e}`);
   }
   
   console.log(`=== END DEBUG: ${context} ===\n`);
@@ -136,42 +141,69 @@ export async function waitForNetworkIdle(page: Page, timeout = 10000) {
  * Set up console logging for a page
  */
 export function setupConsoleLogging(page: Page) {
+  // Create a logs array to store console messages
+  const logs: string[] = [];
+  
+  // Set up console listeners
   page.on('console', msg => {
     const type = msg.type();
     const text = msg.text();
+    const logEntry = `[${new Date().toISOString()}] [${type}] ${text}`;
+    
+    logs.push(logEntry);
     console.log(`[Browser ${type}] ${text}`);
   });
   
   page.on('pageerror', error => {
+    const logEntry = `[${new Date().toISOString()}] [ERROR] ${error}`;
+    logs.push(logEntry);
     console.log(`[Browser Error] ${error}`);
   });
+  
+  return logs;
 }
 
 /**
  * Track network requests
  */
 export function setupNetworkLogging(page: Page) {
-  const requests: any[] = [];
+  const networkData: any = {
+    requests: {},
+    responses: {}
+  };
   
   page.on('request', request => {
     const url = request.url();
     const method = request.method();
     console.log(`[Network Request] ${method} ${url}`);
-    requests.push({
+    
+    const requestId = `${method}-${url}-${Date.now()}`;
+    networkData.requests[requestId] = {
       url,
       method,
       headers: request.headers(),
       timestamp: Date.now(),
-    });
+    };
   });
   
   page.on('response', response => {
     const url = response.url();
     const status = response.status();
     console.log(`[Network Response] ${status} ${url}`);
+    
+    const request = response.request();
+    const method = request.method();
+    const requestId = `${method}-${url}-${Date.now()}`;
+    
+    networkData.responses[requestId] = {
+      url,
+      status,
+      headers: response.headers(),
+      timestamp: Date.now()
+    };
   });
   
-  return requests;
+  return networkData;
 }
 
 /**
@@ -184,6 +216,9 @@ export async function navigateAndWaitForLoad(page: Page, url: string, options = 
   console.log(`Navigating to ${url} with timeout ${options.timeout}ms...`);
   
   try {
+    // Ensure debug directories exist before navigation
+    await setupDebugDirectories();
+    
     // Start navigation and wait for load event
     await page.goto(url, { 
       waitUntil: 'load',
@@ -204,8 +239,8 @@ export async function navigateAndWaitForLoad(page: Page, url: string, options = 
   } catch (e) {
     console.error(`Navigation error: ${e}`);
     
-    // Capture additional debugging info
-    await captureDebugInfo(page, 'navigation-error');
+    // Capture additional debugging info using the new capturePageState function
+    await capturePageState(page, 'navigation-error');
     throw e;
   }
 }

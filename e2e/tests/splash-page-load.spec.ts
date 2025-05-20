@@ -6,6 +6,10 @@ import {
   addTestAttachments,
   waitForAnimationsComplete
 } from '../utils/enhanced-testing'
+import { setupTestEnvironment } from '../utils/test-setup'
+
+// Ensure debug directories exist before tests run
+setupTestEnvironment().catch(e => console.error('Error setting up test environment:', e))
 
 // Use the enhanced test fixture for better error reporting
 const enhancedTest = withErrorReporting;

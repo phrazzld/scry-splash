@@ -74,6 +74,11 @@ jobs:
             pnpm playwright install --with-deps chromium
           fi
         
+      - name: Create debug directories
+        run: |
+          mkdir -p .debug/screenshots .debug/html-dumps .debug/network-logs .debug/console-logs .debug/artifacts
+          echo "Debug directories created"
+          
       - name: Run E2E tests
         run: pnpm playwright test
         env:
@@ -105,5 +110,18 @@ jobs:
         if: failure()
         with:
           name: debug-screenshots
-          path: test-results/debug-*.png
+          path: |
+            test-results/debug-*.png
+            .debug/screenshots/*.png
+          retention-days: 7
+          
+      - name: Upload debug logs and HTML dumps
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: debug-logs
+          path: |
+            .debug/html-dumps/*
+            .debug/network-logs/*
+            .debug/console-logs/*
           retention-days: 7

@@ -62,7 +62,7 @@
         2. Verify faster dependency installation
     - **Depends‑on:** none
 
-- [ ] **CI-T010 · Enhancement · P2: create test setup module for E2E tests**
+- [x] **CI-T010 · Enhancement · P2: create test setup module for E2E tests**
     - **Context:** Debug directories may not exist when tests run in CI
     - **Action:**
         1. Create e2e/test-setup.ts module
