@@ -26,14 +26,36 @@ export async function captureDebugInfo(page: Page, context: string) {
   // Check for specific elements
   const emailInputs = await page.locator('input[type="email"]').count();
   const submitButtons = await page.locator('button[type="submit"]').count();
-  const successMessages = await page.locator('text=Thank you').count();
-  const errorMessages = await page.locator('text=error').count();
+  const successMessagesText = await page.locator('text=Thank you').count();
+  const errorMessagesText = await page.locator('text=error').count();
+  
+  // Check for data-testid elements
+  const successMessagesId = await page.locator('[data-testid="cta-success-message"]').count();
+  const errorMessagesId = await page.locator('[data-testid="cta-error-message"]').count();
+  
+  // Check visibility of messages by data-testid
+  let successVisible = false;
+  let errorVisible = false;
+  
+  try {
+    successVisible = await page.locator('[data-testid="cta-success-message"]').isVisible();
+  } catch (e) {
+    console.log(`Error checking success message visibility: ${e}`);
+  }
+  
+  try {
+    errorVisible = await page.locator('[data-testid="cta-error-message"]').isVisible();
+  } catch (e) {
+    console.log(`Error checking error message visibility: ${e}`);
+  }
   
   console.log(`Element counts:
   - Email inputs: ${emailInputs}
   - Submit buttons: ${submitButtons}
-  - Success messages: ${successMessages}
-  - Error messages: ${errorMessages}`);
+  - Success messages (by text): ${successMessagesText}
+  - Error messages (by text): ${errorMessagesText}
+  - Success messages (by data-testid): ${successMessagesId} (visible: ${successVisible})
+  - Error messages (by data-testid): ${errorMessagesId} (visible: ${errorVisible})`);
   
   // Capture form state
   try {
@@ -81,13 +103,25 @@ export async function captureDebugInfo(page: Page, context: string) {
 /**
  * Wait for network to become idle
  */
-export async function waitForNetworkIdle(page: Page, timeout = 5000) {
+export async function waitForNetworkIdle(page: Page, timeout = 10000) {
   console.log(`Waiting for network idle (timeout: ${timeout}ms)...`);
+  
+  // Start time logging for debugging
+  const startTime = Date.now();
+  
   try {
+    // Wait for network idle with increased timeout
     await page.waitForLoadState('networkidle', { timeout });
-    console.log('Network is idle');
+    const elapsed = Date.now() - startTime;
+    console.log(`Network became idle after ${elapsed}ms`);
+    
+    // Add a small delay to ensure DOM updates are processed
+    await page.waitForTimeout(500);
+    console.log('Added buffer time after network idle');
   } catch (e) {
-    console.log('Network did not become idle within timeout');
+    const elapsed = Date.now() - startTime;
+    console.log(`Network did not become idle within timeout (elapsed: ${elapsed}ms)`);
+    console.log(`Error details: ${e}`);
   }
 }
 
@@ -131,4 +165,40 @@ export function setupNetworkLogging(page: Page) {
   });
   
   return requests;
+}
+
+/**
+ * Navigate to a page and ensure it's fully loaded before continuing
+ * @param page The Playwright page object
+ * @param url The URL to navigate to
+ * @param options Options for navigation
+ */
+export async function navigateAndWaitForLoad(page: Page, url: string, options = { timeout: 60000 }) {
+  console.log(`Navigating to ${url} with timeout ${options.timeout}ms...`);
+  
+  try {
+    // Start navigation and wait for load event
+    await page.goto(url, { 
+      waitUntil: 'load',
+      timeout: options.timeout
+    });
+    
+    // Additional waits to ensure page is fully interactive
+    console.log('Navigation completed, waiting for network idle...');
+    await waitForNetworkIdle(page, options.timeout / 2);
+    
+    console.log('Waiting for page to be fully interactive...');
+    // Wait for key selectors that indicate the page is ready
+    await page.waitForSelector('button', { state: 'attached', timeout: options.timeout / 2 }).catch(e => {
+      console.log(`No buttons found on page: ${e}`);
+    });
+    
+    console.log('Page fully loaded');
+  } catch (e) {
+    console.error(`Navigation error: ${e}`);
+    
+    // Capture additional debugging info
+    await captureDebugInfo(page, 'navigation-error');
+    throw e;
+  }
 }
