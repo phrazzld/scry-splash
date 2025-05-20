@@ -3,88 +3,23 @@
  * 
  * Provides unified debug artifact management for E2E tests in both local and CI environments.
  * Leverages Playwright's built-in TestInfo mechanism for consistent path handling.
+ * 
+ * Dependencies:
+ * - core.ts: For base utilities and type definitions
+ * 
+ * This module should NOT import from other utility modules to avoid circular dependencies.
  */
 
 import { TestInfo } from '@playwright/test';
 import fs from 'fs/promises';
 import path from 'path';
-
-/**
- * Content types for saving artifacts
- */
-export type ArtifactContentType = 'html' | 'json' | 'txt' | 'log';
-
-/**
- * Environment-aware console logging with timestamp
- * @param message The message to log
- * @param level The log level
- */
-export function debugLog(message: string, level: 'info' | 'warn' | 'error' = 'info'): void {
-  const timestamp = new Date().toISOString();
-  const prefix = `[${timestamp}] [DEBUG ${level.toUpperCase()}]`;
-  
-  switch (level) {
-    case 'warn':
-      console.warn(`${prefix} ${message}`);
-      break;
-    case 'error':
-      console.error(`${prefix} ${message}`);
-      break;
-    default:
-      console.log(`${prefix} ${message}`);
-  }
-}
-
-/**
- * Check if running in CI environment
- * @returns true if running in CI, false otherwise
- */
-export function isRunningInCI(): boolean {
-  return !!process.env.CI;
-}
-
-/**
- * Check if a directory exists and is writable
- * @param dirPath Path to the directory to check
- * @returns Promise resolving to a boolean indicating if directory exists and is writable
- */
-export async function isDirectoryWritable(dirPath: string): Promise<boolean> {
-  try {
-    await fs.access(dirPath, fs.constants.W_OK);
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-
-/**
- * Create a directory if it doesn't exist
- * @param dirPath Path to the directory to create
- * @returns Promise resolving to the directory path
- */
-export async function ensureDirectoryExists(dirPath: string): Promise<string> {
-  try {
-    const startTime = Date.now();
-    debugLog(`Ensuring directory exists: ${dirPath}`);
-    
-    await fs.mkdir(dirPath, { recursive: true });
-    
-    // Verify directory was created and is writable
-    const isWritable = await isDirectoryWritable(dirPath);
-    if (!isWritable) {
-      throw new Error(`Directory exists but is not writable: ${dirPath}`);
-    }
-    
-    const elapsedMs = Date.now() - startTime;
-    debugLog(`Directory ready (${elapsedMs}ms): ${dirPath}`);
-    
-    return dirPath;
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    debugLog(`Failed to ensure directory exists: ${dirPath}. Error: ${errorMessage}`, 'error');
-    throw error;
-  }
-}
+import { 
+  ArtifactContentType, 
+  debugLog, 
+  ensureDirectoryExists, 
+  isDirectoryWritable, 
+  isRunningInCI 
+} from './core';
 
 /**
  * Save custom artifact to the test output directory
@@ -314,7 +249,7 @@ export async function saveJsonData(
  */
 export async function takeAndSaveScreenshot(
   testInfo: TestInfo,
-  page: any, // Using any to avoid importing Page which creates circular deps
+  page: { screenshot: (options?: any) => Promise<Buffer> },
   name: string
 ): Promise<string> {
   try {

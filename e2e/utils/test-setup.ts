@@ -1,22 +1,23 @@
 /**
- * Test setup module for E2E tests
- * Handles test environment preparation, debug directories, and CI configurations
+ * Test Setup Module
  * 
- * IMPORTANT: This module delegates most functionality to the debugArtifacts.ts module
- * for better separation of concerns.
+ * Handles test environment preparation, debug directories, and CI configurations.
+ * Sets up the testing environment for E2E tests and provides functions for
+ * capturing test state and artifacts.
+ * 
+ * Dependencies:
+ * - core.ts: For base utilities and type definitions
+ * - debugArtifacts.ts: For artifact creation and management
  */
 import { type Page, type TestInfo } from '@playwright/test';
-import * as debugArtifacts from './debugArtifacts';
-
-// Re-export key functions from debugArtifacts module
-export const {
-  initializeDebugEnvironment,
+import { debugLog } from './core';
+import { 
   takeAndSaveScreenshot,
   saveHtmlContent,
   saveJsonData,
   logDirectoryListing,
-  debugLog
-} = debugArtifacts;
+  saveCustomArtifact
+} from './debugArtifacts';
 
 /**
  * Setup function to be called at the beginning of a test file
@@ -62,7 +63,7 @@ export async function capturePageState(page: Page, testInfo: TestInfo, context: 
       
       // Save long text contents to a file for better inspection
       if (visibleText.length > 500) {
-        await debugArtifacts.saveCustomArtifact(
+        await saveCustomArtifact(
           testInfo,
           `visible-text-${context}`,
           visibleText,
@@ -91,7 +92,7 @@ export async function saveNetworkLogs(
   data: Record<string, any>,
   context: string
 ): Promise<string> {
-  return debugArtifacts.saveJsonData(testInfo, data, `network-logs-${context}`);
+  return saveJsonData(testInfo, data, `network-logs-${context}`);
 }
 
 /**
@@ -128,7 +129,7 @@ export function setupConsoleLogging(page: Page, testInfo: TestInfo): {
     logs, 
     save: async () => {
       const content = logs.join('\n');
-      return debugArtifacts.saveCustomArtifact(
+      return saveCustomArtifact(
         testInfo,
         'console-logs',
         content,

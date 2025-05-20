@@ -1,22 +1,39 @@
+/**
+ * Enhanced Testing Module
+ * 
+ * Top-level integration module that brings together all testing utilities.
+ * Provides high-level test helpers, page object model base class, and reusable utilities
+ * for writing robust and maintainable E2E tests.
+ * 
+ * This module is the main entry point for test files and depends on all other utility modules.
+ * 
+ * Dependencies:
+ * - core.ts: For base utilities and type definitions
+ * - debugArtifacts.ts: For artifact creation and management
+ * - test-setup.ts: For test environment setup and configuration
+ * - debug-helpers.ts: For debug information capture and logging
+ */
+
 import { test, type Page, type Locator, type TestInfo } from '@playwright/test';
-// Import and re-export from debugArtifacts
+
+// Import from core
+import { debugLog, retry as coreRetry, sleep, isRunningInCI } from './core';
+
+// Import from debugArtifacts
 import { 
-  debugLog,
   initializeDebugEnvironment,
   takeAndSaveScreenshot,
   saveHtmlContent,
   saveJsonData,
   logDirectoryListing,
-  saveCustomArtifact,
-  isRunningInCI
+  saveCustomArtifact
 } from './debugArtifacts';
 
 // Import from test-setup
 import { 
   capturePageState, 
   setupConsoleLogging,
-  attachDebugArtifacts,
-  setupTestEnvironment
+  attachDebugArtifacts
 } from './test-setup';
 
 // Import from debug-helpers
@@ -28,29 +45,28 @@ import {
 
 // Re-export all needed functions
 export {
-  // From debug-helpers
-  waitForNetworkIdle,
-  captureDebugInfo,
-  setupNetworkLogging,
+  // From core
+  debugLog,
+  isRunningInCI,
   
   // From debugArtifacts
-  debugLog,
   initializeDebugEnvironment,
   takeAndSaveScreenshot,
   saveHtmlContent,
   saveJsonData,
   logDirectoryListing,
   saveCustomArtifact,
-  isRunningInCI,
   
   // From test-setup
   capturePageState,
   setupConsoleLogging,
-  attachDebugArtifacts
+  attachDebugArtifacts,
+  
+  // From debug-helpers
+  waitForNetworkIdle,
+  captureDebugInfo,
+  setupNetworkLogging
 };
-
-// Setup test environment at module load time
-setupTestEnvironment().catch(e => debugLog(`Failed to set up test environment: ${e}`, 'error'));
 
 /**
  * Retries an operation until it succeeds or reaches the maximum number of attempts
@@ -71,32 +87,21 @@ export async function withRetry<T>(
   const {
     retries = 3,
     delay = 1000,
-    onRetry = (error, attempt) => debugLog(`Retrying (${attempt}/${retries}) after error: ${error.message}`, 'warn'),
-    retryCondition = () => true,
     description = 'operation',
+    // Unused parameters, removed to avoid TypeScript warnings
+    // onRetry, retryCondition
   } = options;
 
-  let lastError: Error | undefined;
-  for (let attempt = 1; attempt <= retries + 1; attempt++) {
-    try {
-      debugLog(`Attempting ${description} (${attempt}/${retries + 1})...`);
-      const result = await operation();
-      if (attempt > 1) {
-        debugLog(`✓ ${description} succeeded after ${attempt - 1} retries`);
-      }
-      return result;
-    } catch (error) {
-      lastError = error as Error;
-      if (attempt <= retries && retryCondition(lastError)) {
-        onRetry(lastError, attempt);
-        await new Promise(resolve => setTimeout(resolve, delay));
-      } else {
-        debugLog(`✗ ${description} failed after ${attempt - 1} retries: ${lastError.message}`, 'error');
-        break;
-      }
+  return coreRetry(
+    operation,
+    {
+      retries,
+      delay,
+      description,
+      backoff: 1.5,
+      maxDelay: 10000
     }
-  }
-  throw lastError!;
+  );
 }
 
 /**
@@ -257,7 +262,7 @@ export async function waitForElementStability(
       
       if (!boundingBox) {
         // Element not visible yet
-        await new Promise(r => setTimeout(r, checkInterval));
+        await sleep(checkInterval);
         continue;
       }
       
@@ -279,10 +284,10 @@ export async function waitForElementStability(
       }
       
       lastRect = currentRect;
-      await new Promise(r => setTimeout(r, checkInterval));
+      await sleep(checkInterval);
     } catch (e) {
       // Element might not be available yet
-      await new Promise(r => setTimeout(r, checkInterval));
+      await sleep(checkInterval);
     }
   }
   

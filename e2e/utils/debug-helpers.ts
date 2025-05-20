@@ -1,15 +1,22 @@
+/**
+ * Debug Helpers Module
+ * 
+ * Provides utilities for debugging test failures and capturing detailed information
+ * about the current state of the application under test.
+ * 
+ * Dependencies:
+ * - core.ts: For base utilities and type definitions
+ * - debugArtifacts.ts: For artifact creation and management
+ */
+
 import { type Page, type TestInfo } from '@playwright/test';
+import { debugLog, sleep } from './core';
 import { 
-  debugLog,
-  initializeDebugEnvironment,
+  saveHtmlContent, 
+  saveJsonData, 
   takeAndSaveScreenshot,
-  saveHtmlContent,
-  saveJsonData,
   logDirectoryListing
 } from './debugArtifacts';
-import {
-  capturePageState
-} from './test-setup';
 
 /**
  * Capture comprehensive debug information about the current page state
@@ -44,8 +51,11 @@ export async function captureDebugInfo(page: Page, testInfo: TestInfo, context: 
 
 /**
  * Capture information about key elements on the page
+ * @param page Playwright page object
+ * @param testInfo Playwright test info object
+ * @param context Context identifier for the information
  */
-async function captureElementInfo(page: Page, testInfo: TestInfo, context: string): Promise<void> {
+export async function captureElementInfo(page: Page, testInfo: TestInfo, context: string): Promise<void> {
   try {
     // Check for specific elements
     const emailInputs = await page.locator('input[type="email"]').count();
@@ -108,8 +118,11 @@ async function captureElementInfo(page: Page, testInfo: TestInfo, context: strin
 
 /**
  * Capture form state information
+ * @param page Playwright page object
+ * @param testInfo Playwright test info object
+ * @param context Context identifier for the information
  */
-async function captureFormState(page: Page, testInfo: TestInfo, context: string): Promise<void> {
+export async function captureFormState(page: Page, testInfo: TestInfo, context: string): Promise<void> {
   try {
     const formState = await page.evaluate(() => {
       const forms = document.querySelectorAll('form');
@@ -156,6 +169,9 @@ async function captureFormState(page: Page, testInfo: TestInfo, context: string)
 
 /**
  * Wait for network to become idle with improved error handling
+ * @param page Playwright page object
+ * @param timeout Timeout in milliseconds
+ * @returns Promise that resolves when network is idle
  */
 export async function waitForNetworkIdle(page: Page, timeout = 10000): Promise<void> {
   debugLog(`Waiting for network idle (timeout: ${timeout}ms)...`);
@@ -171,7 +187,7 @@ export async function waitForNetworkIdle(page: Page, timeout = 10000): Promise<v
     debugLog(`Network became idle after ${elapsed}ms`);
     
     // Add a small delay to ensure DOM updates are processed
-    await page.waitForTimeout(500);
+    await sleep(500);
     debugLog('Added buffer time after network idle');
   } catch (error) {
     const elapsed = Date.now() - startTime;
@@ -182,6 +198,9 @@ export async function waitForNetworkIdle(page: Page, timeout = 10000): Promise<v
 
 /**
  * Set up enhanced network logging for a page
+ * @param page Playwright page object
+ * @param testInfo Playwright test info object
+ * @returns Object with data and save function
  */
 export function setupNetworkLogging(page: Page, testInfo: TestInfo): {
   data: Record<string, any>; 
@@ -292,14 +311,20 @@ export function setupNetworkLogging(page: Page, testInfo: TestInfo): {
 
 /**
  * Navigate to a page and ensure it's fully loaded before continuing
+ * @param page Playwright page object
+ * @param testInfo Playwright test info object
+ * @param url URL to navigate to
+ * @param options Navigation options
  */
-export async function navigateAndWaitForLoad(page: Page, testInfo: TestInfo, url: string, options = { timeout: 60000 }): Promise<void> {
+export async function navigateAndWaitForLoad(
+  page: Page, 
+  testInfo: TestInfo, 
+  url: string, 
+  options = { timeout: 60000 }
+): Promise<void> {
   debugLog(`Navigating to ${url} with timeout ${options.timeout}ms...`);
   
   try {
-    // Initialize the debug environment before navigation
-    await initializeDebugEnvironment(testInfo);
-    
     // Start navigation and wait for load event
     await page.goto(url, { 
       waitUntil: 'load',
@@ -330,7 +355,7 @@ export async function navigateAndWaitForLoad(page: Page, testInfo: TestInfo, url
     
     // Capture debug info if possible
     try {
-      await capturePageState(page, testInfo, 'navigation-error');
+      await captureDebugInfo(page, testInfo, 'navigation-error');
     } catch (e) {
       debugLog(`Failed to capture page state after navigation error: ${e}`, 'error');
     }

@@ -6,9 +6,9 @@ import {
   addTestAttachments,
   waitForAnimationsComplete,
   debugLog,
-  waitForNetworkIdle
+  waitForNetworkIdle,
+  initializeDebugEnvironment
 } from '../utils/enhanced-testing'
-import { initializeDebugEnvironment } from '../utils/debugArtifacts'
 
 // Use the enhanced test fixture for better error reporting
 const enhancedTest = withErrorReporting;

@@ -6,10 +6,10 @@ import {
   createTestLogger, 
   addTestAttachments,
   waitForNetworkIdle,
-  debugLog
+  debugLog,
+  initializeDebugEnvironment,
+  setupNetworkLogging
 } from "../utils/enhanced-testing";
-import { initializeDebugEnvironment } from '../utils/debugArtifacts';
-import { setupNetworkLogging } from "../utils/debug-helpers";
 
 // Use the enhanced test fixture for better error reporting
 const enhancedTest = withErrorReporting;
