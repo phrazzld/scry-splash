@@ -5,15 +5,29 @@ import { PageLayout, DefaultLayout } from '@/components/organisms/page-layout';
 
 // Mock the Footer component
 jest.mock('@/components/molecules/footer', () => ({
-  Footer: ({ projectText, centered, ...props }: any) => (
+  Footer: ({ projectText, centered, showThemeToggle, ...props }: any) => (
     <div 
       data-testid="mock-footer" 
       data-project-text={projectText}
       data-centered={centered}
+      data-show-theme-toggle={showThemeToggle}
       {...props}
     >
       {projectText}
     </div>
+  ),
+}));
+
+// Mock the ThemeToggleButton component
+jest.mock('@/components/ui/theme-toggle-button', () => ({
+  ThemeToggleButton: ({ className, ...props }: any) => (
+    <button 
+      data-testid="mock-theme-toggle-button" 
+      data-class-name={className}
+      {...props}
+    >
+      Toggle theme
+    </button>
   ),
 }));
 
@@ -224,6 +238,43 @@ describe('PageLayout Component', () => {
     const footer = screen.getByTestId('mock-footer');
     expect(footer).toHaveAttribute('data-project-text', customFooterText);
   });
+
+  it('does not render theme toggle button by default', () => {
+    render(<PageLayout>Content</PageLayout>);
+    
+    expect(screen.queryByTestId('mock-theme-toggle-button')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('header-theme-toggle')).not.toBeInTheDocument();
+  });
+
+  it('renders theme toggle button in header when showThemeToggle is true', () => {
+    render(<PageLayout showThemeToggle={true}>Content</PageLayout>);
+    
+    const themeToggle = screen.getByTestId('mock-theme-toggle-button');
+    expect(themeToggle).toBeInTheDocument();
+    
+    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
+    expect(themeToggleContainer).toBeInTheDocument();
+    
+    // Check that the footer theme toggle is hidden when header toggle is shown
+    const footer = screen.getByTestId('mock-footer');
+    expect(footer).toHaveAttribute('data-show-theme-toggle', 'false');
+  });
+
+  it('positions theme toggle on right side by default', () => {
+    render(<PageLayout showThemeToggle={true}>Content</PageLayout>);
+    
+    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
+    expect(themeToggleContainer).toHaveClass('right-4');
+    expect(themeToggleContainer).not.toHaveClass('left-4');
+  });
+
+  it('positions theme toggle based on themeTogglePosition prop', () => {
+    render(<PageLayout showThemeToggle={true} themeTogglePosition="left">Content</PageLayout>);
+    
+    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
+    expect(themeToggleContainer).toHaveClass('left-4');
+    expect(themeToggleContainer).not.toHaveClass('right-4');
+  });
 });
 
 describe('DefaultLayout Component', () => {
@@ -283,5 +334,28 @@ describe('DefaultLayout Component', () => {
     );
     
     expect(screen.queryByTestId('mock-footer')).not.toBeInTheDocument();
+  });
+
+  it('renders theme toggle button when showThemeToggle is true', () => {
+    render(
+      <DefaultLayout showThemeToggle={true}>
+        Content
+      </DefaultLayout>
+    );
+    
+    expect(screen.getByTestId('mock-theme-toggle-button')).toBeInTheDocument();
+    expect(screen.getByTestId('header-theme-toggle')).toBeInTheDocument();
+  });
+
+  it('passes themeTogglePosition prop to PageLayout', () => {
+    render(
+      <DefaultLayout showThemeToggle={true} themeTogglePosition="left">
+        Content
+      </DefaultLayout>
+    );
+    
+    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
+    expect(themeToggleContainer).toHaveClass('left-4');
+    expect(themeToggleContainer).not.toHaveClass('right-4');
   });
 });

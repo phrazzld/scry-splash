@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Container, GridItem } from "@/components/ui/container"
 import { NoiseBackground } from "@/components/ui/noise-background"
 import { Footer } from "@/components/molecules/footer"
+import { ThemeToggleButton } from "@/components/ui/theme-toggle-button"
 
 export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -56,6 +57,18 @@ export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   footerText?: string;
   
   /**
+   * Whether to show a prominent theme toggle button in the header
+   * @default false
+   */
+  showThemeToggle?: boolean;
+  
+  /**
+   * Position of the theme toggle button in the header
+   * @default "right"
+   */
+  themeTogglePosition?: "left" | "right";
+  
+  /**
    * Optional class name for styling
    */
   className?: string;
@@ -69,9 +82,26 @@ export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
 /**
  * PageLayout component for full page layouts with background and grid
  * 
+ * Features:
+ * - Responsive grid container with customizable max-width
+ * - Background with subtle noise texture
+ * - Optional footer with project attribution
+ * - Optional theme toggle button in header or footer
+ * - Animation with fade-in effect
+ * 
  * @example
  * ```tsx
  * <PageLayout>
+ *   <GridItem span={12} md={8} mdStart={3}>
+ *     <div>Content here</div>
+ *   </GridItem>
+ * </PageLayout>
+ * ```
+ * 
+ * @example
+ * ```tsx
+ * // With theme toggle button in header
+ * <PageLayout showThemeToggle={true}>
  *   <GridItem span={12} md={8} mdStart={3}>
  *     <div>Content here</div>
  *   </GridItem>
@@ -87,6 +117,8 @@ export function PageLayout({
   animate = true,
   showFooter = true,
   footerText = "a misty step project",
+  showThemeToggle = false,
+  themeTogglePosition = "right",
   className,
   children,
   ...props
@@ -106,6 +138,27 @@ export function PageLayout({
         noiseOpacity={noiseOpacity}
         className="absolute inset-0 z-0"
       />
+      
+      {/* Theme toggle button (if enabled) */}
+      {showThemeToggle && (
+        <div 
+          className={cn(
+            "absolute top-4 z-20",
+            themeTogglePosition === "right" ? "right-4" : "left-4",
+            animate && "animate-fade-in"
+          )}
+          data-testid="header-theme-toggle"
+        >
+          <ThemeToggleButton 
+            className={cn(
+              "bg-background/50 hover:bg-background/70 backdrop-blur-sm",
+              "shadow-md border border-foreground/10",
+              "text-foreground/80 hover:text-foreground transition-colors",
+            )}
+            aria-label="Toggle theme mode"
+          />
+        </div>
+      )}
       
       {/* Main content container */}
       <div className="flex-1 flex flex-col justify-center">
@@ -128,6 +181,7 @@ export function PageLayout({
           <Footer 
             projectText={footerText} 
             centered={centered}
+            showThemeToggle={!showThemeToggle} // Only show theme toggle in footer when not showing in header
           />
         </div>
       )}
@@ -138,10 +192,21 @@ export function PageLayout({
 /**
  * DefaultLayout component for common page layout with centered content
  * 
+ * This is a convenience wrapper around PageLayout that configures it with commonly
+ * used settings and a single responsive column for content.
+ * 
  * @example
  * ```tsx
  * <DefaultLayout>
  *   <h1>Content goes here</h1>
+ * </DefaultLayout>
+ * ```
+ * 
+ * @example
+ * ```tsx
+ * // With theme toggle button in header
+ * <DefaultLayout showThemeToggle={true}>
+ *   <h1>Content with theme toggle</h1>
  * </DefaultLayout>
  * ```
  */
@@ -149,6 +214,8 @@ export function DefaultLayout({
   children,
   showFooter = true,
   footerText = "a misty step project",
+  showThemeToggle = false,
+  themeTogglePosition = "right",
   ...props
 }: Omit<PageLayoutProps, "children"> & { children: React.ReactNode }) {
   return (
@@ -156,6 +223,8 @@ export function DefaultLayout({
       className="flex justify-center" 
       showFooter={showFooter}
       footerText={footerText}
+      showThemeToggle={showThemeToggle}
+      themeTogglePosition={themeTogglePosition}
       {...props}
     >
       <GridItem 
