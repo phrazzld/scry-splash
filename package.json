@@ -21,7 +21,8 @@
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:report": "playwright show-report playwright-report",
-    "e2e:update-snapshots": "playwright test --update-snapshots"
+    "e2e:update-snapshots": "playwright test --update-snapshots",
+    "e2e:all-browsers": "RUN_ALL_BROWSERS=1 playwright test"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

@@ -33,8 +33,11 @@ This command installs:
 ### Available Scripts
 
 ```bash
-# Run all E2E tests
+# Run E2E tests (Chromium only by default)
 pnpm e2e
+
+# Run E2E tests in all browsers (Chromium, Firefox, WebKit)
+pnpm e2e:all-browsers
 
 # Run tests with UI mode (shows test execution in a browser)
 pnpm e2e:ui
@@ -54,8 +57,8 @@ pnpm e2e e2e/tests/splash-page-load.spec.ts
 
 # Run tests in a specific browser
 pnpm e2e --project=chromium
-pnpm e2e --project=firefox
-pnpm e2e --project=webkit
+pnpm e2e --project=firefox  # Only when using e2e:all-browsers
+pnpm e2e --project=webkit   # Only when using e2e:all-browsers
 
 # Run tests in debug mode
 pnpm e2e --debug
@@ -63,6 +66,20 @@ pnpm e2e --debug
 # Run tests with trace recording (helpful for debugging)
 pnpm e2e --trace on
 ```
+
+### CI Configuration
+
+By default, CI runs only Chromium tests to optimize execution time. This significantly reduces the time taken for E2E tests to complete in the CI pipeline (from 18+ minutes to under 9 minutes).
+
+When needed, you can run tests in all browsers by manually triggering the workflow with the "Run tests on all browsers" option selected.
+
+To manually trigger:
+1. Go to the GitHub repository
+2. Navigate to the Actions tab
+3. Select "E2E Tests" workflow
+4. Click "Run workflow" dropdown
+5. Check "Run tests on all browsers" option
+6. Click "Run workflow"
 
 ## Directory Structure
 

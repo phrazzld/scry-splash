@@ -23,6 +23,14 @@ on:
       - 'pnpm-lock.yaml'
       - 'playwright.config.ts'
       - '.github/workflows/e2e.yml'
+  # Allow manual triggers with options
+  workflow_dispatch:
+    inputs:
+      run_all_browsers:
+        description: 'Run tests on all browsers (not just Chromium)'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   e2e:
@@ -45,12 +53,23 @@ jobs:
         run: pnpm install
         
       - name: Install Playwright browsers
-        run: pnpm playwright install --with-deps
+        # Only install Chromium by default to speed up installation
+        # Install all browsers if explicitly requested
+        run: |
+          if [ "${{ github.event.inputs.run_all_browsers }}" = "true" ]; then
+            echo "Installing all browser engines..."
+            pnpm playwright install --with-deps
+          else
+            echo "Installing Chromium only for faster CI..."
+            pnpm playwright install --with-deps chromium
+          fi
         
       - name: Run E2E tests
         run: pnpm playwright test
         env:
           NEXT_PUBLIC_FORMSPARK_FORM_ID: test-form-id
+          # Set environment variable to run all browsers if specified
+          RUN_ALL_BROWSERS: ${{ github.event.inputs.run_all_browsers == true && '1' || '0' }}
           
       - name: Upload Playwright HTML report
         uses: actions/upload-artifact@v4

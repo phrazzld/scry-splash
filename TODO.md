@@ -32,7 +32,7 @@
         2. No more "snapshot doesn't exist" errors
     - **Depends‑on:** none
 
-- [ ] **CI-T008 · Optimization · P1: reduce CI execution time for E2E tests**
+- [x] **CI-T008 · Optimization · P1: reduce CI execution time for E2E tests**
     - **Context:** E2E tests take 18+ minutes to run in CI, slowing down development
     - **Action:**
         1. Reduce test timeouts in playwright.config.ts
