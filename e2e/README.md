@@ -279,6 +279,41 @@ pnpm e2e:update-snapshots
 pnpm e2e:update-snapshots path/to/test.spec.ts
 ```
 
+### Platform-Specific Snapshots
+
+Visual snapshots are platform and browser-specific. Our project maintains separate snapshots for each browser and platform combination (e.g., `chromium-darwin`, `webkit-linux`).
+
+These snapshots are committed to the repository and checked during test runs.
+
+#### Generating Linux Snapshots
+
+To generate Linux snapshots (required for CI):
+
+1. Use the dedicated GitHub workflow:
+   - Go to the GitHub repository
+   - Navigate to Actions → "Generate Linux Visual Snapshots"
+   - Click "Run workflow"
+   - Select browser (all, chromium, firefox, webkit)
+   - Click "Run workflow" button
+
+2. Download snapshot artifacts:
+   - After workflow completes, go to the run summary page
+   - Download the "linux-snapshots" artifact
+   - Extract the contents and copy to your local repository in `e2e/tests/splash-page-load.spec.ts-snapshots/`
+   - Commit the snapshots to the repository
+
+#### Updating Snapshots Across All Platforms
+
+When making UI changes that affect snapshots:
+
+1. Update local (darwin/Windows) snapshots first:
+   ```bash
+   pnpm e2e:update-snapshots
+   ```
+
+2. Generate new Linux snapshots using the workflow
+3. Download and commit updated snapshots for all platforms
+
 ### Best Practices for Visual Tests
 
 1. **Wait for stable state** before capturing:
@@ -298,6 +333,11 @@ pnpm e2e:update-snapshots path/to/test.spec.ts
    ```typescript
    await page.setViewportSize({ width: 1280, height: 720 })
    ```
+
+4. **Commit snapshots for all platforms/browsers**:
+   - Ensure snapshots exist for all browser/platform combinations
+   - When updating one browser's snapshots, update all others too
+   - Always commit snapshots to the repository
 
 ## API Mocking
 

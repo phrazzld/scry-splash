@@ -17,7 +17,9 @@
 /.github/playwright/
 # Test screenshots should not be committed
 /e2e/screenshots/
-*.png
+# Exclude test screenshots but allow visual regression snapshots
+**/*.png
+!**/splash-page-load.spec.ts-snapshots/*.png
 
 # next.js
 /.next/

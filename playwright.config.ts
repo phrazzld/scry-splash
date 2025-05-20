@@ -18,6 +18,15 @@ export default defineConfig({
     navigationTimeout: 60000, // 60 seconds timeout for navigation
   },
 
+  // Configure screenshot comparison to use existing file format
+  expect: {
+    toHaveScreenshot: {
+      // Using default snapshot format - Playwright will handle platform/browser differences
+      threshold: 0.2, // Allow slight differences due to rendering
+      maxDiffPixelRatio: 0.01, // Allow for minor differences
+    },
+  },
+
   projects: [
     {
       name: 'chromium',

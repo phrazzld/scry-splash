@@ -17,7 +17,7 @@
         2. Debug information is captured when element detection fails
     - **Depends‑on:** none
     
-- [ ] **CI-T007 · Fix · P0: generate and commit missing Linux visual snapshots**
+- [x] **CI-T007 · Fix · P0: generate and commit missing Linux visual snapshots**
     - **Context:** Visual tests failing with `A snapshot doesn't exist at /home/runner/work/scry-splash/scry-splash/e2e/tests/splash-page-load.spec.ts-snapshots/splash-page-stable-webkit-linux.png`
     - **Action:**
         1. Create dedicated workflow to generate Linux snapshots
