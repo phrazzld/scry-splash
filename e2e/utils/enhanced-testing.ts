@@ -313,30 +313,95 @@ export async function waitForElementStability(
 }
 
 /**
- * Waits for a form to be ready for submission
+ * Waits for a form to be ready for submission with improved reliability
  */
 export async function waitForFormReady(
   page: Page,
   formSelector: string,
-  options: { timeout?: number } = {}
+  options: { timeout?: number; debug?: boolean } = {}
 ): Promise<void> {
-  const { timeout = 10000 } = options;
+  const { timeout = 10000, debug = true } = options;
+  const logger = createTestLogger('waitForFormReady');
   
-  await page.waitForFunction(
-    (selector) => {
-      const form = document.querySelector(selector);
-      if (!form) return false;
+  if (debug) {
+    logger.start();
+    logger.info(`Waiting for form with selector: ${formSelector}`);
+  }
+  
+  try {
+    // First check if form exists at all
+    const formExists = await page.locator(formSelector).count() > 0;
+    
+    if (!formExists) {
+      if (debug) {
+        logger.error(`Form with selector "${formSelector}" not found in the document`);
+        // Capture page state for debugging
+        await captureDebugInfo(page, 'form-not-found');
+      }
+      throw new Error(`Form with selector "${formSelector}" not found`);
+    }
+    
+    if (debug) {
+      logger.info('Form element found, now waiting for it to be interactive');
+    }
+    
+    // Wait for the form element to be visible and attached
+    await page.locator(formSelector).waitFor({ 
+      state: 'visible', 
+      timeout: timeout / 2 
+    });
+    
+    if (debug) {
+      logger.info('Form is visible, checking for input elements');
+    }
+    
+    // Wait for key interactive elements within the form
+    // Focus on waiting for any input elements to be visible and enabled
+    const inputLocator = page.locator(`${formSelector} input, ${formSelector} button`).first();
+    await inputLocator.waitFor({ 
+      state: 'visible', 
+      timeout: timeout / 2 
+    });
+    
+    if (debug) {
+      // Log form state for debugging
+      const formInfo = await page.evaluate((selector) => {
+        const form = document.querySelector(selector);
+        if (!form) return { found: false };
+        
+        const inputs = form.querySelectorAll('input');
+        const buttons = form.querySelectorAll('button');
+        
+        return {
+          found: true,
+          inputCount: inputs.length,
+          buttonCount: buttons.length,
+          inputs: Array.from(inputs).map(input => ({
+            type: input.type,
+            name: input.name || '(no name)',
+            disabled: input.disabled,
+            visible: input.offsetParent !== null
+          })),
+          buttons: Array.from(buttons).map(button => ({
+            type: button.type || '(no type)',
+            text: button.textContent?.trim() || '(no text)',
+            disabled: button.disabled,
+            visible: button.offsetParent !== null
+          }))
+        };
+      }, formSelector);
       
-      // Check if all inputs and buttons are attached to DOM and enabled
-      const inputs = form.querySelectorAll('input, button');
-      return Array.from(inputs).every(el => {
-        const element = el as HTMLInputElement | HTMLButtonElement;
-        return !element.disabled && document.body.contains(element);
-      });
-    },
-    formSelector,
-    { timeout }
-  );
+      logger.info(`Form state: ${JSON.stringify(formInfo, null, 2)}`);
+      logger.success('Form is ready for interaction');
+      logger.end('passed');
+    }
+  } catch (error) {
+    if (debug) {
+      logger.error(`Failed waiting for form: ${error instanceof Error ? error.message : String(error)}`);
+      logger.end('failed');
+    }
+    throw error;
+  }
 }
 
 /**

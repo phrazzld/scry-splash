@@ -2,6 +2,81 @@
 
 ## CI E2E Test Fixes (CI-FIX-001)
 
+- [x] **CI-T006 · Fix · P0: fix form element detection in `waitForFormReady` function**
+    - **Context:** CTA flow tests in CI failing with `TimeoutError: page.waitForFunction: Timeout 30000ms exceeded`
+    - **Action:**
+        1. Refactor `waitForFormReady` in enhanced-testing.ts to use simpler `waitForSelector` approach
+        2. Add explicit existence check before waiting
+        3. Add detailed debugging when form not found
+        4. Reduce complexity of DOM traversal in waiting logic
+    - **Done‑when:**
+        1. Form elements are reliably detected in CI environment
+        2. No more timeout errors on form element detection
+    - **Verification:**
+        1. CTA form tests pass consistently in CI
+        2. Debug information is captured when element detection fails
+    - **Depends‑on:** none
+    
+- [ ] **CI-T007 · Fix · P0: generate and commit missing Linux visual snapshots**
+    - **Context:** Visual tests failing with `A snapshot doesn't exist at /home/runner/work/scry-splash/scry-splash/e2e/tests/splash-page-load.spec.ts-snapshots/splash-page-stable-webkit-linux.png`
+    - **Action:**
+        1. Create dedicated workflow to generate Linux snapshots
+        2. Run workflow and download generated snapshots
+        3. Commit the Linux snapshots to the repository
+        4. Document snapshot generation process
+    - **Done‑when:**
+        1. All required Linux snapshots exist in repository
+        2. Visual regression tests pass in CI environment
+    - **Verification:**
+        1. Visual tests pass consistently in CI
+        2. No more "snapshot doesn't exist" errors
+    - **Depends‑on:** none
+
+- [ ] **CI-T008 · Optimization · P1: reduce CI execution time for E2E tests**
+    - **Context:** E2E tests take 18+ minutes to run in CI, slowing down development
+    - **Action:**
+        1. Reduce test timeouts in playwright.config.ts
+        2. Update CI to run only Chromium tests by default
+        3. Configure Firefox/WebKit to run only when explicitly requested
+        4. Increase worker count for parallel test execution
+        5. Reduce retry attempts from 2 to 1
+    - **Done‑when:**
+        1. CI execution time is reduced by at least 50%
+        2. Tests remain reliable with reduced timeouts
+    - **Verification:**
+        1. PR checks complete significantly faster
+        2. Tests still pass consistently with new settings
+    - **Depends‑on:** none
+
+- [ ] **CI-T009 · Enhancement · P1: add dependency caching to CI workflow**
+    - **Context:** CI spends significant time installing dependencies on each run
+    - **Action:**
+        1. Add Node modules caching to CI workflow
+        2. Add Playwright browsers caching
+        3. Use pnpm's frozen lockfile for deterministic installs
+    - **Done‑when:**
+        1. CI setup time is significantly reduced
+        2. Browsers don't need to be downloaded on every run
+    - **Verification:**
+        1. Check CI logs for cache hits
+        2. Verify faster dependency installation
+    - **Depends‑on:** none
+
+- [ ] **CI-T010 · Enhancement · P2: create test setup module for E2E tests**
+    - **Context:** Debug directories may not exist when tests run in CI
+    - **Action:**
+        1. Create e2e/test-setup.ts module
+        2. Add function to ensure debug directories exist
+        3. Update tests to use this setup module
+        4. Ensure CI properly handles debug artifacts
+    - **Done‑when:**
+        1. Debug directories are reliably created in CI
+        2. Debug artifacts are properly stored and uploaded
+    - **Verification:**
+        1. Debug screenshots and logs are available in CI
+        2. No errors about missing directories
+    - **Depends‑on:** none
+
 - [x] **CI-T005 · Fix · P0: fix URL construction in navigation helper**
     - **Context:** All E2E tests failing in CI with `TypeError: Invalid URL` error
     - **Action:**
