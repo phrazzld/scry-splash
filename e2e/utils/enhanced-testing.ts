@@ -502,13 +502,51 @@ export class BasePage {
   constructor(protected readonly page: Page) {}
   
   /**
-   * Navigates to a page with retry logic
+   * Navigates to a page with retry logic and robust URL handling
    */
   async navigateTo(path: string, options?: { retries?: number; timeout?: number }): Promise<void> {
-    const fullUrl = new URL(path, this.page.url()).toString();
-    await retryNavigation(this.page, fullUrl, options);
-    await waitForNetworkIdle(this.page);
-    await waitForPageLoaded(this.page);
+    // Handle both absolute and relative paths safely
+    let fullUrl: string;
+    
+    try {
+      if (path.startsWith('http://') || path.startsWith('https://')) {
+        // Path is already an absolute URL
+        fullUrl = path;
+      } else {
+        // Get current URL or fall back to baseURL
+        const currentUrl = this.page.url();
+        
+        // If current URL is empty or about:blank, use baseURL from config
+        let baseUrl = 'http://localhost:3000';
+        if (currentUrl && currentUrl !== 'about:blank') {
+          baseUrl = currentUrl;
+        } else {
+          // Try to get baseURL from Playwright config if available
+          try {
+            const browserContext = this.page.context();
+            // Access baseURL from context
+            const contextBaseUrl = (browserContext as any)._options?.baseURL;
+            if (contextBaseUrl) {
+              baseUrl = contextBaseUrl;
+            }
+          } catch (e) {
+            console.log('Could not get baseURL from context, using default', e);
+          }
+        }
+        
+        // Construct full URL
+        fullUrl = new URL(path, baseUrl).toString();
+      }
+      
+      console.log(`Navigating to: ${fullUrl}`);
+      await retryNavigation(this.page, fullUrl, options);
+      await waitForNetworkIdle(this.page);
+      await waitForPageLoaded(this.page);
+    } catch (error) {
+      console.error(`Navigation error for path "${path}": ${error}`);
+      console.error(`Current page URL: ${this.page.url() || '(empty)'}`);
+      throw error;
+    }
   }
   
   /**

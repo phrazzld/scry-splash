@@ -2,6 +2,21 @@
 
 ## CI E2E Test Fixes (CI-FIX-001)
 
+- [x] **CI-T005 · Fix · P0: fix URL construction in navigation helper**
+    - **Context:** All E2E tests failing in CI with `TypeError: Invalid URL` error
+    - **Action:**
+        1. Update `navigateTo` method in BasePage to handle empty/invalid page URLs
+        2. Add fallback to baseURL from configuration when page URL is unavailable
+        3. Add better error handling and logging for URL construction
+        4. Test navigation with both relative and absolute paths
+    - **Done‑when:**
+        1. E2E tests pass in CI environment
+        2. Navigation works reliably across all browsers
+    - **Verification:**
+        1. All E2E tests pass in CI for all browsers
+        2. No `TypeError: Invalid URL` errors in logs
+    - **Depends‑on:** none
+
 - [x] **CI-T001 · Debug · P0: debug form submission test failures**
     - **Context:** Form submission tests fail to find success/error messages in CI
     - **Action:**
