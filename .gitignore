@@ -56,10 +56,15 @@ next-env.d.ts
 **/glance.md
 thinktank_*/
 
-# test artifacts and data
+# debug and test artifacts
+/.debug/
 /data/
 /trace/
 /index.html
+**/debug-*.png
+**/html-dump-*.html
+**/network-logs-*.json
+*-task.md
 
 # git hooks logs
 /.githooks/logs/

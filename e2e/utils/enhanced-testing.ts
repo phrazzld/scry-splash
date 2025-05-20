@@ -1,6 +1,5 @@
 import { test, type Page, type Locator, type TestInfo } from '@playwright/test';
 import fs from 'fs/promises';
-import path from 'path';
 import { captureDebugInfo, setupConsoleLogging, waitForNetworkIdle as debugNetworkIdle } from './debug-helpers';
 
 // Re-export waitForNetworkIdle from debug-helpers
@@ -60,10 +59,14 @@ export async function saveHtmlDump(page: Page, context: string): Promise<string>
   try {
     const html = await page.content();
     const timestamp = Date.now();
-    const filename = `test-results/html-dump-${context.replace(/\s+/g, '-')}-${timestamp}.html`;
+    
+    // Use dedicated debug directory
+    const debugDir = '.debug/html-dumps';
     
     // Create directory if it doesn't exist
-    await fs.mkdir(path.dirname(filename), { recursive: true });
+    await fs.mkdir(debugDir, { recursive: true });
+    
+    const filename = `${debugDir}/html-dump-${context.replace(/\s+/g, '-')}-${timestamp}.html`;
     await fs.writeFile(filename, html);
     
     console.log(`HTML dump saved to: ${filename}`);
@@ -173,9 +176,11 @@ export const withErrorReporting = test.extend<{ errorReporter: void }>({
       // Save HTML dump
       await saveHtmlDump(page, `test-failure-${testInfo.title}`);
       
-      // Save network logs
-      const networksLogsPath = `test-results/network-logs-${testInfo.title.replace(/\s+/g, '-')}-${Date.now()}.json`;
-      await fs.mkdir(path.dirname(networksLogsPath), { recursive: true });
+      // Save network logs to dedicated debug directory
+      const debugDir = '.debug/network-logs';
+      await fs.mkdir(debugDir, { recursive: true });
+      
+      const networksLogsPath = `${debugDir}/network-logs-${testInfo.title.replace(/\s+/g, '-')}-${Date.now()}.json`;
       await fs.writeFile(networksLogsPath, JSON.stringify(networkData, null, 2));
       console.log(`Network logs saved to: ${networksLogsPath}`);
       

@@ -90,7 +90,14 @@ export async function captureDebugInfo(page: Page, context: string) {
   
   // Take screenshot
   try {
-    const screenshotPath = `test-results/debug-${context.replace(/\s+/g, '-')}-${Date.now()}.png`;
+    // Create debug directory if it doesn't exist
+    const debugDir = '.debug/screenshots';
+    const fs = require('fs');
+    if (!fs.existsSync(debugDir)) {
+      fs.mkdirSync(debugDir, { recursive: true });
+    }
+    
+    const screenshotPath = `${debugDir}/debug-${context.replace(/\s+/g, '-')}-${Date.now()}.png`;
     await page.screenshot({ path: screenshotPath, fullPage: true });
     console.log(`Screenshot saved: ${screenshotPath}`);
   } catch (e) {
