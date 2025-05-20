@@ -74,10 +74,8 @@ jobs:
             pnpm playwright install --with-deps chromium
           fi
         
-      - name: Create debug directories
-        run: |
-          mkdir -p .debug/screenshots .debug/html-dumps .debug/network-logs .debug/console-logs .debug/artifacts
-          echo "Debug directories created"
+      # Playwright test artifacts will be stored in test-results/e2e-artifacts 
+      # No need to create directories manually - this is handled by the test setup
           
       - name: Run E2E tests
         run: pnpm playwright test
@@ -94,6 +92,21 @@ jobs:
           path: playwright-report/
           retention-days: 30
           
+      - name: List artifact directories (for debugging)
+        if: always()
+        run: |
+          echo "=== Available artifact directories ==="
+          ls -la test-results/ || echo "No test-results directory"
+          ls -la test-results/e2e-artifacts/ || echo "No e2e-artifacts directory"
+          
+      - name: Upload E2E test artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-artifacts
+          path: test-results/e2e-artifacts/
+          retention-days: 30
+          
       - name: Upload Playwright failure artifacts
         uses: actions/upload-artifact@v4
         if: failure()
@@ -102,26 +115,4 @@ jobs:
           path: |
             test-results/
             playwright-report/
-            test-results/debug-*.png
           retention-days: 30
-          
-      - name: Upload debug screenshots
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: debug-screenshots
-          path: |
-            test-results/debug-*.png
-            .debug/screenshots/*.png
-          retention-days: 7
-          
-      - name: Upload debug logs and HTML dumps
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: debug-logs
-          path: |
-            .debug/html-dumps/*
-            .debug/network-logs/*
-            .debug/console-logs/*
-          retention-days: 7

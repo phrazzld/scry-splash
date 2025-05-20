@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test'
+import { type Page, type Locator, type TestInfo } from '@playwright/test'
 import { BasePage, createTestLogger, retryClick, retryFill, waitForFormReady } from '../utils/enhanced-testing'
 
 /**
@@ -20,12 +20,17 @@ export class CtaForm extends BasePage {
   /**
    * Fill the email input field with enhanced reliability
    * @param email - The email address to enter
+   * @param testInfo - Playwright TestInfo object for artifact generation
    */
-  async fillEmail(email: string, options = { timeout: 30000, retries: 2 }): Promise<void> {
+  async fillEmail(
+    email: string, 
+    testInfo: TestInfo,
+    options = { timeout: 30000, retries: 2 }
+  ): Promise<void> {
     const logger = createTestLogger('CtaForm.fillEmail')
     logger.step(`Filling email field with "${email}"`)
     
-    await waitForFormReady(this.page, this.formSelector, { timeout: options.timeout })
+    await waitForFormReady(this.page, testInfo, this.formSelector, { timeout: options.timeout })
     await retryFill(this.page.locator(this.emailInputSelector), email, {
       timeout: options.timeout,
       retries: options.retries,
@@ -37,15 +42,19 @@ export class CtaForm extends BasePage {
 
   /**
    * Submit the form by clicking the submit button with enhanced reliability
+   * @param testInfo - Playwright TestInfo object for artifact generation
    */
-  async submit(options = { timeout: 30000, retries: 2 }): Promise<void> {
+  async submit(
+    testInfo: TestInfo,
+    options = { timeout: 30000, retries: 2 }
+  ): Promise<void> {
     const logger = createTestLogger('CtaForm.submit')
     logger.start()
     
     logger.step('Preparing to submit form')
     
     // Wait for form to be ready
-    await waitForFormReady(this.page, this.formSelector, { timeout: options.timeout })
+    await waitForFormReady(this.page, testInfo, this.formSelector, { timeout: options.timeout })
     
     // Get button information for logging
     const button = this.page.locator(this.submitButtonSelector)
@@ -81,10 +90,14 @@ export class CtaForm extends BasePage {
 
   /**
    * Wait for success message to appear with enhanced reliability
+   * @param testInfo - Playwright TestInfo object for artifact generation
    * @param timeout - Time in milliseconds to wait (default: 30000)
    * @returns The success message locator
    */
-  async waitForSuccessMessage(timeout = 30000): Promise<Locator> {
+  async waitForSuccessMessage(
+    testInfo: TestInfo,
+    timeout = 30000
+  ): Promise<Locator> {
     const logger = createTestLogger('Wait for Success Message')
     logger.start()
     
@@ -93,7 +106,7 @@ export class CtaForm extends BasePage {
     try {
       // Try by data-testid first (preferred method)
       logger.info('Looking for message by data-testid="cta-success-message"')
-      const message = await this.waitForElement(this.successMessageSelector, { 
+      const message = await this.waitForElement(this.successMessageSelector, testInfo, { 
         state: 'visible', 
         timeout 
       })
@@ -115,7 +128,7 @@ export class CtaForm extends BasePage {
         // Capture debug information on failure
         const error = textError instanceof Error ? textError : new Error(String(textError))
         logger.error('Failed to find success message by any method', error)
-        await this.captureState('success-message-not-found')
+        await this.captureState(testInfo, 'success-message-not-found')
         logger.end('failed')
         throw error
       }
@@ -132,10 +145,14 @@ export class CtaForm extends BasePage {
 
   /**
    * Wait for error message to appear with enhanced reliability
+   * @param testInfo - Playwright TestInfo object for artifact generation
    * @param timeout - Time in milliseconds to wait (default: 30000)
    * @returns The error message locator
    */
-  async waitForErrorMessage(timeout = 30000): Promise<Locator> {
+  async waitForErrorMessage(
+    testInfo: TestInfo,
+    timeout = 30000
+  ): Promise<Locator> {
     const logger = createTestLogger('Wait for Error Message')
     logger.start()
     
@@ -144,7 +161,7 @@ export class CtaForm extends BasePage {
     try {
       // Try by data-testid first (preferred method)
       logger.info('Looking for message by data-testid="cta-error-message"')
-      const message = await this.waitForElement(this.errorMessageSelector, { 
+      const message = await this.waitForElement(this.errorMessageSelector, testInfo, { 
         state: 'visible', 
         timeout 
       })
@@ -166,7 +183,7 @@ export class CtaForm extends BasePage {
         // Capture debug information on failure
         const error = textError instanceof Error ? textError : new Error(String(textError))
         logger.error('Failed to find error message by any method', error)
-        await this.captureState('error-message-not-found')
+        await this.captureState(testInfo, 'error-message-not-found')
         logger.end('failed')
         throw error
       }

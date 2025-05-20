@@ -1,19 +1,56 @@
 import { test, type Page, type Locator, type TestInfo } from '@playwright/test';
-import fs from 'fs/promises';
-import { captureDebugInfo, setupConsoleLogging, waitForNetworkIdle as debugNetworkIdle } from './debug-helpers';
+// Import and re-export from debugArtifacts
 import { 
-  setupTestEnvironment, 
-  setupDebugDirectories, 
-  saveNetworkLogs,
-  capturePageState,
-  attachDebugArtifacts
+  debugLog,
+  initializeDebugEnvironment,
+  takeAndSaveScreenshot,
+  saveHtmlContent,
+  saveJsonData,
+  logDirectoryListing,
+  saveCustomArtifact,
+  isRunningInCI
+} from './debugArtifacts';
+
+// Import from test-setup
+import { 
+  capturePageState, 
+  setupConsoleLogging,
+  attachDebugArtifacts,
+  setupTestEnvironment
 } from './test-setup';
 
-// Re-export waitForNetworkIdle from debug-helpers
-export const waitForNetworkIdle = debugNetworkIdle;
+// Import from debug-helpers
+import {
+  waitForNetworkIdle,
+  captureDebugInfo,
+  setupNetworkLogging
+} from './debug-helpers';
+
+// Re-export all needed functions
+export {
+  // From debug-helpers
+  waitForNetworkIdle,
+  captureDebugInfo,
+  setupNetworkLogging,
+  
+  // From debugArtifacts
+  debugLog,
+  initializeDebugEnvironment,
+  takeAndSaveScreenshot,
+  saveHtmlContent,
+  saveJsonData,
+  logDirectoryListing,
+  saveCustomArtifact,
+  isRunningInCI,
+  
+  // From test-setup
+  capturePageState,
+  setupConsoleLogging,
+  attachDebugArtifacts
+};
 
 // Setup test environment at module load time
-setupTestEnvironment().catch(e => console.error('Failed to set up test environment:', e));
+setupTestEnvironment().catch(e => debugLog(`Failed to set up test environment: ${e}`, 'error'));
 
 /**
  * Retries an operation until it succeeds or reaches the maximum number of attempts
@@ -34,7 +71,7 @@ export async function withRetry<T>(
   const {
     retries = 3,
     delay = 1000,
-    onRetry = (error, attempt) => console.log(`Retrying (${attempt}/${retries}) after error: ${error.message}`),
+    onRetry = (error, attempt) => debugLog(`Retrying (${attempt}/${retries}) after error: ${error.message}`, 'warn'),
     retryCondition = () => true,
     description = 'operation',
   } = options;
@@ -42,10 +79,10 @@ export async function withRetry<T>(
   let lastError: Error | undefined;
   for (let attempt = 1; attempt <= retries + 1; attempt++) {
     try {
-      console.log(`Attempting ${description} (${attempt}/${retries + 1})...`);
+      debugLog(`Attempting ${description} (${attempt}/${retries + 1})...`);
       const result = await operation();
       if (attempt > 1) {
-        console.log(`✓ ${description} succeeded after ${attempt - 1} retries`);
+        debugLog(`✓ ${description} succeeded after ${attempt - 1} retries`);
       }
       return result;
     } catch (error) {
@@ -54,7 +91,7 @@ export async function withRetry<T>(
         onRetry(lastError, attempt);
         await new Promise(resolve => setTimeout(resolve, delay));
       } else {
-        console.log(`✗ ${description} failed after ${attempt - 1} retries: ${lastError.message}`);
+        debugLog(`✗ ${description} failed after ${attempt - 1} retries: ${lastError.message}`, 'error');
         break;
       }
     }
@@ -63,138 +100,57 @@ export async function withRetry<T>(
 }
 
 /**
- * Captures and saves the full page HTML to a file
- */
-export async function saveHtmlDump(page: Page, context: string): Promise<string> {
-  try {
-    const html = await page.content();
-    const timestamp = Date.now();
-    
-    // Use dedicated debug directory
-    const debugDir = '.debug/html-dumps';
-    
-    // Create directory if it doesn't exist
-    await fs.mkdir(debugDir, { recursive: true });
-    
-    const filename = `${debugDir}/html-dump-${context.replace(/\s+/g, '-')}-${timestamp}.html`;
-    await fs.writeFile(filename, html);
-    
-    console.log(`HTML dump saved to: ${filename}`);
-    return filename;
-  } catch (e) {
-    console.error(`Failed to save HTML dump: ${e}`);
-    return '';
-  }
-}
-
-/**
- * Enhanced network logging with detailed request/response capture
- */
-export function setupDetailedNetworkLogging(page: Page) {
-  const networkData: {
-    requests: Record<string, any>;
-    responses: Record<string, any>;
-  } = {
-    requests: {},
-    responses: {}
-  };
-
-  page.on('request', request => {
-    const url = request.url();
-    const method = request.method();
-    // Use URL as a unique ID for the request since request.id() isn't available
-    const requestId = `${method}-${url}-${Date.now()}`;
-    
-    console.log(`[Network Request] ${method} ${url}`);
-    
-    try {
-      // Capture request details
-      networkData.requests[requestId] = {
-        url,
-        method,
-        headers: request.headers(),
-        postData: request.postData(),
-        timestamp: Date.now(),
-        resourceType: request.resourceType()
-      };
-    } catch (e) {
-      console.error(`Error capturing request data: ${e}`);
-    }
-  });
-
-  page.on('response', async response => {
-    const request = response.request();
-    const url = response.url();
-    const method = request.method();
-    const status = response.status();
-    // Use URL as a unique ID for the response to match the request
-    const requestId = `${method}-${url}-${Date.now()}`;
-    
-    console.log(`[Network Response] ${status} ${url}`);
-    
-    try {
-      // Get response body for API requests
-      let body = null;
-      const contentType = response.headers()['content-type'] || '';
-      
-      if (
-        (contentType.includes('json') || 
-         contentType.includes('text')) && 
-        !url.endsWith('.js') && 
-        !url.endsWith('.css') && 
-        !url.endsWith('.html')
-      ) {
-        try {
-          body = await response.text();
-        } catch (e) {
-          body = `<Failed to get response body: ${e}>`;
-        }
-      }
-      
-      // Capture response details
-      networkData.responses[requestId] = {
-        url,
-        status,
-        headers: response.headers(),
-        body,
-        timestamp: Date.now()
-      };
-    } catch (e) {
-      console.error(`Error capturing response data: ${e}`);
-    }
-  });
-
-  return networkData;
-}
-
-/**
  * Creates a test fixture that automatically captures error information
  */
 export const withErrorReporting = test.extend<{ errorReporter: void }>({
   errorReporter: [async ({ page }, use, testInfo) => {
-    // Ensure debug directories exist
-    await setupDebugDirectories();
-    
-    // Setup handlers before test
-    const networkData = setupDetailedNetworkLogging(page);
-    setupConsoleLogging(page);
-    
-    // Use enhanced error reporting
     try {
-      await use();
+      // Initialize environment and create necessary directories
+      await initializeDebugEnvironment(testInfo);
+      
+      // Setup network logging
+      const networkLogger = setupNetworkLogging(page, testInfo);
+      
+      // Setup console logging
+      const consoleLogger = setupConsoleLogging(page, testInfo);
+      
+      // Take initial screenshot for reference
+      await takeAndSaveScreenshot(testInfo, page, 'test-start');
+      
+      // Create a directory listing for debugging
+      await logDirectoryListing(testInfo, undefined, 'test-start');
+      
+      // Use enhanced error reporting
+      try {
+        await use();
+        
+        // Test completed successfully - save final state
+        await networkLogger.save();
+        await consoleLogger.save();
+        await takeAndSaveScreenshot(testInfo, page, 'test-completed');
+        
+        debugLog(`Test completed successfully: ${testInfo.title}`);
+      } catch (error) {
+        // Test failed - capture detailed debug information
+        debugLog(`Test failure detected in "${testInfo.title}"`, 'error');
+        
+        // Save network and console logs
+        await networkLogger.save();
+        await consoleLogger.save();
+        
+        // Capture comprehensive debug information
+        await capturePageState(page, testInfo, `test-failure-${testInfo.title}`);
+        
+        // Create a directory listing showing all artifacts
+        await logDirectoryListing(testInfo, undefined, 'test-failure');
+        
+        // Re-throw to fail the test
+        throw error;
+      }
     } catch (error) {
-      console.log('\n=== TEST FAILURE DETECTED ===');
-      
-      // Capture comprehensive debug information
-      await capturePageState(page, `test-failure-${testInfo.title}`);
-      
-      // Save network logs using the test-setup module
-      await saveNetworkLogs(networkData, `test-failure-${testInfo.title}`);
-      
-      // Attach debug artifacts to test report
-      await attachDebugArtifacts(page, testInfo, `test-failure-${testInfo.title}`);
-      
-      // Re-throw to fail the test
+      // Error in the fixture itself
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      debugLog(`Error in enhanced test fixture: ${errorMessage}`, 'error');
       throw error;
     }
   }, { auto: true }]
@@ -244,6 +200,7 @@ export async function retryFill(
  */
 export async function retryNavigation(
   page: Page,
+  testInfo: TestInfo,
   url: string,
   options: { retries?: number; delay?: number; timeout?: number; waitUntil?: 'load'|'domcontentloaded'|'networkidle'; description?: string } = {}
 ): Promise<void> {
@@ -256,7 +213,14 @@ export async function retryNavigation(
   
   return withRetry(
     async () => {
+      // Initialize environment before navigation
+      await initializeDebugEnvironment(testInfo);
+      
+      // Navigate to URL
       await page.goto(url, { timeout, waitUntil });
+      
+      // Take a screenshot after navigation
+      await takeAndSaveScreenshot(testInfo, page, 'post-navigation');
     },
     { ...retryOptions, description }
   );
@@ -284,6 +248,8 @@ export async function waitForElementStability(
   const startTime = Date.now();
   let lastRect: { x: number; y: number; width: number; height: number } | null = null;
   
+  debugLog(`Waiting for element to stabilize (timeout: ${timeout}ms)...`);
+  
   while (Date.now() - startTime < timeout) {
     try {
       // Get current element position and size
@@ -308,6 +274,7 @@ export async function waitForElementStability(
           lastRect.width === currentRect.width && 
           lastRect.height === currentRect.height) {
         // Element has stabilized
+        debugLog(`Element stabilized after ${Date.now() - startTime}ms`);
         return;
       }
       
@@ -319,6 +286,7 @@ export async function waitForElementStability(
     }
   }
   
+  debugLog(`Element did not stabilize within ${timeout}ms`, 'warn');
   throw new Error(`Element did not stabilize within ${timeout}ms`);
 }
 
@@ -327,6 +295,7 @@ export async function waitForElementStability(
  */
 export async function waitForFormReady(
   page: Page,
+  testInfo: TestInfo,
   formSelector: string,
   options: { timeout?: number; debug?: boolean } = {}
 ): Promise<void> {
@@ -345,8 +314,8 @@ export async function waitForFormReady(
     if (!formExists) {
       if (debug) {
         logger.error(`Form with selector "${formSelector}" not found in the document`);
-        // Capture page state for debugging
-        await captureDebugInfo(page, 'form-not-found');
+        // Capture debug information
+        await captureDebugInfo(page, testInfo, 'form-not-found');
       }
       throw new Error(`Form with selector "${formSelector}" not found`);
     }
@@ -401,6 +370,9 @@ export async function waitForFormReady(
         };
       }, formSelector);
       
+      // Save form info as JSON for debugging
+      await saveJsonData(testInfo, formInfo, 'form-ready-state');
+      
       logger.info(`Form state: ${JSON.stringify(formInfo, null, 2)}`);
       logger.success('Form is ready for interaction');
       logger.end('passed');
@@ -423,6 +395,8 @@ export async function waitForAnimationsComplete(
 ): Promise<void> {
   const { timeout = 5000 } = options;
   
+  debugLog(`Waiting for animations to complete (timeout: ${timeout}ms)...`);
+  
   try {
     // Look for common animation classes and properties
     await page.waitForFunction(
@@ -438,9 +412,11 @@ export async function waitForAnimationsComplete(
       },
       { timeout }
     );
+    
+    debugLog('Animations completed successfully');
   } catch (e) {
     // If timeout or error, log but continue - this is best-effort
-    console.log(`Warning: Could not confirm animations completed: ${e}`);
+    debugLog(`Could not confirm animations completed: ${e}`, 'warn');
   }
 }
 
@@ -464,7 +440,7 @@ export async function isPageLoading(page: Page): Promise<boolean> {
     
     return false;
   } catch (e) {
-    console.error(`Error checking page loading state: ${e}`);
+    debugLog(`Error checking page loading state: ${e}`, 'error');
     return false;
   }
 }
@@ -479,12 +455,15 @@ export async function waitForPageLoaded(
   const { timeout = 30000, pollInterval = 100 } = options;
   const startTime = Date.now();
   
+  debugLog(`Waiting for page to finish loading (timeout: ${timeout}ms)...`);
+  
   while (Date.now() - startTime < timeout) {
     if (!(await isPageLoading(page))) {
       // Wait a bit more to ensure stability
       await page.waitForTimeout(500);
       // Double-check it's still not loading
       if (!(await isPageLoading(page))) {
+        debugLog(`Page finished loading after ${Date.now() - startTime}ms`);
         return;
       }
     }
@@ -492,6 +471,7 @@ export async function waitForPageLoaded(
     await page.waitForTimeout(pollInterval);
   }
   
+  debugLog(`Page did not finish loading within ${timeout}ms`, 'warn');
   throw new Error(`Page did not finish loading within ${timeout}ms`);
 }
 
@@ -501,38 +481,38 @@ export async function waitForPageLoaded(
 export function createTestLogger(testTitle: string) {
   return {
     start: () => {
-      console.log(`\n🔶 STARTING TEST: ${testTitle}`);
-      console.log(`🕒 ${new Date().toISOString()}`);
-      console.log('--------------------------------------------------');
+      debugLog(`\n🔶 STARTING TEST: ${testTitle}`);
+      debugLog(`🕒 ${new Date().toISOString()}`);
+      debugLog('--------------------------------------------------');
     },
     
     step: (stepName: string) => {
-      console.log(`\n📌 STEP: ${stepName}`);
+      debugLog(`\n📌 STEP: ${stepName}`);
     },
     
     info: (message: string) => {
-      console.log(`  ℹ️ ${message}`);
+      debugLog(`  ℹ️ ${message}`);
     },
     
     warn: (message: string) => {
-      console.log(`  ⚠️ WARNING: ${message}`);
+      debugLog(`  ⚠️ WARNING: ${message}`, 'warn');
     },
     
     error: (message: string, error?: Error) => {
-      console.log(`  ❌ ERROR: ${message}`);
+      debugLog(`  ❌ ERROR: ${message}`, 'error');
       if (error) {
-        console.log(`  ${error.stack || error.message}`);
+        debugLog(`  ${error.stack || error.message}`, 'error');
       }
     },
     
     success: (message: string) => {
-      console.log(`  ✅ ${message}`);
+      debugLog(`  ✅ ${message}`);
     },
     
     end: (status: 'passed' | 'failed') => {
-      console.log('--------------------------------------------------');
-      console.log(`🏁 TEST ${status.toUpperCase()}: ${testTitle}`);
-      console.log(`🕒 ${new Date().toISOString()}\n`);
+      debugLog('--------------------------------------------------');
+      debugLog(`🏁 TEST ${status.toUpperCase()}: ${testTitle}`);
+      debugLog(`🕒 ${new Date().toISOString()}\n`);
     }
   };
 }
@@ -545,10 +525,18 @@ export async function addTestAttachments(
   testInfo: TestInfo, 
   _options: { includeTrace?: boolean } = {}
 ): Promise<void> {
-  // Use the attachDebugArtifacts function from test-setup module
-  await attachDebugArtifacts(page, testInfo, testInfo.title);
-  
-  // Additional trace handling if needed is automatically handled by Playwright
+  try {
+    // Use the attachDebugArtifacts function from test-setup module
+    await attachDebugArtifacts(page, testInfo, `test-${testInfo.title}`);
+    
+    // Log directory listing
+    await logDirectoryListing(testInfo, undefined, 'final-artifacts');
+    
+    debugLog(`Debug artifacts attached for test "${testInfo.title}"`);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    debugLog(`Error attaching debug artifacts: ${errorMessage}`, 'error');
+  }
 }
 
 /**
@@ -560,7 +548,7 @@ export class BasePage {
   /**
    * Navigates to a page with retry logic and robust URL handling
    */
-  async navigateTo(path: string, options?: { retries?: number; timeout?: number }): Promise<void> {
+  async navigateTo(path: string, testInfo: TestInfo, options?: { retries?: number; timeout?: number }): Promise<void> {
     // Handle both absolute and relative paths safely
     let fullUrl: string;
     
@@ -586,7 +574,7 @@ export class BasePage {
               baseUrl = contextBaseUrl;
             }
           } catch (e) {
-            console.log('Could not get baseURL from context, using default', e);
+            debugLog(`Could not get baseURL from context, using default: ${e}`, 'warn');
           }
         }
         
@@ -594,13 +582,18 @@ export class BasePage {
         fullUrl = new URL(path, baseUrl).toString();
       }
       
-      console.log(`Navigating to: ${fullUrl}`);
-      await retryNavigation(this.page, fullUrl, options);
-      await waitForNetworkIdle(this.page);
+      debugLog(`Navigating to: ${fullUrl}`);
+      await retryNavigation(this.page, testInfo, fullUrl, options);
+      await waitForNetworkIdle(this.page, options?.timeout || 10000);
       await waitForPageLoaded(this.page);
     } catch (error) {
-      console.error(`Navigation error for path "${path}": ${error}`);
-      console.error(`Current page URL: ${this.page.url() || '(empty)'}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      debugLog(`Navigation error for path "${path}": ${errorMessage}`, 'error');
+      debugLog(`Current page URL: ${this.page.url() || '(empty)'}`, 'error');
+      
+      // Capture debug information
+      await captureDebugInfo(this.page, testInfo, 'navigation-error');
+      
       throw error;
     }
   }
@@ -632,7 +625,7 @@ export class BasePage {
   /**
    * Waits for element to be visible with enhanced error reporting
    */
-  async waitForElement(selector: string, options?: { state?: 'attached'|'detached'|'visible'|'hidden'; timeout?: number }): Promise<Locator> {
+  async waitForElement(selector: string, testInfo: TestInfo, options?: { state?: 'attached'|'detached'|'visible'|'hidden'; timeout?: number }): Promise<Locator> {
     const { state = 'visible', timeout = 10000 } = options || {};
     const locator = this.page.locator(selector);
     
@@ -641,8 +634,12 @@ export class BasePage {
       return locator;
     } catch (error) {
       // Enhanced error reporting on timeout
-      console.error(`⚠️ Failed to find element: ${selector} (state: ${state})`);
-      await captureDebugInfo(this.page, `wait-for-element-failed-${selector.replace(/\W+/g, '-')}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      debugLog(`Failed to find element: ${selector} (state: ${state}): ${errorMessage}`, 'error');
+      
+      // Capture debug information
+      await captureDebugInfo(this.page, testInfo, `wait-for-element-failed-${selector.replace(/\W+/g, '-')}`);
+      
       throw error;
     }
   }
@@ -650,7 +647,7 @@ export class BasePage {
   /**
    * Captures current state for debugging
    */
-  async captureState(context: string): Promise<void> {
-    await captureDebugInfo(this.page, context);
+  async captureState(testInfo: TestInfo, context: string): Promise<void> {
+    await captureDebugInfo(this.page, testInfo, context);
   }
 }

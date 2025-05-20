@@ -1,72 +1,115 @@
-import { type Page } from '@playwright/test';
+import { type Page, type TestInfo } from '@playwright/test';
 import { 
-  setupDebugDirectories, 
-  saveScreenshot, 
-  saveHtmlDump, 
-  capturePageState 
+  debugLog,
+  initializeDebugEnvironment,
+  takeAndSaveScreenshot,
+  saveHtmlContent,
+  saveJsonData,
+  logDirectoryListing
+} from './debugArtifacts';
+import {
+  capturePageState
 } from './test-setup';
 
 /**
  * Capture comprehensive debug information about the current page state
+ * @param page Playwright page object
+ * @param testInfo Playwright test info object
+ * @param context Context identifier for the debug info
  */
-export async function captureDebugInfo(page: Page, context: string) {
-  console.log(`\n=== DEBUG: ${context} ===`);
-  console.log(`Timestamp: ${new Date().toISOString()}`);
+export async function captureDebugInfo(page: Page, testInfo: TestInfo, context: string): Promise<void> {
+  debugLog(`\n=== DEBUG: ${context} ===`);
+  debugLog(`Timestamp: ${new Date().toISOString()}`);
   
-  // Ensure debug directories exist
-  await setupDebugDirectories();
-  
-  // Capture page URL
+  // Capture current URL
   const url = page.url();
-  console.log(`Current URL: ${url}`);
+  debugLog(`Current URL: ${url}`);
   
-  // Capture page content
-  const html = await page.content();
-  console.log(`Page HTML length: ${html.length} characters`);
-  
-  // Capture visible text
-  try {
-    const visibleText = await page.evaluate(() => document.body.innerText);
-    console.log(`Visible text on page:\n${visibleText}\n`);
-  } catch (e) {
-    console.log(`Failed to get visible text: ${e}`);
-  }
-  
-  // Check for specific elements
-  const emailInputs = await page.locator('input[type="email"]').count();
-  const submitButtons = await page.locator('button[type="submit"]').count();
-  const successMessagesText = await page.locator('text=Thank you').count();
-  const errorMessagesText = await page.locator('text=error').count();
-  
-  // Check for data-testid elements
-  const successMessagesId = await page.locator('[data-testid="cta-success-message"]').count();
-  const errorMessagesId = await page.locator('[data-testid="cta-error-message"]').count();
-  
-  // Check visibility of messages by data-testid
-  let successVisible = false;
-  let errorVisible = false;
-  
-  try {
-    successVisible = await page.locator('[data-testid="cta-success-message"]').isVisible();
-  } catch (e) {
-    console.log(`Error checking success message visibility: ${e}`);
-  }
-  
-  try {
-    errorVisible = await page.locator('[data-testid="cta-error-message"]').isVisible();
-  } catch (e) {
-    console.log(`Error checking error message visibility: ${e}`);
-  }
-  
-  console.log(`Element counts:
-  - Email inputs: ${emailInputs}
-  - Submit buttons: ${submitButtons}
-  - Success messages (by text): ${successMessagesText}
-  - Error messages (by text): ${errorMessagesText}
-  - Success messages (by data-testid): ${successMessagesId} (visible: ${successVisible})
-  - Error messages (by data-testid): ${errorMessagesId} (visible: ${errorVisible})`);
+  // Capture key element information
+  await captureElementInfo(page, testInfo, context);
   
   // Capture form state
+  await captureFormState(page, testInfo, context);
+  
+  // Take screenshot and save HTML
+  await takeAndSaveScreenshot(testInfo, page, `debug-${context}`);
+  const html = await page.content();
+  await saveHtmlContent(testInfo, html, `debug-${context}`);
+  
+  // Create a directory listing for debugging
+  await logDirectoryListing(testInfo, undefined, `debug-${context}`);
+  
+  debugLog(`=== END DEBUG: ${context} ===\n`);
+}
+
+/**
+ * Capture information about key elements on the page
+ */
+async function captureElementInfo(page: Page, testInfo: TestInfo, context: string): Promise<void> {
+  try {
+    // Check for specific elements
+    const emailInputs = await page.locator('input[type="email"]').count();
+    const submitButtons = await page.locator('button[type="submit"]').count();
+    const successMessagesText = await page.locator('text=Thank you').count();
+    const errorMessagesText = await page.locator('text=error').count();
+    
+    // Check for data-testid elements
+    const successMessagesId = await page.locator('[data-testid="cta-success-message"]').count();
+    const errorMessagesId = await page.locator('[data-testid="cta-error-message"]').count();
+    
+    // Check visibility of messages by data-testid
+    let successVisible = false;
+    let errorVisible = false;
+    
+    try {
+      successVisible = await page.locator('[data-testid="cta-success-message"]').isVisible();
+    } catch (e) {
+      debugLog(`Error checking success message visibility: ${e}`, 'error');
+    }
+    
+    try {
+      errorVisible = await page.locator('[data-testid="cta-error-message"]').isVisible();
+    } catch (e) {
+      debugLog(`Error checking error message visibility: ${e}`, 'error');
+    }
+    
+    // Log element information
+    const elementInfo = {
+      timestamp: new Date().toISOString(),
+      url: page.url(),
+      elements: {
+        emailInputs,
+        submitButtons,
+        successMessagesText,
+        errorMessagesText,
+        successMessagesId,
+        successVisible,
+        errorMessagesId,
+        errorVisible
+      }
+    };
+    
+    // Save as JSON for artifacts
+    await saveJsonData(testInfo, elementInfo, `elements-${context}`);
+    
+    // Also log to console for immediate feedback
+    debugLog(`Element counts:
+    - Email inputs: ${emailInputs}
+    - Submit buttons: ${submitButtons}
+    - Success messages (by text): ${successMessagesText}
+    - Error messages (by text): ${errorMessagesText}
+    - Success messages (by data-testid): ${successMessagesId} (visible: ${successVisible})
+    - Error messages (by data-testid): ${errorMessagesId} (visible: ${errorVisible})`);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    debugLog(`Error capturing element info: ${errorMessage}`, 'error');
+  }
+}
+
+/**
+ * Capture form state information
+ */
+async function captureFormState(page: Page, testInfo: TestInfo, context: string): Promise<void> {
   try {
     const formState = await page.evaluate(() => {
       const forms = document.querySelectorAll('form');
@@ -79,145 +122,183 @@ export async function captureDebugInfo(page: Page, context: string) {
           method: form.method,
           inputs: Array.from(inputs).map(input => ({
             type: input.type,
-            name: input.name,
+            name: input.name || '(no name)',
             value: input.value,
             disabled: input.disabled,
             required: input.required,
           })),
           buttons: Array.from(buttons).map(button => ({
-            type: button.type,
-            text: button.textContent,
+            type: button.type || '(no type)',
+            text: button.textContent || '(no text)',
             disabled: button.disabled,
           })),
         };
       });
     });
-    console.log(`Form state: ${JSON.stringify(formState, null, 2)}`);
-  } catch (e) {
-    console.log(`Failed to get form state: ${e}`);
-  }
-  
-  // Take screenshot using the test-setup module
-  try {
-    const screenshotPath = await saveScreenshot(page, context, { fullPage: true });
-    console.log(`Screenshot saved: ${screenshotPath}`);
     
-    // Save HTML dump using the test-setup module
-    const htmlPath = await saveHtmlDump(page, context);
-    console.log(`HTML dump saved: ${htmlPath}`);
-  } catch (e) {
-    console.log(`Failed to save debug artifacts: ${e}`);
+    // Save form state as JSON
+    if (formState && formState.length > 0) {
+      await saveJsonData(testInfo, {
+        timestamp: new Date().toISOString(),
+        url: page.url(),
+        forms: formState
+      }, `form-state-${context}`);
+      
+      debugLog(`Form state captured: ${formState.length} forms found`);
+    } else {
+      debugLog('No forms found on page');
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    debugLog(`Error capturing form state: ${errorMessage}`, 'error');
   }
-  
-  console.log(`=== END DEBUG: ${context} ===\n`);
 }
 
 /**
- * Wait for network to become idle
+ * Wait for network to become idle with improved error handling
  */
-export async function waitForNetworkIdle(page: Page, timeout = 10000) {
-  console.log(`Waiting for network idle (timeout: ${timeout}ms)...`);
+export async function waitForNetworkIdle(page: Page, timeout = 10000): Promise<void> {
+  debugLog(`Waiting for network idle (timeout: ${timeout}ms)...`);
   
   // Start time logging for debugging
   const startTime = Date.now();
   
   try {
-    // Wait for network idle with increased timeout
+    // Wait for network idle with specified timeout
     await page.waitForLoadState('networkidle', { timeout });
+    
     const elapsed = Date.now() - startTime;
-    console.log(`Network became idle after ${elapsed}ms`);
+    debugLog(`Network became idle after ${elapsed}ms`);
     
     // Add a small delay to ensure DOM updates are processed
     await page.waitForTimeout(500);
-    console.log('Added buffer time after network idle');
-  } catch (e) {
+    debugLog('Added buffer time after network idle');
+  } catch (error) {
     const elapsed = Date.now() - startTime;
-    console.log(`Network did not become idle within timeout (elapsed: ${elapsed}ms)`);
-    console.log(`Error details: ${e}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    debugLog(`Network did not become idle within timeout (elapsed: ${elapsed}ms): ${errorMessage}`, 'warn');
   }
 }
 
 /**
- * Set up console logging for a page
+ * Set up enhanced network logging for a page
  */
-export function setupConsoleLogging(page: Page) {
-  // Create a logs array to store console messages
-  const logs: string[] = [];
-  
-  // Set up console listeners
-  page.on('console', msg => {
-    const type = msg.type();
-    const text = msg.text();
-    const logEntry = `[${new Date().toISOString()}] [${type}] ${text}`;
-    
-    logs.push(logEntry);
-    console.log(`[Browser ${type}] ${text}`);
-  });
-  
-  page.on('pageerror', error => {
-    const logEntry = `[${new Date().toISOString()}] [ERROR] ${error}`;
-    logs.push(logEntry);
-    console.log(`[Browser Error] ${error}`);
-  });
-  
-  return logs;
-}
-
-/**
- * Track network requests
- */
-export function setupNetworkLogging(page: Page) {
-  const networkData: any = {
+export function setupNetworkLogging(page: Page, testInfo: TestInfo): {
+  data: Record<string, any>; 
+  save: () => Promise<string>;
+} {
+  const networkData: Record<string, any> = {
     requests: {},
-    responses: {}
+    responses: {},
+    timestamp: new Date().toISOString()
+  };
+  
+  // Track request counts by type
+  const counts = {
+    xhr: 0,
+    fetch: 0,
+    document: 0,
+    script: 0,
+    stylesheet: 0,
+    image: 0,
+    media: 0,
+    font: 0,
+    other: 0,
+    total: 0
   };
   
   page.on('request', request => {
     const url = request.url();
     const method = request.method();
-    console.log(`[Network Request] ${method} ${url}`);
+    const resourceType = request.resourceType();
+    
+    // Update counts
+    counts.total++;
+    if (resourceType in counts) {
+      counts[resourceType as keyof typeof counts]++;
+    } else {
+      counts.other++;
+    }
+    
+    debugLog(`[Network Request] ${method} ${resourceType} ${url}`);
     
     const requestId = `${method}-${url}-${Date.now()}`;
     networkData.requests[requestId] = {
       url,
       method,
+      resourceType,
       headers: request.headers(),
+      postData: request.postData(),
       timestamp: Date.now(),
     };
   });
   
-  page.on('response', response => {
+  page.on('response', async response => {
     const url = response.url();
     const status = response.status();
-    console.log(`[Network Response] ${status} ${url}`);
+    
+    debugLog(`[Network Response] ${status} ${url}`);
     
     const request = response.request();
     const method = request.method();
     const requestId = `${method}-${url}-${Date.now()}`;
     
-    networkData.responses[requestId] = {
-      url,
-      status,
-      headers: response.headers(),
-      timestamp: Date.now()
-    };
+    try {
+      // Only capture response body for API requests to avoid excessive data
+      let body = null;
+      const contentType = response.headers()['content-type'] || '';
+      
+      if (
+        (contentType.includes('json') || contentType.includes('text/plain')) && 
+        !url.endsWith('.js') && 
+        !url.endsWith('.css') && 
+        !url.endsWith('.html')
+      ) {
+        try {
+          body = await response.text();
+        } catch (e) {
+          body = `<Failed to get response body: ${e}>`;
+        }
+      }
+      
+      networkData.responses[requestId] = {
+        url,
+        status,
+        headers: response.headers(),
+        body,
+        timestamp: Date.now()
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      debugLog(`Error processing response for ${url}: ${errorMessage}`, 'error');
+    }
   });
   
-  return networkData;
+  // Add counts to network data
+  networkData.counts = counts;
+  
+  // Return object with network data and save function
+  return { 
+    data: networkData, 
+    save: async () => {
+      // Update final counts before saving
+      networkData.counts = counts;
+      networkData.duration = `${Date.now() - new Date(networkData.timestamp).getTime()}ms`;
+      
+      return saveJsonData(testInfo, networkData, 'network-activity');
+    }
+  };
 }
 
 /**
  * Navigate to a page and ensure it's fully loaded before continuing
- * @param page The Playwright page object
- * @param url The URL to navigate to
- * @param options Options for navigation
  */
-export async function navigateAndWaitForLoad(page: Page, url: string, options = { timeout: 60000 }) {
-  console.log(`Navigating to ${url} with timeout ${options.timeout}ms...`);
+export async function navigateAndWaitForLoad(page: Page, testInfo: TestInfo, url: string, options = { timeout: 60000 }): Promise<void> {
+  debugLog(`Navigating to ${url} with timeout ${options.timeout}ms...`);
   
   try {
-    // Ensure debug directories exist before navigation
-    await setupDebugDirectories();
+    // Initialize the debug environment before navigation
+    await initializeDebugEnvironment(testInfo);
     
     // Start navigation and wait for load event
     await page.goto(url, { 
@@ -226,21 +307,34 @@ export async function navigateAndWaitForLoad(page: Page, url: string, options = 
     });
     
     // Additional waits to ensure page is fully interactive
-    console.log('Navigation completed, waiting for network idle...');
+    debugLog('Navigation completed, waiting for network idle...');
     await waitForNetworkIdle(page, options.timeout / 2);
     
-    console.log('Waiting for page to be fully interactive...');
+    debugLog('Waiting for page to be fully interactive...');
+    
     // Wait for key selectors that indicate the page is ready
-    await page.waitForSelector('button', { state: 'attached', timeout: options.timeout / 2 }).catch(e => {
-      console.log(`No buttons found on page: ${e}`);
+    await page.waitForSelector('button', { 
+      state: 'attached', 
+      timeout: options.timeout / 2 
+    }).catch(e => {
+      debugLog(`No buttons found on page: ${e}`, 'warn');
     });
     
-    console.log('Page fully loaded');
-  } catch (e) {
-    console.error(`Navigation error: ${e}`);
+    // Take a screenshot to verify page loaded correctly
+    await takeAndSaveScreenshot(testInfo, page, 'post-navigation');
     
-    // Capture additional debugging info using the new capturePageState function
-    await capturePageState(page, 'navigation-error');
-    throw e;
+    debugLog('Page fully loaded');
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    debugLog(`Navigation error: ${errorMessage}`, 'error');
+    
+    // Capture debug info if possible
+    try {
+      await capturePageState(page, testInfo, 'navigation-error');
+    } catch (e) {
+      debugLog(`Failed to capture page state after navigation error: ${e}`, 'error');
+    }
+    
+    throw error;
   }
 }

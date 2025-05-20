@@ -1,8 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
 
 // Determine if we should run all browsers or just Chromium
 // Use RUN_ALL_BROWSERS=1 env variable to run all browsers
 const runAllBrowsers = process.env.RUN_ALL_BROWSERS === '1';
+
+// Central location for all test artifacts
+const artifactsDir = process.env.CI 
+  ? 'test-results/e2e-artifacts'  // CI environment path
+  : path.join(process.cwd(), 'test-results/e2e-artifacts'); // Local path
 
 export default defineConfig({
   testDir: './e2e/tests',
@@ -15,12 +21,17 @@ export default defineConfig({
   reporter: [['list'], ['html']],
   // Reduce test timeout from 60s to 30s
   timeout: 30000, // 30 seconds per test timeout
+  // Central location for test artifacts, with test-name subdirectories
+  outputDir: artifactsDir,
   
   use: {
     baseURL: 'http://localhost:3000',
+    // Capture traces for all tests in CI, only on first retry locally
     trace: process.env.CI ? 'on' : 'on-first-retry',
+    // Capture screenshots on test failures
     screenshot: 'only-on-failure',
-    video: process.env.CI ? 'on' : 'off',
+    // Capture videos in CI, disable locally
+    video: process.env.CI ? 'on-first-retry' : 'off',
     // Reduce action timeout from 30s to 15s
     actionTimeout: 15000, // 15 seconds timeout for actions
     // Reduce navigation timeout from 60s to 30s

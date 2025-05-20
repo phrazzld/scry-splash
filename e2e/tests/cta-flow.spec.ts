@@ -3,26 +3,30 @@ import { SplashPage } from "../page-objects/SplashPage.pom";
 import { CtaForm } from "../page-objects/CtaForm.pom";
 import { 
   withErrorReporting, 
-  setupDetailedNetworkLogging, 
   createTestLogger, 
   addTestAttachments,
-  waitForNetworkIdle
+  waitForNetworkIdle,
+  debugLog
 } from "../utils/enhanced-testing";
-import { setupTestEnvironment } from "../utils/test-setup";
-
-// Ensure debug directories exist before tests run
-setupTestEnvironment().catch(e => console.error('Error setting up test environment:', e));
+import { initializeDebugEnvironment } from '../utils/debugArtifacts';
+import { setupNetworkLogging } from "../utils/debug-helpers";
 
 // Use the enhanced test fixture for better error reporting
 const enhancedTest = withErrorReporting;
 
 enhancedTest.describe("CTA Flow", () => {
+  // Initialize the environment before running tests
+  enhancedTest.beforeEach(async ({}, testInfo) => {
+    await initializeDebugEnvironment(testInfo);
+    debugLog(`Starting test: ${testInfo.title}`);
+  });
+
   enhancedTest("happy path - successful email submission", async ({ page }, testInfo) => {
     const logger = createTestLogger("CTA Flow - Happy Path");
     logger.start();
     
     // Set up detailed network logging for better diagnostics
-    setupDetailedNetworkLogging(page);
+    const networkLogger = setupNetworkLogging(page, testInfo);
     
     // Track API mock usage
     let apiCallMade = false;
@@ -53,12 +57,12 @@ enhancedTest.describe("CTA Flow", () => {
 
     // Navigate to the splash page with improved reliability
     logger.step("Navigating to splash page");
-    await splashPage.navigate();
+    await splashPage.navigate(testInfo);
     logger.success("Navigation completed");
 
     // Fill in a valid email with retry logic
     logger.step("Filling email field");
-    await ctaForm.fillEmail("test@example.com", { 
+    await ctaForm.fillEmail("test@example.com", testInfo, { 
       timeout: 30000,
       retries: 2
     });
@@ -66,7 +70,7 @@ enhancedTest.describe("CTA Flow", () => {
 
     // Submit the form with enhanced reliability
     logger.step("Submitting form");
-    await ctaForm.submit({ 
+    await ctaForm.submit(testInfo, { 
       timeout: 30000,
       retries: 2
     });
@@ -76,6 +80,9 @@ enhancedTest.describe("CTA Flow", () => {
     await waitForNetworkIdle(page, 15000);
     logger.info("Network activity completed");
     
+    // Save network logs
+    await networkLogger.save();
+    
     // Log API mock status for debugging
     logger.info(`API mock was called: ${apiCallMade}`);
     if (apiRequestBody) {
@@ -84,7 +91,7 @@ enhancedTest.describe("CTA Flow", () => {
     
     // Wait for and verify the success message appears with improved reliability
     logger.step("Waiting for success message");
-    const successMessage = await ctaForm.waitForSuccessMessage(30000);
+    const successMessage = await ctaForm.waitForSuccessMessage(testInfo, 30000);
     
     // Verify the message with better logging
     logger.step("Verifying success message");
@@ -108,12 +115,12 @@ enhancedTest.describe("CTA Flow", () => {
 
     // Navigate to the splash page with improved reliability
     logger.step("Navigating to splash page");
-    await splashPage.navigate();
+    await splashPage.navigate(testInfo);
     logger.success("Navigation completed");
 
     // Fill in an invalid email with retry logic
     logger.step("Filling invalid email");
-    await ctaForm.fillEmail("invalid-email", {
+    await ctaForm.fillEmail("invalid-email", testInfo, {
       timeout: 30000,
       retries: 2
     });
@@ -121,7 +128,7 @@ enhancedTest.describe("CTA Flow", () => {
 
     // Try to submit the form with enhanced reliability
     logger.step("Attempting to submit form with invalid email");
-    await ctaForm.submit({
+    await ctaForm.submit(testInfo, {
       timeout: 30000,
       retries: 2
     });
@@ -174,7 +181,7 @@ enhancedTest.describe("CTA Flow", () => {
     logger.start();
     
     // Set up detailed network logging for better diagnostics
-    setupDetailedNetworkLogging(page);
+    const networkLogger = setupNetworkLogging(page, testInfo);
     
     // Track API mock usage
     let apiCallMade = false;
@@ -206,12 +213,12 @@ enhancedTest.describe("CTA Flow", () => {
 
     // Navigate to the splash page with improved reliability
     logger.step("Navigating to splash page");
-    await splashPage.navigate();
+    await splashPage.navigate(testInfo);
     logger.success("Navigation completed");
 
     // Fill in a valid email with retry logic
     logger.step("Filling email field");
-    await ctaForm.fillEmail("test@example.com", {
+    await ctaForm.fillEmail("test@example.com", testInfo, {
       timeout: 30000,
       retries: 2
     });
@@ -219,7 +226,7 @@ enhancedTest.describe("CTA Flow", () => {
 
     // Submit the form with enhanced reliability
     logger.step("Submitting form (expecting error)");
-    await ctaForm.submit({
+    await ctaForm.submit(testInfo, {
       timeout: 30000,
       retries: 2
     });
@@ -229,6 +236,9 @@ enhancedTest.describe("CTA Flow", () => {
     await waitForNetworkIdle(page, 15000);
     logger.info("Network activity completed");
     
+    // Save network logs
+    await networkLogger.save();
+    
     // Log API mock status for debugging
     logger.info(`API mock was called: ${apiCallMade}`);
     if (apiRequestBody) {
@@ -237,7 +247,7 @@ enhancedTest.describe("CTA Flow", () => {
     
     // Wait for and verify the error message appears with improved reliability
     logger.step("Waiting for error message");
-    const errorMessage = await ctaForm.waitForErrorMessage(30000);
+    const errorMessage = await ctaForm.waitForErrorMessage(testInfo, 30000);
     
     // Verify the message with better logging
     logger.step("Verifying error message");
@@ -260,5 +270,10 @@ enhancedTest.describe("CTA Flow", () => {
     await addTestAttachments(page, testInfo);
     
     logger.end("passed");
+  });
+  
+  // After each test, confirm we created proper artifacts
+  enhancedTest.afterEach(async ({}, testInfo) => {
+    debugLog(`Test completed: ${testInfo.title}`);
   });
 });
