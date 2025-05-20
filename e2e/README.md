@@ -71,6 +71,13 @@ pnpm e2e --trace on
 
 By default, CI runs only Chromium tests to optimize execution time. This significantly reduces the time taken for E2E tests to complete in the CI pipeline (from 18+ minutes to under 9 minutes).
 
+The CI workflow includes several optimizations:
+1. **Browser Selection**: Only Chromium by default, with option to run all browsers when needed
+2. **Dependency Caching**: Uses pnpm cache to avoid reinstalling dependencies on each run
+3. **Browser Caching**: Caches downloaded browser binaries to avoid reinstallation
+4. **Frozen Lockfile**: Uses `--frozen-lockfile` for deterministic installs
+5. **Parallel Test Execution**: Uses multiple workers to run tests concurrently
+
 When needed, you can run tests in all browsers by manually triggering the workflow with the "Run tests on all browsers" option selected.
 
 To manually trigger:

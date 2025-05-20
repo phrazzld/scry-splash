@@ -39,22 +39,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 10.x
           
+      - name: Setup Node.js with pnpm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'pnpm'
+          
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          # Cache key based on runner OS, Playwright version, and browser selection
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.event.inputs.run_all_browsers || 'chromium-only' }}
+          
       - name: Install Playwright browsers
+        # Only install if cache miss or explicitly requested
         # Only install Chromium by default to speed up installation
-        # Install all browsers if explicitly requested
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: |
           if [ "${{ github.event.inputs.run_all_browsers }}" = "true" ]; then
             echo "Installing all browser engines..."

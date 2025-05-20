@@ -48,7 +48,7 @@
         2. Tests still pass consistently with new settings
     - **Depends‑on:** none
 
-- [ ] **CI-T009 · Enhancement · P1: add dependency caching to CI workflow**
+- [x] **CI-T009 · Enhancement · P1: add dependency caching to CI workflow**
     - **Context:** CI spends significant time installing dependencies on each run
     - **Action:**
         1. Add Node modules caching to CI workflow
