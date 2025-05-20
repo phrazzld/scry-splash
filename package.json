@@ -22,7 +22,9 @@
     "e2e:ui": "playwright test --ui",
     "e2e:report": "playwright show-report playwright-report",
     "e2e:update-snapshots": "playwright test --update-snapshots",
-    "e2e:all-browsers": "RUN_ALL_BROWSERS=1 playwright test"
+    "e2e:all-browsers": "RUN_ALL_BROWSERS=1 playwright test",
+    "e2e:generate-baselines": "ts-node e2e/scripts/generate-baselines.ts",
+    "e2e:generate-ci-baselines": "CI=true ts-node e2e/scripts/generate-baselines.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

@@ -392,37 +392,68 @@ export async function waitForFormReady(
 }
 
 /**
- * Waits for animations to complete
+ * Waits for animations to complete with enhanced reliability
  */
 export async function waitForAnimationsComplete(
   page: Page,
-  options: { timeout?: number } = {}
+  options: { timeout?: number; retries?: number; checkInterval?: number } = {}
 ): Promise<void> {
-  const { timeout = 5000 } = options;
+  const { timeout = 5000, retries = 3, checkInterval = 100 } = options;
   
-  debugLog(`Waiting for animations to complete (timeout: ${timeout}ms)...`);
+  debugLog(`Waiting for animations to complete (timeout: ${timeout}ms, retries: ${retries})...`);
   
-  try {
-    // Look for common animation classes and properties
-    await page.waitForFunction(
-      () => {
-        // Check for any CSS animations
-        const animating = document.querySelectorAll('.animate-*, [class*="transition-"]');
-        return animating.length === 0 || Array.from(animating).every(el => {
-          const styles = window.getComputedStyle(el);
-          return styles.animationPlayState === 'completed' || 
-                 styles.animationPlayState === 'none' || 
-                 styles.transitionDuration === '0s';
-        });
-      },
-      { timeout }
-    );
-    
-    debugLog('Animations completed successfully');
-  } catch (e) {
-    // If timeout or error, log but continue - this is best-effort
-    debugLog(`Could not confirm animations completed: ${e}`, 'warn');
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      debugLog(`Checking for animations (attempt ${attempt + 1}/${retries + 1})...`);
+      
+      // Look for common animation classes and properties
+      await page.waitForFunction(
+        () => {
+          // Enhanced animation detection - check for more animation classes
+          const animating = document.querySelectorAll(
+            '.animate-*, [class*="transition-"], [class*="animate"], ' +
+            '[class*="motion-"], [class*="fade"], [class*="slide"], ' +
+            '[style*="animation"], [style*="transition"]'
+          );
+          
+          return animating.length === 0 || Array.from(animating).every(el => {
+            const styles = window.getComputedStyle(el);
+            return styles.animationPlayState === 'completed' || 
+                   styles.animationPlayState === 'none' || 
+                   styles.animationDuration === '0s' ||
+                   styles.transitionDuration === '0s';
+          });
+        },
+        { timeout: timeout / (retries + 1) }
+      );
+      
+      // Add additional wait to ensure stability
+      await page.waitForTimeout(checkInterval);
+      
+      // Verify stability by checking for DOM stability
+      const before = await page.evaluate(() => document.documentElement.outerHTML);
+      await page.waitForTimeout(checkInterval);
+      const after = await page.evaluate(() => document.documentElement.outerHTML);
+      
+      if (before === after) {
+        debugLog('Animations completed successfully and DOM is stable');
+        return; // Animations are truly stable
+      }
+      
+      debugLog('DOM still changing, continuing to wait...');
+    } catch (e) {
+      if (attempt === retries) {
+        // On last attempt, log warning but continue - this is best-effort
+        debugLog(`Could not confirm animations completed: ${e}`, 'warn');
+      } else {
+        debugLog(`Animation check failed on attempt ${attempt + 1}, retrying...`, 'warn');
+      }
+    }
   }
+  
+  // Additional safeguard - final brief wait
+  await page.waitForTimeout(100);
+  debugLog('Animation wait cycle completed');
 }
 
 /**

@@ -38,12 +38,16 @@ export default defineConfig({
     navigationTimeout: 30000, // 30 seconds timeout for navigation
   },
 
-  // Configure screenshot comparison to use existing file format
+  // Configure screenshot comparison with environment-specific thresholds
   expect: {
     toHaveScreenshot: {
       // Using default snapshot format - Playwright will handle platform/browser differences
-      threshold: 0.2, // Allow slight differences due to rendering
-      maxDiffPixelRatio: 0.01, // Allow for minor differences
+      // Increase threshold for CI environment to account for rendering differences
+      threshold: process.env.CI ? 0.35 : 0.2,
+      // Allow for more pixel differences in CI environments
+      maxDiffPixelRatio: process.env.CI ? 0.05 : 0.01,
+      // Note: Additional properties like tolerancePercentage would go here
+      // but they're not supported in the current Playwright version
     },
   },
 

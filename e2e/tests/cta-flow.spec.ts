@@ -8,8 +8,13 @@ import {
   waitForNetworkIdle,
   debugLog,
   initializeDebugEnvironment,
-  setupNetworkLogging
+  setupNetworkLogging,
+  waitForAnimationsComplete
 } from "../utils/enhanced-testing";
+import {
+  expectScreenshot,
+  StandardViewport
+} from "../utils/visual-testing";
 
 // Use the enhanced test fixture for better error reporting
 const enhancedTest = withErrorReporting;
@@ -99,6 +104,19 @@ enhancedTest.describe("CTA Flow", () => {
     await expect(successMessage).toContainText("submitted successfully");
     logger.success("Success message verified");
     
+    // Take a screenshot of the success state
+    logger.step("Taking screenshot of success state");
+    await waitForAnimationsComplete(page);
+    await expectScreenshot(page, testInfo, "cta-flow-success", {
+      viewport: StandardViewport.Desktop,
+      thresholdPreset: "strict",
+      // Focus on the success message by masking other elements
+      mask: [
+        page.locator("body > *:not(:has(.success-message))"),
+      ]
+    });
+    logger.success("Success state screenshot captured");
+    
     // Add rich test attachments for better debugging
     await addTestAttachments(page, testInfo);
     
@@ -169,6 +187,19 @@ enhancedTest.describe("CTA Flow", () => {
     expect(successVisible).toBeFalsy();
     expect(errorVisible).toBeFalsy();
     logger.success("Verified no messages were displayed");
+    
+    // Take a screenshot of the form validation state
+    logger.step("Taking screenshot of form validation state");
+    await waitForAnimationsComplete(page);
+    await expectScreenshot(page, testInfo, "cta-flow-invalid-email", {
+      viewport: StandardViewport.Desktop,
+      thresholdPreset: "strict",
+      // Focus on the form by masking other elements
+      mask: [
+        page.locator("body > *:not(form)"),
+      ]
+    });
+    logger.success("Form validation state screenshot captured");
     
     // Add rich test attachments for better debugging
     await addTestAttachments(page, testInfo);
@@ -266,12 +297,80 @@ enhancedTest.describe("CTA Flow", () => {
     expect(successVisible).toBeFalsy();
     logger.success("Verified no success message was displayed");
     
+    // Take a screenshot of the error state
+    logger.step("Taking screenshot of error state");
+    await waitForAnimationsComplete(page);
+    await expectScreenshot(page, testInfo, "cta-flow-error", {
+      viewport: StandardViewport.Desktop,
+      thresholdPreset: "strict",
+      // Focus on the error message by masking other elements
+      mask: [
+        page.locator("body > *:not(:has(.error-message))"),
+      ]
+    });
+    logger.success("Error state screenshot captured");
+    
     // Add rich test attachments for better debugging
     await addTestAttachments(page, testInfo);
     
     logger.end("passed");
   });
   
+  // Add a new test for responsive design of the CTA form
+  enhancedTest("CTA form should display correctly across different viewports", async ({ page }, testInfo) => {
+    const logger = createTestLogger("CTA Form - Responsive Design");
+    logger.start();
+    
+    // Initialize page objects
+    const splashPage = new SplashPage(page);
+    
+    // Navigate to the splash page
+    logger.step("Navigating to splash page");
+    await splashPage.navigate(testInfo);
+    logger.success("Navigation completed");
+    
+    // Test the form rendering across multiple viewports
+    logger.step("Testing CTA form across multiple viewports");
+    
+    // Test desktop viewport first
+    await expectScreenshot(page, testInfo, "cta-form-desktop", {
+      viewport: StandardViewport.Desktop,
+      thresholdPreset: "default",
+      // Focus the screenshot on the form area
+      mask: [
+        page.locator("header"),
+        page.locator("footer")
+      ]
+    });
+    logger.success("Desktop viewport screenshot captured");
+    
+    // Test tablet viewport
+    await expectScreenshot(page, testInfo, "cta-form-tablet", {
+      viewport: StandardViewport.Tablet,
+      thresholdPreset: "default",
+      // Focus the screenshot on the form area
+      mask: [
+        page.locator("header"),
+        page.locator("footer")
+      ]
+    });
+    logger.success("Tablet viewport screenshot captured");
+    
+    // Test mobile viewport
+    await expectScreenshot(page, testInfo, "cta-form-mobile", {
+      viewport: StandardViewport.Mobile,
+      thresholdPreset: "default",
+      // Focus the screenshot on the form area
+      mask: [
+        page.locator("header"),
+        page.locator("footer")
+      ]
+    });
+    logger.success("Mobile viewport screenshot captured");
+    
+    logger.end("passed");
+  });
+
   // After each test, confirm we created proper artifacts
   enhancedTest.afterEach(async ({}, testInfo) => {
     debugLog(`Test completed: ${testInfo.title}`);

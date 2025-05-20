@@ -4,11 +4,15 @@ import {
   withErrorReporting, 
   createTestLogger,
   addTestAttachments,
-  waitForAnimationsComplete,
   debugLog,
   waitForNetworkIdle,
   initializeDebugEnvironment
 } from '../utils/enhanced-testing'
+import {
+  expectScreenshot,
+  expectScreenshotForViewports,
+  StandardViewport
+} from '../utils/visual-testing'
 
 // Use the enhanced test fixture for better error reporting
 const enhancedTest = withErrorReporting;
@@ -71,27 +75,64 @@ enhancedTest.describe('Splash Page Load Tests', () => {
     logger.step('Navigating to splash page')
     await splashPage.navigate(testInfo)
     
-    // Wait for network idle first to ensure all resources loaded
-    await waitForNetworkIdle(page, 10000);
+    // Using the new visual testing helpers for more reliable visual comparison
+    logger.step('Taking screenshot for visual regression using enhanced visual testing')
     
-    // Wait for animations to complete with improved reliability
-    logger.step('Waiting for animations to complete')
-    await waitForAnimationsComplete(page)
-    
-    // Add additional timeout to ensure any typewriter animations complete
-    logger.info('Adding additional delay for typewriter animations')
-    await page.waitForTimeout(2000)
-    logger.success('Animations have completed')
-    
-    // Take a screenshot with improved reliability and increased threshold for CI
-    logger.step('Taking screenshot for visual regression')
-    await expect(page).toHaveScreenshot('splash-page-stable.png', {
-      timeout: 15000, // Increase timeout for screenshot comparison
-      threshold: 0.3, // More tolerant threshold for CI differences
-      maxDiffPixelRatio: 0.02 // Allow for minor differences
+    // Take a single screenshot with desktop viewport using the new helper
+    await expectScreenshot(page, testInfo, 'splash-page-stable', {
+      viewport: StandardViewport.Desktop,
+      // Increase animation waiting time for typewriter effect
+      animationTimeout: 7000,
+      // Use threshold settings optimized for pages with animations
+      thresholdPreset: 'lenient',
+      // Add extra stability delay for typewriter animations
+      stabilityDelay: 2000,
+      // Mask specific elements that might change between runs if needed
+      mask: [
+        // Example: uncomment if typewriter text causes flakiness
+        // page.locator('.typewriter-text') 
+      ]
     })
-    logger.success('Screenshot captured and compared')
     
+    logger.success('Desktop screenshot captured and compared')
+    
+    logger.end('passed')
+  })
+  
+  enhancedTest('should display correctly across different viewports', async ({ page }, testInfo) => {
+    const logger = createTestLogger(testInfo.title)
+    logger.start()
+    
+    // Initialize page objects
+    const splashPage = new SplashPage(page)
+    
+    // Navigate with enhanced reliability
+    logger.step('Navigating to splash page')
+    await splashPage.navigate(testInfo)
+    
+    // Test across multiple viewport sizes
+    logger.step('Taking screenshots across multiple viewports')
+    
+    // Test the splash page in multiple viewport sizes at once
+    await expectScreenshotForViewports(
+      page, 
+      testInfo, 
+      'splash-page-responsive',
+      [
+        StandardViewport.Mobile,
+        StandardViewport.Tablet,
+        StandardViewport.Desktop
+      ],
+      {
+        // Use threshold settings optimized for pages with animations
+        thresholdPreset: 'lenient',
+        // Animation settings for reliable capture
+        animationTimeout: 7000,
+        stabilityDelay: 2000
+      }
+    )
+    
+    logger.success('Multi-viewport screenshots captured and compared')
     logger.end('passed')
   })
   
