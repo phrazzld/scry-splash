@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
+import { execSync } from 'child_process';
 
 // Determine if we should run all browsers or just Chromium
 // Use RUN_ALL_BROWSERS=1 env variable to run all browsers
@@ -9,6 +10,26 @@ const runAllBrowsers = process.env.RUN_ALL_BROWSERS === '1';
 const artifactsDir = process.env.CI 
   ? 'test-results/e2e-artifacts'  // CI environment path
   : path.join(process.cwd(), 'test-results/e2e-artifacts'); // Local path
+
+// Ensure directory exists
+try {
+  execSync(`mkdir -p ${artifactsDir}`);
+} catch (error) {
+  console.warn(`Warning: Failed to create artifacts directory: ${error}`);
+}
+
+// Validate the environment if in CI
+if (process.env.CI) {
+  try {
+    console.log('Validating CI environment before test execution...');
+    // Run the validation script
+    execSync('bash e2e/scripts/validate-environment.sh', { stdio: 'inherit' });
+    console.log('Environment validation complete.');
+  } catch (error) {
+    console.error('Environment validation failed:', error);
+    // We don't exit here - let the tests handle the failure with more context
+  }
+}
 
 export default defineConfig({
   testDir: './e2e/tests',

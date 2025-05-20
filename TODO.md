@@ -35,7 +35,7 @@
   - Add viewport-specific baseline generation
   - Create CI-specific screenshot baselines if needed
 
-- [ ] CI-T014: Enhance GitHub Actions workflow configuration
+- [x] CI-T014: Enhance GitHub Actions workflow configuration ✅
   - Restructure workflow steps for proper coordination with test setup
   - Add validation steps to verify artifact paths
   - Implement improved retry mechanisms for flaky tests

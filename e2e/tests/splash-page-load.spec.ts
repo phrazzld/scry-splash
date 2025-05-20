@@ -1,7 +1,6 @@
 import { expect } from '@playwright/test'
 import { SplashPage } from '../page-objects/SplashPage.pom'
 import { 
-  withErrorReporting, 
   createTestLogger,
   addTestAttachments,
   debugLog,
@@ -13,9 +12,11 @@ import {
   expectScreenshotForViewports,
   StandardViewport
 } from '../utils/visual-testing'
-
-// Use the enhanced test fixture for better error reporting
-const enhancedTest = withErrorReporting;
+import {
+  enhancedTest,
+  enhancedModeratelyFlakyTest,
+  enhancedHighlyFlakyTest
+} from '../utils/test-segmentation'
 
 enhancedTest.describe('Splash Page Load Tests', () => {
   // Initialize the environment before running tests
@@ -64,7 +65,7 @@ enhancedTest.describe('Splash Page Load Tests', () => {
     logger.end('passed')
   })
   
-  enhancedTest('should take a visual screenshot of the splash page', async ({ page }, testInfo) => {
+  enhancedModeratelyFlakyTest('should take a visual screenshot of the splash page', async ({ page }, testInfo) => {
     const logger = createTestLogger(testInfo.title)
     logger.start()
     
@@ -99,7 +100,7 @@ enhancedTest.describe('Splash Page Load Tests', () => {
     logger.end('passed')
   })
   
-  enhancedTest('should display correctly across different viewports', async ({ page }, testInfo) => {
+  enhancedHighlyFlakyTest('should display correctly across different viewports', async ({ page }, testInfo) => {
     const logger = createTestLogger(testInfo.title)
     logger.start()
     
