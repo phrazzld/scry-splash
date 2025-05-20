@@ -12,6 +12,11 @@
  * - debugArtifacts.ts: For artifact creation and management
  * - test-setup.ts: For test environment setup and configuration
  * - debug-helpers.ts: For debug information capture and logging
+ * - environment-detector.ts: For environment detection and configuration
+ * - filesystem-validator.ts: For filesystem validation and operations
+ * - browser-metrics.ts: For browser performance metrics collection
+ * - environment-capture.ts: For comprehensive environment information capture
+ * - ci-debugger.ts: For unified CI debugging capabilities
  */
 
 import { test, type Page, type Locator, type TestInfo } from '@playwright/test';
@@ -43,6 +48,53 @@ import {
   setupNetworkLogging
 } from './debug-helpers';
 
+// Import from environment-detector
+import {
+  getEnvironmentInfo,
+  getEnvironmentConfig,
+  detectCIProvider,
+  detectOperatingSystem,
+  printEnvironmentDiagnosis,
+  CIProvider,
+  OperatingSystem,
+  BrowserType
+} from './environment-detector';
+
+// Import from filesystem-validator
+import {
+  ensureDirectoryExists,
+  checkPermissions,
+  validateArtifactStructure,
+  writeDataToFile,
+  getDirectoryContents,
+  FilesystemError,
+  FilesystemErrorCode
+} from './filesystem-validator';
+
+// Import from browser-metrics
+import {
+  setupPerformanceMetrics,
+  collectPerformanceMetrics,
+  getBrowserInfo
+} from './browser-metrics';
+
+// Import from environment-capture
+import {
+  captureEnvironmentDiagnostics,
+  captureFailureInfo,
+  setupErrorCapture,
+  createFailureReport,
+  FailureType
+} from './environment-capture';
+
+// Import from ci-debugger
+import {
+  setupCIDebugging,
+  withCIDebugging,
+  CIDebugger,
+  DebugLevel
+} from './ci-debugger';
+
 // Re-export all needed functions
 export {
   // From core
@@ -65,7 +117,44 @@ export {
   // From debug-helpers
   waitForNetworkIdle,
   captureDebugInfo,
-  setupNetworkLogging
+  setupNetworkLogging,
+  
+  // From environment-detector
+  getEnvironmentInfo,
+  getEnvironmentConfig,
+  detectCIProvider,
+  detectOperatingSystem,
+  printEnvironmentDiagnosis,
+  CIProvider,
+  OperatingSystem,
+  BrowserType,
+  
+  // From filesystem-validator
+  ensureDirectoryExists,
+  checkPermissions,
+  validateArtifactStructure,
+  writeDataToFile,
+  getDirectoryContents,
+  FilesystemError,
+  FilesystemErrorCode,
+  
+  // From browser-metrics
+  setupPerformanceMetrics,
+  collectPerformanceMetrics,
+  getBrowserInfo,
+  
+  // From environment-capture
+  captureEnvironmentDiagnostics,
+  captureFailureInfo,
+  setupErrorCapture,
+  createFailureReport,
+  FailureType,
+  
+  // From ci-debugger
+  setupCIDebugging,
+  withCIDebugging,
+  CIDebugger,
+  DebugLevel
 };
 
 /**
@@ -160,6 +249,56 @@ export const withErrorReporting = test.extend<{ errorReporter: void }>({
     }
   }, { auto: true }]
 });
+
+/**
+ * Creates a test fixture with enhanced CI debugging capabilities
+ * This extends the basic error reporting with comprehensive CI-specific debugging
+ */
+export const withCIDebugReporting = test.extend<{ ciDebugger: CIDebugger }>({
+  ciDebugger: [async ({ page }, use, testInfo) => {
+    // Set up the CI debugger
+    const ciDebugger = await setupCIDebugging(page, testInfo, {
+      // Use comprehensive debugging in CI, standard in local
+      debugLevel: isRunningInCI() ? DebugLevel.Comprehensive : DebugLevel.Standard,
+      // Always capture performance metrics in CI
+      capturePerformanceMetrics: isRunningInCI(),
+      // Create HTML reports for failures
+      createHtmlReports: true
+    });
+    
+    try {
+      // Initialize environment diagnostics
+      await captureEnvironmentDiagnostics(testInfo);
+      
+      // Collect performance metrics if in CI
+      if (isRunningInCI()) {
+        await setupPerformanceMetrics(page, testInfo);
+      }
+      
+      // Register error handling
+      setupErrorCapture(page, testInfo);
+      
+      // Make ciDebugger available to the test
+      await use(ciDebugger);
+    } catch (error) {
+      // Handle initialization error
+      console.error('Error setting up CI debugging:', error);
+      
+      // Create a minimal debugger to satisfy the fixture interface
+      const minimalDebugger = new CIDebugger(page, testInfo, {
+        debugLevel: DebugLevel.Essential
+      });
+      
+      await use(minimalDebugger);
+    }
+  }, { auto: false }]
+});
+
+/**
+ * Combined test fixture with all enhanced testing capabilities
+ * This combines error reporting and CI debugging
+ */
+export const enhancedCITest = withErrorReporting.extend(withCIDebugReporting);
 
 /**
  * Retries clicking an element until successful
