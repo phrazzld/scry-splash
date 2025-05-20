@@ -47,7 +47,7 @@
         2. Snapshots are stored in platform-specific directories
     - **Depends‑on:** none
 
-- [ ] **CI-T004 · Enhancement · P2: improve test reliability and debugging**
+- [x] **CI-T004 · Enhancement · P2: improve test reliability and debugging**
     - **Context:** Tests need better error reporting and stability
     - **Action:**
         1. Add comprehensive error screenshots and HTML dumps
