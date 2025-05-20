@@ -32,7 +32,7 @@
         2. No timeout errors for message detection
     - **Depends‑on:** [CI-T001]
 
-- [ ] **CI-T003 · Fix · P1: update visual regression snapshots for Linux**
+- [x] **CI-T003 · Fix · P1: update visual regression snapshots for Linux**
     - **Context:** Visual tests fail due to missing Linux baseline snapshots
     - **Action:**
         1. Add platform-specific snapshot directories

@@ -48,10 +48,10 @@ jobs:
         run: pnpm playwright install --with-deps
         
       - name: Run E2E tests
-        run: pnpm e2e
+        run: pnpm playwright test
         env:
           NEXT_PUBLIC_FORMSPARK_FORM_ID: test-form-id
-        
+          
       - name: Upload Playwright HTML report
         uses: actions/upload-artifact@v4
         if: always()
