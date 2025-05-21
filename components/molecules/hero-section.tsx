@@ -87,12 +87,12 @@ function TypewriterHeadline({
   
   return (
     <DisplayText 
-      className={cn("mb-4 max-w-prose text-[2.6rem] md:text-[3.2rem] tracking-tighter leading-[1.1]", textColor)}
+      className={cn("mb-3 md:mb-4 max-w-prose text-[2.2rem] sm:text-[2.6rem] md:text-[3.2rem] tracking-tighter leading-[1.1]", textColor)}
       style={{ fontWeight: 250 }}
       as="h1"
       weight="regular"
     >
-      <span aria-live="polite" className="whitespace-nowrap">
+      <span aria-live="polite" className="whitespace-normal md:whitespace-nowrap">
         {staticPrefix}
         {displayText || " "}
         {!isComplete && <span className="animate-pulse">|</span>}
@@ -182,9 +182,10 @@ export function HeroSection({
   
   return (
     <Container 
-      className={cn("py-8 md:py-12", className)} 
-      gap="lg"
-      padding="none"  
+      className={cn("py-6 sm:py-8 md:py-12", className)} 
+      gap="md"
+      gapY="lg"
+      padding="responsive"  
       {...props}
     >
       <GridItem 
@@ -224,9 +225,9 @@ export function HeroSection({
         
         {/* Subheadline - only render if provided */}
         {subheadline && (
-          <div className="mb-2">
+          <div className="mb-2 md:mb-4 mt-1 md:mt-0">
             <BodyText 
-              className={cn("max-w-prose opacity-80", textColor)}
+              className={cn("max-w-prose opacity-80 text-sm sm:text-base md:text-body", textColor)}
             >
               {subheadline}
             </BodyText>

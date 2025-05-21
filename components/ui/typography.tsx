@@ -17,10 +17,10 @@ import { cn } from "@/lib/utils"
 const typographyVariants = cva("text-foreground", {
   variants: {
     variant: {
-      display: "text-display font-bold leading-[1.1]",
-      heading: "text-heading font-regular leading-[1.2]",
-      subheading: "text-subheading font-medium leading-[1.3]",
-      body: "text-body font-regular leading-[1.5]",
+      display: "text-[2.75rem] md:text-display font-bold leading-[1.1] tracking-tight",
+      heading: "text-[2rem] md:text-heading font-regular leading-[1.2] tracking-tight",
+      subheading: "text-[1.25rem] md:text-subheading font-medium leading-[1.3]",
+      body: "text-[1rem] md:text-body font-regular leading-[1.5]",
       small: "text-sm font-regular leading-[1.5]",
       subtle: "text-muted-foreground",
     },

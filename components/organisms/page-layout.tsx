@@ -143,8 +143,8 @@ export function PageLayout({
       {showThemeToggle && (
         <div 
           className={cn(
-            "absolute top-4 z-20",
-            themeTogglePosition === "right" ? "right-4" : "left-4",
+            "absolute top-3 sm:top-4 z-20",
+            themeTogglePosition === "right" ? "right-3 sm:right-4" : "left-3 sm:left-4",
             animate && "animate-fade-in"
           )}
           data-testid="header-theme-toggle"

@@ -77,7 +77,9 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     
     const liveRegion = screen.getByRole('heading').querySelector('[aria-live="polite"]');
     expect(liveRegion).toBeInTheDocument();
-    expect(liveRegion).toHaveClass('whitespace-nowrap');
+    // Updated for responsive design
+    expect(liveRegion?.className).toContain('whitespace-normal');
+    expect(liveRegion?.className).toContain('md:whitespace-nowrap');
   });
 
   it('shows cursor during animation', () => {
@@ -92,7 +94,7 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     
     // Initial render has empty display text
     const heading = screen.getByRole('heading');
-    const span = heading.querySelector('.whitespace-nowrap');
+    const span = heading.querySelector('[aria-live="polite"]');
     expect(span?.textContent).toMatch(/Remember\s+\|/);
   });
 

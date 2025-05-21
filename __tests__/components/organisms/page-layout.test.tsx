@@ -264,16 +264,20 @@ describe('PageLayout Component', () => {
     render(<PageLayout showThemeToggle={true}>Content</PageLayout>);
     
     const themeToggleContainer = screen.getByTestId('header-theme-toggle');
-    expect(themeToggleContainer).toHaveClass('right-4');
-    expect(themeToggleContainer).not.toHaveClass('left-4');
+    expect(themeToggleContainer.className).toContain('right-3');
+    expect(themeToggleContainer.className).toContain('sm:right-4');
+    expect(themeToggleContainer.className).not.toContain('left-3');
+    expect(themeToggleContainer.className).not.toContain('sm:left-4');
   });
 
   it('positions theme toggle based on themeTogglePosition prop', () => {
     render(<PageLayout showThemeToggle={true} themeTogglePosition="left">Content</PageLayout>);
     
     const themeToggleContainer = screen.getByTestId('header-theme-toggle');
-    expect(themeToggleContainer).toHaveClass('left-4');
-    expect(themeToggleContainer).not.toHaveClass('right-4');
+    expect(themeToggleContainer.className).toContain('left-3');
+    expect(themeToggleContainer.className).toContain('sm:left-4');
+    expect(themeToggleContainer.className).not.toContain('right-3');
+    expect(themeToggleContainer.className).not.toContain('sm:right-4');
   });
 });
 
@@ -355,7 +359,9 @@ describe('DefaultLayout Component', () => {
     );
     
     const themeToggleContainer = screen.getByTestId('header-theme-toggle');
-    expect(themeToggleContainer).toHaveClass('left-4');
-    expect(themeToggleContainer).not.toHaveClass('right-4');
+    expect(themeToggleContainer.className).toContain('left-3');
+    expect(themeToggleContainer.className).toContain('sm:left-4');
+    expect(themeToggleContainer.className).not.toContain('right-3');
+    expect(themeToggleContainer.className).not.toContain('sm:right-4');
   });
 });

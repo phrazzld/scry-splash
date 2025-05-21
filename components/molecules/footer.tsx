@@ -58,9 +58,9 @@ export function Footer({
   return (
     <Container 
       as="footer"
-      className={cn("py-6 border-t border-foreground/5", className)} 
+      className={cn("py-4 sm:py-6 border-t border-foreground/5", className)} 
       gap="none"
-      padding="md"
+      padding="responsive"
       {...props}
     >
       <GridItem 
@@ -68,10 +68,10 @@ export function Footer({
         md={10} 
         lg={8} 
         className={cn(
-          "px-6",
+          "px-2 sm:px-6",
           centered 
             ? "flex flex-col items-center text-center" 
-            : "flex flex-row justify-between items-center"
+            : "flex flex-col sm:flex-row justify-between items-center"
         )}
       >
         <BodyText 
@@ -83,7 +83,7 @@ export function Footer({
         
         {showThemeToggle && (
           <div className={cn(
-            centered ? "mt-4" : ""
+            centered ? "mt-4" : "mt-3 sm:mt-0"
           )}>
             <ThemeToggleButton 
               className={cn(

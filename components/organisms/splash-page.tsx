@@ -105,7 +105,7 @@ export function SplashPage({
       className={cn("flex justify-center", className)}
       {...props}
     >
-      <div className="flex flex-col w-full max-w-4xl px-6">
+      <div className="flex flex-col w-full max-w-4xl px-3 sm:px-4 md:px-6">
         {/* Hero Section */}
         <div className={cn("w-full", animateClass)} {...heroDelay}>
           <HeroSection
@@ -118,7 +118,7 @@ export function SplashPage({
         </div>
         
         {/* CTA Section */}
-        <div className={cn("mt-12 md:mt-16", animateClass)} {...ctaDelay}>
+        <div className={cn("mt-8 sm:mt-12 md:mt-16", animateClass)} {...ctaDelay}>
           <CTASection
             buttonText={buttonText}
             microcopy={microcopy}

@@ -201,7 +201,7 @@ export function CTASection({
       <form 
         onSubmit={handleSubmit}
         className={cn(
-          "flex flex-col gap-2 w-full max-w-lg",
+          "flex flex-col gap-3 w-full max-w-lg px-2 sm:px-0",
           centered && "items-center"
         )}
         role="form"
@@ -240,7 +240,7 @@ export function CTASection({
             type="submit"
             disabled={isSubmitting || !inputValue.trim()}
             className={cn(
-              "whitespace-nowrap h-12 text-base font-bold px-10 py-3 bg-[#0047AB] text-white hover:bg-[#003d91]",
+              "whitespace-nowrap h-12 text-base font-bold px-6 sm:px-10 py-3 w-full sm:w-auto bg-[#0047AB] text-white hover:bg-[#003d91]",
               isSubmitting && "opacity-80 cursor-not-allowed"
             )}
           >
