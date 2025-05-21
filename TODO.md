@@ -2,7 +2,7 @@
 
 ## Visual Testing Tasks
 
- - [ ] 1. **ci-visual-001:** Generate and commit Linux-specific snapshots for CI
+ - [x] 1. **ci-visual-001:** Generate and commit Linux-specific snapshots for CI
    - Priority: High
    - Use the generate-linux-snapshots.yml workflow to create Linux-specific snapshot files
    - Commit the generated snapshot files to the repository
