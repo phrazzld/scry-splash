@@ -68,13 +68,29 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.run_all_browsers }}" = "true" ]; then
             echo "Installing all browser engines..."
-            pnpm playwright install --with-deps
+            pnpm exec playwright install --with-deps
           else
-            echo "Installing Chromium for CI..."
-            pnpm playwright install chromium --with-deps
+            echo "Installing Chromium specifically for CI..."
+            pnpm exec playwright install chromium --with-deps
             echo "Verifying Chromium installation..."
-            pnpm playwright install-deps chromium
-            ls -la ~/.cache/ms-playwright/
+            pnpm exec playwright install-deps chromium
+            
+            # Verify installation directory exists and show contents for debugging
+            echo "Checking Playwright browser installation directories:"
+            ls -la ~/.cache/ms-playwright/ || echo "Directory not found"
+            
+            # Additional verification of Chromium
+            if [ -d "$HOME/.cache/ms-playwright/chromium-"* ]; then
+              echo "Chromium browser directory found in cache"
+              find ~/.cache/ms-playwright/ -name "*chromium*" || echo "Chromium details not found"
+            else
+              echo "Chromium directory not found, checking version output"
+              pnpm exec playwright --version
+              
+              # Force reinstall if not found
+              echo "Attempting to reinstall Chromium with force flag"
+              PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=0 pnpm exec playwright install chromium --with-deps
+            fi
           fi
         
       # Setup phase - Create directories and verify permissions

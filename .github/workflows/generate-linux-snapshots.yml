@@ -6,13 +6,22 @@ on:
       browser:
         description: 'Browser to generate snapshots for'
         required: true
-        default: 'all'
+        default: 'chromium'
         type: choice
         options:
           - all
           - chromium
           - firefox
           - webkit
+      commit_changes:
+        description: 'Commit snapshot changes back to the repository'
+        type: boolean
+        default: true
+      test_files:
+        description: 'Test files to generate snapshots for (comma-separated, empty for all)'
+        type: string
+        default: ''
+        required: false
 
 jobs:
   generate-snapshots:
@@ -22,37 +31,90 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 10.x
           
+      - name: Setup Node.js with pnpm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'pnpm'
+          
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         
       - name: Install Playwright browsers
-        run: pnpm playwright install --with-deps
-        
-      - name: Generate snapshots
         run: |
           if [ "${{ github.event.inputs.browser }}" = "all" ]; then
-            echo "Generating snapshots for all browsers"
-            pnpm playwright test e2e/tests/splash-page-load.spec.ts --update-snapshots
+            echo "Installing all browser engines..."
+            pnpm exec playwright install --with-deps
           else
-            echo "Generating snapshots for ${{ github.event.inputs.browser }}"
-            pnpm playwright test e2e/tests/splash-page-load.spec.ts --update-snapshots --project=${{ github.event.inputs.browser }}
+            echo "Installing ${{ github.event.inputs.browser }} specifically for snapshot generation..."
+            pnpm exec playwright install ${{ github.event.inputs.browser }} --with-deps
+          fi
+          echo "Verifying browser installation..."
+          pnpm exec playwright --version
+        
+      - name: Generate Snapshots
+        run: |
+          # Set environment variables to ensure we generate Linux-specific snapshots
+          export CI=true
+          export PLAYWRIGHT_LINUX_SNAPSHOTS=true
+          
+          # Determine which test files to update
+          if [ -z "${{ github.event.inputs.test_files }}" ]; then
+            echo "Generating snapshots for all stable tests..."
+            PLAYWRIGHT_UPDATE_SNAPSHOTS=1 pnpm playwright test --grep "@stable" --update-snapshots
+          else
+            echo "Generating snapshots for specified tests: ${{ github.event.inputs.test_files }}"
+            IFS=',' read -ra TEST_FILES <<< "${{ github.event.inputs.test_files }}"
+            for TEST_FILE in "${TEST_FILES[@]}"; do
+              echo "Processing test file: ${TEST_FILE}"
+              PLAYWRIGHT_UPDATE_SNAPSHOTS=1 pnpm playwright test "${TEST_FILE}" --update-snapshots
+            done
           fi
         env:
           NEXT_PUBLIC_FORMSPARK_FORM_ID: test-form-id
+          
+      - name: List generated snapshots
+        run: |
+          echo "Generated snapshots:"
+          find e2e/tests -name "*.png" | grep -v "node_modules"
           
       - name: Upload snapshots as artifacts
         uses: actions/upload-artifact@v4
         with:
           name: linux-snapshots
-          path: e2e/tests/splash-page-load.spec.ts-snapshots/
+          path: |
+            e2e/tests/**/*.spec.ts-snapshots/
+            !**/node_modules/**
           retention-days: 7
+          
+      - name: Commit snapshots
+        if: ${{ github.event.inputs.commit_changes == 'true' }}
+        run: |
+          # Configure git
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Check if there are changes
+          if [[ -n $(git status -s | grep ".png") ]]; then
+            # Add all png files in the tests directory
+            git add e2e/tests/**/*.png
+            
+            # Create commit with descriptive message
+            git commit -m "chore: add Linux-specific snapshots for E2E tests
+            
+            - Generated from GitHub Actions workflow
+            - Platform: Ubuntu Linux
+            - Browser: ${{ github.event.inputs.browser }}
+            - CI: true"
+            
+            # Push changes
+            git push
+            echo "Committed and pushed snapshot changes successfully!"
+          else
+            echo "No snapshot changes detected"
+          fi
