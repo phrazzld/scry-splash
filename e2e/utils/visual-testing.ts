@@ -78,6 +78,39 @@ export function shouldSkipVisualTests(): boolean {
 }
 
 /**
+ * Get the appropriate snapshot update mode based on environment and settings
+ * 
+ * Update modes:
+ * - 'all': Update all snapshots (replace existing ones)
+ * - 'missing': Only add snapshots that don't exist yet
+ * - 'on-failure': Update snapshots for tests that would otherwise fail
+ * - undefined: Use Playwright's default behavior
+ * 
+ * @returns The snapshot update mode to use
+ */
+export function getSnapshotUpdateMode(): 'all' | 'missing' | 'on-failure' | undefined {
+  // If user has explicitly set the mode via environment variable, use that
+  const existingMode = process.env.PLAYWRIGHT_UPDATE_SNAPSHOTS;
+  if (existingMode) {
+    // Validate it's a valid mode
+    if (['all', 'missing', 'on-failure'].includes(existingMode)) {
+      debugLog(`Using user-defined snapshot update mode: ${existingMode}`, 'info');
+      return existingMode as 'all' | 'missing' | 'on-failure';
+    } else {
+      debugLog(`Invalid snapshot update mode: ${existingMode}, defaulting to undefined`, 'warn');
+    }
+  }
+  
+  // For CI with visual tests enabled, use 'missing' mode by default
+  if (isRunningInCI() && process.env.VISUAL_TESTS_ENABLED_IN_CI === '1') {
+    return 'missing';
+  }
+  
+  // For local development, don't set any mode (let Playwright use its default)
+  return undefined;
+}
+
+/**
  * Set the viewport to a standard size or custom dimensions
  * 
  * @param page Playwright Page object
@@ -242,11 +275,15 @@ export async function expectScreenshot(
     const thresholds = screenshotThresholds[thresholdPreset];
     
     // Take and compare screenshot with appropriate settings
-    // In CI with visual tests enabled, handle missing snapshots gracefully
+    // Handle snapshot updates based on environment and settings
     try {
-      // Set environment variable for update mode in CI with visual tests enabled
-      if (isRunningInCI() && process.env.VISUAL_TESTS_ENABLED_IN_CI === '1') {
-        process.env.PLAYWRIGHT_UPDATE_SNAPSHOTS = 'missing';
+      // Get the appropriate snapshot update mode
+      const updateMode = getSnapshotUpdateMode();
+      
+      // If an update mode was determined, set the environment variable
+      if (updateMode) {
+        debugLog(`Setting snapshot update mode: ${updateMode}`, 'info');
+        process.env.PLAYWRIGHT_UPDATE_SNAPSHOTS = updateMode;
       }
       
       await expect(page).toHaveScreenshot(screenshotName, {
@@ -259,8 +296,13 @@ export async function expectScreenshot(
       // For CI only with visual tests enabled: if we still get an error, log it but don't fail the test
       if (isRunningInCI() && process.env.VISUAL_TESTS_ENABLED_IN_CI === '1') {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        debugLog(`WARNING: Visual comparison failed in CI, but continuing: ${errorMessage}`, 'warn');
-        debugLog('Set VISUAL_TESTS_ENABLED_IN_CI=0 to disable visual tests in CI completely');
+        const updateMode = process.env.PLAYWRIGHT_UPDATE_SNAPSHOTS || 'none';
+        
+        debugLog(`WARNING: Visual comparison failed in CI (update mode: ${updateMode}): ${errorMessage}`, 'warn');
+        debugLog('Available options to fix this issue:', 'info');
+        debugLog('1. Set VISUAL_TESTS_ENABLED_IN_CI=0 to disable visual tests in CI completely', 'info');
+        debugLog('2. Set PLAYWRIGHT_UPDATE_SNAPSHOTS=all to update all snapshots', 'info');
+        debugLog('3. Set PLAYWRIGHT_UPDATE_SNAPSHOTS=on-failure to update failing snapshots', 'info');
         return; // Exit without failing in CI
       }
       throw error; // Re-throw in non-CI environment or if tests should fail
@@ -323,6 +365,12 @@ export async function expectScreenshotForViewports(
 /**
  * Generate new baseline screenshots for the current environment
  * 
+ * This function explicitly generates new screenshots regardless of environment settings.
+ * It's useful for creating initial baselines or deliberately updating them.
+ * 
+ * When running in CI, consider using the PLAYWRIGHT_UPDATE_SNAPSHOTS environment variable
+ * with expectScreenshot() instead, as it provides more fine-grained control.
+ * 
  * @param page Playwright Page object
  * @param testInfo Playwright TestInfo object
  * @param name Base name for the screenshot
@@ -335,7 +383,14 @@ export async function generateBaselineScreenshot(
   options: VisualComparisonOptions = {}
 ): Promise<void> {
   try {
-    debugLog(`Generating baseline screenshot for "${name}"`);
+    // In CI, warn that we're generating baselines which might be unexpected
+    if (isRunningInCI()) {
+      debugLog(`Generating baseline screenshot in CI environment for "${name}"`, 'warn');
+      debugLog('Note: This will override existing snapshots if they exist', 'warn');
+      debugLog('For more controlled updates, consider using PLAYWRIGHT_UPDATE_SNAPSHOTS with expectScreenshot', 'info');
+    } else {
+      debugLog(`Generating baseline screenshot for "${name}"`);
+    }
     
     const { viewport, timeout = 15000 } = options;
     
@@ -361,7 +416,10 @@ export async function generateBaselineScreenshot(
       timeout,
     });
     
-    debugLog(`Baseline screenshot generated: ${screenshotName}`);
+    // Explicitly log the full path for easier verification
+    const fullPath = testInfo.outputPath(`../snapshots/${screenshotName}`);
+    debugLog(`Baseline screenshot generated: ${screenshotName}`, 'info');
+    debugLog(`Full path: ${fullPath}`, 'debug');
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     debugLog(`Failed to generate baseline screenshot: ${errorMessage}`, 'error');

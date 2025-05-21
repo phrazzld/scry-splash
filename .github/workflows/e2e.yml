@@ -142,6 +142,11 @@ jobs:
           RUN_ALL_BROWSERS: ${{ github.event.inputs.run_all_browsers == true && '1' || '0' }}
           CI: true
           VISUAL_TESTS_ENABLED_IN_CI: '0' # Visual tests disabled in CI by default
+          # To enable visual tests in CI, set: VISUAL_TESTS_ENABLED_IN_CI: '1'
+          # To control snapshot update mode, set one of:
+          # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'missing' - Only add snapshots that don't exist
+          # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'on-failure' - Update snapshots for failing tests
+          # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'all' - Update all snapshots
       
       - name: Run potentially flaky E2E tests
         id: flaky-tests
@@ -153,6 +158,11 @@ jobs:
           CI: true
           RETRY_FACTOR: 2
           VISUAL_TESTS_ENABLED_IN_CI: '0' # Visual tests disabled in CI by default
+          # To enable visual tests in CI, set: VISUAL_TESTS_ENABLED_IN_CI: '1'
+          # To control snapshot update mode, set one of:
+          # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'missing' - Only add snapshots that don't exist
+          # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'on-failure' - Update snapshots for failing tests
+          # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'all' - Update all snapshots
       
       # Artifact collection phase with explicit validation
       - name: Prepare test artifacts
