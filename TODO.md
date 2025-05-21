@@ -37,19 +37,19 @@
 
 ## General CI Improvements
 
- - [ ] 7. **ci-general-001:** Set up specific CI testing mode
+ - [x] 7. **ci-general-001:** Set up specific CI testing mode
    - Priority: Medium
    - Create a dedicated CI testing configuration
    - Allow tests to adapt their behavior based on the CI environment
 
- - [ ] 8. **ci-general-002:** Improve CI debugging information
+ - [x] 8. **ci-general-002:** Improve CI debugging information
    - Priority: Low
    - Add more comprehensive debug information for CI failures
    - Create debug artifact collection for failed tests
 
 ## Documentation
 
- - [ ] 9. **ci-docs-001:** Document visual testing strategy for CI
+ - [x] 9. **ci-docs-001:** Document visual testing strategy for CI
    - Priority: Medium
    - Explain the approach for handling visual tests in CI
    - Document how to generate and maintain platform-specific snapshots

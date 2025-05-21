@@ -14,8 +14,7 @@ import {
 } from '../utils/visual-testing'
 import {
   enhancedTest,
-  enhancedModeratelyFlakyTest,
-  enhancedHighlyFlakyTest
+  enhancedModeratelyFlakyTest
 } from '../utils/test-segmentation'
 
 enhancedTest.describe('Splash Page Load Tests @stable', () => {
@@ -100,7 +99,7 @@ enhancedTest.describe('Splash Page Load Tests @stable', () => {
     logger.end('passed')
   })
   
-  enhancedHighlyFlakyTest('should display correctly across different viewports', async ({ page }, testInfo) => {
+  enhancedModeratelyFlakyTest('should display correctly across different viewports', async ({ page }, testInfo) => {
     const logger = createTestLogger(testInfo.title)
     logger.start()
     

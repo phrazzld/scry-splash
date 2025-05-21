@@ -24,7 +24,16 @@
     "e2e:update-snapshots": "playwright test --update-snapshots",
     "e2e:all-browsers": "RUN_ALL_BROWSERS=1 playwright test",
     "e2e:generate-baselines": "ts-node e2e/scripts/generate-baselines.ts",
-    "e2e:generate-ci-baselines": "CI=true ts-node e2e/scripts/generate-baselines.ts"
+    "e2e:generate-ci-baselines": "CI=true ts-node e2e/scripts/generate-baselines.ts",
+    "e2e:local": "TEST_MODE=local-development playwright test",
+    "e2e:ci-functional": "TEST_MODE=ci-functional playwright test",
+    "e2e:ci-visual": "TEST_MODE=ci-visual playwright test",
+    "e2e:ci-full": "TEST_MODE=ci-full playwright test",
+    "e2e:ci-lightweight": "TEST_MODE=ci-lightweight playwright test",
+    "e2e:functional": "TEST_MODE=ci-functional PLAYWRIGHT_TEST_GREP_INVERT='@visual' playwright test",
+    "e2e:visual": "TEST_MODE=ci-visual PLAYWRIGHT_TEST_GREP='@visual' VISUAL_TESTS_ENABLED_IN_CI=1 playwright test",
+    "e2e:performance": "TEST_MODE=local-development PLAYWRIGHT_TEST_GREP='@performance' playwright test",
+    "e2e:critical": "TEST_MODE=local-development PLAYWRIGHT_TEST_GREP='@critical' playwright test"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

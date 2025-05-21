@@ -1,21 +1,25 @@
 import { defineConfig, devices } from '@playwright/test';
-import path from 'path';
 import { execSync } from 'child_process';
+import { getPlaywrightConfig } from './e2e/config/ci-config';
+import { applyTestModeEnvironment, getTestModeSummary } from './e2e/utils/test-modes';
 
-// Determine if we should run all browsers or just Chromium
-// Use RUN_ALL_BROWSERS=1 env variable to run all browsers
-const runAllBrowsers = process.env.RUN_ALL_BROWSERS === '1';
+// Apply test mode environment variables
+applyTestModeEnvironment();
 
-// Set default for visual tests - disabled in CI by default
-// Use VISUAL_TESTS_ENABLED_IN_CI=1 to enable visual tests in CI
-process.env.VISUAL_TESTS_ENABLED_IN_CI = process.env.VISUAL_TESTS_ENABLED_IN_CI || '0';
+// Get the current test mode and configuration
+const testModeSummary = getTestModeSummary();
+
+// Log the current test mode for debugging
+console.log('Current test mode:', testModeSummary.mode);
+console.log('Test mode description:', testModeSummary.description);
+
+// Get base configuration from CI config
+const baseConfig = getPlaywrightConfig();
 
 // Central location for all test artifacts
-const artifactsDir = process.env.CI 
-  ? 'test-results/e2e-artifacts'  // CI environment path
-  : path.join(process.cwd(), 'test-results/e2e-artifacts'); // Local path
+const artifactsDir = baseConfig.outputDir;
 
-// Ensure directory exists
+// Ensure artifact directory exists
 try {
   execSync(`mkdir -p ${artifactsDir}`);
 } catch (error) {
@@ -30,7 +34,7 @@ try {
   console.log('Environment validation complete.');
 } catch (error) {
   console.warn('Environment validation had issues:', error);
-  if (!process.env.CI) {
+  if (!testModeSummary.isCI) {
     console.error('Environment validation failed in local environment');
     throw error; // Only fail in local environment
   } else {
@@ -39,87 +43,55 @@ try {
   }
 }
 
-export default defineConfig({
-  testDir: './e2e/tests',
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  // Reduce retry attempts from 2 to 1 in CI to speed up test execution
-  retries: process.env.CI ? 1 : 0,
-  // Increase worker count to 2 in CI to enable parallel test execution
-  workers: process.env.CI ? 2 : undefined,
-  reporter: [['list'], ['html']],
-  // Reduce test timeout from 60s to 30s
-  timeout: 30000, // 30 seconds per test timeout
-  // Central location for test artifacts, with test-name subdirectories
-  outputDir: artifactsDir,
-  
-  use: {
-    baseURL: 'http://localhost:3000',
-    // Capture traces for all tests in CI, only on first retry locally
-    trace: process.env.CI ? 'on' : 'on-first-retry',
-    // Capture screenshots on test failures
-    screenshot: 'only-on-failure',
-    // Capture videos in CI, disable locally
-    video: process.env.CI ? 'on-first-retry' : 'off',
-    // Reduce action timeout from 30s to 15s
-    actionTimeout: 15000, // 15 seconds timeout for actions
-    // Reduce navigation timeout from 60s to 30s
-    navigationTimeout: 30000, // 30 seconds timeout for navigation
-  },
-
-  // Configure screenshot comparison with environment-specific thresholds
-  expect: {
-    toHaveScreenshot: {
-      // Using default snapshot format - Playwright will handle platform/browser differences
-      // Increase threshold for CI environment to account for rendering differences
-      // Note: Visual tests in CI are disabled by default (see utils/visual-testing.ts)
-      // Use VISUAL_TESTS_ENABLED_IN_CI=1 to enable them
-      threshold: process.env.CI ? 0.35 : 0.2,
-      // Allow for more pixel differences in CI environments
-      maxDiffPixelRatio: process.env.CI ? 0.05 : 0.01,
-      // Note: Additional properties like tolerancePercentage would go here
-      // but they're not supported in the current Playwright version
-    },
-  },
-
-  // Define projects based on runAllBrowsers flag
-  // In CI, we only run Chromium by default, but can run all browsers if specified
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-      // Use grep to filter tests based on tags if specified
-      // Examples:
-      // - PLAYWRIGHT_TEST_GREP="@visual" to run only visual tests
-      // - PLAYWRIGHT_TEST_GREP_INVERT="@visual" to skip visual tests
-      // By default, run all tests (no filtering)
+// Set up browser projects with proper filtering
+const setupProjects = () => {
+  // Get projects from base config
+  const projects = baseConfig.projects.map(project => {
+    const browserName = project.name;
+    return {
+      name: browserName,
+      use: { ...devices[`Desktop ${browserName.charAt(0).toUpperCase() + browserName.slice(1)}`] },
+      // Apply grep filters for test filtering
       grep: process.env.PLAYWRIGHT_TEST_GREP ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP) : undefined,
       grepInvert: process.env.PLAYWRIGHT_TEST_GREP_INVERT ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP_INVERT) : undefined,
-    },
-    // Firefox and WebKit tests only run when explicitly requested
-    ...(runAllBrowsers ? [
-      {
-        name: 'firefox',
-        use: { ...devices['Desktop Firefox'] },
-        // Apply the same grep filters to Firefox tests
-        grep: process.env.PLAYWRIGHT_TEST_GREP ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP) : undefined,
-        grepInvert: process.env.PLAYWRIGHT_TEST_GREP_INVERT ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP_INVERT) : undefined,
-      },
-      {
-        name: 'webkit',
-        use: { ...devices['Desktop Safari'] },
-        // Apply the same grep filters to WebKit tests
-        grep: process.env.PLAYWRIGHT_TEST_GREP ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP) : undefined,
-        grepInvert: process.env.PLAYWRIGHT_TEST_GREP_INVERT ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP_INVERT) : undefined,
-      }
-    ] : []),
-  ],
+    };
+  });
 
-  webServer: {
-    command: 'pnpm dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    stdout: 'pipe',
-    stderr: 'pipe',
+  return projects;
+};
+
+export default defineConfig({
+  // Test directory
+  testDir: baseConfig.testDir,
+  
+  // Test execution
+  fullyParallel: baseConfig.fullyParallel,
+  forbidOnly: baseConfig.forbidOnly,
+  retries: baseConfig.retries,
+  workers: baseConfig.workers,
+  
+  // Reporting
+  reporter: baseConfig.reporter,
+  
+  // Timeouts
+  timeout: baseConfig.testTimeout,
+  
+  // Artifacts
+  outputDir: baseConfig.outputDir,
+  
+  // Browser behavior
+  use: {
+    ...baseConfig.use,
+    // Make sure baseURL is always set
+    baseURL: baseConfig.use.baseURL || 'http://localhost:3000',
   },
+  
+  // Screenshot comparison settings
+  expect: baseConfig.expect,
+  
+  // Configure projects (browsers)
+  projects: setupProjects(),
+  
+  // Web server configuration
+  webServer: baseConfig.webServer,
 });
