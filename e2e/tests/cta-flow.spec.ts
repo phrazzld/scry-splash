@@ -19,7 +19,7 @@ import {
 // Use the enhanced test fixture for better error reporting
 const enhancedTest = withErrorReporting;
 
-enhancedTest.describe("CTA Flow", () => {
+enhancedTest.describe("CTA Flow @stable", () => {
   // Initialize the environment before running tests
   enhancedTest.beforeEach(async ({}, testInfo) => {
     await initializeDebugEnvironment(testInfo);

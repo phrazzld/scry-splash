@@ -18,7 +18,7 @@ import {
   enhancedHighlyFlakyTest
 } from '../utils/test-segmentation'
 
-enhancedTest.describe('Splash Page Load Tests', () => {
+enhancedTest.describe('Splash Page Load Tests @stable', () => {
   // Initialize the environment before running tests
   enhancedTest.beforeEach(async ({}, testInfo) => {
     await initializeDebugEnvironment(testInfo);
