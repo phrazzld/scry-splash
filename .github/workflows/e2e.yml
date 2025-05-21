@@ -64,6 +64,7 @@ jobs:
       - name: Install Playwright browsers
         # Only install if cache miss or explicitly requested
         # Only install Chromium by default to speed up installation
+        id: install-browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: |
           if [ "${{ github.event.inputs.run_all_browsers }}" = "true" ]; then
@@ -72,26 +73,34 @@ jobs:
           else
             echo "Installing Chromium specifically for CI..."
             pnpm exec playwright install chromium --with-deps
-            echo "Verifying Chromium installation..."
+            echo "Installing system dependencies for Chromium..."
             pnpm exec playwright install-deps chromium
-            
-            # Verify installation directory exists and show contents for debugging
-            echo "Checking Playwright browser installation directories:"
-            ls -la ~/.cache/ms-playwright/ || echo "Directory not found"
-            
-            # Additional verification of Chromium
-            if [ -d "$HOME/.cache/ms-playwright/chromium-"* ]; then
-              echo "Chromium browser directory found in cache"
-              find ~/.cache/ms-playwright/ -name "*chromium*" || echo "Chromium details not found"
-            else
-              echo "Chromium directory not found, checking version output"
-              pnpm exec playwright --version
-              
-              # Force reinstall if not found
-              echo "Attempting to reinstall Chromium with force flag"
-              PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=0 pnpm exec playwright install chromium --with-deps
-            fi
           fi
+          
+          # Basic verification to report installation status
+          echo "Checking Playwright version..."
+          pnpm exec playwright --version
+          echo "Browser installation completed."
+      
+      # Dedicated browser verification step - always run this regardless of cache status
+      - name: Verify Playwright Browser Installation
+        id: verify-browser
+        # No 'if' condition - we want to run this even when browsers are loaded from cache
+        # We do NOT use continue-on-error as browser verification is critical for test execution
+        run: |
+          echo "=== Playwright Browser Verification ==="
+          
+          # Make browser verification script executable
+          chmod +x e2e/scripts/verify-browser-installation.sh
+          
+          # Run detailed browser verification script
+          bash e2e/scripts/verify-browser-installation.sh
+          
+          # Verify Chromium can actually launch by running the verification test
+          echo "Testing Chromium browser launch with verification test..."
+          pnpm exec playwright test e2e/browser-verification.spec.ts --browser=chromium
+          
+          echo "Browser verification completed successfully."
         
       # Setup phase - Create directories and verify permissions
       - name: Validate Test Environment
@@ -115,10 +124,19 @@ jobs:
       # Validation phase - Verify setup was successful
       - name: Verify Environment Setup
         run: |
+          # Check environment validation outcome
           if [ "${{ steps.validate-env.outcome }}" != "success" ]; then
             echo "::warning::Environment validation had issues, but we'll try to continue. Check the logs for details."
           else
             echo "Environment validation successful"
+          fi
+          
+          # Check browser verification outcome
+          if [ "${{ steps.verify-browser.outcome }}" != "success" ]; then
+            echo "::error::Browser verification failed. This is a critical issue that will prevent tests from running."
+            echo "Please check the browser verification logs for details on the failure."
+          else
+            echo "Browser verification successful. Chromium is properly installed and functional."
           fi
           
           # Verify critical directories exist

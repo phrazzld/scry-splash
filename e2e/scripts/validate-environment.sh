@@ -105,54 +105,75 @@ check_playwright_browsers() {
     # Check if chromium is mentioned in the version output
     if echo "$BROWSERS" | grep -q "chromium"; then
       print_success "Chromium browser is available in version output"
-      return 0
+    else
+      print_warning "Chromium not found in version output - will check for binary"
     fi
     
     # Check if the chromium directory exists in the cache
     if [ -d "$HOME/.cache/ms-playwright/chromium-"* ]; then
       print_success "Chromium browser directory found in cache"
-      return 0
-    fi
-    
-    # Check for binary existence as fallback
-    CHROMIUM_PATHS=(
-      "$HOME/.cache/ms-playwright/chromium-*/chrome-linux/chrome"
-      "$HOME/.cache/ms-playwright/chromium-*/chrome-linux/chromium"
-      "$HOME/.cache/ms-playwright/chromium-*/chrome-win/chrome.exe"
-      "$HOME/.cache/ms-playwright/chromium-*/chrome-mac/Chromium.app/Contents/MacOS/Chromium"
-      "node_modules/.pnpm/playwright*/**/chromium-*/**/{chrome,chromium,chrome.exe}"
-    )
-    
-    for CHROME_PATH_PATTERN in "${CHROMIUM_PATHS[@]}"; do
-      if ls $CHROME_PATH_PATTERN &>/dev/null; then
-        print_success "Chromium binary found at $CHROME_PATH_PATTERN"
-        return 0
+      CHROMIUM_DIR=$(find "$HOME/.cache/ms-playwright" -type d -name "chromium-*" | head -1)
+      echo "Chromium directory: $CHROMIUM_DIR"
+      
+      # Determine platform-specific binary path
+      if [ "$(uname)" == "Darwin" ]; then
+        # macOS
+        CHROME_BINARY="${CHROMIUM_DIR}/chrome-mac/Chromium.app/Contents/MacOS/Chromium"
+      elif [ "$(uname)" == "Linux" ]; then
+        # Linux
+        CHROME_BINARY="${CHROMIUM_DIR}/chrome-linux/chrome"
+      else
+        # Windows (when running in WSL or similar)
+        CHROME_BINARY="${CHROMIUM_DIR}/chrome-win/chrome.exe"
       fi
-    done
-    
-    # Additional check for any chromium-related files in the cache
-    if find "$HOME/.cache/ms-playwright" -name "*chromium*" | grep -q .; then
-      print_success "Found chromium-related files in Playwright cache"
-      find "$HOME/.cache/ms-playwright" -name "*chromium*" | head -5
-      return 0
-    fi
-    
-    # If we get here, none of the detection methods succeeded
-    print_warning "Chromium browser not detected through standard methods"
-    
-    # In CI, we don't want to fail the build, so we'll just warn
-    if [ "$IS_CI" = true ]; then
-      print_warning "Running in CI environment, continuing despite browser detection issue"
-      return 0
+      
+      # Check if binary exists and is executable
+      if [ -f "$CHROME_BINARY" ]; then
+        print_success "Chromium binary found at: $CHROME_BINARY"
+        if [ -x "$CHROME_BINARY" ]; then
+          print_success "Chromium binary is executable"
+        else
+          print_warning "Chromium binary is not executable - attempting to fix permissions"
+          chmod +x "$CHROME_BINARY" 2>/dev/null && print_success "Permission fixed" || print_warning "Failed to fix permission"
+        fi
+      else
+        print_warning "Chromium binary not found at expected path: $CHROME_BINARY"
+        echo "Searching for any chromium binaries:"
+        find "$CHROMIUM_DIR" -type f -name "chrome*" | head -5
+      fi
     else
-      print_error "Chromium browser not detected"
+      print_warning "Chromium browser directory not found in cache"
+      
+      # Check for binary existence as fallback
+      CHROMIUM_PATHS=(
+        "$HOME/.cache/ms-playwright/chromium-*/chrome-linux/chrome"
+        "$HOME/.cache/ms-playwright/chromium-*/chrome-linux/chromium"
+        "$HOME/.cache/ms-playwright/chromium-*/chrome-win/chrome.exe"
+        "$HOME/.cache/ms-playwright/chromium-*/chrome-mac/Chromium.app/Contents/MacOS/Chromium"
+        "node_modules/.pnpm/playwright*/**/chromium-*/**/{chrome,chromium,chrome.exe}"
+      )
+      
+      for CHROME_PATH_PATTERN in "${CHROMIUM_PATHS[@]}"; do
+        if ls $CHROME_PATH_PATTERN &>/dev/null; then
+          print_success "Chromium binary found at $CHROME_PATH_PATTERN"
+          return 0
+        fi
+      done
     fi
+    
+    # Note that detailed verification is now handled in the dedicated verification script
+    # See e2e/scripts/verify-browser-installation.sh for comprehensive browser verification
+    echo "Note: A dedicated browser verification step will run after this check."
+    echo "Please see the 'Verify Playwright Browser Installation' step for detailed diagnostics."
+    
+    return 0
   else
+    print_warning "Playwright CLI not available"
     if [ "$IS_CI" = true ]; then
-      print_warning "Playwright CLI not available, but continuing in CI environment"
+      print_warning "Running in CI environment, will continue but expect failures in the browser verification step"
       return 0
     else
-      print_error "Playwright CLI not available"
+      print_error "Playwright CLI not available - installation failure"
     fi
   fi
 }
