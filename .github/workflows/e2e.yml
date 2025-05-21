@@ -67,20 +67,83 @@ jobs:
         id: install-browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: |
-          if [ "${{ github.event.inputs.run_all_browsers }}" = "true" ]; then
-            echo "Installing all browser engines..."
-            pnpm exec playwright install --with-deps
-          else
-            echo "Installing Chromium specifically for CI..."
-            pnpm exec playwright install chromium --with-deps
-            echo "Installing system dependencies for Chromium..."
-            pnpm exec playwright install-deps chromium
-          fi
+          # Make browser recovery script executable
+          chmod +x e2e/scripts/browser-recovery.sh
           
-          # Basic verification to report installation status
-          echo "Checking Playwright version..."
-          pnpm exec playwright --version
-          echo "Browser installation completed."
+          # Configuration
+          MAX_RETRIES=3
+          RETRY_DELAY=10
+          ATTEMPT=1
+          INSTALL_SUCCESS=false
+          
+          echo "::group::Browser Installation"
+          
+          while [ $ATTEMPT -le $MAX_RETRIES ] && [ "$INSTALL_SUCCESS" != "true" ]; do
+            echo "Installation attempt $ATTEMPT of $MAX_RETRIES"
+            
+            # Determine which browsers to install
+            if [ "${{ github.event.inputs.run_all_browsers }}" = "true" ]; then
+              echo "Installing all browser engines..."
+              BROWSERS="chromium firefox webkit"
+            else
+              echo "Installing Chromium specifically for CI..."
+              BROWSERS="chromium"
+            fi
+            
+            # Try standard installation first
+            echo "Using standard installation method..."
+            if [ $ATTEMPT -eq 1 ]; then
+              # First attempt: Standard installation
+              for BROWSER in $BROWSERS; do
+                echo "Installing $BROWSER with dependencies..."
+                pnpm exec playwright install $BROWSER --with-deps
+              done
+            else
+              # Subsequent attempts: Use recovery script with exponential backoff
+              echo "Using recovery method for attempt $ATTEMPT..."
+              for BROWSER in $BROWSERS; do
+                echo "Recovering $BROWSER installation..."
+                bash e2e/scripts/browser-recovery.sh $BROWSER
+              done
+            fi
+            
+            # Basic verification to check if installation succeeded
+            echo "Checking Playwright version..."
+            if pnpm exec playwright --version; then
+              # Further verify browser binaries exist
+              if bash e2e/scripts/verify-browser-installation.sh --quiet; then
+                INSTALL_SUCCESS=true
+                echo "Browser installation successful on attempt $ATTEMPT"
+                break
+              else
+                echo "Browser verification failed on attempt $ATTEMPT"
+              fi
+            else
+              echo "Playwright command failed on attempt $ATTEMPT"
+            fi
+            
+            # If we get here, installation failed - prepare for retry
+            if [ $ATTEMPT -lt $MAX_RETRIES ]; then
+              # Calculate exponential backoff delay: 10s, 30s, 90s
+              SLEEP_TIME=$((RETRY_DELAY * (3 ** (ATTEMPT - 1))))
+              echo "Waiting ${SLEEP_TIME} seconds before retry..."
+              sleep $SLEEP_TIME
+            fi
+            
+            ATTEMPT=$((ATTEMPT + 1))
+          done
+          
+          echo "::endgroup::"
+          
+          # Final verification and reporting
+          if [ "$INSTALL_SUCCESS" = "true" ]; then
+            echo "Browser installation completed successfully after $((ATTEMPT - 1)) attempt(s)"
+            exit 0
+          else
+            echo "::error::Browser installation failed after $MAX_RETRIES attempts"
+            echo "See logs for details. Browser verification will still be attempted in the next step."
+            # Don't exit with error here - let the verification step determine if we can continue
+          fi
       
       # Dedicated browser verification step - always run this regardless of cache status
       - name: Verify Playwright Browser Installation
@@ -90,17 +153,62 @@ jobs:
         run: |
           echo "=== Playwright Browser Verification ==="
           
-          # Make browser verification script executable
+          # Make verification scripts executable
           chmod +x e2e/scripts/verify-browser-installation.sh
+          chmod +x e2e/scripts/browser-recovery.sh
           
-          # Run detailed browser verification script
-          bash e2e/scripts/verify-browser-installation.sh
+          # Define which browsers to verify
+          if [ "${{ github.event.inputs.run_all_browsers }}" = "true" ]; then
+            echo "Verifying all browser engines..."
+            BROWSERS="chromium firefox webkit"
+          else
+            echo "Verifying Chromium specifically for CI..."
+            BROWSERS="chromium"
+          fi
           
-          # Verify Chromium can actually launch by running the verification test
-          echo "Testing Chromium browser launch with verification test..."
-          pnpm exec playwright test e2e/browser-verification.spec.ts --browser=chromium
+          # Verify each browser
+          VERIFICATION_SUCCESS=true
+          for BROWSER in $BROWSERS; do
+            echo "Verifying $BROWSER browser installation..."
+            # Use enhanced verification script - non-quiet mode for full details
+            if ! bash e2e/scripts/verify-browser-installation.sh --browser=$BROWSER; then
+              echo "::warning::Verification failed for $BROWSER. Attempting recovery..."
+              
+              # Try to recover
+              if bash e2e/scripts/browser-recovery.sh $BROWSER; then
+                echo "::notice::Recovery successful for $BROWSER!"
+                
+                # Verify again to confirm recovery worked
+                if bash e2e/scripts/verify-browser-installation.sh --browser=$BROWSER --quiet; then
+                  echo "::notice::Verification successful after recovery for $BROWSER!"
+                else
+                  echo "::error::Verification still failing for $BROWSER after recovery"
+                  VERIFICATION_SUCCESS=false
+                fi
+              else
+                echo "::error::Recovery failed for $BROWSER"
+                VERIFICATION_SUCCESS=false
+              fi
+            fi
+          done
           
-          echo "Browser verification completed successfully."
+          # Run the browser verification test for Chromium
+          echo "Testing Chromium browser launch with functional verification test..."
+          if pnpm exec playwright test e2e/browser-verification.spec.ts --browser=chromium; then
+            echo "Functional verification test passed!"
+          else
+            echo "::error::Functional verification test failed!"
+            VERIFICATION_SUCCESS=false
+          fi
+          
+          # Final verification status
+          if [ "$VERIFICATION_SUCCESS" = "true" ]; then
+            echo "Browser verification completed successfully!"
+            exit 0
+          else
+            echo "::error::Browser verification failed! Some browsers may not work correctly."
+            exit 1
+          fi
         
       # Setup phase - Create directories and verify permissions
       - name: Validate Test Environment
