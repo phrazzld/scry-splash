@@ -72,14 +72,25 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     expect(heading).toBeInTheDocument();
   });
 
-  it('has accessibility support with aria-live', () => {
+  it('has enhanced accessibility support with aria attributes', () => {
     render(<HeroSection />);
     
-    const liveRegion = screen.getByRole('heading').querySelector('[aria-live="polite"]');
+    // Check for main aria-live region
+    const liveRegion = screen.getByRole('heading').querySelector('[aria-live="polite"][aria-atomic="true"]');
     expect(liveRegion).toBeInTheDocument();
-    // Updated for responsive design
     expect(liveRegion?.className).toContain('whitespace-normal');
     expect(liveRegion?.className).toContain('md:whitespace-nowrap');
+    
+    // Check for additional screen reader status information
+    const statusElement = screen.getByTestId('typewriter-status');
+    expect(statusElement).toBeInTheDocument();
+    expect(statusElement).toHaveAttribute('aria-live', 'polite');
+    expect(statusElement).toHaveClass('sr-only');
+    
+    // Verify cursor is hidden from screen readers
+    const cursor = screen.getByText('|');
+    expect(cursor).toHaveAttribute('aria-hidden', 'true');
+    expect(cursor).toHaveAttribute('role', 'presentation');
   });
 
   it('shows cursor during animation', () => {

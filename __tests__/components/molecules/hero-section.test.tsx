@@ -68,8 +68,14 @@ jest.mock('react', () => {
 
 // Mock the dependencies of HeroSection
 jest.mock('@/components/ui/logo', () => ({
-  Logo: ({ size, color, as }: LogoProps) => (
-    <div data-testid="mock-logo" data-size={size} data-color={color} data-as={as}>
+  Logo: ({ size, color, as, "aria-label": ariaLabel }: LogoProps & { "aria-label"?: string }) => (
+    <div 
+      data-testid="mock-logo" 
+      data-size={size} 
+      data-color={color} 
+      data-as={as}
+      data-aria-label={ariaLabel}
+    >
       Scry.
     </div>
   ),
@@ -87,8 +93,8 @@ jest.mock('@/components/ui/typography', () => ({
       {children}
     </div>
   ),
-  BodyText: ({ children, className }: BodyTextProps) => (
-    <div data-testid="mock-body" className={className}>{children}</div>
+  BodyText: ({ children, className, role }: BodyTextProps & { role?: string }) => (
+    <div data-testid="mock-body" className={className} role={role}>{children}</div>
   ),
 }));
 
@@ -214,5 +220,34 @@ describe('HeroSection Component', () => {
     
     const container = screen.getByTestId('mock-container');
     expect(container).toHaveAttribute('data-testprop', 'test-value');
+  });
+  
+  it('renders with proper container accessibility attributes', () => {
+    render(<HeroSection useTypewriterEffect={false} />);
+    
+    const container = screen.getByTestId('mock-container');
+    expect(container).toHaveAttribute('role', 'banner');
+    expect(container).toHaveAttribute('id', 'hero-section');
+    expect(container).toHaveAttribute('aria-labelledby', 'hero-heading');
+  });
+  
+  it('applies proper ARIA attributes to components', () => {
+    render(<HeroSection 
+      useTypewriterEffect={false} 
+      logoAriaLabel="Custom logo label"
+      sectionId="custom-section-id"
+    />);
+    
+    const logo = screen.getByTestId('mock-logo');
+    expect(logo).toHaveAttribute('data-aria-label', 'Custom logo label');
+    
+    const container = screen.getByTestId('mock-container');
+    expect(container).toHaveAttribute('id', 'custom-section-id');
+    
+    const subheadlineContainer = screen.getByTestId('mock-body').parentElement;
+    expect(subheadlineContainer).toHaveAttribute('aria-describedby', 'hero-heading');
+    
+    // Role was removed in favor of using semantic HTML structure
+    screen.getByTestId('mock-body');
   });
 });

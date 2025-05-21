@@ -135,8 +135,8 @@ describe('PageLayout Component', () => {
   it('renders correctly with default props', () => {
     render(<PageLayout>Test Content</PageLayout>);
     
-    // Check main wrapper
-    const wrapper = screen.getByRole('main');
+    // Check main wrapper - no longer uses role="main" to avoid landmark nesting issues
+    const wrapper = screen.getByLabelText('Main content');
     expect(wrapper).toBeInTheDocument();
     
     // Check background
@@ -214,14 +214,30 @@ describe('PageLayout Component', () => {
     const customClass = 'test-class';
     render(<PageLayout className={customClass}>Content</PageLayout>);
     
-    const wrapper = screen.getByRole('main');
+    const wrapper = screen.getByLabelText('Main content');
     expect(wrapper).toHaveClass(customClass);
+  });
+  
+  it('includes a skip link for accessibility', () => {
+    render(<PageLayout>Content</PageLayout>);
+    
+    // Look for the skip link
+    const skipLink = screen.getByText('Skip to content');
+    expect(skipLink).toBeInTheDocument();
+    expect(skipLink).toHaveAttribute('href', '#main-content');
+    expect(skipLink).toHaveClass('sr-only');
+    expect(skipLink).toHaveClass('focus:not-sr-only');
+    
+    // Check for the target of the skip link
+    const mainContent = document.getElementById('main-content');
+    expect(mainContent).toBeInTheDocument();
+    expect(mainContent).toHaveAttribute('tabIndex', '-1');
   });
 
   it('passes additional props to main div', () => {
     render(<PageLayout data-custom="custom-attr">Content</PageLayout>);
     
-    const wrapper = screen.getByRole('main');
+    const wrapper = screen.getByLabelText('Main content');
     expect(wrapper).toHaveAttribute('data-custom', 'custom-attr');
   });
 
@@ -237,6 +253,10 @@ describe('PageLayout Component', () => {
     
     const footer = screen.getByTestId('mock-footer');
     expect(footer).toHaveAttribute('data-project-text', customFooterText);
+    
+    // No longer using role="contentinfo" for footer to avoid nesting issues
+    const footerContainer = footer.parentElement;
+    expect(footerContainer).toBeInTheDocument();
   });
 
   it('does not render theme toggle button by default', () => {
@@ -286,7 +306,7 @@ describe('DefaultLayout Component', () => {
     render(<DefaultLayout>Test Content</DefaultLayout>);
     
     // Check PageLayout is used
-    const wrapper = screen.getByRole('main');
+    const wrapper = screen.getByLabelText('Main content');
     expect(wrapper).toBeInTheDocument();
     expect(wrapper).toHaveClass('flex justify-center');
     

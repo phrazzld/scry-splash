@@ -124,44 +124,63 @@ export function PageLayout({
   ...props
 }: PageLayoutProps) {
   return (
-    <div 
-      className={cn(
-        "relative min-h-screen flex flex-col justify-start overflow-hidden",
-        className
-      )} 
-      role="main"
-      {...props}
-    >
-      {/* Background with noise texture */}
-      <NoiseBackground 
-        baseColor={backgroundColor}
-        noiseOpacity={noiseOpacity}
-        className="absolute inset-0 z-0"
-      />
+    <>
+      {/* Skip to content link - only visible on keyboard focus */}
+      <a 
+        href="#main-content" 
+        className={cn(
+          "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50",
+          "px-4 py-2 bg-primary text-primary-foreground rounded-md",
+          "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        )}
+      >
+        Skip to content
+      </a>
       
-      {/* Theme toggle button (if enabled) */}
-      {showThemeToggle && (
-        <div 
-          className={cn(
-            "absolute top-3 sm:top-4 z-20",
-            themeTogglePosition === "right" ? "right-3 sm:right-4" : "left-3 sm:left-4",
-            animate && "animate-fade-in"
-          )}
-          data-testid="header-theme-toggle"
-        >
-          <ThemeToggleButton 
+      <div 
+        className={cn(
+          "relative min-h-screen flex flex-col justify-start overflow-hidden",
+          className
+        )} 
+        // Landmarks should not be nested, so removing role="main"
+        aria-label="Main content"
+        {...props}
+      >
+        {/* Background with noise texture */}
+        <NoiseBackground 
+          baseColor={backgroundColor}
+          noiseOpacity={noiseOpacity}
+          className="absolute inset-0 z-0"
+          aria-hidden="true"
+        />
+        
+        {/* Theme toggle button (if enabled) */}
+        {showThemeToggle && (
+          <div 
             className={cn(
-              "bg-background/50 hover:bg-background/70 backdrop-blur-sm",
-              "shadow-md border border-foreground/10",
-              "text-foreground/80 hover:text-foreground transition-colors",
+              "absolute top-3 sm:top-4 z-20",
+              themeTogglePosition === "right" ? "right-3 sm:right-4" : "left-3 sm:left-4",
+              animate && "animate-fade-in"
             )}
-            aria-label="Toggle theme mode"
-          />
-        </div>
-      )}
+            data-testid="header-theme-toggle"
+          >
+            <ThemeToggleButton 
+              className={cn(
+                "bg-background/50 hover:bg-background/70 backdrop-blur-sm",
+                "shadow-md border border-foreground/10",
+                "text-foreground/80 hover:text-foreground transition-colors",
+              )}
+              aria-label="Toggle theme mode"
+            />
+          </div>
+        )}
       
       {/* Main content container */}
-      <div className="flex-1 flex flex-col justify-center">
+      <div 
+        className="flex-1 flex flex-col justify-center"
+        id="main-content"
+        tabIndex={-1} // Allow focus for skip link navigation without affecting tab order
+      >
         <Container
           maxWidth={maxWidth}
           padding={padding}
@@ -177,7 +196,10 @@ export function PageLayout({
       
       {/* Footer */}
       {showFooter && (
-        <div className={cn("relative z-10 mt-auto", animate && "animate-fade-in")}>
+        <div 
+          className={cn("relative z-10 mt-auto", animate && "animate-fade-in")}
+          // Removing role="contentinfo" to avoid nesting landmarks
+        >
           <Footer 
             projectText={footerText} 
             centered={centered}
@@ -186,6 +208,7 @@ export function PageLayout({
         </div>
       )}
     </div>
+    </>
   )
 }
 
