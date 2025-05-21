@@ -18,16 +18,20 @@ try {
   console.warn(`Warning: Failed to create artifacts directory: ${error}`);
 }
 
-// Validate the environment if in CI
-if (process.env.CI) {
-  try {
-    console.log('Validating CI environment before test execution...');
-    // Run the validation script
-    execSync('bash e2e/scripts/validate-environment.sh', { stdio: 'inherit' });
-    console.log('Environment validation complete.');
-  } catch (error) {
-    console.error('Environment validation failed:', error);
-    // We don't exit here - let the tests handle the failure with more context
+// Validate the environment with fallback for CI
+try {
+  console.log('Validating environment before test execution...');
+  // Run the validation script
+  execSync('bash e2e/scripts/validate-environment.sh', { stdio: 'inherit' });
+  console.log('Environment validation complete.');
+} catch (error) {
+  console.warn('Environment validation had issues:', error);
+  if (!process.env.CI) {
+    console.error('Environment validation failed in local environment');
+    throw error; // Only fail in local environment
+  } else {
+    console.warn('Continuing in CI environment despite validation issues');
+    // In CI, we continue despite validation issues to allow the tests to run
   }
 }
 
