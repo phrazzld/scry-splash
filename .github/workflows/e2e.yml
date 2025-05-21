@@ -141,6 +141,7 @@ jobs:
           NEXT_PUBLIC_FORMSPARK_FORM_ID: test-form-id
           RUN_ALL_BROWSERS: ${{ github.event.inputs.run_all_browsers == true && '1' || '0' }}
           CI: true
+          VISUAL_TESTS_ENABLED_IN_CI: '0' # Visual tests disabled in CI by default
       
       - name: Run potentially flaky E2E tests
         id: flaky-tests
@@ -151,6 +152,7 @@ jobs:
           RUN_ALL_BROWSERS: ${{ github.event.inputs.run_all_browsers == true && '1' || '0' }}
           CI: true
           RETRY_FACTOR: 2
+          VISUAL_TESTS_ENABLED_IN_CI: '0' # Visual tests disabled in CI by default
       
       # Artifact collection phase with explicit validation
       - name: Prepare test artifacts

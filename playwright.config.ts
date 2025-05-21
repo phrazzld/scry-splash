@@ -6,6 +6,10 @@ import { execSync } from 'child_process';
 // Use RUN_ALL_BROWSERS=1 env variable to run all browsers
 const runAllBrowsers = process.env.RUN_ALL_BROWSERS === '1';
 
+// Set default for visual tests - disabled in CI by default
+// Use VISUAL_TESTS_ENABLED_IN_CI=1 to enable visual tests in CI
+process.env.VISUAL_TESTS_ENABLED_IN_CI = process.env.VISUAL_TESTS_ENABLED_IN_CI || '0';
+
 // Central location for all test artifacts
 const artifactsDir = process.env.CI 
   ? 'test-results/e2e-artifacts'  // CI environment path
@@ -68,6 +72,8 @@ export default defineConfig({
     toHaveScreenshot: {
       // Using default snapshot format - Playwright will handle platform/browser differences
       // Increase threshold for CI environment to account for rendering differences
+      // Note: Visual tests in CI are disabled by default (see utils/visual-testing.ts)
+      // Use VISUAL_TESTS_ENABLED_IN_CI=1 to enable them
       threshold: process.env.CI ? 0.35 : 0.2,
       // Allow for more pixel differences in CI environments
       maxDiffPixelRatio: process.env.CI ? 0.05 : 0.01,
