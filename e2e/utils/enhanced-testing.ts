@@ -19,7 +19,7 @@
  * - ci-debugger.ts: For unified CI debugging capabilities
  */
 
-import { test, type Page, type Locator, type TestInfo } from '@playwright/test';
+import { test, mergeTests, type Page, type Locator, type TestInfo } from '@playwright/test';
 
 // Import from core
 import { debugLog, retry as coreRetry, sleep, isRunningInCI } from './core';
@@ -298,7 +298,7 @@ export const withCIDebugReporting = test.extend<{ ciDebugger: CIDebugger }>({
  * Combined test fixture with all enhanced testing capabilities
  * This combines error reporting and CI debugging
  */
-export const enhancedCITest = withErrorReporting.extend(withCIDebugReporting);
+export const enhancedCITest = mergeTests(withErrorReporting, withCIDebugReporting);
 
 /**
  * Retries clicking an element until successful

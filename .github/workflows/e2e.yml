@@ -70,8 +70,11 @@ jobs:
             echo "Installing all browser engines..."
             pnpm playwright install --with-deps
           else
-            echo "Installing Chromium only for faster CI..."
-            pnpm playwright install --with-deps chromium
+            echo "Installing Chromium for CI..."
+            pnpm playwright install chromium --with-deps
+            echo "Verifying Chromium installation..."
+            pnpm playwright install-deps chromium
+            ls -la ~/.cache/ms-playwright/
           fi
         
       # Setup phase - Create directories and verify permissions
