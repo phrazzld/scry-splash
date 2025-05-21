@@ -88,16 +88,29 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      // Use grep to filter tests based on tags if specified
+      // Examples:
+      // - PLAYWRIGHT_TEST_GREP="@visual" to run only visual tests
+      // - PLAYWRIGHT_TEST_GREP_INVERT="@visual" to skip visual tests
+      // By default, run all tests (no filtering)
+      grep: process.env.PLAYWRIGHT_TEST_GREP ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP) : undefined,
+      grepInvert: process.env.PLAYWRIGHT_TEST_GREP_INVERT ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP_INVERT) : undefined,
     },
     // Firefox and WebKit tests only run when explicitly requested
     ...(runAllBrowsers ? [
       {
         name: 'firefox',
         use: { ...devices['Desktop Firefox'] },
+        // Apply the same grep filters to Firefox tests
+        grep: process.env.PLAYWRIGHT_TEST_GREP ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP) : undefined,
+        grepInvert: process.env.PLAYWRIGHT_TEST_GREP_INVERT ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP_INVERT) : undefined,
       },
       {
         name: 'webkit',
         use: { ...devices['Desktop Safari'] },
+        // Apply the same grep filters to WebKit tests
+        grep: process.env.PLAYWRIGHT_TEST_GREP ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP) : undefined,
+        grepInvert: process.env.PLAYWRIGHT_TEST_GREP_INVERT ? new RegExp(process.env.PLAYWRIGHT_TEST_GREP_INVERT) : undefined,
       }
     ] : []),
   ],

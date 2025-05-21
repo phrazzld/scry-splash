@@ -65,6 +65,12 @@ export const screenshotThresholds = {
 /**
  * Check if visual tests should be skipped
  * Visual tests are skipped in CI by default unless explicitly enabled
+ * 
+ * This can be controlled with the following environment variables:
+ * - VISUAL_TESTS_ENABLED_IN_CI=1: Enable visual tests in CI (default: disabled)
+ * - PLAYWRIGHT_TEST_GREP="@visual": Only run visual tests
+ * - PLAYWRIGHT_TEST_GREP_INVERT="@visual": Skip visual tests
+ *
  * @returns true if visual tests should be skipped, false otherwise
  */
 export function shouldSkipVisualTests(): boolean {

@@ -133,32 +133,28 @@ jobs:
           echo "OS Info: $(uname -a)"
       
       # Test execution phase with segmented test runs
-      - name: Run stable E2E tests
-        id: stable-tests
-        run: pnpm playwright test --grep "@stable"
+      - name: Run functional tests (non-visual)
+        id: functional-tests
+        run: pnpm playwright test --grep-invert "@visual"
         continue-on-error: true
         env:
           NEXT_PUBLIC_FORMSPARK_FORM_ID: test-form-id
           RUN_ALL_BROWSERS: ${{ github.event.inputs.run_all_browsers == true && '1' || '0' }}
           CI: true
-          VISUAL_TESTS_ENABLED_IN_CI: '0' # Visual tests disabled in CI by default
-          # To enable visual tests in CI, set: VISUAL_TESTS_ENABLED_IN_CI: '1'
-          # To control snapshot update mode, set one of:
-          # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'missing' - Only add snapshots that don't exist
-          # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'on-failure' - Update snapshots for failing tests
-          # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'all' - Update all snapshots
+          PLAYWRIGHT_TEST_GREP_INVERT: "@visual" # Skip all visual tests
       
-      - name: Run potentially flaky E2E tests
-        id: flaky-tests
-        run: pnpm playwright test --grep-invert "@stable"
+      - name: Run visual tests (if explicitly enabled)
+        id: visual-tests
+        # Only run visual tests if explicitly enabled or when manually triggered
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: pnpm playwright test --grep "@visual"
         continue-on-error: true
         env:
           NEXT_PUBLIC_FORMSPARK_FORM_ID: test-form-id
           RUN_ALL_BROWSERS: ${{ github.event.inputs.run_all_browsers == true && '1' || '0' }}
           CI: true
-          RETRY_FACTOR: 2
-          VISUAL_TESTS_ENABLED_IN_CI: '0' # Visual tests disabled in CI by default
-          # To enable visual tests in CI, set: VISUAL_TESTS_ENABLED_IN_CI: '1'
+          PLAYWRIGHT_TEST_GREP: "@visual" # Only run visual tests
+          VISUAL_TESTS_ENABLED_IN_CI: '1' # Visual tests enabled for this step
           # To control snapshot update mode, set one of:
           # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'missing' - Only add snapshots that don't exist
           # PLAYWRIGHT_UPDATE_SNAPSHOTS: 'on-failure' - Update snapshots for failing tests
@@ -223,11 +219,11 @@ jobs:
       - name: Determine workflow success
         if: always()
         run: |
-          if [ "${{ steps.stable-tests.outcome }}" != "success" ]; then
-            echo "::error::Stable tests failed. This is considered a workflow failure."
+          if [ "${{ steps.functional-tests.outcome }}" != "success" ]; then
+            echo "::error::Functional tests failed. This is considered a workflow failure."
             exit 1
-          elif [ "${{ steps.flaky-tests.outcome }}" != "success" ]; then
-            echo "::warning::Some flaky tests failed, but stable tests passed. Marking workflow as successful."
+          elif [ "${{ steps.visual-tests.outcome }}" != "success" ] && [ "${{ steps.visual-tests.conclusion }}" != "skipped" ]; then
+            echo "::warning::Visual tests failed, but functional tests passed. Marking workflow as successful."
           else
             echo "All tests passed successfully."
           fi

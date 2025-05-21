@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect, TestInfo, Page, Browser } from '@playwright/test';
 import { 
   withErrorReporting, 
   debugLog, 
@@ -9,18 +9,21 @@ import {
   expectScreenshot,
   StandardViewport
 } from '../utils/visual-testing';
+import {
+  visualTest
+} from '../utils/test-segmentation';
 
-// Use the enhanced test fixture for better error reporting
-const enhancedTest = withErrorReporting;
+// Use the visual test fixture for these tests since they're all visual regression tests
+const enhancedTest = visualTest.extend(withErrorReporting);
 
 enhancedTest.describe('Theme Visual Appearance', () => {
-  // Initialize the environment before running tests
-  enhancedTest.beforeEach(async ({}, testInfo) => {
-    await initializeDebugEnvironment(testInfo);
-    debugLog(`Starting theme visual test: ${testInfo.title}`);
-  });
+  // Note: Initialize environment in each test instead of using beforeEach
+  // since we have TypeScript compatibility issues with the test fixture extension
 
-  enhancedTest('should apply correct styles in dark theme', async ({ page }, testInfo) => {
+  enhancedTest('should apply correct styles in dark theme', async ({ page }: { page: Page }, testInfo: TestInfo) => {
+    // Initialize environment for this test
+    await initializeDebugEnvironment(testInfo);
+    debugLog(`Starting visual test: ${testInfo.title}`);
     // First, set the theme to dark
     await page.goto('/');
     
@@ -48,7 +51,7 @@ enhancedTest.describe('Theme Visual Appearance', () => {
     
     // Check headline text visibility
     const headline = page.locator('h1');
-    const headlineColor = await headline.evaluate(el => {
+    const headlineColor = await headline.evaluate((el: Element) => {
       return window.getComputedStyle(el).color;
     });
     
@@ -66,7 +69,10 @@ enhancedTest.describe('Theme Visual Appearance', () => {
     });
   });
   
-  enhancedTest('should apply correct styles in light theme', async ({ page }, testInfo) => {
+  enhancedTest('should apply correct styles in light theme', async ({ page }: { page: Page }, testInfo: TestInfo) => {
+    // Initialize environment for this test
+    await initializeDebugEnvironment(testInfo);
+    debugLog(`Starting visual test: ${testInfo.title}`);
     // First, set the theme to light
     await page.goto('/');
     
@@ -94,7 +100,7 @@ enhancedTest.describe('Theme Visual Appearance', () => {
     
     // Check headline text visibility
     const headline = page.locator('h1');
-    const headlineColor = await headline.evaluate(el => {
+    const headlineColor = await headline.evaluate((el: Element) => {
       return window.getComputedStyle(el).color;
     });
     
@@ -112,7 +118,10 @@ enhancedTest.describe('Theme Visual Appearance', () => {
     });
   });
   
-  enhancedTest('should have visible CTA button with proper contrast in both themes', async ({ browser }, testInfo) => {
+  enhancedTest('should have visible CTA button with proper contrast in both themes', async ({ browser }: { browser: Browser }, testInfo: TestInfo) => {
+    // Initialize environment for this test
+    await initializeDebugEnvironment(testInfo);
+    debugLog(`Starting visual test: ${testInfo.title}`);
     // Test dark theme first
     const darkContext = await browser.newContext();
     const darkPage = await darkContext.newPage();
@@ -131,7 +140,7 @@ enhancedTest.describe('Theme Visual Appearance', () => {
     expect(darkCtaVisible).toBeTruthy();
     
     // CTA should have good contrast with background
-    const darkCtaColor = await darkCta.evaluate(el => {
+    const darkCtaColor = await darkCta.evaluate((el: Element) => {
       const style = window.getComputedStyle(el);
       return {
         background: style.backgroundColor,
@@ -171,7 +180,7 @@ enhancedTest.describe('Theme Visual Appearance', () => {
     expect(lightCtaVisible).toBeTruthy();
     
     // CTA should have good contrast with background
-    const lightCtaColor = await lightCta.evaluate(el => {
+    const lightCtaColor = await lightCta.evaluate((el: Element) => {
       const style = window.getComputedStyle(el);
       return {
         background: style.backgroundColor,
@@ -198,7 +207,10 @@ enhancedTest.describe('Theme Visual Appearance', () => {
   });
   
   // Add a new test to check theme rendering across different viewports
-  enhancedTest('should render both themes correctly across different viewports', async ({ browser }, testInfo) => {
+  enhancedTest('should render both themes correctly across different viewports', async ({ browser }: { browser: Browser }, testInfo: TestInfo) => {
+    // Initialize environment for this test
+    await initializeDebugEnvironment(testInfo);
+    debugLog(`Starting visual test: ${testInfo.title}`);
     // Test each theme across viewports
     const viewports = [StandardViewport.Mobile, StandardViewport.Tablet, StandardViewport.Desktop];
     const themes = ['dark', 'light'];
@@ -219,7 +231,7 @@ enhancedTest.describe('Theme Visual Appearance', () => {
         
         // Set up theme and navigate
         await page.goto('/');
-        await page.evaluate((themeName) => {
+        await page.evaluate((themeName: string) => {
           localStorage.setItem('scry-ui-theme', themeName);
         }, theme);
         await page.reload();

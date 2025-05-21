@@ -18,7 +18,7 @@
    - Ensure the `PLAYWRIGHT_UPDATE_SNAPSHOTS` environment variable is properly set
    - Update the code to handle 'on-failure', 'missing', and 'all' modes
 
- - [ ] 4. **ci-visual-004:** Create separate test groups for visual tests
+ - [x] 4. **ci-visual-004:** Create separate test groups for visual tests
    - Priority: Medium
    - Separate visual tests from functional tests
    - Add tags like `@visual` to make them easier to exclude in CI
