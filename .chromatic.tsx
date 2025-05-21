@@ -1,27 +1,61 @@
-// Chromatic configuration file
-export default {
+/**
+ * Chromatic Configuration
+ * 
+ * This file is the single source of truth for all Chromatic settings.
+ * It's used by both local development and CI environments.
+ * 
+ * To run Chromatic:
+ * - Local: pnpm chromatic
+ * - CI: Configured in .github/workflows/chromatic.yml
+ */
+
+// Define configuration type for better developer experience 
+type ChromaticConfig = {
+  projectToken?: string;
+  buildScriptName: string;
+  storybookBuildDir: string;
+  fileMatch: string[];
+  skip: string[];
+  viewports: number[];
+  disableAnimations: boolean;
+  exitZeroOnChanges: boolean;
+  onlyChanged: boolean;
+  // Additional options as needed
+}
+
+// Define Chromatic configuration
+const config: ChromaticConfig = {
   // Project token can be passed via command line or environment variable
-  // projectToken: process.env.CHROMATIC_PROJECT_TOKEN,
+  // It is defined in GitHub secrets for CI
+  projectToken: process.env.CHROMATIC_PROJECT_TOKEN,
   
-  // Don't allow builds to pass with visual changes
-  exitZeroOnChanges: false,
+  // Storybook build script name in package.json
+  buildScriptName: "build-storybook",
   
-  // Include only specific paths for performance
-  // This helps to reduce build time by only capturing snapshots for components we care about
-  onlyChanged: false, // Capture all stories initially, then can be set to true
+  // Where to find the Storybook build output
+  storybookBuildDir: "storybook-static",
   
-  // Storybook build directory
-  storybookBuildDir: 'storybook-static',
+  // Files to watch for changes to trigger snapshot updates
+  // Reduces false positives from test or configuration files
+  fileMatch: [
+    "**/*.tsx", 
+    "**/*.css", 
+    "**/*.scss", 
+    "**/*.stories.tsx",
+    "**/*.stories.ts"
+  ],
   
   // Skip stories that match this pattern
-  skip: ['**/*template*/**', '**/node_modules/**'],
-  
-  // Files to be watched for changes to trigger snapshot updates
-  // Reduces false positives from test or configuration files
-  fileMatch: ['**/*.tsx', '**/*.css'],
+  // Avoids capturing snapshots for incomplete components or test utilities
+  skip: [
+    "**/*template*/**", 
+    "**/node_modules/**", 
+    "**/*.test.tsx", 
+    "**/*.spec.tsx"
+  ],
   
   // Viewports to capture snapshots for
-  // These should match the viewports defined in Storybook
+  // These should match the viewports defined in Storybook's viewport addon
   viewports: [
     // Mobile
     320,
@@ -33,4 +67,16 @@ export default {
   
   // Disable animations to prevent flaky visual tests
   disableAnimations: true,
-}
+  
+  // Allow builds to pass with visual changes
+  // In CI, this is set to true to prevent blocking the pipeline
+  // In local development, this should be set based on the use case
+  exitZeroOnChanges: true,
+  
+  // By default, capture all stories initially
+  // In CI, this can be set to true to optimize build times
+  onlyChanged: false,
+};
+
+// Export the configuration
+export default config;

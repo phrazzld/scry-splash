@@ -58,3 +58,7 @@
 - [ ] FT-001: Add user authentication system
 - [ ] FT-002: Implement dashboard page
 - [ ] FT-003: Create user profile functionality
+
+## Configuration & Build
+
+- [x] CONFIG-001: Standardize Chromatic configuration ✅
