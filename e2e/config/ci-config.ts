@@ -222,7 +222,7 @@ export function getPlaywrightConfig() {
     ...getResourceAllocation(),
     
     // Reporting
-    reporter: [['list' as const, null], ['html' as const, null]] as const,
+    reporter: [['list', {}], ['html', {}]] as Array<[string, any]>,
     
     // Timeout
     testTimeout: getTimeouts().testTimeout,

@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test'
+import { expect, type Page, type TestInfo } from '@playwright/test'
 import { SplashPage } from '../page-objects/SplashPage.pom'
 import { 
   createTestLogger,
@@ -23,7 +23,7 @@ enhancedTest.describe('Mobile Responsive Design Tests', () => {
     debugLog(`Starting test: ${testInfo.title}`);
   });
 
-  enhancedModeratelyFlakyTest('should have proper mobile layout at 375px width', async ({ page }, testInfo) => {
+  enhancedModeratelyFlakyTest('should have proper mobile layout at 375px width', async ({ page }: { page: Page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title)
     logger.start()
     
@@ -72,7 +72,7 @@ enhancedTest.describe('Mobile Responsive Design Tests', () => {
     logger.end('passed')
   });
 
-  enhancedModeratelyFlakyTest('should have fluid layout transitions between mobile and desktop', async ({ page }, testInfo) => {
+  enhancedModeratelyFlakyTest('should have fluid layout transitions between mobile and desktop', async ({ page }: { page: Page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title)
     logger.start()
     

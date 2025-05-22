@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test'
+import { expect, type Page, type TestInfo } from '@playwright/test'
 import { SplashPage } from '../page-objects/SplashPage.pom'
 import { 
   createTestLogger,
@@ -64,7 +64,7 @@ enhancedTest.describe('Splash Page Load Tests @stable', () => {
     logger.end('passed')
   })
   
-  enhancedModeratelyFlakyTest('should take a visual screenshot of the splash page', async ({ page }, testInfo) => {
+  enhancedModeratelyFlakyTest('should take a visual screenshot of the splash page', async ({ page }: { page: Page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title)
     logger.start()
     
@@ -99,7 +99,7 @@ enhancedTest.describe('Splash Page Load Tests @stable', () => {
     logger.end('passed')
   })
   
-  enhancedModeratelyFlakyTest('should display correctly across different viewports', async ({ page }, testInfo) => {
+  enhancedModeratelyFlakyTest('should display correctly across different viewports', async ({ page }: { page: Page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title)
     logger.start()
     

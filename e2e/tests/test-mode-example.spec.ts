@@ -5,7 +5,7 @@
  * It shows the different test fixtures and how they interact with the test mode system.
  */
 
-import { expect } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 import { 
   enhancedTest,
   visualTest, 
@@ -42,7 +42,7 @@ enhancedTest.describe('Test Mode System', () => {
 });
 
 visualTest.describe('@visual Visual Tests', () => {
-  visualTest('should only run when visual testing is enabled', async ({ page }) => {
+  visualTest('should only run when visual testing is enabled', async ({ page }: { page: Page }) => {
     // This test will be skipped in ci-functional and ci-lightweight modes
     await page.goto('/');
     
@@ -57,7 +57,7 @@ visualTest.describe('@visual Visual Tests', () => {
 });
 
 performanceTest.describe('@performance Performance Tests', () => {
-  performanceTest('should only run when performance testing is enabled', async ({ page }) => {
+  performanceTest('should only run when performance testing is enabled', async ({ page }: { page: Page }) => {
     // This test will be skipped in ci-lightweight mode
     await page.goto('/');
     
@@ -78,7 +78,7 @@ performanceTest.describe('@performance Performance Tests', () => {
 });
 
 criticalTest.describe('@critical Critical Tests', () => {
-  criticalTest('should run critical business flows', async ({ page }) => {
+  criticalTest('should run critical business flows', async ({ page }: { page: Page }) => {
     // Critical tests typically run in all modes but with adjusted timeouts
     await page.goto('/');
     
@@ -95,7 +95,7 @@ criticalTest.describe('@critical Critical Tests', () => {
 });
 
 enhancedModeratelyFlakyTest.describe('@flaky Flaky Tests', () => {
-  enhancedModeratelyFlakyTest('should be skipped in lightweight mode', async ({ page }) => {
+  enhancedModeratelyFlakyTest('should be skipped in lightweight mode', async ({ page }: { page: Page }) => {
     // This test will be skipped in ci-lightweight mode
     await page.goto('/');
     
