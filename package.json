@@ -10,9 +10,9 @@
     "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "chromatic": "chromatic --exit-zero-on-changes",
-    "chromatic:ci": "pnpm build-storybook && chromatic --exit-zero-on-changes",
-    "chromatic:baseline": "pnpm build-storybook && chromatic --exit-zero-on-changes --auto-accept-changes",
+    "chromatic": "chromatic",
+    "chromatic:ci": "pnpm build-storybook && chromatic",
+    "chromatic:baseline": "pnpm build-storybook && chromatic --auto-accept-changes",
     "setup-hooks": "git config core.hooksPath .githooks && chmod +x .githooks/*",
     "postinstall": "npm run setup-hooks",
     "test": "jest",
@@ -20,7 +20,20 @@
     "test:coverage": "jest --coverage",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
-    "e2e:report": "playwright show-report"
+    "e2e:report": "playwright show-report playwright-report",
+    "e2e:update-snapshots": "playwright test --update-snapshots",
+    "e2e:all-browsers": "RUN_ALL_BROWSERS=1 playwright test",
+    "e2e:generate-baselines": "ts-node e2e/scripts/generate-baselines.ts",
+    "e2e:generate-ci-baselines": "CI=true ts-node e2e/scripts/generate-baselines.ts",
+    "e2e:local": "TEST_MODE=local-development playwright test",
+    "e2e:ci-functional": "TEST_MODE=ci-functional playwright test",
+    "e2e:ci-visual": "TEST_MODE=ci-visual playwright test",
+    "e2e:ci-full": "TEST_MODE=ci-full playwright test",
+    "e2e:ci-lightweight": "TEST_MODE=ci-lightweight playwright test",
+    "e2e:functional": "TEST_MODE=ci-functional PLAYWRIGHT_TEST_GREP_INVERT='@visual' playwright test",
+    "e2e:visual": "TEST_MODE=ci-visual PLAYWRIGHT_TEST_GREP='@visual' VISUAL_TESTS_ENABLED_IN_CI=1 playwright test",
+    "e2e:performance": "TEST_MODE=local-development PLAYWRIGHT_TEST_GREP='@performance' playwright test",
+    "e2e:critical": "TEST_MODE=local-development PLAYWRIGHT_TEST_GREP='@critical' playwright test"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -29,7 +42,8 @@
     "next": "15.3.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwind-merge": "^3.2.0"
+    "tailwind-merge": "^3.2.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -53,6 +67,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
     "chromatic": "^11.28.2",
     "eslint": "^9",

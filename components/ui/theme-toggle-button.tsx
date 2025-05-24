@@ -77,6 +77,10 @@ export function ThemeToggleButton({ className, ...props }: ThemeToggleButtonProp
     }
   }, [])
   
+  // Determine descriptive text for screen readers
+  const currentThemeDescription = currentTheme === "dark" ? "Currently in dark mode" : "Currently in light mode";
+  const actionDescription = currentTheme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+
   return (
     <button
       onClick={toggleTheme}
@@ -97,21 +101,31 @@ export function ThemeToggleButton({ className, ...props }: ThemeToggleButtonProp
             : "scale-100",
         className
       )}
-      aria-label={currentTheme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+      aria-label={actionDescription}
+      aria-pressed={currentTheme === "dark"} // For toggle button semantics
+      aria-live="polite"
       type="button"
       {...props}
     >
+      {/* Visually hidden text for screen readers */}
+      <span className="sr-only">{currentThemeDescription}</span>
+      
       {/* Container div for both icons with positioning */}
-      <div className={cn(
-        "relative w-5 h-5",
-        "transition-transform duration-[var(--theme-toggle-duration)] [transition-timing-function:var(--theme-toggle-timing)]",
-        isHovered && !isPressed ? "animate-subtle-pulse" : ""
-      )}>
+      <div 
+        className={cn(
+          "relative w-5 h-5",
+          "transition-transform duration-[var(--theme-toggle-duration)] [transition-timing-function:var(--theme-toggle-timing)]",
+          isHovered && !isPressed ? "animate-subtle-pulse" : ""
+        )}
+        aria-hidden="true" // Hide decorative icons from screen readers
+      >
         {/* Sun icon (shown in dark mode) */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
+          role="presentation"
+          aria-hidden="true"
           className={cn(
             "absolute inset-0 h-5 w-5 transition-all",
             "transform-gpu scale-100 rotate-0",
@@ -131,6 +145,8 @@ export function ThemeToggleButton({ className, ...props }: ThemeToggleButtonProp
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
+          role="presentation"
+          aria-hidden="true"
           className={cn(
             "absolute inset-0 h-5 w-5 transition-all",
             "transform-gpu scale-100 rotate-0",

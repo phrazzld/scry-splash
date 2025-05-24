@@ -356,4 +356,60 @@ describe('ThemeToggleButton Component', () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+  
+  it('has enhanced accessibility attributes for screen readers', () => {
+    // Test light mode
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      systemTheme: 'light',
+      setTheme: jest.fn(),
+    });
+
+    render(<ThemeToggleButton />);
+    
+    // Check for proper button accessibility attributes
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('aria-label', 'Switch to dark theme');
+    expect(button).toHaveAttribute('aria-pressed', 'false'); // Light mode = false
+    expect(button).toHaveAttribute('aria-live', 'polite');
+    
+    // Check for screen reader text
+    const srOnlyText = screen.getByText('Currently in light mode');
+    expect(srOnlyText).toBeInTheDocument();
+    expect(srOnlyText).toHaveClass('sr-only');
+    
+    // Check icon container is hidden from screen readers
+    const iconContainer = button.querySelector('div');
+    expect(iconContainer).toHaveAttribute('aria-hidden', 'true');
+    
+    // Check SVG icons have proper accessibility attributes
+    const svgIcons = button.querySelectorAll('svg');
+    svgIcons.forEach(icon => {
+      expect(icon).toHaveAttribute('aria-hidden', 'true');
+      expect(icon).toHaveAttribute('role', 'presentation');
+    });
+    
+    // Test dark mode
+    (ThemeProviderModule.useTheme as jest.Mock).mockReturnValue({
+      theme: 'dark',
+      systemTheme: 'dark',
+      setTheme: jest.fn(),
+    });
+    
+    // Instead of trying to find the button by role (which might find multiple buttons),
+    // Let's render with a specific testid to ensure we get the right button
+    const { unmount } = render(<ThemeToggleButton data-testid="dark-mode-button" />);
+    unmount();
+    render(<ThemeToggleButton data-testid="dark-mode-button" />);
+    
+    // Get a new reference to the button using the testid
+    const updatedButton = screen.getByTestId('dark-mode-button');
+    
+    // Verify button has updated aria attributes for dark mode
+    expect(updatedButton).toHaveAttribute('aria-label', 'Switch to light theme');
+    expect(updatedButton).toHaveAttribute('aria-pressed', 'true'); // Dark mode = true
+    
+    // Verify screen reader text updated
+    expect(screen.getByText('Currently in dark mode')).toBeInTheDocument();
+  });
 });

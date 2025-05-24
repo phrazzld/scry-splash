@@ -43,8 +43,7 @@ jobs:
       - name: Publish to Chromatic
         uses: chromaui/action@latest
         with:
+          # Use project token from secrets - all other settings are in .chromatic.tsx
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          exitZeroOnChanges: true # Allow the workflow to pass with visual changes (review in UI)
-          onlyChanged: true # Only build stories affected by changes
-          buildScriptName: "build-storybook"
-          skip: "**/*template*/**"
+          # CI-specific overrides to optimize build time
+          onlyChanged: true # Only build stories affected by changes in CI

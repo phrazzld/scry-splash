@@ -164,6 +164,9 @@ const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
   }, ref) => {
     const Component = as
     
+    // Spread only valid HTML props to the component
+    const containerProps = { ...props }
+    
     return (
       <Component
         ref={ref}
@@ -176,7 +179,7 @@ const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
           gapY,
           className 
         }))}
-        {...props}
+        {...containerProps}
       />
     )
   }

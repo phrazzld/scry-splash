@@ -91,6 +91,21 @@ This project uses [Formspark](https://formspark.io) for handling the early acces
 
 For more information, see the Formspark [documentation](https://documentation.formspark.io/).
 
+## CI/CD Workflow
+
+This project uses GitHub Actions for continuous integration and testing:
+
+1. **Unit Tests**: Runs Jest tests on code changes
+2. **Type Checking**: Ensures TypeScript type safety
+3. **E2E Tests**: Runs Playwright end-to-end tests with performance optimizations:
+   - Dependency caching for faster installations
+   - Browser binary caching
+   - Selective browser testing (Chromium by default)
+   - Parallel test execution
+4. **Visual Testing**: Uses Chromatic for UI regression testing
+
+For more details on the E2E testing setup, see the [E2E Testing documentation](e2e/README.md).
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
