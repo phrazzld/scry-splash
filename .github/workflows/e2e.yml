@@ -194,7 +194,7 @@ jobs:
           
           # Run the browser verification test for Chromium
           echo "Testing Chromium browser launch with functional verification test..."
-          if NEXT_PUBLIC_FORMSPARK_FORM_ID=test-form-id pnpm exec playwright test e2e/browser-verification.spec.ts --project=chromium; then
+          if NEXT_PUBLIC_FORMSPARK_FORM_ID=test-form-id pnpm exec playwright test e2e/tests/browser-verification.spec.ts --project=chromium; then
             echo "Functional verification test passed!"
           else
             echo "::error::Functional verification test failed!"
