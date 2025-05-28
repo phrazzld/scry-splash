@@ -283,7 +283,8 @@ enhancedTest.describe("CTA Flow @stable", () => {
     // Verify the message with better logging
     logger.step("Verifying error message");
     await expect(errorMessage).toBeVisible();
-    await expect(errorMessage).toContainText("error submitting");
+    // The error message could be either the mocked response or the fallback message
+    await expect(errorMessage).toContainText(/Submission failed|error submitting/i);
     logger.success("Error message verified");
     
     // Verify that success message is not shown with better error handling

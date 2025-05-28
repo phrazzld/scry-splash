@@ -5,10 +5,10 @@ import { BasePage, createTestLogger, retryClick, retryFill, waitForFormReady } f
  * Page Object Model for the CTA Form component
  */
 export class CtaForm extends BasePage {
-  // Selectors
-  private readonly emailInputSelector = 'input[type="email"]'
-  private readonly submitButtonSelector = 'button[type="submit"]'
-  private readonly formSelector = 'form'
+  // Selectors - Use data-testid for reliable targeting
+  private readonly formSelector = '[data-testid="cta-form"]'
+  private readonly emailInputSelector = '[data-testid="cta-email-input"]'
+  private readonly submitButtonSelector = '[data-testid="cta-submit-button"]'
   private readonly successMessageSelector = '[data-testid="cta-success-message"]'
   private readonly errorMessageSelector = '[data-testid="cta-error-message"]'
   private readonly errorMessageText = 'Sorry, there was an error submitting your email. Please try again.'

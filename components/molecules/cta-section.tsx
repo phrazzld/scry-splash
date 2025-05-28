@@ -205,6 +205,7 @@ export function CTASection({
           centered && "items-center"
         )}
         aria-labelledby="cta-form-heading"
+        data-testid="cta-form"
         noValidate
       >
         {/* Invisible heading for screen readers */}
@@ -244,6 +245,7 @@ export function CTASection({
             value={inputValue}
             onChange={handleInputChange}
             disabled={isSubmitting}
+            data-testid="cta-email-input"
             className={cn(
               submitStatus === "success" && "border-green-500 bg-green-50 dark:bg-green-900/20",
               submitStatus === "error" && "border-red-500 bg-red-50 dark:bg-red-900/20"
@@ -261,6 +263,7 @@ export function CTASection({
             aria-busy={isSubmitting}
             type="submit"
             disabled={isSubmitting || !inputValue.trim()}
+            data-testid="cta-submit-button"
             className={cn(
               "whitespace-nowrap h-12 text-base font-bold px-6 sm:px-10 py-3 w-full sm:w-auto bg-[#0047AB] text-white hover:bg-[#003d91]",
               isSubmitting && "opacity-80 cursor-not-allowed"

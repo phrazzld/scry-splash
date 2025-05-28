@@ -479,12 +479,26 @@ export async function waitForFormReady(
     }
     
     // Wait for key interactive elements within the form
-    // Focus on waiting for any input elements to be visible and enabled
-    const inputLocator = page.locator(`${formSelector} input, ${formSelector} button`).first();
-    await inputLocator.waitFor({ 
-      state: 'visible', 
-      timeout: timeout / 2 
-    });
+    // Use specific data-testid selectors to avoid matching honeypot fields
+    // Try CTA form elements first (most common case), then fall back to generic selectors
+    
+    // First try data-testid selectors for CTA form elements
+    const ctaEmailInput = page.getByTestId('cta-email-input');
+    const ctaSubmitButton = page.getByTestId('cta-submit-button');
+    
+    try {
+      // Wait for CTA form elements specifically
+      await ctaEmailInput.waitFor({ state: 'visible', timeout: timeout / 4 });
+      await ctaSubmitButton.waitFor({ state: 'visible', timeout: timeout / 4 });
+    } catch {
+      // Fall back to more targeted generic selectors that exclude honeypot fields
+      // Target visible, enabled inputs that are NOT honeypot fields
+      const visibleInputLocator = page.locator(`${formSelector} input:not([name="_gotcha"]):not([tabindex="-1"])`).first();
+      await visibleInputLocator.waitFor({ 
+        state: 'visible', 
+        timeout: timeout / 2 
+      });
+    }
     
     if (debug) {
       // Log form state for debugging
