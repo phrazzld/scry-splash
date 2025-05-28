@@ -50,7 +50,7 @@ jest.mock('@/components/ui/button', () => ({
     ...props 
   }: ButtonProps) => (
     <button 
-      data-testid="mock-button" 
+      data-testid={props['data-testid'] || "cta-submit-button"} 
       data-variant={variant} 
       data-size={size} 
       data-aria-label={ariaLabel}
@@ -76,7 +76,7 @@ jest.mock('@/components/ui/input', () => ({
     ...props 
   }: InputProps) => (
     <input 
-      data-testid="mock-input" 
+      data-testid={props['data-testid'] || "cta-email-input"}
       type={type}
       placeholder={placeholder}
       aria-label={ariaLabel}
@@ -137,7 +137,7 @@ describe('CTASection Component', () => {
     render(<CTASection />);
     
     // Check input field renders
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
     expect(input).toBeInTheDocument();
     expect(input).toHaveAttribute('type', 'email');
     expect(input).toHaveAttribute('name', 'email');
@@ -146,7 +146,7 @@ describe('CTASection Component', () => {
     expect(input).toHaveAttribute('required');
     
     // Check button renders with default text
-    const button = screen.getByTestId('mock-button');
+    const button = screen.getByTestId('cta-submit-button');
     expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent('Get early access');
     expect(button).toHaveAttribute('data-variant', 'cta'); // Now using cta variant by default
@@ -173,7 +173,7 @@ describe('CTASection Component', () => {
     
     render(<CTASection buttonText={customButtonText} microcopy={customMicrocopy} />);
     
-    const button = screen.getByTestId('mock-button');
+    const button = screen.getByTestId('cta-submit-button');
     expect(button).toHaveTextContent(customButtonText);
     
     const microcopy = screen.getByTestId('cta-microcopy');
@@ -186,7 +186,7 @@ describe('CTASection Component', () => {
     
     render(<CTASection inputPlaceholder={customPlaceholder} inputType={customType} />);
     
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
     expect(input).toHaveAttribute('placeholder', customPlaceholder);
     expect(input).toHaveAttribute('type', customType);
   });
@@ -194,7 +194,7 @@ describe('CTASection Component', () => {
   it('renders with custom button size', () => {
     render(<CTASection buttonSize="xl" />);
     
-    const button = screen.getByTestId('mock-button');
+    const button = screen.getByTestId('cta-submit-button');
     expect(button).toHaveAttribute('data-size', 'xl');
   });
 
@@ -204,7 +204,7 @@ describe('CTASection Component', () => {
     render(<CTASection onFormSubmit={handleSubmit} />);
 
     const form = screen.getByRole('form');
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
 
     // Type in the input
     await act(async () => {
@@ -228,7 +228,7 @@ describe('CTASection Component', () => {
     render(<CTASection onButtonClick={handleClick} />);
 
     const form = screen.getByRole('form');
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
 
     // Type in the input so the form is valid
     await act(async () => {
@@ -253,7 +253,7 @@ describe('CTASection Component', () => {
     const customAriaLabel = 'Custom input label';
     render(<CTASection inputAriaLabel={customAriaLabel} />);
     
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
     expect(input).toHaveAttribute('aria-label', customAriaLabel);
   });
 
@@ -261,7 +261,7 @@ describe('CTASection Component', () => {
     const customAriaLabel = 'Custom button label';
     render(<CTASection buttonAriaLabel={customAriaLabel} />);
     
-    const button = screen.getByTestId('mock-button');
+    const button = screen.getByTestId('cta-submit-button');
     expect(button).toHaveAttribute('data-aria-label', customAriaLabel);
   });
 
@@ -269,7 +269,7 @@ describe('CTASection Component', () => {
     const buttonText = 'Join now';
     render(<CTASection buttonText={buttonText} />);
     
-    const button = screen.getByTestId('mock-button');
+    const button = screen.getByTestId('cta-submit-button');
     expect(button).toHaveAttribute('data-aria-label', buttonText);
   });
 
@@ -337,7 +337,7 @@ describe('CTASection Component', () => {
     expect(inputLabel).toHaveClass('sr-only');
     
     // Check input has an id for label association
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
     expect(input).toHaveAttribute('id', 'email-input');
     
     // Check microcopy has proper attributes
@@ -359,7 +359,7 @@ describe('CTASection Component', () => {
     render(<CTASection />);
 
     const form = screen.getByRole('form');
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
 
     // Type in the input
     await act(async () => {
@@ -399,7 +399,7 @@ describe('CTASection Component', () => {
     render(<CTASection formAction={customFormAction} />);
 
     const form = screen.getByRole('form');
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
 
     // Type in the input
     await act(async () => {
@@ -430,7 +430,7 @@ describe('CTASection Component', () => {
     render(<CTASection />);
     
     const form = screen.getByRole('form');
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
     
     // Type in the input
     await act(async () => {
@@ -469,7 +469,7 @@ describe('CTASection Component', () => {
     render(<CTASection />);
     
     const form = screen.getByRole('form');
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
     
     // Type in the input
     await act(async () => {
