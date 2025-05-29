@@ -91,3 +91,25 @@
      - Updated Page Object Models (CtaForm, SplashPage) to use CI-aware timeouts by default
      - Integrated with existing CI configuration and test modes
      - Maintained fast local development timeouts while extending CI timeouts for reliability
+
+## CI Resolution Tasks (Current Failures)
+
+ - [x] 13. **ci-fix-001:** Fix environment variable isolation in timeout-config unit tests
+   - Priority: High
+   - **Issue**: Test Coverage failing because timeout-config.test.ts expects local timeouts (15000ms) but receives CI timeouts (37500ms)
+   - **Root Cause**: Jest test environment not properly isolated from CI environment detection
+   - **Action Required**:
+     - Mock environment variables in Jest test setup for timeout-config.test.ts
+     - Ensure unit tests run in predictable local context regardless of CI environment
+     - Verify timeout calculations work correctly in both local and CI environments
+   - **COMPLETED**: Fixed environment isolation by mocking `isRunningInCI()` and `getCurrentTestMode()` functions instead of manipulating environment variables directly. Tests now run reliably in both local and CI contexts with proper isolation.
+
+ - [ ] 14. **ci-fix-002:** Add missing data-testid attribute to CTA form component
+   - Priority: High  
+   - **Issue**: E2E tests failing because CTA form lacks required `data-testid="cta-form"` attribute
+   - **Root Cause**: Page Object Model expects `[data-testid="cta-form"]` selector but component doesn't have this attribute
+   - **Action Required**:
+     - Locate CTA section component (likely in components/molecules/cta-section.tsx)
+     - Add `data-testid="cta-form"` attribute to the form element
+     - Verify E2E test selectors match actual component structure
+     - Ensure all CTA flow E2E tests can locate the form element

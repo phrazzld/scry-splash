@@ -9,25 +9,43 @@ import {
   TimeoutOperation 
 } from '../../e2e/config/timeout-config';
 
+// Mock the environment detector to ensure predictable test behavior
+jest.mock('../../e2e/utils/environment-detector', () => ({
+  isRunningInCI: jest.fn()
+}));
+
+// Mock the test modes module 
+jest.mock('../../e2e/utils/test-modes', () => ({
+  getCurrentTestMode: jest.fn(() => 'functional'), // Default to functional mode
+  TestMode: {
+    CILightweight: 'ci-lightweight',
+    CIFull: 'ci-full', 
+    CIFunctional: 'ci-functional',
+    CIVisual: 'ci-visual'
+  }
+}));
+
+import { isRunningInCI } from '../../e2e/utils/environment-detector';
+import { getCurrentTestMode, TestMode } from '../../e2e/utils/test-modes';
+
+// Type the mocked functions
+const mockIsRunningInCI = isRunningInCI as jest.MockedFunction<typeof isRunningInCI>;
+const mockGetCurrentTestMode = getCurrentTestMode as jest.MockedFunction<typeof getCurrentTestMode>;
+
 describe('Timeout Configuration', () => {
-  let originalEnv: NodeJS.ProcessEnv;
-
   beforeEach(() => {
-    // Save original environment
-    originalEnv = { ...process.env };
-  });
-
-  afterEach(() => {
-    // Restore original environment
-    process.env = originalEnv;
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+    
+    // Default to local environment (not CI)
+    mockIsRunningInCI.mockReturnValue(false);
+    mockGetCurrentTestMode.mockReturnValue(TestMode.CIFunctional);
   });
 
   describe('getEnvironmentTimeouts', () => {
     it('should return local timeouts for local environment', () => {
-      // Arrange: Set up local environment by deleting CI variables
-      delete process.env.CI;
-      delete process.env.GITHUB_ACTIONS;
-      delete process.env.TEST_MODE;
+      // Arrange: Mock local environment (not CI)
+      mockIsRunningInCI.mockReturnValue(false);
 
       // Act
       const timeouts = getEnvironmentTimeouts();
@@ -39,9 +57,9 @@ describe('Timeout Configuration', () => {
     });
 
     it('should return CI timeouts for CI environment', () => {
-      // Arrange: Set up CI environment
-      process.env.CI = 'true';
-      process.env.GITHUB_ACTIONS = 'true';
+      // Arrange: Mock CI environment with default mode
+      mockIsRunningInCI.mockReturnValue(true);
+      mockGetCurrentTestMode.mockReturnValue(TestMode.CIFunctional);
 
       // Act
       const timeouts = getEnvironmentTimeouts();
@@ -53,9 +71,9 @@ describe('Timeout Configuration', () => {
     });
 
     it('should handle different CI modes correctly', () => {
-      // Arrange: Set up CI environment with specific mode
-      process.env.CI = 'true';
-      process.env.TEST_MODE = 'ci-full';
+      // Arrange: Mock CI environment with ci-full mode
+      mockIsRunningInCI.mockReturnValue(true);
+      mockGetCurrentTestMode.mockReturnValue(TestMode.CIFull);
 
       // Act
       const timeouts = getEnvironmentTimeouts();
@@ -66,9 +84,9 @@ describe('Timeout Configuration', () => {
     });
 
     it('should use lightweight timeouts for ci-lightweight mode', () => {
-      // Arrange
-      process.env.CI = 'true';
-      process.env.TEST_MODE = 'ci-lightweight';
+      // Arrange: Mock CI environment with ci-lightweight mode
+      mockIsRunningInCI.mockReturnValue(true);
+      mockGetCurrentTestMode.mockReturnValue(TestMode.CILightweight);
 
       // Act
       const timeouts = getEnvironmentTimeouts();
@@ -81,8 +99,8 @@ describe('Timeout Configuration', () => {
 
   describe('calculateTimeout', () => {
     it('should calculate timeout for specific operation in local environment', () => {
-      // Arrange
-      process.env.CI = undefined;
+      // Arrange: Mock local environment
+      mockIsRunningInCI.mockReturnValue(false);
 
       // Act
       const timeout = calculateTimeout(TimeoutOperation.FormInteraction);
@@ -92,8 +110,9 @@ describe('Timeout Configuration', () => {
     });
 
     it('should calculate timeout for specific operation in CI environment', () => {
-      // Arrange
-      process.env.CI = 'true';
+      // Arrange: Mock CI environment
+      mockIsRunningInCI.mockReturnValue(true);
+      mockGetCurrentTestMode.mockReturnValue(TestMode.CIFunctional);
 
       // Act
       const timeout = calculateTimeout(TimeoutOperation.FormInteraction);
@@ -103,8 +122,8 @@ describe('Timeout Configuration', () => {
     });
 
     it('should accept custom multipliers', () => {
-      // Arrange
-      process.env.CI = undefined;
+      // Arrange: Mock local environment
+      mockIsRunningInCI.mockReturnValue(false);
 
       // Act
       const timeout = calculateTimeout(TimeoutOperation.ElementWait, 2.0);
@@ -114,9 +133,9 @@ describe('Timeout Configuration', () => {
     });
 
     it('should have reasonable upper bounds for timeouts', () => {
-      // Arrange
-      process.env.CI = 'true';
-      process.env.TEST_MODE = 'ci-full';
+      // Arrange: Mock CI environment with ci-full mode
+      mockIsRunningInCI.mockReturnValue(true);
+      mockGetCurrentTestMode.mockReturnValue(TestMode.CIFull);
 
       // Act
       const timeout = calculateTimeout(TimeoutOperation.Navigation);
@@ -128,8 +147,8 @@ describe('Timeout Configuration', () => {
 
   describe('TimeoutConfig interface', () => {
     it('should have all required timeout properties', () => {
-      // Arrange
-      process.env.CI = undefined;
+      // Arrange: Mock local environment  
+      mockIsRunningInCI.mockReturnValue(false);
 
       // Act
       const config = getEnvironmentTimeouts();
@@ -150,7 +169,10 @@ describe('Timeout Configuration', () => {
     });
 
     it('should have consistent timeout ordering', () => {
-      // Arrange
+      // Arrange: Mock local environment
+      mockIsRunningInCI.mockReturnValue(false);
+      
+      // Act
       const config = getEnvironmentTimeouts();
 
       // Assert: Verify logical timeout ordering
@@ -161,46 +183,38 @@ describe('Timeout Configuration', () => {
   });
 
   describe('Environment detection edge cases', () => {
-    it('should handle missing environment variables gracefully', () => {
-      // Arrange: Clear all environment variables
-      delete process.env.CI;
-      delete process.env.GITHUB_ACTIONS;
-      delete process.env.TEST_MODE;
+    it('should handle local environment gracefully', () => {
+      // Arrange: Mock local environment (not CI)
+      mockIsRunningInCI.mockReturnValue(false);
 
       // Act & Assert: Should not throw
       expect(() => getEnvironmentTimeouts()).not.toThrow();
       
       const timeouts = getEnvironmentTimeouts();
       expect(timeouts).toBeDefined();
-      expect(timeouts.elementWait).toBe(10000); // Should use local timeouts when no CI env vars
+      expect(timeouts.elementWait).toBe(10000); // Should use local timeouts when not CI
     });
 
     it('should handle invalid TEST_MODE values', () => {
-      // Arrange
-      process.env.CI = 'true';
-      process.env.TEST_MODE = 'invalid-mode';
+      // Arrange: Mock CI environment with invalid mode (falls back to default functional)
+      mockIsRunningInCI.mockReturnValue(true);
+      mockGetCurrentTestMode.mockReturnValue('invalid-mode' as any);
 
       // Act & Assert: Should fall back to default CI timeouts
       const timeouts = getEnvironmentTimeouts();
       expect(timeouts.elementWait).toBe(25000); // Default CI multiplier
     });
 
-    it('should handle string boolean values correctly', () => {
-      // Arrange: Test different CI string values  
-      const testCases = ['true', '1'];
+    it('should handle CI environment correctly', () => {
+      // Arrange: Mock CI environment
+      mockIsRunningInCI.mockReturnValue(true);
+      mockGetCurrentTestMode.mockReturnValue(TestMode.CIFunctional);
+        
+      // Act
+      const timeouts = getEnvironmentTimeouts();
       
-      testCases.forEach(ciValue => {
-        // Clear other CI variables first
-        delete process.env.GITHUB_ACTIONS;
-        delete process.env.TEST_MODE;
-        process.env.CI = ciValue;
-        
-        // Act
-        const timeouts = getEnvironmentTimeouts();
-        
-        // Assert: Should recognize as CI environment (elementWait should be 25000 for CI)
-        expect(timeouts.elementWait).toBe(25000);
-      });
+      // Assert: Should recognize as CI environment (elementWait should be 25000 for CI)
+      expect(timeouts.elementWait).toBe(25000);
     });
   });
 });
