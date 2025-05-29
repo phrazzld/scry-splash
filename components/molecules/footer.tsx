@@ -61,6 +61,7 @@ export function Footer({
       className={cn("py-4 sm:py-6 border-t border-foreground/5", className)} 
       gap="none"
       padding="responsive"
+      data-testid="footer"
       {...props}
     >
       <GridItem 
@@ -77,14 +78,18 @@ export function Footer({
         <BodyText 
           className={cn("text-xs", textColor)}
           as="p"
+          data-testid="footer-attribution"
         >
           {projectText}
         </BodyText>
         
         {showThemeToggle && (
-          <div className={cn(
-            centered ? "mt-4" : "mt-3 sm:mt-0"
-          )}>
+          <div 
+            className={cn(
+              centered ? "mt-4" : "mt-3 sm:mt-0"
+            )}
+            data-testid="footer-theme-toggle"
+          >
             <ThemeToggleButton 
               className={cn(
                 "text-foreground/50 hover:text-foreground transition-colors",

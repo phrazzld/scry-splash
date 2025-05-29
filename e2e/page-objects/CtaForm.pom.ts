@@ -1,5 +1,6 @@
 import { type Page, type Locator, type TestInfo } from '@playwright/test'
-import { BasePage, createTestLogger, retryClick, retryFill, waitForFormReady } from '../utils/enhanced-testing'
+import { BasePage, createTestLogger, waitForFormReadyCI, retryClickCI, retryFillCI } from '../utils/enhanced-testing'
+import { getEnvironmentTimeouts } from '../config/timeout-config'
 
 /**
  * Page Object Model for the CTA Form component
@@ -18,22 +19,29 @@ export class CtaForm extends BasePage {
   }
 
   /**
-   * Fill the email input field with enhanced reliability
+   * Fill the email input field with enhanced reliability and CI-aware timeouts
    * @param email - The email address to enter
    * @param testInfo - Playwright TestInfo object for artifact generation
    */
   async fillEmail(
     email: string, 
     testInfo: TestInfo,
-    options = { timeout: 30000, retries: 2 }
+    options: { timeout?: number; retries?: number } = {}
   ): Promise<void> {
     const logger = createTestLogger('CtaForm.fillEmail')
     logger.step(`Filling email field with "${email}"`)
     
-    await waitForFormReady(this.page, testInfo, this.formSelector, { timeout: options.timeout })
-    await retryFill(this.page.locator(this.emailInputSelector), email, {
-      timeout: options.timeout,
-      retries: options.retries,
+    // Use CI-aware timeouts as defaults
+    const timeouts = getEnvironmentTimeouts()
+    const finalOptions = {
+      timeout: timeouts.formReady,
+      retries: 2,
+      ...options
+    }
+    
+    await waitForFormReadyCI(this.page, testInfo, this.formSelector, { timeout: finalOptions.timeout })
+    await retryFillCI(this.page.locator(this.emailInputSelector), email, {
+      retries: finalOptions.retries,
       description: `fill email field with "${email}"`
     })
     
@@ -41,24 +49,32 @@ export class CtaForm extends BasePage {
   }
 
   /**
-   * Submit the form by clicking the submit button with enhanced reliability
+   * Submit the form by clicking the submit button with enhanced reliability and CI-aware timeouts
    * @param testInfo - Playwright TestInfo object for artifact generation
    */
   async submit(
     testInfo: TestInfo,
-    options = { timeout: 30000, retries: 2 }
+    options: { timeout?: number; retries?: number } = {}
   ): Promise<void> {
     const logger = createTestLogger('CtaForm.submit')
     logger.start()
     
     logger.step('Preparing to submit form')
     
+    // Use CI-aware timeouts as defaults
+    const timeouts = getEnvironmentTimeouts()
+    const finalOptions = {
+      timeout: timeouts.formReady,
+      retries: 2,
+      ...options
+    }
+    
     // Wait for form to be ready
-    await waitForFormReady(this.page, testInfo, this.formSelector, { timeout: options.timeout })
+    await waitForFormReadyCI(this.page, testInfo, this.formSelector, { timeout: finalOptions.timeout })
     
     // Get button information for logging
     const button = this.page.locator(this.submitButtonSelector)
-    await button.waitFor({ state: 'visible', timeout: options.timeout })
+    await button.waitFor({ state: 'visible', timeout: timeouts.elementWait })
     
     const buttonText = await button.textContent()
     const buttonEnabled = await button.isEnabled()
@@ -68,11 +84,10 @@ export class CtaForm extends BasePage {
     const emailValue = await this.page.locator(this.emailInputSelector).inputValue()
     logger.info(`Email input value: "${emailValue}"`)
     
-    // Click with retry logic
+    // Click with retry logic using CI-aware function
     logger.step('Clicking submit button')
-    await retryClick(button, { 
-      timeout: options.timeout,
-      retries: options.retries,
+    await retryClickCI(button, { 
+      retries: finalOptions.retries,
       description: 'click submit button'
     })
     

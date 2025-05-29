@@ -1,33 +1,40 @@
 import { type Page, type Locator, type TestInfo } from '@playwright/test'
-import { BasePage, createTestLogger, waitForPageLoaded, debugLog } from '../utils/enhanced-testing'
+import { BasePage, createTestLogger, waitForPageLoaded, debugLog, retryNavigationCI } from '../utils/enhanced-testing'
+import { getEnvironmentTimeouts } from '../config/timeout-config'
 
 /**
  * Page Object Model for the Splash Page
  */
 export class SplashPage extends BasePage {
   // Selectors
-  private readonly headlineSelector = 'h1'
-  private readonly ctaSectionSelector = 'form'
-  private readonly footerSelector = 'footer'
+  private readonly headlineSelector = '[data-testid="hero-headline"]'
+  private readonly ctaSectionSelector = '[data-testid="cta-form"]'
+  private readonly footerSelector = '[data-testid="footer"]'
 
   constructor(page: Page) {
     super(page)
   }
 
   /**
-   * Navigate to the splash page with improved reliability
+   * Navigate to the splash page with improved reliability and CI-aware timeouts
    * @param testInfo Playwright TestInfo object for artifact generation
    * @param options Navigation options
    */
-  async navigate(testInfo: TestInfo, options = { timeout: 60000 }): Promise<void> {
+  async navigate(testInfo: TestInfo, options: { timeout?: number } = {}): Promise<void> {
     const logger = createTestLogger('SplashPage Navigation')
     logger.start()
     
-    logger.step('Navigating to homepage')
-    await this.navigateTo('/', testInfo, { timeout: options.timeout })
+    // Use CI-aware timeout as default
+    const timeouts = getEnvironmentTimeouts()
+    const finalTimeout = options.timeout || timeouts.navigation
+    
+    logger.step('Navigating to homepage with CI-aware timeouts')
+    await retryNavigationCI(this.page, testInfo, '/', {
+      description: 'navigate to splash page'
+    })
     
     logger.step('Waiting for page to be fully loaded')
-    await waitForPageLoaded(this.page)
+    await waitForPageLoaded(this.page, { timeout: finalTimeout })
     
     logger.success('Navigation complete')
     logger.end('passed')

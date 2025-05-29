@@ -38,12 +38,13 @@ enhancedTest.describe('Mobile Responsive Design Tests', () => {
     logger.step('Verifying mobile layout')
     
     // Check headline visibility and appropriate sizing
-    const headline = await page.locator('h1').first();
+    const headline = await splashPage.getHeadline(testInfo);
     await expect(headline).toBeVisible();
     
     // Check CTA form is properly sized for mobile
-    const ctaForm = await page.locator('form').first();
-    await expect(ctaForm).toBeVisible();
+    const ctaFormVisible = await splashPage.isCtaSectionVisible(testInfo);
+    expect(ctaFormVisible).toBe(true);
+    const ctaForm = await page.locator('[data-testid="cta-form"]');
     
     // Check button is full width on mobile
     const button = await page.locator('button[type="submit"]').first();
@@ -58,8 +59,8 @@ enhancedTest.describe('Mobile Responsive Design Tests', () => {
     expect(buttonBox?.width).toBeGreaterThan(formBox!.width * 0.9);
     
     // Verify the footer stacks vertically on mobile
-    const footer = await page.locator('footer').first();
-    await expect(footer).toBeVisible();
+    const footerVisible = await splashPage.isFooterVisible(testInfo);
+    expect(footerVisible).toBe(true);
     
     // Take a screenshot for visual verification
     await expectScreenshot(page, testInfo, 'mobile-responsive-layout', {
@@ -101,11 +102,11 @@ enhancedTest.describe('Mobile Responsive Design Tests', () => {
       await page.waitForTimeout(500);
       
       // Verify key elements are visible at this viewport
-      const headline = await page.locator('h1').first();
+      const headline = await splashPage.getHeadline(testInfo);
       await expect(headline).toBeVisible();
       
-      const ctaForm = await page.locator('form').first();
-      await expect(ctaForm).toBeVisible();
+      const ctaFormVisible = await splashPage.isCtaSectionVisible(testInfo);
+      expect(ctaFormVisible).toBe(true);
       
       // Take a screenshot for each viewport
       await expectScreenshot(page, testInfo, `responsive-layout-${viewport.width}`, {

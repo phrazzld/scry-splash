@@ -119,6 +119,7 @@ function TypewriterHeadline({
       as="h1"
       weight="regular"
       aria-label={ariaLabel}
+      data-testid="hero-headline"
     >
       {/* Visually hidden text for screen readers that announces the complete final result */}
       {isComplete && (
@@ -272,6 +273,7 @@ export function HeroSection({
       id={sectionId}
       role="banner"
       aria-labelledby={useTypewriterEffect ? undefined : "hero-heading"}
+      data-testid="hero-section"
       {...props}
     >
       <GridItem 
@@ -307,6 +309,7 @@ export function HeroSection({
             as="h1"
             weight="regular"
             id="hero-heading"
+            data-testid="hero-headline"
           >
             {headline}
           </DisplayText>
@@ -317,9 +320,11 @@ export function HeroSection({
           <div 
             className="mb-2 md:mb-4 mt-1 md:mt-0"
             aria-describedby={useTypewriterEffect ? undefined : "hero-heading"}
+            data-testid="hero-subheadline-container"
           >
             <BodyText 
               className={cn("max-w-prose opacity-80 text-sm sm:text-base md:text-body", textColor)}
+              data-testid="hero-subheadline"
               // Using a paragraph element for semantic meaning instead of a role
               // Removing role="complementary" as it should be a top-level landmark
             >

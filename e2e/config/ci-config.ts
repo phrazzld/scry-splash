@@ -119,39 +119,44 @@ export function shouldSkipTestCategory(category: 'visual' | 'performance' | 'fla
 
 /**
  * Get appropriate timeouts based on the current mode
+ * Now integrates with the timeout-config module for consistency
  */
 export function getTimeouts() {
+  // Import here to avoid circular dependencies
+  const { getEnvironmentTimeouts } = require('./timeout-config');
+  const environmentTimeouts = getEnvironmentTimeouts();
+  
   const mode = getCurrentTestMode();
   
   switch (mode) {
     case TestMode.CIFull:
       return {
-        testTimeout: CI_CONSTANTS.DEFAULT_TEST_TIMEOUT * 1.5, // Longer timeout for full suite
-        actionTimeout: CI_CONSTANTS.DEFAULT_ACTION_TIMEOUT,
-        navigationTimeout: CI_CONSTANTS.DEFAULT_NAVIGATION_TIMEOUT
+        testTimeout: environmentTimeouts.navigation * 2, // Extra long for full suite
+        actionTimeout: environmentTimeouts.elementWait,
+        navigationTimeout: environmentTimeouts.navigation
       };
     
     case TestMode.CILightweight:
       return {
-        testTimeout: CI_CONSTANTS.DEFAULT_TEST_TIMEOUT * 0.75, // Shorter timeout for fast feedback
-        actionTimeout: CI_CONSTANTS.DEFAULT_ACTION_TIMEOUT * 0.75,
-        navigationTimeout: CI_CONSTANTS.DEFAULT_NAVIGATION_TIMEOUT * 0.75
+        testTimeout: environmentTimeouts.navigation * 0.75, // Shorter for fast feedback
+        actionTimeout: environmentTimeouts.elementWait * 0.75,
+        navigationTimeout: environmentTimeouts.navigation * 0.75
       };
     
     case TestMode.CIFunctional:
     case TestMode.CIVisual:
       return {
-        testTimeout: CI_CONSTANTS.DEFAULT_TEST_TIMEOUT,
-        actionTimeout: CI_CONSTANTS.DEFAULT_ACTION_TIMEOUT,
-        navigationTimeout: CI_CONSTANTS.DEFAULT_NAVIGATION_TIMEOUT
+        testTimeout: environmentTimeouts.navigation,
+        actionTimeout: environmentTimeouts.elementWait,
+        navigationTimeout: environmentTimeouts.navigation
       };
     
     case TestMode.LocalDevelopment:
     default:
       return {
-        testTimeout: 30000, // Shorter timeouts for local development
-        actionTimeout: 15000,
-        navigationTimeout: 30000
+        testTimeout: environmentTimeouts.navigation,
+        actionTimeout: environmentTimeouts.elementWait,
+        navigationTimeout: environmentTimeouts.navigation
       };
   }
 }

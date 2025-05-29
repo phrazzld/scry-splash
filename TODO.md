@@ -56,7 +56,7 @@
 
 ## Current CI Failures (Latest Branch)
 
- - [~] 10. **ci-e2e-001:** Fix CTA Flow form visibility timeouts
+ - [x] 10. **ci-e2e-001:** Fix CTA Flow form visibility timeouts
    - Priority: High
    - **Issue**: E2E tests for CTA flow are failing with timeout errors when waiting for form elements to be visible
    - **Failing Tests**:
@@ -66,19 +66,28 @@
    - **Error**: `TimeoutError: locator.waitFor: Timeout 15000ms exceeded` when waiting for `form input, form button` to be visible
    - **Root Cause**: Locator is resolving to hidden honeypot field `<input type="text" tabindex="-1" name="_gotcha" autocomplete="off"/>` instead of visible form inputs
    - **Action Required**: Update test selectors to exclude honeypot fields and target visible form elements specifically
+   - **COMPLETED**: Added data-testid attributes to CTA form elements (email input, submit button, success/error messages) and updated selectors to use them instead of generic selectors that were matching honeypot fields
 
- - [ ] 11. **ci-e2e-002:** Improve CTA form test selectors
+ - [x] 11. **ci-e2e-002:** Improve CTA form test selectors
    - Priority: High
    - **Issue**: Test selectors are too generic and matching hidden form elements
    - **Action Required**: 
      - Use more specific selectors that exclude `tabindex="-1"` or `name="_gotcha"` elements
      - Add `data-testid` attributes to actual form inputs for reliable targeting
      - Update page object models to use the new selectors
+   - **COMPLETED**: Added data-testid attributes to HeroSection and Footer components, updated Page Object Models to use data-testid selectors, updated E2E tests to use POM methods, fixed unit test mocks
+   - **Note**: Found additional files (theme-visual.spec.ts, splash-page.spec.ts) still using generic selectors - created follow-up task
 
- - [ ] 12. **ci-e2e-003:** Stabilize E2E test execution in CI environment
+ - [x] 12. **ci-e2e-003:** Stabilize E2E test execution in CI environment
    - Priority: Medium
    - **Issue**: Tests pass locally but fail in CI due to timing/environment differences
    - **Action Required**:
      - Increase timeout values for CI environment
      - Add proper wait conditions before interacting with form elements
      - Ensure form is fully loaded and interactive before running tests
+   - **COMPLETED**: Implemented comprehensive environment-aware timeout configuration system:
+     - Created `timeout-config.ts` with CI-specific timeouts (2.5x longer for standard CI, 3x for CI-full)
+     - Added CI-aware wait functions: `waitForFormReadyCI`, `retryClickCI`, `retryFillCI`, `retryNavigationCI`
+     - Updated Page Object Models (CtaForm, SplashPage) to use CI-aware timeouts by default
+     - Integrated with existing CI configuration and test modes
+     - Maintained fast local development timeouts while extending CI timeouts for reliability

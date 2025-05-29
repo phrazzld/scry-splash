@@ -840,3 +840,146 @@ export class BasePage {
     await captureDebugInfo(this.page, testInfo, context);
   }
 }
+
+// Import timeout configuration for CI-aware functions
+import { getEnvironmentTimeouts } from '../config/timeout-config';
+
+/**
+ * CI-aware form readiness wait function
+ * Uses environment-appropriate timeouts and enhanced reliability checks
+ */
+export async function waitForFormReadyCI(
+  page: Page,
+  testInfo: TestInfo,
+  formSelector: string,
+  options: { timeout?: number; debug?: boolean } = {}
+): Promise<void> {
+  const environmentTimeouts = getEnvironmentTimeouts();
+  const { timeout = environmentTimeouts.formReady, debug = true } = options;
+  const logger = createTestLogger('waitForFormReadyCI');
+  
+  if (debug) {
+    logger.start();
+    logger.info(`Waiting for form with selector: ${formSelector} (timeout: ${timeout}ms)`);
+  }
+  
+  try {
+    // Wait for basic page load first
+    await page.waitForLoadState('domcontentloaded', { timeout: timeout / 3 });
+    
+    // Wait for form element to be visible
+    const formLocator = page.locator(formSelector);
+    await formLocator.waitFor({ state: 'visible', timeout });
+    
+    // Additional checks for form readiness
+    await formLocator.waitFor({ state: 'attached', timeout: timeout / 4 });
+    
+    // Wait for any form inputs to be ready
+    const inputs = formLocator.locator('input, button, select, textarea');
+    const inputCount = await inputs.count();
+    
+    if (inputCount > 0) {
+      // Wait for at least one input to be enabled
+      await inputs.first().waitFor({ state: 'visible', timeout: timeout / 4 });
+    }
+    
+    // Brief stability wait
+    await sleep(100);
+    
+    if (debug) {
+      logger.success(`Form ready after checks completed`);
+      logger.end('passed');
+    }
+    
+  } catch (error) {
+    if (debug) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error(`Form readiness check failed: ${errorMessage}`, error as Error);
+      logger.end('failed');
+    }
+    
+    // Capture debug state on failure
+    await captureDebugInfo(page, testInfo, `form-not-ready-${formSelector.replace(/\W+/g, '-')}`);
+    throw error;
+  }
+}
+
+/**
+ * CI-aware element wait function
+ * Uses environment-appropriate timeouts for element waiting
+ */
+export async function waitForElementCI(
+  locator: Locator,
+  options: { state?: 'attached'|'detached'|'visible'|'hidden'; timeout?: number } = {}
+): Promise<void> {
+  const environmentTimeouts = getEnvironmentTimeouts();
+  const { state = 'visible', timeout = environmentTimeouts.elementWait } = options;
+  
+  await locator.waitFor({ state, timeout });
+}
+
+/**
+ * Retry operation with CI-appropriate configuration
+ * Uses environment-aware retry counts and delays
+ */
+export async function retryWithCIConfig<T>(
+  operation: () => Promise<T>,
+  description?: string
+): Promise<T> {
+  const isCI = isRunningInCI();
+  const retryConfig = {
+    retries: isCI ? 3 : 1,
+    delay: isCI ? 2000 : 1000,
+    backoff: 1.5,
+    maxDelay: isCI ? 10000 : 5000,
+    description: description || 'operation'
+  };
+  
+  return coreRetry(operation, retryConfig);
+}
+
+/**
+ * Enhanced retry functions that use CI-aware timeouts
+ */
+
+/**
+ * Retries clicking an element with CI-aware timeouts
+ */
+export async function retryClickCI(
+  locator: Locator,
+  options: { retries?: number; delay?: number; description?: string } = {}
+): Promise<void> {
+  const environmentTimeouts = getEnvironmentTimeouts();
+  const timeout = environmentTimeouts.elementWait;
+  
+  return retryClick(locator, { timeout, ...options });
+}
+
+/**
+ * Retries filling a form field with CI-aware timeouts
+ */
+export async function retryFillCI(
+  locator: Locator,
+  value: string,
+  options: { retries?: number; delay?: number; description?: string } = {}
+): Promise<void> {
+  const environmentTimeouts = getEnvironmentTimeouts();
+  const timeout = environmentTimeouts.elementWait;
+  
+  return retryFill(locator, value, { timeout, ...options });
+}
+
+/**
+ * Retries navigation with CI-aware timeouts
+ */
+export async function retryNavigationCI(
+  page: Page,
+  testInfo: TestInfo,
+  url: string,
+  options: { retries?: number; delay?: number; waitUntil?: 'load'|'domcontentloaded'|'networkidle'; description?: string } = {}
+): Promise<void> {
+  const environmentTimeouts = getEnvironmentTimeouts();
+  const timeout = environmentTimeouts.navigation;
+  
+  return retryNavigation(page, testInfo, url, { timeout, ...options });
+}
