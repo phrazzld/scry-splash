@@ -15,6 +15,11 @@ import {
   expectScreenshot,
   StandardViewport
 } from "../utils/visual-testing";
+import {
+  mockFormSparkAPI,
+  createMockVerificationReport,
+  getFormSparkSubmitURL
+} from "../utils/api-mocking";
 
 // Use the enhanced test fixture for better error reporting
 const enhancedTest = withErrorReporting;
@@ -33,28 +38,14 @@ enhancedTest.describe("CTA Flow @stable", () => {
     // Set up detailed network logging for better diagnostics
     const networkLogger = setupNetworkLogging(page, testInfo);
     
-    // Track API mock usage
-    let apiCallMade = false;
-    let apiRequestBody: any = null;
-    
     // Mock the Formspark API to return a successful response
     logger.step("Setting up API mock");
-    await page.route("https://submit-form.com/rq22voxgX", async (route) => {
-      logger.info("API request intercepted");
-      apiCallMade = true;
-      
-      // Capture request details
-      const request = route.request();
-      apiRequestBody = request.postDataJSON();
-      logger.info(`Request body: ${JSON.stringify(apiRequestBody)}`);
-      
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({ success: true }),
-      });
-      logger.success("Returned mocked success response");
+    logger.info(`FormSpark URL: ${getFormSparkSubmitURL()}`);
+    await mockFormSparkAPI(page, { 
+      success: true,
+      enableLogging: true 
     });
+    logger.success("FormSpark API mock configured for success");
 
     // Initialize page objects
     const splashPage = new SplashPage(page);
@@ -88,11 +79,15 @@ enhancedTest.describe("CTA Flow @stable", () => {
     // Save network logs
     await networkLogger.save();
     
-    // Log API mock status for debugging
-    logger.info(`API mock was called: ${apiCallMade}`);
-    if (apiRequestBody) {
-      logger.info(`Request data: ${JSON.stringify(apiRequestBody)}`);
-    }
+    // Verify API mock was called and generate report
+    logger.step("Verifying API mock usage");
+    const mockReport = await createMockVerificationReport(page);
+    logger.info(`Mock verification: ${JSON.stringify(mockReport, null, 2)}`);
+    
+    // Assert that mock was called
+    expect(mockReport.mockVerification.wasCalled).toBe(true);
+    expect(mockReport.noRealCalls).toBe(true);
+    logger.success("API mock verification passed");
     
     // Wait for and verify the success message appears with improved reliability
     logger.step("Waiting for success message");
@@ -214,29 +209,16 @@ enhancedTest.describe("CTA Flow @stable", () => {
     // Set up detailed network logging for better diagnostics
     const networkLogger = setupNetworkLogging(page, testInfo);
     
-    // Track API mock usage
-    let apiCallMade = false;
-    let apiRequestBody: any = null;
-    
     // Mock the Formspark API to return a server error response
     logger.step("Setting up API error mock");
-    await page.route("https://submit-form.com/rq22voxgX", async (route) => {
-      logger.info("API request intercepted for error simulation");
-      apiCallMade = true;
-      
-      // Capture request details
-      const request = route.request();
-      apiRequestBody = request.postDataJSON();
-      logger.info(`Request body: ${JSON.stringify(apiRequestBody)}`);
-      
-      // Return error response
-      await route.fulfill({
-        status: 400,
-        contentType: "application/json",
-        body: JSON.stringify({ error: "Submission failed" }),
-      });
-      logger.success("Returned mocked error response");
+    logger.info(`FormSpark URL: ${getFormSparkSubmitURL()}`);
+    await mockFormSparkAPI(page, { 
+      success: false,
+      errorMessage: "Submission failed",
+      statusCode: 400,
+      enableLogging: true 
     });
+    logger.success("FormSpark API mock configured for error");
 
     // Initialize page objects
     const splashPage = new SplashPage(page);
@@ -270,11 +252,15 @@ enhancedTest.describe("CTA Flow @stable", () => {
     // Save network logs
     await networkLogger.save();
     
-    // Log API mock status for debugging
-    logger.info(`API mock was called: ${apiCallMade}`);
-    if (apiRequestBody) {
-      logger.info(`Request data: ${JSON.stringify(apiRequestBody)}`);
-    }
+    // Verify API mock was called and generate report
+    logger.step("Verifying API mock usage");
+    const mockReport = await createMockVerificationReport(page);
+    logger.info(`Mock verification: ${JSON.stringify(mockReport, null, 2)}`);
+    
+    // Assert that mock was called
+    expect(mockReport.mockVerification.wasCalled).toBe(true);
+    expect(mockReport.noRealCalls).toBe(true);
+    logger.success("API mock verification passed");
     
     // Wait for and verify the error message appears with improved reliability
     logger.step("Waiting for error message");

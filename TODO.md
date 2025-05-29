@@ -114,3 +114,42 @@
      - Verify E2E test selectors match actual component structure
      - Ensure all CTA flow E2E tests can locate the form element
    - **COMPLETED**: CTA form component already had `data-testid="cta-form"` attribute. Fixed the actual issue: E2E form readiness check was selecting the hidden honeypot field instead of visible form elements. Updated enhanced-testing.ts to exclude hidden inputs by filtering out `tabindex="-1"` and `name="_gotcha"` elements.
+
+## E2E Test CI Failures - FormSpark API Integration
+
+ - [x] 15. **ci-e2e-fix-001:** Mock FormSpark API responses in E2E tests
+   - Priority: High
+   - **Issue**: E2E tests failing because form submissions to FormSpark with invalid test form ID never complete
+   - **Root Cause**: Tests use `NEXT_PUBLIC_FORMSPARK_FORM_ID=test-form-id` which is not a valid FormSpark form ID, causing real API calls to fail
+   - **Action Required**:
+     - Add Playwright request interception for FormSpark API endpoint (`https://submit-form.com/*`)
+     - Mock successful response for happy path test
+     - Mock error response for server error test
+     - Ensure mocked responses match FormSpark API format
+     - Verify no real API calls are made during tests
+   - **COMPLETED**: Implemented comprehensive FormSpark API mocking solution:
+     - Created `e2e/utils/api-mocking.ts` with reusable mocking utilities: `mockFormSparkAPI()`, `verifyMockWasCalled()`, `createMockVerificationReport()`
+     - Added dynamic URL construction using `getFormSparkSubmitURL()` to match application behavior regardless of environment
+     - Updated `cta-flow.spec.ts` to use mocking utilities with proper request interception and verification
+     - Successfully tested locally - mock intercepted all requests, no real API calls made, all assertions passed
+     - Ensured mocks work in both local (`test-form-id`) and CI environments
+
+ - [ ] 16. **ci-e2e-fix-002:** Update CTA flow tests to use mocked API responses
+   - Priority: High
+   - **Depends on**: ci-e2e-fix-001
+   - **Issue**: Tests expect real API responses but should verify UI behavior with mocked responses
+   - **Action Required**:
+     - Update happy path test to verify success message after mocked success response
+     - Update error test to verify error message after mocked error response
+     - Ensure client-side validation test continues to work without API calls
+     - Add test assertions to verify API mocking is working correctly
+
+ - [ ] 17. **ci-e2e-fix-003:** Add E2E test utilities for common API mocking patterns
+   - Priority: Medium
+   - **Depends on**: ci-e2e-fix-001, ci-e2e-fix-002
+   - **Issue**: API mocking logic should be reusable across different E2E tests
+   - **Action Required**:
+     - Create `e2e/utils/api-mocking.ts` with FormSpark mock utilities
+     - Add helper functions for common mock scenarios (success, error, network failure)
+     - Document mocking patterns for future E2E test development
+     - Ensure mock utilities are easily extensible for other APIs
