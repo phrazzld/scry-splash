@@ -134,7 +134,7 @@
      - Successfully tested locally - mock intercepted all requests, no real API calls made, all assertions passed
      - Ensured mocks work in both local (`test-form-id`) and CI environments
 
- - [ ] 16. **ci-e2e-fix-002:** Update CTA flow tests to use mocked API responses
+ - [x] 16. **ci-e2e-fix-002:** Update CTA flow tests to use mocked API responses
    - Priority: High
    - **Depends on**: ci-e2e-fix-001
    - **Issue**: Tests expect real API responses but should verify UI behavior with mocked responses
@@ -143,6 +143,13 @@
      - Update error test to verify error message after mocked error response
      - Ensure client-side validation test continues to work without API calls
      - Add test assertions to verify API mocking is working correctly
+   - **COMPLETED**: Verified CTA flow tests properly use mocked API responses from ci-e2e-fix-001:
+     - Happy path test correctly mocks success response and verifies success message appears
+     - Error test correctly mocks error response and verifies error message appears  
+     - Client-side validation test works without API calls (no mocking needed)
+     - Mock verification confirms no real API calls are made, only mocked responses used
+     - All 4 tests pass: happy path, client validation, server error, and responsive design
+     - Tests properly isolated with individual mock setup per test case
 
  - [ ] 17. **ci-e2e-fix-003:** Add E2E test utilities for common API mocking patterns
    - Priority: Medium
