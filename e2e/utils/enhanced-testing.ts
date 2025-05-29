@@ -874,13 +874,13 @@ export async function waitForFormReadyCI(
     // Additional checks for form readiness
     await formLocator.waitFor({ state: 'attached', timeout: timeout / 4 });
     
-    // Wait for any form inputs to be ready
-    const inputs = formLocator.locator('input, button, select, textarea');
-    const inputCount = await inputs.count();
+    // Wait for any visible form inputs to be ready (exclude hidden honeypot fields)
+    const visibleInputs = formLocator.locator('input:not([tabindex="-1"]):not([name="_gotcha"]), button, select, textarea').locator('visible=true');
+    const inputCount = await visibleInputs.count();
     
     if (inputCount > 0) {
-      // Wait for at least one input to be enabled
-      await inputs.first().waitFor({ state: 'visible', timeout: timeout / 4 });
+      // Wait for at least one visible input to be enabled
+      await visibleInputs.first().waitFor({ state: 'visible', timeout: timeout / 4 });
     }
     
     // Brief stability wait

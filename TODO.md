@@ -104,7 +104,7 @@
      - Verify timeout calculations work correctly in both local and CI environments
    - **COMPLETED**: Fixed environment isolation by mocking `isRunningInCI()` and `getCurrentTestMode()` functions instead of manipulating environment variables directly. Tests now run reliably in both local and CI contexts with proper isolation.
 
- - [ ] 14. **ci-fix-002:** Add missing data-testid attribute to CTA form component
+ - [x] 14. **ci-fix-002:** Add missing data-testid attribute to CTA form component
    - Priority: High  
    - **Issue**: E2E tests failing because CTA form lacks required `data-testid="cta-form"` attribute
    - **Root Cause**: Page Object Model expects `[data-testid="cta-form"]` selector but component doesn't have this attribute
@@ -113,3 +113,4 @@
      - Add `data-testid="cta-form"` attribute to the form element
      - Verify E2E test selectors match actual component structure
      - Ensure all CTA flow E2E tests can locate the form element
+   - **COMPLETED**: CTA form component already had `data-testid="cta-form"` attribute. Fixed the actual issue: E2E form readiness check was selecting the hidden honeypot field instead of visible form elements. Updated enhanced-testing.ts to exclude hidden inputs by filtering out `tabindex="-1"` and `name="_gotcha"` elements.
