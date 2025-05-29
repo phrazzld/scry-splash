@@ -9,15 +9,78 @@
  * - Configurable response scenarios (success, error, network failure)
  * - Request verification and logging
  * - Consistent with development philosophy: mock only external boundaries
+ * 
+ * ## Usage Guide
+ * 
+ * ### Basic Usage
+ * ```typescript
+ * // Mock successful submission
+ * await mockFormSparkAPI(page, { success: true });
+ * 
+ * // Mock error response
+ * await mockFormSparkAPI(page, { success: false, statusCode: 400 });
+ * 
+ * // Mock network failure
+ * await mockFormSparkNetworkFailure(page);
+ * ```
+ * 
+ * ### Verification
+ * ```typescript
+ * // Verify mock was called
+ * const result = verifyMockWasCalled();
+ * expect(result.wasCalled).toBe(true);
+ * 
+ * // Get comprehensive report
+ * const report = await createMockVerificationReport(page);
+ * expect(report.summary.success).toBe(true);
+ * ```
+ * 
+ * ### Extending for Other APIs
+ * ```typescript
+ * // Use the same pattern for other external APIs:
+ * // 1. Define mock options interface extending BaseMockOptions
+ * // 2. Create mock setup function using page.route()
+ * // 3. Add verification utilities
+ * // 4. Create convenience functions for common scenarios
+ * ```
  */
 
 import { type Page, type Route, type Request } from '@playwright/test';
 import { FORMSPARK } from '../../lib/constants';
 
 /**
+ * Base configuration for all API mocks
+ */
+export interface BaseMockOptions {
+  /** Delay in milliseconds before responding */
+  delay?: number;
+  
+  /** Enable detailed logging of mock interactions */
+  enableLogging?: boolean;
+}
+
+/**
+ * Common network failure scenarios
+ * Using Playwright's valid error codes for route.abort()
+ */
+export enum NetworkFailureType {
+  /** Connection refused/unreachable */
+  CONNECTION_REFUSED = 'connectionrefused',
+  
+  /** Request timeout */
+  TIMEOUT = 'timedout',
+  
+  /** DNS lookup failure */
+  DNS_FAILURE = 'namenotresolved',
+  
+  /** Connection aborted */
+  ABORTED = 'aborted'
+}
+
+/**
  * Configuration options for FormSpark API mocking
  */
-export interface FormSparkMockOptions {
+export interface FormSparkMockOptions extends BaseMockOptions {
   /** Whether the mock should simulate a successful response */
   success?: boolean;
   
@@ -27,17 +90,14 @@ export interface FormSparkMockOptions {
   /** HTTP status code for the response */
   statusCode?: number;
   
-  /** Delay in milliseconds before responding */
-  delay?: number;
-  
-  /** Enable detailed logging of mock interactions */
-  enableLogging?: boolean;
+  /** Simulate network failure instead of HTTP response */
+  networkFailure?: NetworkFailureType;
 }
 
 /**
  * Default configuration for FormSpark mocks
  */
-const DEFAULT_MOCK_OPTIONS: Required<FormSparkMockOptions> = {
+const DEFAULT_MOCK_OPTIONS: Omit<Required<FormSparkMockOptions>, 'networkFailure'> = {
   success: true,
   errorMessage: 'Submission failed',
   statusCode: 200,
@@ -152,6 +212,15 @@ export async function mockFormSparkAPI(
     // Apply delay if configured
     if (config.delay > 0) {
       await new Promise(resolve => setTimeout(resolve, config.delay));
+    }
+
+    // Handle network failure scenarios
+    if (config.networkFailure) {
+      if (config.enableLogging) {
+        console.log(`[API Mock] Simulating network failure: ${config.networkFailure}`);
+      }
+      await route.abort(config.networkFailure);
+      return;
     }
 
     // Prepare response based on success/error configuration
@@ -285,3 +354,93 @@ export async function createMockVerificationReport(page: Page) {
     }
   };
 }
+
+/**
+ * Convenience function to mock FormSpark network failure
+ * 
+ * @param page Playwright page instance
+ * @param failureType Type of network failure to simulate
+ * @returns Promise that resolves when mock is set up
+ * 
+ * @example
+ * ```typescript
+ * // Simulate connection refused
+ * await mockFormSparkNetworkFailure(page);
+ * 
+ * // Simulate timeout
+ * await mockFormSparkNetworkFailure(page, NetworkFailureType.TIMEOUT);
+ * ```
+ */
+export async function mockFormSparkNetworkFailure(
+  page: Page,
+  failureType: NetworkFailureType = NetworkFailureType.CONNECTION_REFUSED
+): Promise<void> {
+  return mockFormSparkAPI(page, {
+    networkFailure: failureType,
+    enableLogging: true
+  });
+}
+
+/**
+ * Convenience function to mock FormSpark timeout
+ * 
+ * @param page Playwright page instance
+ * @param delay Delay before timeout in milliseconds
+ * @returns Promise that resolves when mock is set up
+ */
+export async function mockFormSparkTimeout(
+  page: Page,
+  delay: number = 30000
+): Promise<void> {
+  return mockFormSparkAPI(page, {
+    networkFailure: NetworkFailureType.TIMEOUT,
+    delay,
+    enableLogging: true
+  });
+}
+
+/**
+ * Convenience function to mock FormSpark rate limit response
+ * 
+ * @param page Playwright page instance
+ * @returns Promise that resolves when mock is set up
+ * 
+ * @example
+ * ```typescript
+ * await mockFormSparkRateLimit(page);
+ * // Returns 429 Too Many Requests with appropriate error message
+ * ```
+ */
+export async function mockFormSparkRateLimit(page: Page): Promise<void> {
+  return mockFormSparkAPI(page, {
+    success: false,
+    statusCode: 429,
+    errorMessage: 'Too many requests. Please try again later.',
+    enableLogging: true
+  });
+}
+
+/**
+ * Example: How to extend these utilities for another API
+ * 
+ * ```typescript
+ * // 1. Define your API's mock options
+ * interface StripeAPIMockOptions extends BaseMockOptions {
+ *   success?: boolean;
+ *   paymentStatus?: 'succeeded' | 'failed' | 'pending';
+ *   errorCode?: string;
+ * }
+ * 
+ * // 2. Create mock setup function
+ * export async function mockStripeAPI(page: Page, options: StripeAPIMockOptions) {
+ *   await page.route('https://api.stripe.com/**', async (route) => {
+ *     // Implementation similar to mockFormSparkAPI
+ *   });
+ * }
+ * 
+ * // 3. Add convenience functions
+ * export async function mockStripePaymentSuccess(page: Page) {
+ *   return mockStripeAPI(page, { success: true, paymentStatus: 'succeeded' });
+ * }
+ * ```
+ */

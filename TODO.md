@@ -151,7 +151,7 @@
      - All 4 tests pass: happy path, client validation, server error, and responsive design
      - Tests properly isolated with individual mock setup per test case
 
- - [ ] 17. **ci-e2e-fix-003:** Add E2E test utilities for common API mocking patterns
+ - [x] 17. **ci-e2e-fix-003:** Add E2E test utilities for common API mocking patterns
    - Priority: Medium
    - **Depends on**: ci-e2e-fix-001, ci-e2e-fix-002
    - **Issue**: API mocking logic should be reusable across different E2E tests
@@ -160,3 +160,10 @@
      - Add helper functions for common mock scenarios (success, error, network failure)
      - Document mocking patterns for future E2E test development
      - Ensure mock utilities are easily extensible for other APIs
+   - **COMPLETED**: Enhanced existing API mocking utilities with additional scenarios:
+     - Added network failure support with NetworkFailureType enum (connection refused, timeout, DNS failure, aborted)
+     - Created convenience functions: mockFormSparkNetworkFailure(), mockFormSparkTimeout(), mockFormSparkRateLimit()
+     - Enhanced documentation with comprehensive usage guide and examples
+     - Improved extensibility with BaseMockOptions interface and example for extending to other APIs
+     - Fixed TypeScript types and used correct Playwright error codes for route.abort()
+     - All existing E2E tests continue to pass with enhanced utilities
