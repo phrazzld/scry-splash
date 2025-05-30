@@ -56,38 +56,39 @@ export function Footer({
   ...props
 }: FooterProps) {
   return (
-    <Container 
-      as="footer"
-      className={cn("py-4 sm:py-6 border-t border-foreground/5", className)} 
-      gap="none"
-      padding="responsive"
-      data-testid="footer"
-      {...props}
-    >
-      <GridItem 
-        span={12} 
-        md={10} 
-        lg={8} 
-        className={cn(
-          "px-2 sm:px-6",
-          centered 
-            ? "flex flex-col items-center text-center" 
-            : "flex flex-col sm:flex-row justify-between items-center"
-        )}
-      >
-        <BodyText 
-          className={cn("text-xs", textColor)}
-          as="p"
-          data-testid="footer-attribution"
+    <footer className={cn("relative", className)} {...props} data-testid="footer">
+      {/* Full-width border separator */}
+      <div className="w-full border-t border-foreground/5" />
+      
+      <div className="relative">
+        {/* Footer content with proper padding */}
+        <Container 
+          className="py-4 sm:py-6" 
+          gap="none"
+          padding="responsive"
         >
-          {projectText}
-        </BodyText>
-        
-        {showThemeToggle && (
-          <div 
+          <GridItem 
+            span={12}
             className={cn(
-              centered ? "mt-4" : "mt-3 sm:mt-0"
+              centered 
+                ? "flex flex-col items-center text-center" 
+                : "flex items-center"
             )}
+          >
+            <BodyText 
+              className={cn("text-xs", textColor)}
+              as="p"
+              data-testid="footer-attribution"
+            >
+              {projectText}
+            </BodyText>
+          </GridItem>
+        </Container>
+        
+        {/* Theme toggle positioned absolutely at right edge */}
+        {showThemeToggle && !centered && (
+          <div 
+            className="absolute right-4 top-1/2 -translate-y-1/2 sm:right-6"
             data-testid="footer-theme-toggle"
           >
             <ThemeToggleButton 
@@ -98,7 +99,22 @@ export function Footer({
             />
           </div>
         )}
-      </GridItem>
-    </Container>
+      </div>
+      
+      {/* Centered theme toggle if centered mode */}
+      {showThemeToggle && centered && (
+        <Container padding="responsive">
+          <div className="flex justify-center pb-4">
+            <ThemeToggleButton 
+              className={cn(
+                "text-foreground/50 hover:text-foreground transition-colors",
+                "bg-transparent hover:bg-transparent"
+              )} 
+              data-testid="footer-theme-toggle"
+            />
+          </div>
+        </Container>
+      )}
+    </footer>
   )
 }

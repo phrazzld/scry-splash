@@ -105,7 +105,7 @@ export function SplashPage({
       className={cn("flex justify-center", className)}
       {...props}
     >
-      <div className="flex flex-col w-full max-w-4xl px-3 sm:px-4 md:px-6">
+      <div className="flex flex-col w-full">
         {/* Hero Section */}
         <div className={cn("w-full", animateClass)} {...heroDelay}>
           <HeroSection
