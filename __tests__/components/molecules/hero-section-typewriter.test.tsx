@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { axe } from 'jest-axe';
 import { HeroSection } from '@/components/molecules/hero-section';
@@ -22,7 +22,9 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     expect(heading).toHaveTextContent('Remember');
     
     // Let the animation run for a bit
-    jest.advanceTimersByTime(1000);
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
     
     // Should have typed some characters
     await waitFor(() => {
@@ -34,9 +36,11 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     render(<HeroSection />);
     
     // Simulate rapid progression through all phrases
-    for (let i = 0; i < 50; i++) {
-      jest.advanceTimersByTime(500);
-    }
+    act(() => {
+      for (let i = 0; i < 50; i++) {
+        jest.advanceTimersByTime(500);
+      }
+    });
     
     // The animation should eventually complete
     const heading = screen.getByRole('heading');
@@ -47,10 +51,14 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     render(<HeroSection />);
     
     // Type out a full word (~10 chars at 70ms each)
-    jest.advanceTimersByTime(700);
+    act(() => {
+      jest.advanceTimersByTime(700);
+    });
     
     // Enter wait state
-    jest.advanceTimersByTime(1500);
+    act(() => {
+      jest.advanceTimersByTime(1500);
+    });
     
     const heading = screen.getByRole('heading');
     expect(heading).toBeInTheDocument();
@@ -60,24 +68,43 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     render(<HeroSection />);
     
     // Type phase
-    jest.advanceTimersByTime(700);
+    act(() => {
+      jest.advanceTimersByTime(700);
+    });
     
     // Wait phase  
-    jest.advanceTimersByTime(1500);
+    act(() => {
+      jest.advanceTimersByTime(1500);
+    });
     
     // Should start deleting
-    jest.advanceTimersByTime(300);
+    act(() => {
+      jest.advanceTimersByTime(300);
+    });
     
     const heading = screen.getByRole('heading');
     expect(heading).toBeInTheDocument();
   });
 
-  it('has accessibility support with aria-live', () => {
+  it('has enhanced accessibility support with aria attributes', () => {
     render(<HeroSection />);
     
-    const liveRegion = screen.getByRole('heading').querySelector('[aria-live="polite"]');
+    // Check for main aria-live region
+    const liveRegion = screen.getByRole('heading').querySelector('[aria-live="polite"][aria-atomic="true"]');
     expect(liveRegion).toBeInTheDocument();
-    expect(liveRegion).toHaveClass('whitespace-nowrap');
+    expect(liveRegion?.className).toContain('whitespace-normal');
+    expect(liveRegion?.className).toContain('md:whitespace-nowrap');
+    
+    // Check for additional screen reader status information
+    const statusElement = screen.getByTestId('typewriter-status');
+    expect(statusElement).toBeInTheDocument();
+    expect(statusElement).toHaveAttribute('aria-live', 'polite');
+    expect(statusElement).toHaveClass('sr-only');
+    
+    // Verify cursor is hidden from screen readers
+    const cursor = screen.getByText('|');
+    expect(cursor).toHaveAttribute('aria-hidden', 'true');
+    expect(cursor).toHaveAttribute('role', 'presentation');
   });
 
   it('shows cursor during animation', () => {
@@ -92,7 +119,7 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     
     // Initial render has empty display text
     const heading = screen.getByRole('heading');
-    const span = heading.querySelector('.whitespace-nowrap');
+    const span = heading.querySelector('[aria-live="polite"]');
     expect(span?.textContent).toMatch(/Remember\s+\|/);
   });
 

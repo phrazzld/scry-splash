@@ -16,11 +16,13 @@ interface DisplayTextProps {
   style?: React.CSSProperties;
   as?: React.ElementType;
   weight?: string;
+  'data-testid'?: string;
 }
 
 interface BodyTextProps {
   children: React.ReactNode;
   className?: string;
+  'data-testid'?: string;
 }
 
 interface ContainerProps {
@@ -68,33 +70,40 @@ jest.mock('react', () => {
 
 // Mock the dependencies of HeroSection
 jest.mock('@/components/ui/logo', () => ({
-  Logo: ({ size, color, as }: LogoProps) => (
-    <div data-testid="mock-logo" data-size={size} data-color={color} data-as={as}>
+  Logo: ({ size, color, as, "aria-label": ariaLabel }: LogoProps & { "aria-label"?: string }) => (
+    <div 
+      data-testid="mock-logo" 
+      data-size={size} 
+      data-color={color} 
+      data-as={as}
+      data-aria-label={ariaLabel}
+    >
       Scry.
     </div>
   ),
 }));
 
 jest.mock('@/components/ui/typography', () => ({
-  DisplayText: ({ children, className, as, style, weight }: DisplayTextProps) => (
+  DisplayText: ({ children, className, as, style, weight, 'data-testid': dataTestId, ...props }: DisplayTextProps) => (
     <div 
-      data-testid="mock-display-text" 
+      data-testid={dataTestId || "mock-display-text"} 
       data-as={as} 
       data-weight={weight}
       className={className}
       style={style}
+      {...props}
     >
       {children}
     </div>
   ),
-  BodyText: ({ children, className }: BodyTextProps) => (
-    <div data-testid="mock-body" className={className}>{children}</div>
+  BodyText: ({ children, className, role, 'data-testid': dataTestId, ...props }: BodyTextProps & { role?: string }) => (
+    <div data-testid={dataTestId || "mock-body"} className={className} role={role} {...props}>{children}</div>
   ),
 }));
 
 jest.mock('@/components/ui/container', () => ({
   Container: ({ children, className, gap, ...props }: ContainerProps) => (
-    <div data-testid="mock-container" data-gap={gap} className={className} {...props}>{children}</div>
+    <div data-testid={props['data-testid'] || "mock-container"} data-gap={gap} className={className} {...props}>{children}</div>
   ),
   GridItem: ({ children, span, md, lg, mdStart, lgStart, className }: GridItemProps) => (
     <div 
@@ -116,7 +125,7 @@ describe('HeroSection Component', () => {
     render(<HeroSection />);
     
     // Check if the component renders correctly
-    const container = screen.getByTestId('mock-container');
+    const container = screen.getByTestId('hero-section');
     expect(container).toBeInTheDocument();
     
     // Check for Logo component
@@ -127,7 +136,7 @@ describe('HeroSection Component', () => {
     expect(logo).toHaveAttribute('data-as', 'div');
     
     // Check for DisplayText component (typewriter will use this)
-    const displayText = screen.getByTestId('mock-display-text');
+    const displayText = screen.getByTestId('hero-headline');
     expect(displayText).toBeInTheDocument();
     expect(displayText).toHaveAttribute('data-as', 'h1');
     
@@ -135,7 +144,7 @@ describe('HeroSection Component', () => {
     expect(displayText.className).toContain('text-foreground');
     
     // Check for subheadline
-    const body = screen.getByTestId('mock-body');
+    const body = screen.getByTestId('hero-subheadline');
     expect(body).toBeInTheDocument();
     expect(body).toHaveTextContent('Turns your notes into spaced‑repetition prompts—automatically.');
     
@@ -148,7 +157,7 @@ describe('HeroSection Component', () => {
     
     render(<HeroSection headline={customHeadline} useTypewriterEffect={false} />);
     
-    const displayText = screen.getByTestId('mock-display-text');
+    const displayText = screen.getByTestId('hero-headline');
     expect(displayText).toHaveTextContent(customHeadline);
   });
 
@@ -158,10 +167,10 @@ describe('HeroSection Component', () => {
     
     render(<HeroSection headline={customHeadline} subheadline={customSubheadline} useTypewriterEffect={false} />);
     
-    const displayText = screen.getByTestId('mock-display-text');
+    const displayText = screen.getByTestId('hero-headline');
     expect(displayText).toHaveTextContent(customHeadline);
     
-    const body = screen.getByTestId('mock-body');
+    const body = screen.getByTestId('hero-subheadline');
     expect(body).toHaveTextContent(customSubheadline);
   });
 
@@ -194,10 +203,10 @@ describe('HeroSection Component', () => {
     const customTextColor = 'text-cobalt';
     render(<HeroSection textColor={customTextColor} useTypewriterEffect={false} />);
     
-    const displayText = screen.getByTestId('mock-display-text');
+    const displayText = screen.getByTestId('hero-headline');
     expect(displayText.className).toContain(customTextColor);
     
-    const body = screen.getByTestId('mock-body');
+    const body = screen.getByTestId('hero-subheadline');
     expect(body.className).toContain(customTextColor);
   });
 
@@ -205,14 +214,43 @@ describe('HeroSection Component', () => {
     const customClass = 'custom-class';
     render(<HeroSection className={customClass} />);
     
-    const container = screen.getByTestId('mock-container');
+    const container = screen.getByTestId('hero-section');
     expect(container.className).toContain(customClass);
   });
 
   it('passes additional props to container', () => {
     render(<HeroSection data-testprop="test-value" />);
     
-    const container = screen.getByTestId('mock-container');
+    const container = screen.getByTestId('hero-section');
     expect(container).toHaveAttribute('data-testprop', 'test-value');
+  });
+  
+  it('renders with proper container accessibility attributes', () => {
+    render(<HeroSection useTypewriterEffect={false} />);
+    
+    const container = screen.getByTestId('hero-section');
+    expect(container).toHaveAttribute('role', 'banner');
+    expect(container).toHaveAttribute('id', 'hero-section');
+    expect(container).toHaveAttribute('aria-labelledby', 'hero-heading');
+  });
+  
+  it('applies proper ARIA attributes to components', () => {
+    render(<HeroSection 
+      useTypewriterEffect={false} 
+      logoAriaLabel="Custom logo label"
+      sectionId="custom-section-id"
+    />);
+    
+    const logo = screen.getByTestId('mock-logo');
+    expect(logo).toHaveAttribute('data-aria-label', 'Custom logo label');
+    
+    const container = screen.getByTestId('hero-section');
+    expect(container).toHaveAttribute('id', 'custom-section-id');
+    
+    const subheadlineContainer = screen.getByTestId('hero-subheadline').parentElement;
+    expect(subheadlineContainer).toHaveAttribute('aria-describedby', 'hero-heading');
+    
+    // Role was removed in favor of using semantic HTML structure
+    screen.getByTestId('hero-subheadline');
   });
 });

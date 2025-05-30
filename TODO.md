@@ -1,414 +1,169 @@
-# Todo
+# CI Fix Tasks
 
-## Test Suite Hygiene & Policy Enforcement
-- [x] **T001 · Chore · P0: audit test files for internal mocks and confirm policy adherence**
-    - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
-    - **Action:**
-        1. Manually inspect all `__tests__/components/ui/*` test files for any `jest.mock()` or similar mocking of internal modules.
-        2. Remove any occurrences found (other than allowed utilities, if any).
-    - **Done‑when:**
-        1. No internal mocks are present in any test file.
-    - **Verification:**
-        1. Search for `jest.mock` and verify no forbidden mocks exist.
-    - **Depends‑on:** none
+## Visual Testing Tasks
 
-- [x] **T002 · Chore · P0: add explicit internal mocking policy confirmation to PR description**
-    - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
-    - **Action:**
-        1. Add a clear statement in the PR description confirming the audit for internal mocks is complete and no forbidden mocks exist.
-    - **Done‑when:**
-        1. PR description contains explicit internal mocking audit confirmation.
-    - **Depends‑on:** [T001]
+ - [x] 1. **ci-visual-001:** Generate and commit Linux-specific snapshots for CI
+   - Priority: High
+   - Use the generate-linux-snapshots.yml workflow to create Linux-specific snapshot files
+   - Commit the generated snapshot files to the repository
+   - Ensure proper file paths: e.g., `splash-page-responsive-tablet-linux-ci-chromium-linux.png`
 
-- [x] **T003 · Chore · P1: propose or implement ESLint rule to prevent internal mocking**
-    - **Context:** cr-02 Confirm "No Internal Mocking" Policy Adherence
-    - **Action:**
-        1. Evaluate ESLint's `no-restricted-imports` or similar mechanism to warn on internal module mocking.
-        2. Add or propose the rule to the ESLint config as appropriate.
-    - **Done‑when:**
-        1. Rule is in place or a proposal is documented.
-    - **Verification:**
-        1. Trigger a test violation to ensure the rule is active.
-    - **Depends‑on:** [T001]
+- [x] 2. **ci-visual-002:** ✅ Update visual test configuration to completely disable visual tests in CI until snapshots are generated
+   - Priority: High
+   - Implement a conditional skip for visual tests when running in CI environment
+   - Add a environment variable flag to explicitly enable visual tests in CI when needed
 
-## Accessibility Coverage
-- [x] **T004 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct Container variants**
-    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
-    - **Action:**
-        1. Identify each unique prop/state variant tested in `container.test.tsx`.
-        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
-    - **Done‑when:**
-        1. Every distinct Container variant rendered in a test is covered by an axe accessibility assertion.
-    - **Verification:**
-        1. Run tests with accessibility assertions failing if violations exist.
-    - **Depends‑on:** none
+ - [x] 3. **ci-visual-003:** Fix environment variable handling in visual-testing.ts
+   - Priority: Medium
+   - Ensure the `PLAYWRIGHT_UPDATE_SNAPSHOTS` environment variable is properly set
+   - Update the code to handle 'on-failure', 'missing', and 'all' modes
 
-- [x] **T005 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct GridItem variants**
-    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
-    - **Action:**
-        1. Identify each unique prop/state variant tested in `grid-item.test.tsx`.
-        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
-    - **Done‑when:**
-        1. Every distinct GridItem variant rendered in a test is covered by an axe accessibility assertion.
-    - **Verification:**
-        1. Run tests with accessibility assertions failing if violations exist.
-    - **Depends‑on:** [T008]
+ - [x] 4. **ci-visual-004:** Create separate test groups for visual tests
+   - Priority: Medium
+   - Separate visual tests from functional tests
+   - Add tags like `@visual` to make them easier to exclude in CI
 
-- [x] **T006 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct Logo variants**
-    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
-    - **Action:**
-        1. Identify each unique prop/state variant tested in `logo.test.tsx`.
-        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
-    - **Done‑when:**
-        1. Every distinct Logo variant rendered in a test is covered by an axe accessibility assertion.
-    - **Verification:**
-        1. Run tests with accessibility assertions failing if violations exist.
-    - **Depends‑on:** none
+## Browser Installation Tasks
 
-- [x] **T007 · Test · P0: add comprehensive jest-axe accessibility checks for all distinct NoiseBackground variants**
-    - **Context:** cr-01 Ensure Comprehensive Accessibility Coverage (`jest-axe`)
-    - **Action:**
-        1. Identify each unique prop/state variant tested in `noise-background.test.tsx`.
-        2. For each, add `await axe(container)` and assert `toHaveNoViolations()`.
-    - **Done‑when:**
-        1. Every distinct NoiseBackground variant rendered in a test is covered by an axe accessibility assertion.
-    - **Verification:**
-        1. Run tests with accessibility assertions failing if violations exist.
-    - **Depends‑on:** none
+ - [x] 5. **ci-browser-001:** Add explicit verification step for Chromium installation
+   - Priority: Medium
+   - Add a dedicated verification step after browser installation
+   - Report detailed diagnostic information about the Playwright browsers
 
-## Test Modularity & File Structure
-- [x] **T008 · Refactor · P0: split GridItem tests into grid-item.test.tsx**
-    - **Context:** cr-03 Split Excessive Length Test File (`container.test.tsx`)
-    - **Action:**
-        1. Create `__tests__/components/ui/grid-item.test.tsx`.
-        2. Move all GridItem-related tests from `container.test.tsx` to `grid-item.test.tsx`.
-    - **Done‑when:**
-        1. `container.test.tsx` contains only Container tests.
-        2. `grid-item.test.tsx` contains only GridItem tests.
-        3. All tests pass.
-    - **Verification:**
-        1. Run test suite and confirm passing.
-    - **Depends‑on:** none
+ - [x] 6. **ci-browser-002:** Create fallback browser installation mechanism
+   - Priority: Low
+   - Implement a retry mechanism for browser installation
+   - Add explicit verification steps after each installation attempt
 
-- [x] **T009 · Refactor · P1: reorganize Container and GridItem test files with clear describe blocks**
-    - **Context:** cr-03 Split Excessive Length Test File (`container.test.tsx`)
-    - **Action:**
-        1. Group tests within `container.test.tsx` and `grid-item.test.tsx` using `describe` blocks (e.g., "Props", "Accessibility", "Edge Cases").
-    - **Done‑when:**
-        1. Test files are logically organized and sections clearly delineated.
-    - **Verification:**
-        1. Code review confirms improved structure.
-    - **Depends‑on:** [T008]
+## General CI Improvements
 
-## Test Assertion Robustness
-- [x] **T010 · Refactor · P1: decouple Container and GridItem tests from CSS class implementation details**
-    - **Context:** cr-04 Decouple Tests from CSS Class Implementation Details
-    - **Action:**
-        1. Refactor assertions in `container.test.tsx` and `grid-item.test.tsx` to check styles or semantic DOM attributes, not internal class names.
-    - **Done‑when:**
-        1. Tests assert behavior or computed styles, not internal CSS classes (except for documented public API).
-    - **Verification:**
-        1. Tests remain green and are resilient to class name changes.
-    - **Depends‑on:** [T009]
+ - [x] 7. **ci-general-001:** Set up specific CI testing mode
+   - Priority: Medium
+   - Create a dedicated CI testing configuration
+   - Allow tests to adapt their behavior based on the CI environment
 
-- [x] **T011 · Refactor · P1: decouple Logo tests from CSS class implementation details**
-    - **Context:** cr-04 Decouple Tests from CSS Class Implementation Details
-    - **Action:**
-        1. Refactor assertions in `logo.test.tsx` to check styles or semantic properties over internal class names.
-    - **Done‑when:**
-        1. Tests assert observable outcome, not styling internals.
-    - **Verification:**
-        1. Tests remain green and non-brittle.
-    - **Depends‑on:** none
+ - [x] 8. **ci-general-002:** Improve CI debugging information
+   - Priority: Low
+   - Add more comprehensive debug information for CI failures
+   - Create debug artifact collection for failed tests
 
-- [x] **T012 · Refactor · P1: replace manual class checks in Logo tests with toHaveClass**
-    - **Context:** cr-05 Refactor Non-Idiomatic/Brittle Class/Style Assertions
-    - **Action:**
-        1. Replace all manual class presence checks in `logo.test.tsx` with `expect(...).toHaveClass(...)`.
-        2. Remove obsolete comments about CSS-in-JS if present.
-    - **Done‑when:**
-        1. Only idiomatic toHaveClass is used for class assertions in Logo tests.
-    - **Verification:**
-        1. Code search shows no manual classList checks remain.
-    - **Depends‑on:** [T011]
+## Documentation
 
-- [x] **T013 · Refactor · P1: robustly assert NoiseBackground styles and document jsdom limitations**
-    - **Context:** cr-05 Refactor Non-Idiomatic/Brittle Class/Style Assertions
-    - **Action:**
-        1. Use `toHaveStyle` for `backgroundRepeat`, `opacity` in `noise-background.test.tsx`.
-        2. Attempt to assert `backgroundImage`; if not feasible, comment in code explaining jsdom limitation.
-    - **Done‑when:**
-        1. Style assertions are robust, or a clear comment explains any limitation.
-    - **Verification:**
-        1. Code review and test output.
-    - **Depends‑on:** none
+ - [x] 9. **ci-docs-001:** Document visual testing strategy for CI
+   - Priority: Medium
+   - Explain the approach for handling visual tests in CI
+   - Document how to generate and maintain platform-specific snapshots
 
-## Querying Strategy & Test Resilience
-- [x] **T014 · Refactor · P1: minimize data-testid usage in Logo tests in favor of user-facing queries**
-    - **Context:** cr-06 Optimize Querying Strategy (Reduce `data-testid` Overuse)
-    - **Action:**
-        1. Update Logo tests to use `getByRole`, `getByLabelText`, or `getByText`.
-    - **Done‑when:**
-        1. No `getByTestId` is used in Logo tests where user-facing queries are possible.
-    - **Verification:**
-        1. Tests remain green; queries reflect real user selectors.
-    - **Depends‑on:** [T012]
+## Current CI Failures (Latest Branch)
 
-- [x] **T015 · Refactor · P1: minimize data-testid usage in Container, GridItem, and NoiseBackground tests**
-    - **Context:** cr-06 Optimize Querying Strategy (Reduce `data-testid` Overuse)
-    - **Action:**
-        1. Replace `getByTestId` with semantic selectors where feasible in these test files.
-        2. If a more semantic wrapper is appropriate for accessibility, implement it.
-    - **Done‑when:**
-        1. `getByTestId` is used only when no accessible selector is possible.
-    - **Verification:**
-        1. Code review confirms selector improvement.
-    - **Depends‑on:** [T010], [T013]
+ - [x] 10. **ci-e2e-001:** Fix CTA Flow form visibility timeouts
+   - Priority: High
+   - **Issue**: E2E tests for CTA flow are failing with timeout errors when waiting for form elements to be visible
+   - **Failing Tests**:
+     - `CTA Flow @stable › happy path - successful email submission`
+     - `CTA Flow @stable › client-side invalid email validation`
+     - `CTA Flow @stable › server error - displays error message`
+   - **Error**: `TimeoutError: locator.waitFor: Timeout 15000ms exceeded` when waiting for `form input, form button` to be visible
+   - **Root Cause**: Locator is resolving to hidden honeypot field `<input type="text" tabindex="-1" name="_gotcha" autocomplete="off"/>` instead of visible form inputs
+   - **Action Required**: Update test selectors to exclude honeypot fields and target visible form elements specifically
+   - **COMPLETED**: Added data-testid attributes to CTA form elements (email input, submit button, success/error messages) and updated selectors to use them instead of generic selectors that were matching honeypot fields
 
-## Coverage Verification
-- [x] **T016 · Test · P0: generate and attach test coverage report to PR**
-    - **Context:** cr-07 Address Test Coverage Verification Gap
-    - **Action:**
-        1. Run tests with coverage enabled.
-        2. Attach the summary or artifact (HTML report link) to the PR or as a PR comment.
-    - **Done‑when:**
-        1. PR includes evidence of current coverage.
-    - **Verification:**
-        1. Reviewer can view and verify coverage numbers.
-    - **Depends‑on:** none
+ - [x] 11. **ci-e2e-002:** Improve CTA form test selectors
+   - Priority: High
+   - **Issue**: Test selectors are too generic and matching hidden form elements
+   - **Action Required**: 
+     - Use more specific selectors that exclude `tabindex="-1"` or `name="_gotcha"` elements
+     - Add `data-testid` attributes to actual form inputs for reliable targeting
+     - Update page object models to use the new selectors
+   - **COMPLETED**: Added data-testid attributes to HeroSection and Footer components, updated Page Object Models to use data-testid selectors, updated E2E tests to use POM methods, fixed unit test mocks
+   - **Note**: Found additional files (theme-visual.spec.ts, splash-page.spec.ts) still using generic selectors - created follow-up task
 
-- [x] **T017 · Chore · P0: confirm CI enforces test coverage thresholds**
-    - **Context:** cr-07 Address Test Coverage Verification Gap
-    - **Action:**
-        1. Check CI pipeline config for test coverage enforcement (90%+).
-        2. If missing, add coverage enforcement to CI config.
-    - **Done‑when:**
-        1. CI fails builds that fall below coverage thresholds.
-    - **Verification:**
-        1. Deliberately break coverage and confirm CI fails.
-    - **Depends‑on:** none
+ - [x] 12. **ci-e2e-003:** Stabilize E2E test execution in CI environment
+   - Priority: Medium
+   - **Issue**: Tests pass locally but fail in CI due to timing/environment differences
+   - **Action Required**:
+     - Increase timeout values for CI environment
+     - Add proper wait conditions before interacting with form elements
+     - Ensure form is fully loaded and interactive before running tests
+   - **COMPLETED**: Implemented comprehensive environment-aware timeout configuration system:
+     - Created `timeout-config.ts` with CI-specific timeouts (2.5x longer for standard CI, 3x for CI-full)
+     - Added CI-aware wait functions: `waitForFormReadyCI`, `retryClickCI`, `retryFillCI`, `retryNavigationCI`
+     - Updated Page Object Models (CtaForm, SplashPage) to use CI-aware timeouts by default
+     - Integrated with existing CI configuration and test modes
+     - Maintained fast local development timeouts while extending CI timeouts for reliability
 
-## Minor Hygiene/Readability
-- [x] **T018 · Chore · P2: remove commented-out dead jest.mock code from container.test.tsx**
-    - **Context:** cr-08 Remove Commented-Out Dead Code
-    - **Action:**
-        1. Delete commented-out `jest.mock` block from `container.test.tsx`.
-    - **Done‑when:**
-        1. No dead code remains.
-    - **Verification:**
-        1. Code search for `jest.mock` comments is empty.
-    - **Depends‑on:** none
+## CI Resolution Tasks (Current Failures)
 
-- [x] **T019 · Chore · P2: ensure all test files have final newlines**
-    - **Context:** cr-09 Add Missing Final Newlines in Test Files
-    - **Action:**
-        1. Run Prettier or configured formatter to enforce final newlines.
-    - **Done‑when:**
-        1. All test files end with a newline.
-    - **Verification:**
-        1. `git diff` shows no missing newlines; Prettier check passes.
-    - **Depends‑on:** none
+ - [x] 13. **ci-fix-001:** Fix environment variable isolation in timeout-config unit tests
+   - Priority: High
+   - **Issue**: Test Coverage failing because timeout-config.test.ts expects local timeouts (15000ms) but receives CI timeouts (37500ms)
+   - **Root Cause**: Jest test environment not properly isolated from CI environment detection
+   - **Action Required**:
+     - Mock environment variables in Jest test setup for timeout-config.test.ts
+     - Ensure unit tests run in predictable local context regardless of CI environment
+     - Verify timeout calculations work correctly in both local and CI environments
+   - **COMPLETED**: Fixed environment isolation by mocking `isRunningInCI()` and `getCurrentTestMode()` functions instead of manipulating environment variables directly. Tests now run reliably in both local and CI contexts with proper isolation.
 
-- [x] **T020 · Refactor · P2: change let to const in test files where reassignment does not occur**
-    - **Context:** cr-11 Use `const` Over `let` Where Possible in Test Files
-    - **Action:**
-        1. Find all `let` declarations in test files that are not reassigned.
-        2. Replace with `const`.
-    - **Done‑when:**
-        1. Only genuinely reassigned variables use `let`.
-    - **Verification:**
-        1. Lint passes; code review confirms.
-    - **Depends‑on:** none
+ - [x] 14. **ci-fix-002:** Add missing data-testid attribute to CTA form component
+   - Priority: High  
+   - **Issue**: E2E tests failing because CTA form lacks required `data-testid="cta-form"` attribute
+   - **Root Cause**: Page Object Model expects `[data-testid="cta-form"]` selector but component doesn't have this attribute
+   - **Action Required**:
+     - Locate CTA section component (likely in components/molecules/cta-section.tsx)
+     - Add `data-testid="cta-form"` attribute to the form element
+     - Verify E2E test selectors match actual component structure
+     - Ensure all CTA flow E2E tests can locate the form element
+   - **COMPLETED**: CTA form component already had `data-testid="cta-form"` attribute. Fixed the actual issue: E2E form readiness check was selecting the hidden honeypot field instead of visible form elements. Updated enhanced-testing.ts to exclude hidden inputs by filtering out `tabindex="-1"` and `name="_gotcha"` elements.
 
-- [x] **T021 · Chore · P2: add comments explaining non-obvious test logic**
-    - **Context:** cr-10 Add Documentation for Non-Obvious Test Logic
-    - **Action:**
-        1. Add concise comments to non-trivial test logic, e.g., DOM filtering in `noise-background.test.tsx:70-72`.
-    - **Done‑when:**
-        1. All non-obvious test setups are explained.
-    - **Verification:**
-        1. Code review confirms clarity.
-    - **Depends‑on:** none
+## E2E Test CI Failures - FormSpark API Integration
 
-## Component Source Documentation
-- [x] **T022 · Chore · P1: ensure TSDoc coverage for Container props**
-    - **Context:** cr-12 Ensure TSDoc for Source Component Props
-    - **Action:**
-        1. Review Container props interface in `container.tsx`.
-        2. Add/update TSDoc for each prop, covering type, usage, and default.
-    - **Done‑when:**
-        1. All Container props are comprehensively documented with TSDoc.
-    - **Verification:**
-        1. IDE hover shows TSDoc; code review confirms completeness.
-    - **Depends‑on:** none
+ - [x] 15. **ci-e2e-fix-001:** Mock FormSpark API responses in E2E tests
+   - Priority: High
+   - **Issue**: E2E tests failing because form submissions to FormSpark with invalid test form ID never complete
+   - **Root Cause**: Tests use `NEXT_PUBLIC_FORMSPARK_FORM_ID=test-form-id` which is not a valid FormSpark form ID, causing real API calls to fail
+   - **Action Required**:
+     - Add Playwright request interception for FormSpark API endpoint (`https://submit-form.com/*`)
+     - Mock successful response for happy path test
+     - Mock error response for server error test
+     - Ensure mocked responses match FormSpark API format
+     - Verify no real API calls are made during tests
+   - **COMPLETED**: Implemented comprehensive FormSpark API mocking solution:
+     - Created `e2e/utils/api-mocking.ts` with reusable mocking utilities: `mockFormSparkAPI()`, `verifyMockWasCalled()`, `createMockVerificationReport()`
+     - Added dynamic URL construction using `getFormSparkSubmitURL()` to match application behavior regardless of environment
+     - Updated `cta-flow.spec.ts` to use mocking utilities with proper request interception and verification
+     - Successfully tested locally - mock intercepted all requests, no real API calls made, all assertions passed
+     - Ensured mocks work in both local (`test-form-id`) and CI environments
 
-- [x] **T023 · Chore · P1: ensure TSDoc coverage for GridItem props**
-    - **Context:** cr-12 Ensure TSDoc for Source Component Props
-    - **Action:**
-        1. Review GridItem props interface in `container.tsx`.
-        2. Add/update TSDoc for each prop, covering type, usage, and default.
-    - **Done‑when:**
-        1. All GridItem props are comprehensively documented with TSDoc.
-    - **Verification:**
-        1. IDE hover shows TSDoc; code review confirms completeness.
-    - **Depends‑on:** none
+ - [x] 16. **ci-e2e-fix-002:** Update CTA flow tests to use mocked API responses
+   - Priority: High
+   - **Depends on**: ci-e2e-fix-001
+   - **Issue**: Tests expect real API responses but should verify UI behavior with mocked responses
+   - **Action Required**:
+     - Update happy path test to verify success message after mocked success response
+     - Update error test to verify error message after mocked error response
+     - Ensure client-side validation test continues to work without API calls
+     - Add test assertions to verify API mocking is working correctly
+   - **COMPLETED**: Verified CTA flow tests properly use mocked API responses from ci-e2e-fix-001:
+     - Happy path test correctly mocks success response and verifies success message appears
+     - Error test correctly mocks error response and verifies error message appears  
+     - Client-side validation test works without API calls (no mocking needed)
+     - Mock verification confirms no real API calls are made, only mocked responses used
+     - All 4 tests pass: happy path, client validation, server error, and responsive design
+     - Tests properly isolated with individual mock setup per test case
 
-- [x] **T024 · Chore · P1: ensure TSDoc coverage for Logo props**
-    - **Context:** cr-12 Ensure TSDoc for Source Component Props
-    - **Action:**
-        1. Review Logo props interface in `logo.tsx`.
-        2. Add/update TSDoc for each prop, covering type, usage, and default.
-    - **Done‑when:**
-        1. All Logo props are comprehensively documented with TSDoc.
-    - **Verification:**
-        1. IDE hover shows TSDoc; code review confirms completeness.
-    - **Depends‑on:** none
-
-- [x] **T025 · Chore · P1: ensure TSDoc coverage for NoiseBackground props**
-    - **Context:** cr-12 Ensure TSDoc for Source Component Props
-    - **Action:**
-        1. Review NoiseBackground props interface in `noise-background.tsx`.
-        2. Add/update TSDoc for each prop, covering type, usage, and default.
-    - **Done‑when:**
-        1. All NoiseBackground props are comprehensively documented with TSDoc.
-    - **Verification:**
-        1. IDE hover shows TSDoc; code review confirms completeness.
-    - **Depends‑on:** none
-
-## CI Fixes
-- [x] **T026 · Fix · P0: exclude e2e tests from Jest runs**
-    - **Context:** CI Failure - Test Coverage failing due to Playwright tests in Jest
-    - **Action:**
-        1. Update `jest.config.js` to exclude e2e directory in testPathIgnorePatterns.
-        2. This prevents Playwright tests from being run by Jest.
-    - **Done‑when:**
-        1. Jest test runs no longer attempt to execute Playwright tests.
-        2. Error messages about Playwright no longer appear in test output.
-    - **Verification:**
-        1. Run 'pnpm test' and confirm no Playwright-related errors.
-    - **Depends‑on:** none
-
-- [x] **T027 · Fix · P0: fix React act() warnings in CTASection tests**
-    - **Context:** CI Failure - React state updates not wrapped in act()
-    - **Action:**
-        1. Update `__tests__/components/molecules/cta-section.test.tsx` to properly wrap state updates in act().
-        2. Fix issues on lines ~137, 138, 165, 179 where state updates aren't properly handled.
-        3. Ensure async form submission tests use proper act() wrapping.
-    - **Done‑when:**
-        1. Tests run without React act() warnings.
-        2. Form submission tests properly handle async state updates.
-    - **Verification:**
-        1. Run tests for CTASection and confirm no act() warnings in console.
-    - **Depends‑on:** none
-
-- [x] **T028 · Refactor · P0: temporarily adjust coverage thresholds**
-    - **Context:** CI Failure - Coverage thresholds too high for current codebase
-    - **Action:**
-        1. Update `jest.config.js` to temporarily lower coverage thresholds from 90% to 50%.
-        2. Add comment explaining these are temporary thresholds to be gradually increased.
-    - **Done‑when:**
-        1. Tests can pass coverage thresholds in CI.
-        2. A clear comment explains the temporary nature of the reduced thresholds.
-    - **Verification:**
-        1. Run test coverage locally and confirm it passes with new thresholds.
-    - **Depends‑on:** none
-
-- [x] **T029 · Config · P0: set up Chromatic project token**
-    - **Context:** CI Failure - Chromatic deployment failing due to missing token
-    - **Action:**
-        1. Create/locate a Chromatic project token from chromatic.com.
-        2. Add `CHROMATIC_PROJECT_TOKEN` as a GitHub repository secret.
-        3. Verify `.github/workflows/chromatic.yml` uses the secret correctly.
-    - **Done‑when:**
-        1. Chromatic token is configured in GitHub secrets.
-        2. Workflow file correctly references the token.
-    - **Verification:**
-        1. Push a commit to verify Chromatic job succeeds in CI.
-    - **Depends‑on:** none
-
-- [x] **T030 · Docs · P1: document testing strategy and separation**
-    - **Context:** Improve test organization and clarity
-    - **Action:**
-        1. Create or update testing documentation explaining the separation between:
-           - Unit/component tests (Jest)
-           - End-to-end tests (Playwright)
-        2. Include information about test coverage goals and thresholds.
-        3. Document in `/docs/TESTING.md` or similar location.
-    - **Done‑when:**
-        1. Documentation clearly explains test organization.
-        2. Guide for writing tests in the right framework is available.
-    - **Verification:**
-        1. Documentation review by team member.
-    - **Depends‑on:** [T026]
-
-- [x] **T031 · DevOps · P0: add coverage check to pre-push hook**
-    - **Context:** Ensure consistent test coverage enforcement locally and in CI
-    - **Action:**
-        1. Update `.githooks/pre-push` to run tests with coverage check.
-        2. Ensure the same thresholds used in CI are applied locally before pushing.
-        3. Add clear error messages when coverage requirements aren't met.
-    - **Done‑when:**
-        1. Pre-push hook runs test coverage and prevents pushing if thresholds aren't met.
-        2. Error messages clearly identify which coverage metrics failed.
-    - **Verification:**
-        1. Try to push with failing coverage and verify the hook prevents it.
-    - **Depends‑on:** none
-
-- [x] **T032 · Test · P1: improve test coverage for design-system components**
-    - **Context:** Increase test coverage to meet original 90% threshold
-    - **Action:**
-        1. Write comprehensive tests for all components in `components/design-system/`.
-        2. Focus on key files: animation-tokens.tsx, color-tokens.tsx, layout-tokens.tsx.
-        3. Implement both unit tests and visual regression tests as appropriate.
-    - **Done‑when:**
-        1. Test coverage for design-system components reaches at least 90%.
-    - **Verification:**
-        1. Run tests with coverage report and verify metrics.
-    - **Depends‑on:** none
-
-- [x] **T033 · Test · P1: improve test coverage for UI token components**
-    - **Context:** Increase test coverage to meet original 90% threshold
-    - **Action:**
-        1. Write tests for all components in `components/ui/tokens/`.
-        2. Ensure color-tokens.tsx, design-tokens.tsx, spacing-tokens.tsx, and typography-tokens.tsx have comprehensive tests.
-    - **Done‑when:**
-        1. Test coverage for UI token components reaches at least 90%.
-    - **Verification:**
-        1. Run tests with coverage report and verify metrics.
-    - **Depends‑on:** none
-
-- [x] **T034 · Test · P1: improve test coverage for theme components**
-    - **Context:** Increase test coverage to meet original 90% threshold
-    - **Action:**
-        1. Write tests for theme-debug.tsx and theme-script.tsx.
-        2. Complete test coverage for theme-toggle-button.tsx.
-    - **Done‑when:**
-        1. Test coverage for theme components reaches at least 90%.
-    - **Verification:**
-        1. Run tests with coverage report and verify metrics.
-    - **Depends‑on:** none
-
-- [x] **T035 · Test · P1: improve test coverage for hero-section and constants**
-    - **Context:** Increase test coverage to meet original 90% threshold
-    - **Action:**
-        1. Complete test coverage for `components/molecules/hero-section.tsx`.
-        2. Add tests for constants in `lib/constants.ts`.
-    - **Done‑when:**
-        1. Test coverage for these files reaches at least 90%.
-    - **Verification:**
-        1. Run tests with coverage report and verify metrics.
-    - **Depends‑on:** none
-
-- [x] **T036 · Test · P2: create test coverage improvement plan**
-    - **Context:** Long-term test quality improvement
-    - **Action:**
-        1. Generate a detailed coverage report to identify components with low coverage.
-        2. Create a prioritized list of components needing tests (beyond those in T032-T035).
-        3. Develop a plan to gradually increase coverage thresholds back to 90%.
-        4. Document the plan in `/docs/TEST_COVERAGE_PLAN.md`.
-    - **Done‑when:**
-        1. A plan document exists with coverage targets and timeline.
-        2. High-priority components for testing are identified.
-    - **Verification:**
-        1. Plan review by team member.
-    - **Depends‑on:** [T032], [T033], [T034], [T035]
+ - [x] 17. **ci-e2e-fix-003:** Add E2E test utilities for common API mocking patterns
+   - Priority: Medium
+   - **Depends on**: ci-e2e-fix-001, ci-e2e-fix-002
+   - **Issue**: API mocking logic should be reusable across different E2E tests
+   - **Action Required**:
+     - Create `e2e/utils/api-mocking.ts` with FormSpark mock utilities
+     - Add helper functions for common mock scenarios (success, error, network failure)
+     - Document mocking patterns for future E2E test development
+     - Ensure mock utilities are easily extensible for other APIs
+   - **COMPLETED**: Enhanced existing API mocking utilities with additional scenarios:
+     - Added network failure support with NetworkFailureType enum (connection refused, timeout, DNS failure, aborted)
+     - Created convenience functions: mockFormSparkNetworkFailure(), mockFormSparkTimeout(), mockFormSparkRateLimit()
+     - Enhanced documentation with comprehensive usage guide and examples
+     - Improved extensibility with BaseMockOptions interface and example for extending to other APIs
+     - Fixed TypeScript types and used correct Playwright error codes for route.abort()
+     - All existing E2E tests continue to pass with enhanced utilities

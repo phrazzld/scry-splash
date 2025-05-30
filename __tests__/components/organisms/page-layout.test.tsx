@@ -5,15 +5,29 @@ import { PageLayout, DefaultLayout } from '@/components/organisms/page-layout';
 
 // Mock the Footer component
 jest.mock('@/components/molecules/footer', () => ({
-  Footer: ({ projectText, centered, ...props }: any) => (
+  Footer: ({ projectText, centered, showThemeToggle, ...props }: any) => (
     <div 
       data-testid="mock-footer" 
       data-project-text={projectText}
       data-centered={centered}
+      data-show-theme-toggle={showThemeToggle}
       {...props}
     >
       {projectText}
     </div>
+  ),
+}));
+
+// Mock the ThemeToggleButton component
+jest.mock('@/components/ui/theme-toggle-button', () => ({
+  ThemeToggleButton: ({ className, ...props }: any) => (
+    <button 
+      data-testid="mock-theme-toggle-button" 
+      data-class-name={className}
+      {...props}
+    >
+      Toggle theme
+    </button>
   ),
 }));
 
@@ -121,8 +135,8 @@ describe('PageLayout Component', () => {
   it('renders correctly with default props', () => {
     render(<PageLayout>Test Content</PageLayout>);
     
-    // Check main wrapper
-    const wrapper = screen.getByRole('main');
+    // Check main wrapper - no longer uses role="main" to avoid landmark nesting issues
+    const wrapper = screen.getByLabelText('Main content');
     expect(wrapper).toBeInTheDocument();
     
     // Check background
@@ -200,14 +214,30 @@ describe('PageLayout Component', () => {
     const customClass = 'test-class';
     render(<PageLayout className={customClass}>Content</PageLayout>);
     
-    const wrapper = screen.getByRole('main');
+    const wrapper = screen.getByLabelText('Main content');
     expect(wrapper).toHaveClass(customClass);
+  });
+  
+  it('includes a skip link for accessibility', () => {
+    render(<PageLayout>Content</PageLayout>);
+    
+    // Look for the skip link
+    const skipLink = screen.getByText('Skip to content');
+    expect(skipLink).toBeInTheDocument();
+    expect(skipLink).toHaveAttribute('href', '#main-content');
+    expect(skipLink).toHaveClass('sr-only');
+    expect(skipLink).toHaveClass('focus:not-sr-only');
+    
+    // Check for the target of the skip link
+    const mainContent = document.getElementById('main-content');
+    expect(mainContent).toBeInTheDocument();
+    expect(mainContent).toHaveAttribute('tabIndex', '-1');
   });
 
   it('passes additional props to main div', () => {
     render(<PageLayout data-custom="custom-attr">Content</PageLayout>);
     
-    const wrapper = screen.getByRole('main');
+    const wrapper = screen.getByLabelText('Main content');
     expect(wrapper).toHaveAttribute('data-custom', 'custom-attr');
   });
 
@@ -223,6 +253,51 @@ describe('PageLayout Component', () => {
     
     const footer = screen.getByTestId('mock-footer');
     expect(footer).toHaveAttribute('data-project-text', customFooterText);
+    
+    // No longer using role="contentinfo" for footer to avoid nesting issues
+    const footerContainer = footer.parentElement;
+    expect(footerContainer).toBeInTheDocument();
+  });
+
+  it('does not render theme toggle button by default', () => {
+    render(<PageLayout>Content</PageLayout>);
+    
+    expect(screen.queryByTestId('mock-theme-toggle-button')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('header-theme-toggle')).not.toBeInTheDocument();
+  });
+
+  it('renders theme toggle button in header when showThemeToggle is true', () => {
+    render(<PageLayout showThemeToggle={true}>Content</PageLayout>);
+    
+    const themeToggle = screen.getByTestId('mock-theme-toggle-button');
+    expect(themeToggle).toBeInTheDocument();
+    
+    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
+    expect(themeToggleContainer).toBeInTheDocument();
+    
+    // Check that the footer theme toggle is hidden when header toggle is shown
+    const footer = screen.getByTestId('mock-footer');
+    expect(footer).toHaveAttribute('data-show-theme-toggle', 'false');
+  });
+
+  it('positions theme toggle on right side by default', () => {
+    render(<PageLayout showThemeToggle={true}>Content</PageLayout>);
+    
+    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
+    expect(themeToggleContainer.className).toContain('right-3');
+    expect(themeToggleContainer.className).toContain('sm:right-4');
+    expect(themeToggleContainer.className).not.toContain('left-3');
+    expect(themeToggleContainer.className).not.toContain('sm:left-4');
+  });
+
+  it('positions theme toggle based on themeTogglePosition prop', () => {
+    render(<PageLayout showThemeToggle={true} themeTogglePosition="left">Content</PageLayout>);
+    
+    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
+    expect(themeToggleContainer.className).toContain('left-3');
+    expect(themeToggleContainer.className).toContain('sm:left-4');
+    expect(themeToggleContainer.className).not.toContain('right-3');
+    expect(themeToggleContainer.className).not.toContain('sm:right-4');
   });
 });
 
@@ -231,7 +306,7 @@ describe('DefaultLayout Component', () => {
     render(<DefaultLayout>Test Content</DefaultLayout>);
     
     // Check PageLayout is used
-    const wrapper = screen.getByRole('main');
+    const wrapper = screen.getByLabelText('Main content');
     expect(wrapper).toBeInTheDocument();
     expect(wrapper).toHaveClass('flex justify-center');
     
@@ -283,5 +358,30 @@ describe('DefaultLayout Component', () => {
     );
     
     expect(screen.queryByTestId('mock-footer')).not.toBeInTheDocument();
+  });
+
+  it('renders theme toggle button when showThemeToggle is true', () => {
+    render(
+      <DefaultLayout showThemeToggle={true}>
+        Content
+      </DefaultLayout>
+    );
+    
+    expect(screen.getByTestId('mock-theme-toggle-button')).toBeInTheDocument();
+    expect(screen.getByTestId('header-theme-toggle')).toBeInTheDocument();
+  });
+
+  it('passes themeTogglePosition prop to PageLayout', () => {
+    render(
+      <DefaultLayout showThemeToggle={true} themeTogglePosition="left">
+        Content
+      </DefaultLayout>
+    );
+    
+    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
+    expect(themeToggleContainer.className).toContain('left-3');
+    expect(themeToggleContainer.className).toContain('sm:left-4');
+    expect(themeToggleContainer.className).not.toContain('right-3');
+    expect(themeToggleContainer.className).not.toContain('sm:right-4');
   });
 });

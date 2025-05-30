@@ -191,21 +191,28 @@ export function CTASection({
   
   return (
     <div 
-      className={cn(
-        "flex flex-col",
-        centered && "items-center text-center",
-        className
-      )} 
+      className={cn("px-4 sm:px-6 lg:px-8 w-full", className)} 
       {...props}
     >
-      <form 
-        onSubmit={handleSubmit}
-        className={cn(
-          "flex flex-col gap-2 w-full max-w-lg",
-          centered && "items-center"
-        )}
-        role="form"
-      >
+      <div className={cn(
+        "w-full max-w-none mx-auto",
+        centered && "text-center"
+      )}>
+        <form 
+          onSubmit={handleSubmit}
+          className={cn(
+            "flex flex-col gap-3 w-full max-w-2xl mx-auto",
+            centered && "items-center"
+          )}
+          aria-labelledby="cta-form-heading"
+          data-testid="cta-form"
+          noValidate
+        >
+        {/* Invisible heading for screen readers */}
+        <div className="sr-only" id="cta-form-heading">
+          Get early access form
+        </div>
+        
         {/* Honeypot field for spam protection - will be hidden via CSS */}
         <div className="hidden" aria-hidden="true">
           <input
@@ -217,14 +224,29 @@ export function CTASection({
         </div>
         
         <div className="w-full">
+          <label htmlFor="email-input" className="sr-only">
+            {inputAriaLabel || "Enter your email address"}
+          </label>
           <Input
+            id="email-input"
             type={inputType}
             name="email"
             placeholder={inputPlaceholder}
             aria-label={inputAriaLabel}
+            aria-required={true}
+            aria-invalid={submitStatus === "error"}
+            aria-describedby={
+              submitStatus === "error" 
+                ? "cta-error-message" 
+                : submitStatus === "success" 
+                  ? "cta-success-message" 
+                  : undefined
+            }
             value={inputValue}
             onChange={handleInputChange}
             disabled={isSubmitting}
+            data-testid="cta-email-input"
+            style={{ minWidth: '400px', width: '100%' }}
             className={cn(
               submitStatus === "success" && "border-green-500 bg-green-50 dark:bg-green-900/20",
               submitStatus === "error" && "border-red-500 bg-red-50 dark:bg-red-900/20"
@@ -232,15 +254,17 @@ export function CTASection({
             required
           />
         </div>
-        <div className={cn(centered ? "text-center" : "text-left", "w-full")}>
+        <div className="w-full">
           <Button
             variant="cta"
             size={buttonSize}
             aria-label={buttonAriaLabelFinal}
+            aria-busy={isSubmitting}
             type="submit"
             disabled={isSubmitting || !inputValue.trim()}
+            data-testid="cta-submit-button"
             className={cn(
-              "whitespace-nowrap h-12 text-base font-bold px-10 py-3 bg-[#0047AB] text-white hover:bg-[#003d91]",
+              "whitespace-nowrap h-12 text-base font-bold px-6 sm:px-10 py-3 w-full sm:w-auto bg-[#0047AB] text-white hover:bg-[#003d91]",
               isSubmitting && "opacity-80 cursor-not-allowed"
             )}
           >
@@ -250,30 +274,45 @@ export function CTASection({
       </form>
       
       {/* Status messages */}
-      {submitStatus === "success" && (
-        <BodyText 
-          className={cn("mt-4 text-green-600 dark:text-green-400")}
-        >
-          Thank you! Your email has been submitted successfully. We&apos;ll be in touch soon.
-        </BodyText>
-      )}
-      
-      {submitStatus === "error" && (
-        <BodyText 
-          className={cn("mt-4 text-red-600 dark:text-red-400")}
-        >
-          {errorMessage || "Sorry, there was an error submitting your email. Please try again."}
-        </BodyText>
-      )}
-      
-      {/* Original microcopy if provided and not showing status message */}
-      {microcopy && submitStatus === "idle" && (
-        <BodyText 
-          className={cn("mt-4 opacity-70", microcopyColor)}
-        >
-          {microcopy}
-        </BodyText>
-      )}
+        {submitStatus === "success" && (
+          <BodyText 
+            className={cn("mt-4 text-green-600 dark:text-green-400")}
+            data-testid="cta-success-message"
+            id="cta-success-message"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <span role="img" aria-label="Success" className="mr-2">✅</span>
+            Thank you! Your email has been submitted successfully. We&apos;ll be in touch soon.
+          </BodyText>
+        )}
+        
+        {submitStatus === "error" && (
+          <BodyText 
+            className={cn("mt-4 text-red-600 dark:text-red-400")}
+            data-testid="cta-error-message"
+            id="cta-error-message"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <span role="img" aria-label="Error" className="mr-2">⚠️</span>
+            {errorMessage || "Sorry, there was an error submitting your email. Please try again."}
+          </BodyText>
+        )}
+        
+        {/* Original microcopy if provided and not showing status message */}
+        {microcopy && submitStatus === "idle" && (
+          <BodyText 
+            className={cn("mt-4 opacity-70", microcopyColor)}
+            id="cta-microcopy"
+            aria-hidden={submitStatus !== "idle"} // Hide from screen readers when status messages are shown
+          >
+            {microcopy}
+          </BodyText>
+        )}
+      </div>
     </div>
   )
 }

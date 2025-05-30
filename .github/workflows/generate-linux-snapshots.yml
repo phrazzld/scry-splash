@@ -1,0 +1,174 @@
+name: Generate Linux Visual Snapshots
+
+# This workflow generates Linux-specific snapshots for visual regression tests
+# It can be triggered manually with workflow_dispatch
+# 
+# Visual test snapshots are platform-specific, so we need separate snapshots for
+# Linux environments (like CI runners) compared to local development on macOS/Windows
+#
+# Usage:
+# 1. Run this workflow manually
+# 2. Choose the browser to use (chromium, firefox, webkit, or all)
+# 3. Select the test mode (visual, all, or specific)
+# 4. If using specific mode, provide comma-separated test files paths
+# 5. Choose whether to commit the snapshots back to the repository
+#
+# Example test files paths:
+# - e2e/theme/theme-visual.spec.ts
+# - e2e/tests/mobile-responsive.spec.ts
+# - e2e/tests/cta-flow.spec.ts
+
+on:
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: 'Browser to generate snapshots for'
+        required: true
+        default: 'chromium'
+        type: choice
+        options:
+          - all
+          - chromium
+          - firefox
+          - webkit
+      commit_changes:
+        description: 'Commit snapshot changes back to the repository'
+        type: boolean
+        default: true
+      test_mode:
+        description: 'Test selection mode'
+        required: true
+        default: 'visual'
+        type: choice
+        options:
+          - visual     # Only tests with @visual tag
+          - all        # All tests
+          - specific   # Specific test files (requires test_files)
+      test_files:
+        description: 'Specific test files to generate snapshots for (comma-separated), required if test_mode=specific'
+        type: string
+        default: ''
+        required: false
+
+jobs:
+  generate-snapshots:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.x
+          
+      - name: Setup Node.js with pnpm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Install Playwright browsers
+        run: |
+          if [ "${{ github.event.inputs.browser }}" = "all" ]; then
+            echo "Installing all browser engines..."
+            pnpm exec playwright install --with-deps
+          else
+            echo "Installing ${{ github.event.inputs.browser }} specifically for snapshot generation..."
+            pnpm exec playwright install ${{ github.event.inputs.browser }} --with-deps
+          fi
+          echo "Verifying browser installation..."
+          pnpm exec playwright --version
+        
+      - name: Generate Snapshots
+        run: |
+          # Set environment variables to ensure we generate Linux-specific snapshots
+          export CI=true
+          export PLAYWRIGHT_LINUX_SNAPSHOTS=true
+          export VISUAL_TESTS_ENABLED_IN_CI=1
+          
+          # Determine which test files to update based on test_mode
+          if [ "${{ github.event.inputs.test_mode }}" = "visual" ]; then
+            echo "Generating snapshots for visual tests (@visual tag)..."
+            PLAYWRIGHT_UPDATE_SNAPSHOTS=1 pnpm playwright test --grep "@visual" --update-snapshots
+            
+            # Also run any tests that use expectScreenshot but might not be tagged yet
+            echo "Checking for additional tests that use expectScreenshot but aren't tagged..."
+            ADDITIONAL_FILES=$(grep -r "expectScreenshot" --include="*.spec.ts" e2e/ | grep -v "@visual" | cut -d: -f1 | sort | uniq)
+            
+            if [ -n "$ADDITIONAL_FILES" ]; then
+              echo "Found additional test files with visual assertions:"
+              echo "$ADDITIONAL_FILES"
+              
+              for TEST_FILE in $ADDITIONAL_FILES; do
+                echo "Processing additional test file: ${TEST_FILE}"
+                PLAYWRIGHT_UPDATE_SNAPSHOTS=1 pnpm playwright test "${TEST_FILE}" --update-snapshots
+              done
+            fi
+          elif [ "${{ github.event.inputs.test_mode }}" = "all" ]; then
+            echo "Generating snapshots for all tests..."
+            PLAYWRIGHT_UPDATE_SNAPSHOTS=1 pnpm playwright test --update-snapshots
+          elif [ "${{ github.event.inputs.test_mode }}" = "specific" ]; then
+            if [ -z "${{ github.event.inputs.test_files }}" ]; then
+              echo "Error: test_files input is required when test_mode=specific"
+              exit 1
+            fi
+            
+            echo "Generating snapshots for specified tests: ${{ github.event.inputs.test_files }}"
+            IFS=',' read -ra TEST_FILES <<< "${{ github.event.inputs.test_files }}"
+            for TEST_FILE in "${TEST_FILES[@]}"; do
+              echo "Processing test file: ${TEST_FILE}"
+              PLAYWRIGHT_UPDATE_SNAPSHOTS=1 pnpm playwright test "${TEST_FILE}" --update-snapshots
+            done
+          else
+            echo "Error: Unknown test_mode value: ${{ github.event.inputs.test_mode }}"
+            exit 1
+          fi
+        env:
+          NEXT_PUBLIC_FORMSPARK_FORM_ID: test-form-id
+          
+      - name: List generated snapshots
+        run: |
+          echo "Generated snapshots:"
+          find e2e -name "*.png" | grep -v "node_modules"
+          
+      - name: Upload snapshots as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-snapshots
+          path: |
+            e2e/**/*.spec.ts-snapshots/
+            !**/node_modules/**
+          retention-days: 7
+          
+      - name: Commit snapshots
+        if: ${{ github.event.inputs.commit_changes == 'true' }}
+        run: |
+          # Configure git
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Check if there are changes
+          if [[ -n $(git status -s | grep ".png") ]]; then
+            # Add all png files in the e2e directory structure
+            git add "e2e/**/*.png"
+            
+            # Create commit with descriptive message
+            git commit -m "chore: add Linux-specific snapshots for visual tests
+            
+            - Generated from GitHub Actions workflow
+            - Platform: Ubuntu Linux
+            - Browser: ${{ github.event.inputs.browser }}
+            - Test mode: ${{ github.event.inputs.test_mode }}
+            - CI: true"
+            
+            # Push changes
+            git push
+            echo "Committed and pushed snapshot changes successfully!"
+          else
+            echo "No snapshot changes detected"
+          fi

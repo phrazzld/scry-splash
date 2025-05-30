@@ -8,6 +8,7 @@ interface BodyTextProps {
   children: React.ReactNode;
   className?: string;
   as?: React.ElementType;
+  'data-testid'?: string;
 }
 
 interface ContainerProps {
@@ -28,15 +29,15 @@ interface GridItemProps {
 
 // Mock the dependencies of Footer
 jest.mock('@/components/ui/typography', () => ({
-  BodyText: ({ children, className, as }: BodyTextProps) => (
-    <div data-testid="mock-body" data-as={as} className={className}>{children}</div>
+  BodyText: ({ children, className, as, 'data-testid': dataTestId, ...props }: BodyTextProps) => (
+    <div data-testid={dataTestId || "mock-body"} data-as={as} className={className} {...props}>{children}</div>
   ),
 }));
 
 jest.mock('@/components/ui/container', () => ({
   Container: ({ children, className, gap, as, ...props }: ContainerProps) => (
     <div 
-      data-testid="mock-container" 
+      data-testid={props['data-testid'] || "mock-container"} 
       data-gap={gap}
       data-as={as}
       className={className} 
@@ -63,13 +64,12 @@ describe('Footer Component', () => {
     render(<Footer />);
     
     // Check if the component renders correctly
-    const container = screen.getByTestId('mock-container');
+    const container = screen.getByTestId('footer');
     expect(container).toBeInTheDocument();
-    expect(container).toHaveAttribute('data-as', 'footer');
-    expect(container).toHaveAttribute('data-gap', 'none');
+    expect(container.tagName.toLowerCase()).toBe('footer');
     
     // Check that the text content is correct
-    const body = screen.getByTestId('mock-body');
+    const body = screen.getByTestId('footer-attribution');
     expect(body).toBeInTheDocument();
     expect(body).toHaveTextContent('a misty step project');
     expect(body).toHaveAttribute('data-as', 'p');
@@ -82,7 +82,7 @@ describe('Footer Component', () => {
     const customText = 'built with ❤️ by misty step';
     render(<Footer projectText={customText} />);
     
-    const body = screen.getByTestId('mock-body');
+    const body = screen.getByTestId('footer-attribution');
     expect(body).toHaveTextContent(customText);
   });
 
@@ -91,9 +91,10 @@ describe('Footer Component', () => {
     const { rerender } = render(<Footer centered={false} />);
     
     const gridItem = screen.getByTestId('mock-grid-item');
-    // Check that with centered=false, we use flex-row and justify-between
-    expect(gridItem.className).toContain('flex-row');
-    expect(gridItem.className).toContain('justify-between');
+    // Check that with centered=false, we use flex items-center
+    expect(gridItem.className).toContain('flex');
+    expect(gridItem.className).toContain('items-center');
+    expect(gridItem.className).not.toContain('flex-col');
     
     // Rerender with centered=true
     rerender(<Footer centered={true} />);
@@ -108,7 +109,7 @@ describe('Footer Component', () => {
     const customTextColor = 'text-cobalt/50';
     render(<Footer textColor={customTextColor} />);
     
-    const body = screen.getByTestId('mock-body');
+    const body = screen.getByTestId('footer-attribution');
     expect(body.className).toContain(customTextColor);
     expect(body.className).not.toContain('text-foreground/40');
   });
@@ -117,14 +118,14 @@ describe('Footer Component', () => {
     const customClass = 'custom-footer-class';
     render(<Footer className={customClass} />);
     
-    const container = screen.getByTestId('mock-container');
+    const container = screen.getByTestId('footer');
     expect(container.className).toContain(customClass);
   });
 
   it('passes additional props to container', () => {
     render(<Footer data-testprop="test-value" />);
     
-    const container = screen.getByTestId('mock-container');
+    const container = screen.getByTestId('footer');
     expect(container).toHaveAttribute('data-testprop', 'test-value');
   });
 });

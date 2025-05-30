@@ -10,6 +10,7 @@ Thank you for your interest in contributing to Scry Splash! This guide will help
 - [Git Workflow](#git-workflow)
 - [Code Standards](#code-standards)
 - [Testing](#testing)
+- [End-to-End Testing](#end-to-end-testing)
 
 ## Development Setup
 
@@ -149,3 +150,35 @@ See our [Development Philosophy](docs/DEVELOPMENT_PHILOSOPHY.md) for complete st
   pnpm test
   ```
 - Follow our [testing strategy](docs/TESTING_STRATEGY.md) and [A11Y testing](docs/A11Y_TESTING.md) guidelines
+
+## End-to-End Testing
+
+This project uses Playwright for end-to-end testing to validate critical user flows and ensure the application works correctly in real browsers.
+
+### Running E2E Tests
+
+```bash
+# Run E2E tests in headless mode
+pnpm e2e
+
+# Run E2E tests with UI mode for debugging
+pnpm e2e:ui
+
+# Update visual regression snapshots
+pnpm e2e:update-snapshots
+
+# View HTML test report
+pnpm e2e:report
+```
+
+### E2E Test Structure
+
+E2E tests follow the Page Object Model (POM) pattern for maintainability and reusability. For detailed information about:
+
+- Writing E2E tests
+- Adding new page objects
+- Running tests in CI
+- Debugging tips
+- Visual regression testing
+
+Please refer to the comprehensive [E2E Testing Documentation](e2e/README.md).

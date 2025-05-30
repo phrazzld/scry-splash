@@ -24,8 +24,12 @@ interface BodyTextProps {
 interface InputProps {
   type?: string;
   name?: string;
+  id?: string;
   placeholder?: string;
   'aria-label'?: string;
+  'aria-required'?: boolean | "true" | "false";
+  'aria-invalid'?: boolean;
+  'aria-describedby'?: string;
   value?: string;
   onChange?: (e: any) => void;
   required?: boolean;
@@ -46,7 +50,7 @@ jest.mock('@/components/ui/button', () => ({
     ...props 
   }: ButtonProps) => (
     <button 
-      data-testid="mock-button" 
+      data-testid={props['data-testid'] || "cta-submit-button"} 
       data-variant={variant} 
       data-size={size} 
       data-aria-label={ariaLabel}
@@ -72,7 +76,7 @@ jest.mock('@/components/ui/input', () => ({
     ...props 
   }: InputProps) => (
     <input 
-      data-testid="mock-input" 
+      data-testid={props['data-testid'] || "cta-email-input"}
       type={type}
       placeholder={placeholder}
       aria-label={ariaLabel}
@@ -86,8 +90,23 @@ jest.mock('@/components/ui/input', () => ({
 }));
 
 jest.mock('@/components/ui/typography', () => ({
-  BodyText: ({ children, className }: BodyTextProps) => (
-    <div data-testid="mock-body-text" className={className}>{children}</div>
+  BodyText: ({ children, className, id, role, 'aria-live': ariaLive, 'aria-atomic': ariaAtomic, ...props }: BodyTextProps & { 
+    id?: string,
+    role?: string, 
+    'aria-live'?: "off" | "assertive" | "polite",
+    'aria-atomic'?: boolean | "true" | "false"
+  }) => (
+    <div 
+      data-testid={id || "mock-body-text"} 
+      id={id}
+      className={className}
+      role={role}
+      aria-live={ariaLive}
+      aria-atomic={ariaAtomic}
+      {...props}
+    >
+      {children}
+    </div>
   ),
 }));
 
@@ -118,7 +137,7 @@ describe('CTASection Component', () => {
     render(<CTASection />);
     
     // Check input field renders
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
     expect(input).toBeInTheDocument();
     expect(input).toHaveAttribute('type', 'email');
     expect(input).toHaveAttribute('name', 'email');
@@ -127,7 +146,7 @@ describe('CTASection Component', () => {
     expect(input).toHaveAttribute('required');
     
     // Check button renders with default text
-    const button = screen.getByTestId('mock-button');
+    const button = screen.getByTestId('cta-submit-button');
     expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent('Get early access');
     expect(button).toHaveAttribute('data-variant', 'cta'); // Now using cta variant by default
@@ -143,7 +162,7 @@ describe('CTASection Component', () => {
     expect(honeypot).toBeInTheDocument();
     
     // Check microcopy renders
-    const microcopy = screen.getByTestId('mock-body-text');
+    const microcopy = screen.getByTestId('cta-microcopy');
     expect(microcopy).toBeInTheDocument();
     expect(microcopy).toHaveTextContent('Beta invites roll out weekly.');
   });
@@ -154,10 +173,10 @@ describe('CTASection Component', () => {
     
     render(<CTASection buttonText={customButtonText} microcopy={customMicrocopy} />);
     
-    const button = screen.getByTestId('mock-button');
+    const button = screen.getByTestId('cta-submit-button');
     expect(button).toHaveTextContent(customButtonText);
     
-    const microcopy = screen.getByTestId('mock-body-text');
+    const microcopy = screen.getByTestId('cta-microcopy');
     expect(microcopy).toHaveTextContent(customMicrocopy);
   });
 
@@ -167,7 +186,7 @@ describe('CTASection Component', () => {
     
     render(<CTASection inputPlaceholder={customPlaceholder} inputType={customType} />);
     
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
     expect(input).toHaveAttribute('placeholder', customPlaceholder);
     expect(input).toHaveAttribute('type', customType);
   });
@@ -175,7 +194,7 @@ describe('CTASection Component', () => {
   it('renders with custom button size', () => {
     render(<CTASection buttonSize="xl" />);
     
-    const button = screen.getByTestId('mock-button');
+    const button = screen.getByTestId('cta-submit-button');
     expect(button).toHaveAttribute('data-size', 'xl');
   });
 
@@ -185,7 +204,7 @@ describe('CTASection Component', () => {
     render(<CTASection onFormSubmit={handleSubmit} />);
 
     const form = screen.getByRole('form');
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
 
     // Type in the input
     await act(async () => {
@@ -209,7 +228,7 @@ describe('CTASection Component', () => {
     render(<CTASection onButtonClick={handleClick} />);
 
     const form = screen.getByRole('form');
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
 
     // Type in the input so the form is valid
     await act(async () => {
@@ -234,7 +253,7 @@ describe('CTASection Component', () => {
     const customAriaLabel = 'Custom input label';
     render(<CTASection inputAriaLabel={customAriaLabel} />);
     
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
     expect(input).toHaveAttribute('aria-label', customAriaLabel);
   });
 
@@ -242,7 +261,7 @@ describe('CTASection Component', () => {
     const customAriaLabel = 'Custom button label';
     render(<CTASection buttonAriaLabel={customAriaLabel} />);
     
-    const button = screen.getByTestId('mock-button');
+    const button = screen.getByTestId('cta-submit-button');
     expect(button).toHaveAttribute('data-aria-label', customAriaLabel);
   });
 
@@ -250,7 +269,7 @@ describe('CTASection Component', () => {
     const buttonText = 'Join now';
     render(<CTASection buttonText={buttonText} />);
     
-    const button = screen.getByTestId('mock-button');
+    const button = screen.getByTestId('cta-submit-button');
     expect(button).toHaveAttribute('data-aria-label', buttonText);
   });
 
@@ -258,8 +277,12 @@ describe('CTASection Component', () => {
     render(<CTASection centered={true} data-testid="cta-section" />);
     
     const container = screen.getByTestId('cta-section');
-    expect(container).toHaveClass('items-center');
-    expect(container).toHaveClass('text-center');
+    // The outer container only has padding classes
+    expect(container).toHaveClass('px-4');
+    
+    // The text-center class is applied to the inner wrapper
+    const innerWrapper = container.firstElementChild;
+    expect(innerWrapper).toHaveClass('text-center');
     
     const form = screen.getByRole('form');
     expect(form).toHaveClass('items-center');
@@ -279,7 +302,7 @@ describe('CTASection Component', () => {
   it('applies default theme-aware text color to microcopy', () => {
     render(<CTASection />);
     
-    const microcopy = screen.getByTestId('mock-body-text');
+    const microcopy = screen.getByTestId('cta-microcopy');
     expect(microcopy).toHaveClass('text-foreground');
   });
 
@@ -287,7 +310,7 @@ describe('CTASection Component', () => {
     const customColor = 'text-cobalt';
     render(<CTASection microcopyColor={customColor} />);
     
-    const microcopy = screen.getByTestId('mock-body-text');
+    const microcopy = screen.getByTestId('cta-microcopy');
     expect(microcopy).toHaveClass(customColor);
   });
 
@@ -297,6 +320,33 @@ describe('CTASection Component', () => {
     
     const container = screen.getByTestId('cta-section');
     expect(container).toHaveClass(customClass);
+  });
+  
+  it('has proper accessibility attributes for screen readers', () => {
+    render(<CTASection />);
+    
+    // Check for form accessibility attributes
+    const form = screen.getByRole('form');
+    expect(form).toHaveAttribute('aria-labelledby', 'cta-form-heading');
+    expect(form).toHaveAttribute('novalidate');
+    
+    // Check for sr-only form heading
+    const formHeading = document.getElementById('cta-form-heading');
+    expect(formHeading).toBeInTheDocument();
+    expect(formHeading).toHaveClass('sr-only');
+    
+    // Check for hidden label
+    const inputLabel = screen.getByText('Enter your email address');
+    expect(inputLabel).toBeInTheDocument();
+    expect(inputLabel).toHaveClass('sr-only');
+    
+    // Check input has an id for label association
+    const input = screen.getByTestId('cta-email-input');
+    expect(input).toHaveAttribute('id', 'email-input');
+    
+    // Check microcopy has proper attributes
+    const microcopy = screen.getByTestId('cta-microcopy');
+    expect(microcopy).toHaveAttribute('id', 'cta-microcopy');
   });
 
   it('passes additional props to container div', () => {
@@ -313,7 +363,7 @@ describe('CTASection Component', () => {
     render(<CTASection />);
 
     const form = screen.getByRole('form');
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
 
     // Type in the input
     await act(async () => {
@@ -353,7 +403,7 @@ describe('CTASection Component', () => {
     render(<CTASection formAction={customFormAction} />);
 
     const form = screen.getByRole('form');
-    const input = screen.getByTestId('mock-input');
+    const input = screen.getByTestId('cta-email-input');
 
     // Type in the input
     await act(async () => {
@@ -375,5 +425,82 @@ describe('CTASection Component', () => {
       customFormAction,
       expect.anything()
     );
+  });
+  
+  it('displays accessible success message after successful submission', async () => {
+    const mockFetch = global.fetch as jest.Mock;
+    mockFetch.mockClear();
+    
+    render(<CTASection />);
+    
+    const form = screen.getByRole('form');
+    const input = screen.getByTestId('cta-email-input');
+    
+    // Type in the input
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'test@example.com' } });
+    });
+    
+    // Submit the form and wait for all state updates and async operations
+    await act(async () => {
+      fireEvent.submit(form);
+      await Promise.resolve();
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+    
+    // Check success message has proper accessibility attributes
+    const successMessage = screen.getByTestId('cta-success-message');
+    expect(successMessage).toBeInTheDocument();
+    expect(successMessage).toHaveAttribute('role', 'status');
+    expect(successMessage).toHaveAttribute('aria-live', 'polite');
+    expect(successMessage).toHaveAttribute('aria-atomic', 'true');
+    expect(successMessage).toHaveAttribute('id', 'cta-success-message');
+    
+    // Check for success icon with accessible label
+    const successIcon = document.querySelector('[role="img"][aria-label="Success"]');
+    expect(successIcon).toBeInTheDocument();
+  });
+  
+  it('displays accessible error message after failed submission', async () => {
+    const mockFetch = global.fetch as jest.Mock;
+    mockFetch.mockImplementationOnce(() => 
+      Promise.resolve({
+        ok: false,
+        json: () => Promise.resolve({ error: 'Test error message' })
+      } as unknown as Response)
+    );
+    
+    render(<CTASection />);
+    
+    const form = screen.getByRole('form');
+    const input = screen.getByTestId('cta-email-input');
+    
+    // Type in the input
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'test@example.com' } });
+    });
+    
+    // Submit the form and wait for all state updates and async operations
+    await act(async () => {
+      fireEvent.submit(form);
+      await Promise.resolve();
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+    
+    // Check error message has proper accessibility attributes
+    const errorMessage = screen.getByTestId('cta-error-message');
+    expect(errorMessage).toBeInTheDocument();
+    expect(errorMessage).toHaveAttribute('role', 'alert');
+    expect(errorMessage).toHaveAttribute('aria-live', 'assertive');
+    expect(errorMessage).toHaveAttribute('aria-atomic', 'true');
+    expect(errorMessage).toHaveAttribute('id', 'cta-error-message');
+    
+    // Check for error icon with accessible label
+    const errorIcon = document.querySelector('[role="img"][aria-label="Error"]');
+    expect(errorIcon).toBeInTheDocument();
+    
+    // Check form field reflects error state
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(input).toHaveAttribute('aria-describedby', 'cta-error-message');
   });
 });

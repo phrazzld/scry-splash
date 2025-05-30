@@ -263,9 +263,33 @@ For more details, see [A11Y_TESTING.md](./A11Y_TESTING.md).
 
 ## Visual Testing
 
-Visual regression testing is handled through Chromatic, which integrates with Storybook.
+The project employs a comprehensive dual approach to visual regression testing:
 
-For more details, see [VISUAL_TESTING.md](./VISUAL_TESTING.md) and [CHROMATIC_SETUP.md](./CHROMATIC_SETUP.md).
+### Component-Level Visual Testing (Chromatic)
+- **Purpose**: Test individual components in isolation
+- **Integration**: Automatic CI execution with PR status checks
+- **Platform**: Handles cross-platform differences automatically
+- **Workflow**: Web-based review and approval process
+
+### End-to-End Visual Testing (Playwright)
+- **Purpose**: Test complete pages and user flows
+- **Integration**: Manual CI execution with platform-specific snapshots
+- **Platform**: Separate snapshots for macOS (local) and Linux (CI)
+- **Workflow**: Git-based snapshot management
+
+### When to Use Each Approach
+
+| Scenario | Chromatic | Playwright |
+|----------|-----------|------------|
+| Component variants | ✅ | ❌ |
+| Full page layouts | ❌ | ✅ |
+| Theme switching | ❌ | ✅ |
+| Cross-browser testing | ✅ | ✅ |
+
+### Documentation
+- [VISUAL_TESTING_STRATEGY.md](./VISUAL_TESTING_STRATEGY.md) - Comprehensive strategy overview
+- [VISUAL_TESTING.md](./VISUAL_TESTING.md) - Chromatic setup and usage
+- [PLAYWRIGHT_VISUAL_REGRESSION_GUIDE.md](./PLAYWRIGHT_VISUAL_REGRESSION_GUIDE.md) - E2E visual testing guide
 
 ## CI Integration
 

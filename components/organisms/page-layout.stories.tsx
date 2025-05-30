@@ -47,6 +47,15 @@ const meta: Meta<typeof PageLayout> = {
       control: "text",
       description: "Footer project text",
     },
+    showThemeToggle: {
+      control: "boolean",
+      description: "Whether to show the theme toggle button in the header",
+    },
+    themeTogglePosition: {
+      control: "radio",
+      options: ["left", "right"],
+      description: "Position of the theme toggle button in the header",
+    },
   },
 }
 
@@ -217,6 +226,31 @@ export const CustomFooterText: Story = {
           This demonstrates a layout with custom footer text
         </BodyText>
         <Button variant="outline">Action Button</Button>
+      </GridItem>
+    ),
+  },
+}
+
+// With theme toggle button in header
+export const WithThemeToggle: Story = {
+  args: {
+    backgroundColor: "var(--color-ink)",
+    noiseOpacity: 0.02,
+    maxWidth: "xl",
+    padding: "md",
+    centered: true,
+    animate: true,
+    showFooter: true,
+    showThemeToggle: true,
+    themeTogglePosition: "right",
+    children: (
+      <GridItem span={12} md={8} mdStart={3} className="text-center py-12">
+        <HeadingText className="text-chalk mb-4">Theme Toggle in Header</HeadingText>
+        <BodyText className="text-chalk opacity-80 mb-6">
+          This demonstrates a layout with theme toggle button in the header.
+          The toggle button allows users to switch between light and dark modes.
+        </BodyText>
+        <Button variant="cta">Action Button</Button>
       </GridItem>
     ),
   },

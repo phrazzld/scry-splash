@@ -69,6 +69,59 @@ export const Default: Story = {
 };
 ```
 
+## CI Integration
+
+### Automatic CI Execution
+
+Chromatic integrates seamlessly with CI/CD pipelines:
+
+1. **GitHub Actions Integration**:
+   - Chromatic runs automatically on all pull requests
+   - Uses the `CHROMATIC_PROJECT_TOKEN` repository secret
+   - Provides status checks that can block merging
+
+2. **CI Workflow Configuration**:
+   ```yaml
+   - name: Run Chromatic
+     uses: chromaui/action@v1
+     with:
+       projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+       token: ${{ secrets.GITHUB_TOKEN }}
+   ```
+
+3. **Build and Publish**:
+   - CI builds Storybook and publishes to Chromatic
+   - Generates baseline comparisons automatically
+   - Links CI status to Chromatic review interface
+
+### CI Artifact Management
+
+**Storybook Build Artifacts**:
+- CI builds and uploads the complete Storybook
+- Provides permanent links to component library versions
+- Enables historical comparison across builds
+
+**Review Workflow**:
+1. CI runs Chromatic and reports status
+2. Team reviews changes via Chromatic web interface
+3. Changes are approved or rejected
+4. PR can be merged once Chromatic status is passing
+
+### Handling CI Failures
+
+**When Chromatic CI Fails**:
+1. **Check the Chromatic Link**: CI logs include direct link to review interface
+2. **Review Changes**: Use web interface to see visual diffs
+3. **Determine Action**:
+   - **Accept**: If changes are intentional
+   - **Reject**: If changes are unintended, fix code and re-run
+4. **Status Update**: Chromatic automatically updates CI status
+
+**Troubleshooting CI Issues**:
+- **Token Issues**: Verify `CHROMATIC_PROJECT_TOKEN` is correctly set
+- **Build Failures**: Check Storybook builds locally before CI
+- **Network Issues**: Chromatic may need retry on network failures
+
 ## Best Practices
 
 1. **Consistent Test Data**:
@@ -87,6 +140,12 @@ export const Default: Story = {
 4. **CI Integration**:
    - Chromatic runs automatically on pull requests
    - Review and approve/reject changes before merging
+   - Use Chromatic status checks to prevent merging unreviewed changes
+
+5. **Workflow Efficiency**:
+   - Review Chromatic changes promptly to avoid blocking PRs
+   - Use batch approval for expected changes across multiple components
+   - Document significant visual changes in PR descriptions
 
 ## Troubleshooting
 
@@ -132,9 +191,23 @@ If components aren't being captured:
    - This prevents potential exposure of secrets to unauthorized repositories
    - PRs from forks are still validated but without access to repository secrets
 
+## Visual Testing Strategy Integration
+
+This Chromatic setup is part of our comprehensive visual testing strategy:
+
+- **Component-Level Testing**: Use Chromatic for isolated component testing
+- **End-to-End Visual Testing**: Use Playwright for full-page visual regression testing
+- **Platform Considerations**: Chromatic handles cross-platform differences automatically
+
+For complete visual testing guidance, see [VISUAL_TESTING_STRATEGY.md](./VISUAL_TESTING_STRATEGY.md).
+
+For E2E visual testing, see [PLAYWRIGHT_VISUAL_REGRESSION_GUIDE.md](./PLAYWRIGHT_VISUAL_REGRESSION_GUIDE.md).
+
 ## Resources
 
 - [Chromatic Documentation](https://www.chromatic.com/docs/)
 - [Storybook Visual Testing](https://storybook.js.org/docs/writing-tests/visual-testing)
 - [Configuring Chromatic](https://www.chromatic.com/docs/config)
 - [GitHub Actions Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)
+- [VISUAL_TESTING_STRATEGY.md](./VISUAL_TESTING_STRATEGY.md) - Overall visual testing approach
+- [PLAYWRIGHT_VISUAL_REGRESSION_GUIDE.md](./PLAYWRIGHT_VISUAL_REGRESSION_GUIDE.md) - E2E visual testing
