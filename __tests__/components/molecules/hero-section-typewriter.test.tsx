@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { axe } from 'jest-axe';
 import { HeroSection } from '@/components/molecules/hero-section';
@@ -22,7 +22,9 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     expect(heading).toHaveTextContent('Remember');
     
     // Let the animation run for a bit
-    jest.advanceTimersByTime(1000);
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
     
     // Should have typed some characters
     await waitFor(() => {
@@ -34,9 +36,11 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     render(<HeroSection />);
     
     // Simulate rapid progression through all phrases
-    for (let i = 0; i < 50; i++) {
-      jest.advanceTimersByTime(500);
-    }
+    act(() => {
+      for (let i = 0; i < 50; i++) {
+        jest.advanceTimersByTime(500);
+      }
+    });
     
     // The animation should eventually complete
     const heading = screen.getByRole('heading');
@@ -47,10 +51,14 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     render(<HeroSection />);
     
     // Type out a full word (~10 chars at 70ms each)
-    jest.advanceTimersByTime(700);
+    act(() => {
+      jest.advanceTimersByTime(700);
+    });
     
     // Enter wait state
-    jest.advanceTimersByTime(1500);
+    act(() => {
+      jest.advanceTimersByTime(1500);
+    });
     
     const heading = screen.getByRole('heading');
     expect(heading).toBeInTheDocument();
@@ -60,13 +68,19 @@ describe('HeroSection TypewriterHeadline Coverage', () => {
     render(<HeroSection />);
     
     // Type phase
-    jest.advanceTimersByTime(700);
+    act(() => {
+      jest.advanceTimersByTime(700);
+    });
     
     // Wait phase  
-    jest.advanceTimersByTime(1500);
+    act(() => {
+      jest.advanceTimersByTime(1500);
+    });
     
     // Should start deleting
-    jest.advanceTimersByTime(300);
+    act(() => {
+      jest.advanceTimersByTime(300);
+    });
     
     const heading = screen.getByRole('heading');
     expect(heading).toBeInTheDocument();

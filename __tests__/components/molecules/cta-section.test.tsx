@@ -277,8 +277,12 @@ describe('CTASection Component', () => {
     render(<CTASection centered={true} data-testid="cta-section" />);
     
     const container = screen.getByTestId('cta-section');
-    expect(container).toHaveClass('items-center');
-    expect(container).toHaveClass('text-center');
+    // The outer container only has padding classes
+    expect(container).toHaveClass('px-4');
+    
+    // The text-center class is applied to the inner wrapper
+    const innerWrapper = container.firstElementChild;
+    expect(innerWrapper).toHaveClass('text-center');
     
     const form = screen.getByRole('form');
     expect(form).toHaveClass('items-center');

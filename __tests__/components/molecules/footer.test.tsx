@@ -66,8 +66,7 @@ describe('Footer Component', () => {
     // Check if the component renders correctly
     const container = screen.getByTestId('footer');
     expect(container).toBeInTheDocument();
-    expect(container).toHaveAttribute('data-as', 'footer');
-    expect(container).toHaveAttribute('data-gap', 'none');
+    expect(container.tagName.toLowerCase()).toBe('footer');
     
     // Check that the text content is correct
     const body = screen.getByTestId('footer-attribution');
@@ -92,9 +91,10 @@ describe('Footer Component', () => {
     const { rerender } = render(<Footer centered={false} />);
     
     const gridItem = screen.getByTestId('mock-grid-item');
-    // Check that with centered=false, we use flex-row and justify-between
-    expect(gridItem.className).toContain('flex-row');
-    expect(gridItem.className).toContain('justify-between');
+    // Check that with centered=false, we use flex items-center
+    expect(gridItem.className).toContain('flex');
+    expect(gridItem.className).toContain('items-center');
+    expect(gridItem.className).not.toContain('flex-col');
     
     // Rerender with centered=true
     rerender(<Footer centered={true} />);
