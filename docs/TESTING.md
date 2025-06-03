@@ -70,7 +70,7 @@ describe('Button Component', () => {
   it('calls onClick handler when clicked', async () => {
     const handleClick = jest.fn();
     render(<Button onClick={handleClick}>Click me</Button>);
-    
+
     await userEvent.click(screen.getByRole('button'));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
@@ -114,24 +114,24 @@ E2E tests should:
 ### Example E2E Test
 
 ```typescript
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Theme Switching', () => {
-  test('should switch from light to dark theme', async ({ page }) => {
+test.describe("Theme Switching", () => {
+  test("should switch from light to dark theme", async ({ page }) => {
     // Navigate to the homepage
-    await page.goto('/');
-    
+    await page.goto("/");
+
     // Verify initial theme (assuming light is default)
-    await expect(page.locator('html')).toHaveClass(/light/);
-    
+    await expect(page.locator("html")).toHaveClass(/light/);
+
     // Click the theme toggle button
     await page.click('[aria-label="Toggle theme"]');
-    
+
     // Verify theme changed to dark
-    await expect(page.locator('html')).toHaveClass(/dark/);
-    
+    await expect(page.locator("html")).toHaveClass(/dark/);
+
     // Take a screenshot for visual verification
-    await page.screenshot({ path: 'e2e/screenshots/dark-theme.png' });
+    await page.screenshot({ path: "e2e/screenshots/dark-theme.png" });
   });
 });
 ```
@@ -162,6 +162,7 @@ open coverage/lcov-report/index.html
 ### Coverage Enforcement
 
 Coverage is enforced in two ways:
+
 1. **CI Pipeline**: Fails if coverage falls below thresholds
 2. **Pre-push Hook**: Prevents pushing if coverage is insufficient
 
@@ -221,6 +222,7 @@ npx playwright test --project=chromium
 ### When to Use Jest vs. Playwright
 
 - **Use Jest for**:
+
   - Unit testing individual components
   - Testing component props and interactions
   - Logic and state management
@@ -266,12 +268,14 @@ For more details, see [A11Y_TESTING.md](./A11Y_TESTING.md).
 The project employs a comprehensive dual approach to visual regression testing:
 
 ### Component-Level Visual Testing (Chromatic)
+
 - **Purpose**: Test individual components in isolation
 - **Integration**: Automatic CI execution with PR status checks
 - **Platform**: Handles cross-platform differences automatically
 - **Workflow**: Web-based review and approval process
 
 ### End-to-End Visual Testing (Playwright)
+
 - **Purpose**: Test complete pages and user flows
 - **Integration**: Manual CI execution with platform-specific snapshots
 - **Platform**: Separate snapshots for macOS (local) and Linux (CI)
@@ -279,14 +283,15 @@ The project employs a comprehensive dual approach to visual regression testing:
 
 ### When to Use Each Approach
 
-| Scenario | Chromatic | Playwright |
-|----------|-----------|------------|
-| Component variants | ✅ | ❌ |
-| Full page layouts | ❌ | ✅ |
-| Theme switching | ❌ | ✅ |
-| Cross-browser testing | ✅ | ✅ |
+| Scenario              | Chromatic | Playwright |
+| --------------------- | --------- | ---------- |
+| Component variants    | ✅        | ❌         |
+| Full page layouts     | ❌        | ✅         |
+| Theme switching       | ❌        | ✅         |
+| Cross-browser testing | ✅        | ✅         |
 
 ### Documentation
+
 - [VISUAL_TESTING_STRATEGY.md](./VISUAL_TESTING_STRATEGY.md) - Comprehensive strategy overview
 - [VISUAL_TESTING.md](./VISUAL_TESTING.md) - Chromatic setup and usage
 - [PLAYWRIGHT_VISUAL_REGRESSION_GUIDE.md](./PLAYWRIGHT_VISUAL_REGRESSION_GUIDE.md) - E2E visual testing guide
@@ -294,6 +299,7 @@ The project employs a comprehensive dual approach to visual regression testing:
 ## CI Integration
 
 Tests are run in the CI pipeline:
+
 - Jest tests with coverage checking
 - Playwright tests for E2E verification
 - Chromatic for visual regression testing

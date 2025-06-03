@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { BenefitTrio } from "./benefit-trio"
-import { NoiseBackground } from "@/components/ui/noise-background"
+import type { Meta, StoryObj } from "@storybook/react";
+import { BenefitTrio } from "./benefit-trio";
+import { NoiseBackground } from "@/components/ui/noise-background";
 
 const meta: Meta<typeof BenefitTrio> = {
   title: "Molecules/BenefitTrio",
@@ -42,17 +42,17 @@ const meta: Meta<typeof BenefitTrio> = {
       description: "Font weight",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof BenefitTrio>
+export default meta;
+type Story = StoryObj<typeof BenefitTrio>;
 
 // Helper for consistent decoration
 const withBackground = (Story: React.ComponentType) => (
   <NoiseBackground baseColor="var(--color-ink)" className="p-12">
     <Story />
   </NoiseBackground>
-)
+);
 
 // Default (horizontal layout with default benefits)
 export const Default: Story = {
@@ -66,7 +66,7 @@ export const Default: Story = {
     weight: "medium",
   },
   decorators: [withBackground],
-}
+};
 
 // Vertical layout
 export const VerticalLayout: Story = {
@@ -80,7 +80,7 @@ export const VerticalLayout: Story = {
     weight: "medium",
   },
   decorators: [withBackground],
-}
+};
 
 // Responsive layout (horizontal on desktop, vertical on mobile)
 export const ResponsiveLayout: Story = {
@@ -94,7 +94,7 @@ export const ResponsiveLayout: Story = {
     weight: "medium",
   },
   decorators: [withBackground],
-}
+};
 
 // Different typography variant (body text)
 export const BodyVariant: Story = {
@@ -108,7 +108,7 @@ export const BodyVariant: Story = {
     weight: "regular",
   },
   decorators: [withBackground],
-}
+};
 
 // Custom benefits
 export const CustomBenefits: Story = {
@@ -122,7 +122,7 @@ export const CustomBenefits: Story = {
     weight: "medium",
   },
   decorators: [withBackground],
-}
+};
 
 // Left-aligned
 export const LeftAligned: Story = {
@@ -136,7 +136,7 @@ export const LeftAligned: Story = {
     weight: "medium",
   },
   decorators: [withBackground],
-}
+};
 
 // Alternative color scheme
 export const AlternativeColors: Story = {
@@ -149,9 +149,11 @@ export const AlternativeColors: Story = {
     centered: true,
     weight: "bold",
   },
-  decorators: [(Story) => (
-    <NoiseBackground baseColor="var(--color-chalk)" className="p-12">
-      <Story />
-    </NoiseBackground>
-  )],
-}
+  decorators: [
+    (Story) => (
+      <NoiseBackground baseColor="var(--color-chalk)" className="p-12">
+        <Story />
+      </NoiseBackground>
+    ),
+  ],
+};

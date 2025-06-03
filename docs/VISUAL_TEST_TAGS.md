@@ -22,7 +22,7 @@ To create a visual test that can be easily identified and filtered:
 1. Import the `visualTest` fixture:
 
 ```typescript
-import { visualTest } from '../utils/test-segmentation';
+import { visualTest } from "../utils/test-segmentation";
 ```
 
 2. Use this fixture instead of the regular test fixture:
@@ -59,7 +59,7 @@ In CI environments, you can control test execution using environment variables:
 # Run only visual tests
 PLAYWRIGHT_TEST_GREP="@visual" pnpm playwright test
 
-# Skip visual tests 
+# Skip visual tests
 PLAYWRIGHT_TEST_GREP_INVERT="@visual" pnpm playwright test
 ```
 
@@ -75,8 +75,8 @@ To enable visual tests in a CI workflow, set:
 
 ```yaml
 env:
-  VISUAL_TESTS_ENABLED_IN_CI: '1'  # Enable visual tests
-  PLAYWRIGHT_TEST_GREP: "@visual"  # Filter to run only visual tests
+  VISUAL_TESTS_ENABLED_IN_CI: "1" # Enable visual tests
+  PLAYWRIGHT_TEST_GREP: "@visual" # Filter to run only visual tests
 ```
 
 ## Snapshot Management

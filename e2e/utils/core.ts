@@ -1,26 +1,26 @@
 /**
  * Core E2E Testing Utilities Module
- * 
+ *
  * This module provides core types, interfaces, and universal utilities for E2E testing.
  * It serves as the foundation layer with NO dependencies on other utility modules.
- * 
+ *
  * All other testing utility modules should depend on this module, but this module
  * should not depend on any other utility modules to prevent circular dependencies.
  */
 
-import fs from 'fs/promises';
-import path from 'path';
-import type { TestInfo } from '@playwright/test';
+import fs from "fs/promises";
+import path from "path";
+import type { TestInfo } from "@playwright/test";
 
 /**
  * Supported content types for saving artifacts
  */
-export type ArtifactContentType = 'html' | 'json' | 'txt' | 'log';
+export type ArtifactContentType = "html" | "json" | "txt" | "log";
 
 /**
  * Log levels for debug logging
  */
-export type LogLevel = 'info' | 'warn' | 'error' | 'debug';
+export type LogLevel = "info" | "warn" | "error" | "debug";
 
 /**
  * Common context type for test operations
@@ -44,18 +44,18 @@ export function isRunningInCI(): boolean {
  * @param message The message to log
  * @param level The log level
  */
-export function debugLog(message: string, level: LogLevel = 'info'): void {
+export function debugLog(message: string, level: LogLevel = "info"): void {
   const timestamp = new Date().toISOString();
   const prefix = `[${timestamp}] [DEBUG ${level.toUpperCase()}]`;
-  
+
   switch (level) {
-    case 'warn':
+    case "warn":
       console.warn(`${prefix} ${message}`);
       break;
-    case 'error':
+    case "error":
       console.error(`${prefix} ${message}`);
       break;
-    case 'debug':
+    case "debug":
       if (process.env.DEBUG) {
         console.debug(`${prefix} ${message}`);
       }
@@ -88,22 +88,25 @@ export async function ensureDirectoryExists(dirPath: string): Promise<string> {
   try {
     const startTime = Date.now();
     debugLog(`Ensuring directory exists: ${dirPath}`);
-    
+
     await fs.mkdir(dirPath, { recursive: true });
-    
+
     // Verify directory was created and is writable
     const isWritable = await isDirectoryWritable(dirPath);
     if (!isWritable) {
       throw new Error(`Directory exists but is not writable: ${dirPath}`);
     }
-    
+
     const elapsedMs = Date.now() - startTime;
     debugLog(`Directory ready (${elapsedMs}ms): ${dirPath}`);
-    
+
     return dirPath;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    debugLog(`Failed to ensure directory exists: ${dirPath}. Error: ${errorMessage}`, 'error');
+    debugLog(
+      `Failed to ensure directory exists: ${dirPath}. Error: ${errorMessage}`,
+      "error",
+    );
     throw error;
   }
 }
@@ -126,11 +129,11 @@ export function formatError(error: unknown): string {
  * @returns TestContext object
  */
 export function toTestContext(testInfo: TestInfo | TestContext): TestContext {
-  if ('outputDir' in testInfo) {
+  if ("outputDir" in testInfo) {
     return {
       outputDir: testInfo.outputDir,
-      testName: ('title' in testInfo) ? testInfo.title : undefined,
-      testFile: ('file' in testInfo) ? testInfo.file : undefined
+      testName: "title" in testInfo ? testInfo.title : undefined,
+      testFile: "file" in testInfo ? testInfo.file : undefined,
     };
   }
   return testInfo;
@@ -142,7 +145,10 @@ export function toTestContext(testInfo: TestInfo | TestContext): TestContext {
  * @param segments Path segments to join
  * @returns Promise resolving to the joined path
  */
-export async function safeJoinPath(base: string, ...segments: string[]): Promise<string> {
+export async function safeJoinPath(
+  base: string,
+  ...segments: string[]
+): Promise<string> {
   const joinedPath = path.join(base, ...segments);
   const dir = path.dirname(joinedPath);
   await ensureDirectoryExists(dir);
@@ -155,7 +161,7 @@ export async function safeJoinPath(base: string, ...segments: string[]): Promise
  * @returns Promise that resolves after the specified time
  */
 export function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
@@ -172,14 +178,14 @@ export async function retry<T>(
     maxDelay?: number;
     backoff?: number;
     description?: string;
-  } = {}
+  } = {},
 ): Promise<T> {
   const {
     retries = 3,
     delay = 1000,
     maxDelay = 10000,
     backoff = 1.5,
-    description = 'operation',
+    description = "operation",
   } = options;
 
   let lastError: Error | undefined;
@@ -195,17 +201,23 @@ export async function retry<T>(
       return result;
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
-      
+
       if (attempt <= retries) {
-        debugLog(`Retry ${attempt}/${retries} for ${description}: ${lastError.message}`, 'warn');
+        debugLog(
+          `Retry ${attempt}/${retries} for ${description}: ${lastError.message}`,
+          "warn",
+        );
         await sleep(currentDelay);
         // Increase delay with backoff for next attempt
         currentDelay = Math.min(currentDelay * backoff, maxDelay);
       } else {
-        debugLog(`✗ ${description} failed after ${attempt - 1} retries: ${lastError.message}`, 'error');
+        debugLog(
+          `✗ ${description} failed after ${attempt - 1} retries: ${lastError.message}`,
+          "error",
+        );
       }
     }
   }
-  
+
   throw lastError!;
 }

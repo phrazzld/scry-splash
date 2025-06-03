@@ -1,13 +1,13 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { ThemeToggleButton } from './theme-toggle-button';
-import { ThemeProvider } from './theme-provider';
+import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+import { ThemeToggleButton } from "./theme-toggle-button";
+import { ThemeProvider } from "./theme-provider";
 
 const meta = {
-  title: 'UI/ThemeToggleButton',
+  title: "UI/ThemeToggleButton",
   component: ThemeToggleButton,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
         component: `
@@ -16,34 +16,34 @@ const meta = {
           indicating what the theme will change to when clicked.
           
           Uses the theme context from ThemeProvider via useTheme hook.
-        `
-      }
+        `,
+      },
     },
     a11y: {
       // Accessibility checks
       config: {
         rules: [
           {
-            id: 'color-contrast',
-            enabled: true
+            id: "color-contrast",
+            enabled: true,
           },
           {
-            id: 'button-name',
-            enabled: true
-          }
-        ]
-      }
-    }
+            id: "button-name",
+            enabled: true,
+          },
+        ],
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     className: {
-      control: 'text',
-      description: 'Additional CSS classes to apply',
+      control: "text",
+      description: "Additional CSS classes to apply",
     },
-    'aria-label': {
-      control: 'text',
-      description: 'Accessibility label for the button',
+    "aria-label": {
+      control: "text",
+      description: "Accessibility label for the button",
     },
   },
   // ThemeProvider is necessary to supply the theme context
@@ -52,8 +52,8 @@ const meta = {
       <div className="flex flex-col items-center gap-8">
         <StoryComponent />
       </div>
-    )
-  ]
+    ),
+  ],
 } satisfies Meta<typeof ThemeToggleButton>;
 
 export default meta;
@@ -65,17 +65,21 @@ type Story = StoryObj<typeof meta>;
  */
 export const InDarkMode: Story = {
   parameters: {
-    backgrounds: { default: 'dark' },
+    backgrounds: { default: "dark" },
   },
   decorators: [
     (StoryComponent) => (
-      <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
+      <ThemeProvider
+        defaultTheme="dark"
+        storageKey="storybook-theme"
+        enableSystem={false}
+      >
         <div className="p-8 bg-background text-foreground rounded-lg flex justify-center items-center">
           <StoryComponent />
         </div>
       </ThemeProvider>
-    )
-  ]
+    ),
+  ],
 };
 
 /**
@@ -84,17 +88,21 @@ export const InDarkMode: Story = {
  */
 export const InLightMode: Story = {
   parameters: {
-    backgrounds: { default: 'light' },
+    backgrounds: { default: "light" },
   },
   decorators: [
     (StoryComponent) => (
-      <ThemeProvider defaultTheme="light" storageKey="storybook-theme" enableSystem={false}>
+      <ThemeProvider
+        defaultTheme="light"
+        storageKey="storybook-theme"
+        enableSystem={false}
+      >
         <div className="p-8 bg-background text-foreground rounded-lg flex justify-center items-center">
           <StoryComponent />
         </div>
       </ThemeProvider>
-    )
-  ]
+    ),
+  ],
 };
 
 /**
@@ -103,14 +111,18 @@ export const InLightMode: Story = {
 export const InHeader: Story = {
   decorators: [
     (StoryComponent) => (
-      <ThemeProvider defaultTheme="light" storageKey="storybook-theme" enableSystem={false}>
+      <ThemeProvider
+        defaultTheme="light"
+        storageKey="storybook-theme"
+        enableSystem={false}
+      >
         <div className="w-full max-w-3xl p-4 bg-background border-b border-border flex justify-between items-center">
           <div className="text-xl font-bold">Scry</div>
           <StoryComponent />
         </div>
       </ThemeProvider>
-    )
-  ]
+    ),
+  ],
 };
 
 /**
@@ -119,7 +131,11 @@ export const InHeader: Story = {
 export const InFooter: Story = {
   decorators: [
     (StoryComponent) => (
-      <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
+      <ThemeProvider
+        defaultTheme="dark"
+        storageKey="storybook-theme"
+        enableSystem={false}
+      >
         <div className="w-full max-w-3xl p-6 bg-background border-t border-border flex justify-between items-center">
           <div className="text-sm opacity-70">© 2025 Scry</div>
           <div className="flex items-center gap-4">
@@ -128,8 +144,8 @@ export const InFooter: Story = {
           </div>
         </div>
       </ThemeProvider>
-    )
-  ]
+    ),
+  ],
 };
 
 /**
@@ -137,7 +153,11 @@ export const InFooter: Story = {
  */
 export const InteractionStates: Story = {
   render: () => (
-    <ThemeProvider defaultTheme="light" storageKey="storybook-theme" enableSystem={false}>
+    <ThemeProvider
+      defaultTheme="light"
+      storageKey="storybook-theme"
+      enableSystem={false}
+    >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 p-8 bg-background text-foreground rounded-lg">
         <div className="flex flex-col items-center">
           <ThemeToggleButton />
@@ -157,7 +177,7 @@ export const InteractionStates: Story = {
         </div>
       </div>
     </ThemeProvider>
-  )
+  ),
 };
 
 /**
@@ -169,7 +189,11 @@ export const ThemeComparison: Story = {
       <div className="p-6 border border-border rounded-lg bg-background flex flex-col items-center gap-4">
         <h3 className="text-lg font-semibold">Light Theme</h3>
         <div className="flex justify-center rounded-md bg-background p-4">
-          <ThemeProvider defaultTheme="light" storageKey="theme-example-1" enableSystem={false}>
+          <ThemeProvider
+            defaultTheme="light"
+            storageKey="theme-example-1"
+            enableSystem={false}
+          >
             <ThemeToggleButton />
           </ThemeProvider>
         </div>
@@ -177,11 +201,15 @@ export const ThemeComparison: Story = {
           Shows moon icon when in light mode
         </p>
       </div>
-      
+
       <div className="p-6 border border-border rounded-lg bg-background flex flex-col items-center gap-4">
         <h3 className="text-lg font-semibold">Dark Theme</h3>
         <div className="flex justify-center rounded-md bg-background p-4">
-          <ThemeProvider defaultTheme="dark" storageKey="theme-example-2" enableSystem={false}>
+          <ThemeProvider
+            defaultTheme="dark"
+            storageKey="theme-example-2"
+            enableSystem={false}
+          >
             <ThemeToggleButton />
           </ThemeProvider>
         </div>
@@ -192,12 +220,12 @@ export const ThemeComparison: Story = {
     </div>
   ),
   parameters: {
-    layout: 'padded',
+    layout: "padded",
     chromatic: {
       // Removed modes to fix Chromatic error - viewports and modes cannot be used together
       // Theme comparison is handled by the global theme toolbar instead
-    }
-  }
+    },
+  },
 };
 
 /**
@@ -206,34 +234,40 @@ export const ThemeComparison: Story = {
 export const AnimatedDemo: Story = {
   render: function AnimatedDemoRender() {
     const [isAnimating, setIsAnimating] = React.useState(false);
-    const [currentTheme, setCurrentTheme] = React.useState<"light" | "dark">("light");
-    
+    const [currentTheme, setCurrentTheme] = React.useState<"light" | "dark">(
+      "light",
+    );
+
     // Toggle theme and trigger animation sequence
     const handleDemoClick = () => {
       if (isAnimating) return;
-      
+
       setIsAnimating(true);
-      
+
       // Schedule animations with appropriate timing
       setTimeout(() => {
         setCurrentTheme(currentTheme === "light" ? "dark" : "light");
-        
+
         setTimeout(() => {
           setIsAnimating(false);
         }, 1500); // Allow time for the toggle animation to complete
       }, 1000); // Delay before triggering the theme change
     };
-    
+
     return (
       <div className="p-8 border border-border rounded-lg bg-background flex flex-col items-center gap-6">
         <h3 className="text-lg font-semibold">Interactive Demo</h3>
-        
+
         <div className="flex justify-center rounded-md bg-background p-4">
-          <ThemeProvider defaultTheme={currentTheme} storageKey="theme-demo" enableSystem={false}>
+          <ThemeProvider
+            defaultTheme={currentTheme}
+            storageKey="theme-demo"
+            enableSystem={false}
+          >
             <ThemeToggleButton />
           </ThemeProvider>
         </div>
-        
+
         <div className="flex flex-col items-center gap-2">
           <button
             onClick={handleDemoClick}
@@ -243,18 +277,21 @@ export const AnimatedDemo: Story = {
             {isAnimating ? "Animating..." : "Toggle Theme Animation"}
           </button>
           <p className="text-sm text-center text-muted-foreground max-w-md">
-            Click the button to see a full animation cycle of the theme toggle button. Watch for the smooth transition, icon rotation, and scaling effects.
+            Click the button to see a full animation cycle of the theme toggle
+            button. Watch for the smooth transition, icon rotation, and scaling
+            effects.
           </p>
         </div>
       </div>
     );
   },
   parameters: {
-    layout: 'padded',
+    layout: "padded",
     docs: {
       description: {
-        story: "This story demonstrates the complete animation sequence of the ThemeToggleButton component, including hover, press, and theme change animations."
-      }
-    }
-  }
+        story:
+          "This story demonstrates the complete animation sequence of the ThemeToggleButton component, including hover, press, and theme change animations.",
+      },
+    },
+  },
 };

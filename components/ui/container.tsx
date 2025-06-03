@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 /**
  * Container component for Scry
@@ -21,60 +21,57 @@ import { cn } from "@/lib/utils"
  * ```
  */
 
-const containerVariants = cva(
-  "grid-container w-full relative",
-  {
-    variants: {
-      maxWidth: {
-        none: "",
-        sm: "max-w-screen-sm",
-        md: "max-w-screen-md",
-        lg: "max-w-screen-lg",
-        xl: "max-w-screen-xl",
-        "2xl": "max-w-screen-2xl",
-        full: "max-w-full",
-      },
-      padding: {
-        none: "px-0",
-        sm: "px-4",
-        md: "px-6",
-        lg: "px-8",
-        xl: "px-12",
-        responsive: "px-responsive",
-      },
-      center: {
-        true: "mx-auto",
-      },
-      gap: {
-        none: "gap-0",
-        sm: "gap-sm",
-        md: "gap-md",
-        lg: "gap-lg",
-        xl: "gap-xl",
-      },
-      gapX: {
-        none: "gap-x-0",
-        sm: "gap-x-sm",
-        md: "gap-x-md",
-        lg: "gap-x-lg",
-        xl: "gap-x-xl",
-      },
-      gapY: {
-        none: "gap-y-0",
-        sm: "gap-y-sm",
-        md: "gap-y-md",
-        lg: "gap-y-lg",
-        xl: "gap-y-xl",
-      }
+const containerVariants = cva("grid-container w-full relative", {
+  variants: {
+    maxWidth: {
+      none: "",
+      sm: "max-w-screen-sm",
+      md: "max-w-screen-md",
+      lg: "max-w-screen-lg",
+      xl: "max-w-screen-xl",
+      "2xl": "max-w-screen-2xl",
+      full: "max-w-full",
     },
-    defaultVariants: {
-      maxWidth: "xl",
-      padding: "md",
-      center: false,
-      gap: "md",
+    padding: {
+      none: "px-0",
+      sm: "px-4",
+      md: "px-6",
+      lg: "px-8",
+      xl: "px-12",
+      responsive: "px-responsive",
     },
-  }
-)
+    center: {
+      true: "mx-auto",
+    },
+    gap: {
+      none: "gap-0",
+      sm: "gap-sm",
+      md: "gap-md",
+      lg: "gap-lg",
+      xl: "gap-xl",
+    },
+    gapX: {
+      none: "gap-x-0",
+      sm: "gap-x-sm",
+      md: "gap-x-md",
+      lg: "gap-x-lg",
+      xl: "gap-x-xl",
+    },
+    gapY: {
+      none: "gap-y-0",
+      sm: "gap-y-sm",
+      md: "gap-y-md",
+      lg: "gap-y-lg",
+      xl: "gap-y-xl",
+    },
+  },
+  defaultVariants: {
+    maxWidth: "xl",
+    padding: "md",
+    center: false,
+    gap: "md",
+  },
+});
 
 /**
  * Props for the Container component
@@ -93,7 +90,7 @@ export interface ContainerProps
    *
    * @default "div"
    */
-  as?: React.ElementType
+  as?: React.ElementType;
 
   /**
    * Maximum width constraint for the container
@@ -102,7 +99,7 @@ export interface ContainerProps
    *
    * @default "xl" (1280px)
    */
-  maxWidth?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"
+  maxWidth?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
 
   /**
    * Horizontal padding applied to the container
@@ -111,7 +108,7 @@ export interface ContainerProps
    *
    * @default "md" (1.5rem)
    */
-  padding?: "none" | "sm" | "md" | "lg" | "xl" | "responsive"
+  padding?: "none" | "sm" | "md" | "lg" | "xl" | "responsive";
 
   /**
    * Center the container horizontally
@@ -121,7 +118,7 @@ export interface ContainerProps
    *
    * @default false
    */
-  center?: boolean
+  center?: boolean;
 
   /**
    * Grid gap spacing in both directions
@@ -131,7 +128,7 @@ export interface ContainerProps
    *
    * @default "md" (1rem)
    */
-  gap?: "none" | "sm" | "md" | "lg" | "xl"
+  gap?: "none" | "sm" | "md" | "lg" | "xl";
 
   /**
    * Horizontal grid gap spacing
@@ -139,7 +136,7 @@ export interface ContainerProps
    * Sets gap spacing between columns only. Takes precedence over the 'gap' prop
    * for horizontal spacing.
    */
-  gapX?: "none" | "sm" | "md" | "lg" | "xl"
+  gapX?: "none" | "sm" | "md" | "lg" | "xl";
 
   /**
    * Vertical grid gap spacing
@@ -147,44 +144,49 @@ export interface ContainerProps
    * Sets gap spacing between rows only. Takes precedence over the 'gap' prop
    * for vertical spacing.
    */
-  gapY?: "none" | "sm" | "md" | "lg" | "xl"
+  gapY?: "none" | "sm" | "md" | "lg" | "xl";
 }
 
 const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
-  ({ 
-    className, 
-    maxWidth, 
-    padding, 
-    center, 
-    gap,
-    gapX,
-    gapY,
-    as = "div", 
-    ...props 
-  }, ref) => {
-    const Component = as
-    
+  (
+    {
+      className,
+      maxWidth,
+      padding,
+      center,
+      gap,
+      gapX,
+      gapY,
+      as = "div",
+      ...props
+    },
+    ref,
+  ) => {
+    const Component = as;
+
     // Spread only valid HTML props to the component
-    const containerProps = { ...props }
-    
+    const containerProps = { ...props };
+
     return (
       <Component
         ref={ref}
-        className={cn(containerVariants({ 
-          maxWidth, 
-          padding, 
-          center, 
-          gap,
-          gapX,
-          gapY,
-          className 
-        }))}
+        className={cn(
+          containerVariants({
+            maxWidth,
+            padding,
+            center,
+            gap,
+            gapX,
+            gapY,
+            className,
+          }),
+        )}
         {...containerProps}
       />
-    )
-  }
-)
-Container.displayName = "Container"
+    );
+  },
+);
+Container.displayName = "Container";
 
 /**
  * GridItem component for Scry
@@ -215,35 +217,35 @@ export interface GridItemProps extends React.HTMLAttributes<HTMLDivElement> {
    *
    * @default 12 (full width)
    */
-  span?: number
+  span?: number;
 
   /**
    * Number of columns to span at the small breakpoint (sm: 640px+)
    *
    * Overrides the default span value specifically for small screens and above.
    */
-  sm?: number
+  sm?: number;
 
   /**
    * Number of columns to span at the medium breakpoint (md: 768px+)
    *
    * Overrides the default span value specifically for medium screens and above.
    */
-  md?: number
+  md?: number;
 
   /**
    * Number of columns to span at the large breakpoint (lg: 1024px+)
    *
    * Overrides the default span value specifically for large screens and above.
    */
-  lg?: number
+  lg?: number;
 
   /**
    * Number of columns to span at the extra large breakpoint (xl: 1280px+)
    *
    * Overrides the default span value specifically for extra large screens and above.
    */
-  xl?: number
+  xl?: number;
 
   /**
    * Starting column position (1-12)
@@ -251,35 +253,35 @@ export interface GridItemProps extends React.HTMLAttributes<HTMLDivElement> {
    * Controls the default starting position of the grid cell at all breakpoints,
    * unless overridden by breakpoint-specific start props.
    */
-  start?: number
+  start?: number;
 
   /**
    * Starting column position at the small breakpoint (sm: 640px+)
    *
    * Overrides the default start position specifically for small screens and above.
    */
-  smStart?: number
+  smStart?: number;
 
   /**
    * Starting column position at the medium breakpoint (md: 768px+)
    *
    * Overrides the default start position specifically for medium screens and above.
    */
-  mdStart?: number
+  mdStart?: number;
 
   /**
    * Starting column position at the large breakpoint (lg: 1024px+)
    *
    * Overrides the default start position specifically for large screens and above.
    */
-  lgStart?: number
+  lgStart?: number;
 
   /**
    * Starting column position at the extra large breakpoint (xl: 1280px+)
    *
    * Overrides the default start position specifically for extra large screens and above.
    */
-  xlStart?: number
+  xlStart?: number;
 
   /**
    * Render the grid item as a different HTML element
@@ -289,26 +291,29 @@ export interface GridItemProps extends React.HTMLAttributes<HTMLDivElement> {
    *
    * @default "div"
    */
-  as?: React.ElementType
+  as?: React.ElementType;
 }
 
 const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>(
-  ({ 
-    className, 
-    span = 12, 
-    sm, 
-    md, 
-    lg, 
-    xl,
-    start,
-    smStart,
-    mdStart,
-    lgStart,
-    xlStart, 
-    as = "div",
-    ...props 
-  }, ref) => {
-    const Component = as
+  (
+    {
+      className,
+      span = 12,
+      sm,
+      md,
+      lg,
+      xl,
+      start,
+      smStart,
+      mdStart,
+      lgStart,
+      xlStart,
+      as = "div",
+      ...props
+    },
+    ref,
+  ) => {
+    const Component = as;
 
     // Build the responsive column classes
     const spanClasses = [
@@ -317,7 +322,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>(
       md && `md:col-span-${md}`,
       lg && `lg:col-span-${lg}`,
       xl && `xl:col-span-${xl}`,
-    ].filter(Boolean)
+    ].filter(Boolean);
 
     // Build the responsive start position classes
     const startClasses = [
@@ -326,7 +331,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>(
       mdStart && `md:col-start-${mdStart}`,
       lgStart && `lg:col-start-${lgStart}`,
       xlStart && `xl:col-start-${xlStart}`,
-    ].filter(Boolean)
+    ].filter(Boolean);
 
     return (
       <Component
@@ -334,9 +339,9 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>(
         className={cn(...spanClasses, ...startClasses, className)}
         {...props}
       />
-    )
-  }
-)
-GridItem.displayName = "GridItem"
+    );
+  },
+);
+GridItem.displayName = "GridItem";
 
-export { Container, GridItem, containerVariants }
+export { Container, GridItem, containerVariants };

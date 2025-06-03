@@ -12,7 +12,7 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-  
+
   // TypeScript ESLint rules to enforce strictness
   {
     files: ["**/*.ts", "**/*.tsx"],
@@ -22,7 +22,7 @@ const eslintConfig = [
     rules: {
       // Prevent usage of the `any` type
       "@typescript-eslint/no-explicit-any": "error",
-      
+
       // Prevent usage of TypeScript suppression comments
       "@typescript-eslint/ban-ts-comment": [
         "error",
@@ -31,10 +31,10 @@ const eslintConfig = [
           "ts-ignore": true,
           "ts-nocheck": true,
           "ts-check": false,
-          "minimumDescriptionLength": 10
-        }
+          minimumDescriptionLength: 10,
+        },
       ],
-      
+
       // Prevent usage of the non-null assertion operator
       "@typescript-eslint/no-non-null-assertion": "error",
     },

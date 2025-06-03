@@ -10,9 +10,15 @@ The grid system is implemented through the `Container` and `GridItem` components
 
 ```tsx
 <PageLayout>
-  <GridItem span={12} md={6} lg={4}>Content 1</GridItem>
-  <GridItem span={12} md={6} lg={4}>Content 2</GridItem>
-  <GridItem span={12} md={12} lg={4}>Content 3</GridItem>
+  <GridItem span={12} md={6} lg={4}>
+    Content 1
+  </GridItem>
+  <GridItem span={12} md={6} lg={4}>
+    Content 2
+  </GridItem>
+  <GridItem span={12} md={12} lg={4}>
+    Content 3
+  </GridItem>
 </PageLayout>
 ```
 
@@ -27,6 +33,7 @@ Each `GridItem` can specify how many columns it spans at different breakpoints:
 - `xl`: Extra large screens (1280px and up)
 
 For example, `span={12} md={6} lg={4}` means:
+
 - Takes all 12 columns on mobile (default)
 - Takes 6 columns on medium-sized screens
 - Takes 4 columns on large screens
@@ -46,29 +53,45 @@ For example, `span={6} mdStart={4}` means it spans 6 columns and starts at colum
 ## Common Layouts
 
 ### Full Width
+
 ```tsx
 <GridItem span={12}>Full width content</GridItem>
 ```
 
 ### Centered Content
+
 ```tsx
-<GridItem span={12} md={8} mdStart={3}>Centered content on medium screens</GridItem>
+<GridItem span={12} md={8} mdStart={3}>
+  Centered content on medium screens
+</GridItem>
 ```
 
 ### Multi-Column Layout
+
 ```tsx
 <>
-  <GridItem span={12} md={6}>Left column</GridItem>
-  <GridItem span={12} md={6}>Right column</GridItem>
+  <GridItem span={12} md={6}>
+    Left column
+  </GridItem>
+  <GridItem span={12} md={6}>
+    Right column
+  </GridItem>
 </>
 ```
 
 ### Three-Column Layout
+
 ```tsx
 <>
-  <GridItem span={12} lg={4}>Column 1</GridItem>
-  <GridItem span={12} lg={4}>Column 2</GridItem>
-  <GridItem span={12} lg={4}>Column 3</GridItem>
+  <GridItem span={12} lg={4}>
+    Column 1
+  </GridItem>
+  <GridItem span={12} lg={4}>
+    Column 2
+  </GridItem>
+  <GridItem span={12} lg={4}>
+    Column 3
+  </GridItem>
 </>
 ```
 

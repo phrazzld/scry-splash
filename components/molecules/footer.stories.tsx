@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { Footer } from "./footer"
-import { NoiseBackground } from "@/components/ui/noise-background"
-import { ThemeProvider } from "@/components/ui/theme-provider"
+import type { Meta, StoryObj } from "@storybook/react";
+import { Footer } from "./footer";
+import { NoiseBackground } from "@/components/ui/noise-background";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const meta: Meta<typeof Footer> = {
   title: "Molecules/Footer",
@@ -28,10 +28,10 @@ const meta: Meta<typeof Footer> = {
       description: "Whether to show the theme toggle button",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Footer>
+export default meta;
+type Story = StoryObj<typeof Footer>;
 
 // Default footer with standard text
 export const Default: Story = {
@@ -42,14 +42,18 @@ export const Default: Story = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
+      <ThemeProvider
+        defaultTheme="dark"
+        storageKey="storybook-theme"
+        enableSystem={false}
+      >
         <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
           <Story />
         </NoiseBackground>
       </ThemeProvider>
     ),
   ],
-}
+};
 
 // Centered footer
 export const Centered: Story = {
@@ -60,14 +64,18 @@ export const Centered: Story = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
+      <ThemeProvider
+        defaultTheme="dark"
+        storageKey="storybook-theme"
+        enableSystem={false}
+      >
         <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
           <Story />
         </NoiseBackground>
       </ThemeProvider>
     ),
   ],
-}
+};
 
 // Footer with custom text
 export const CustomText: Story = {
@@ -78,14 +86,18 @@ export const CustomText: Story = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
+      <ThemeProvider
+        defaultTheme="dark"
+        storageKey="storybook-theme"
+        enableSystem={false}
+      >
         <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
           <Story />
         </NoiseBackground>
       </ThemeProvider>
     ),
   ],
-}
+};
 
 // Footer with alternate color scheme
 export const AlternateColors: Story = {
@@ -96,14 +108,21 @@ export const AlternateColors: Story = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider defaultTheme="light" storageKey="storybook-theme" enableSystem={false}>
-        <NoiseBackground baseColor="var(--color-chalk)" className="min-h-[100px]">
+      <ThemeProvider
+        defaultTheme="light"
+        storageKey="storybook-theme"
+        enableSystem={false}
+      >
+        <NoiseBackground
+          baseColor="var(--color-chalk)"
+          className="min-h-[100px]"
+        >
           <Story />
         </NoiseBackground>
       </ThemeProvider>
     ),
   ],
-}
+};
 
 // Set up for testing theme toggle interactions
 export const ThemeToggleInteraction: Story = {
@@ -115,7 +134,11 @@ export const ThemeToggleInteraction: Story = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider defaultTheme="system" storageKey="storybook-theme" enableSystem={true}>
+      <ThemeProvider
+        defaultTheme="system"
+        storageKey="storybook-theme"
+        enableSystem={true}
+      >
         <div className="bg-background text-foreground min-h-[100px]">
           <Story />
         </div>
@@ -125,11 +148,12 @@ export const ThemeToggleInteraction: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'This story demonstrates the theme toggle button in the footer with system preference detection. Try clicking the theme toggle button to switch between light and dark modes.',
+        story:
+          "This story demonstrates the theme toggle button in the footer with system preference detection. Try clicking the theme toggle button to switch between light and dark modes.",
       },
     },
   },
-}
+};
 
 // Footer without theme toggle
 export const WithoutThemeToggle: Story = {
@@ -141,7 +165,11 @@ export const WithoutThemeToggle: Story = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider defaultTheme="dark" storageKey="storybook-theme" enableSystem={false}>
+      <ThemeProvider
+        defaultTheme="dark"
+        storageKey="storybook-theme"
+        enableSystem={false}
+      >
         <NoiseBackground baseColor="var(--color-ink)" className="min-h-[100px]">
           <Story />
         </NoiseBackground>
@@ -151,8 +179,8 @@ export const WithoutThemeToggle: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'This story shows the footer without the theme toggle button.',
+        story: "This story shows the footer without the theme toggle button.",
       },
     },
   },
-}
+};

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { ShadcnIntegration } from "./shadcn-integration"
+import type { Meta, StoryObj } from "@storybook/react";
+import { ShadcnIntegration } from "./shadcn-integration";
 
 const meta: Meta<typeof ShadcnIntegration> = {
   title: "Design System/ShadcnIntegration",
@@ -7,9 +7,9 @@ const meta: Meta<typeof ShadcnIntegration> = {
   parameters: {
     layout: "fullscreen",
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof ShadcnIntegration>
+export default meta;
+type Story = StoryObj<typeof ShadcnIntegration>;
 
-export const Default: Story = {}
+export const Default: Story = {};

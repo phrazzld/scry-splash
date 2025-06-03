@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import type { Decorator } from '@storybook/react';
+import React, { useEffect } from "react";
+import type { Decorator } from "@storybook/react";
 
 /**
  * Chromatic decorator for visual regression testing
@@ -11,7 +11,7 @@ export const ChromaticDecorator: Decorator = (Story, context) => {
     // Only apply when running in Chromatic environment
     if (context.parameters.chromatic || process.env.CHROMATIC) {
       // Add a style tag to disable all animations and transitions
-      const style = document.createElement('style');
+      const style = document.createElement("style");
       style.innerHTML = `
         *, *::before, *::after {
           animation-duration: 0ms !important;
@@ -21,9 +21,9 @@ export const ChromaticDecorator: Decorator = (Story, context) => {
           animation-iteration-count: 1 !important;
         }
       `;
-      style.setAttribute('data-chromatic', 'true');
+      style.setAttribute("data-chromatic", "true");
       document.head.appendChild(style);
-      
+
       return () => {
         // Clean up on unmount
         if (style.parentNode) {

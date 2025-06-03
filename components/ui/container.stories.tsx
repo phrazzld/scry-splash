@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { Container, GridItem } from "./container"
-import { NoiseBackground } from "./noise-background"
+import type { Meta, StoryObj } from "@storybook/react";
+import { Container, GridItem } from "./container";
+import { NoiseBackground } from "./noise-background";
 
 const meta: Meta<typeof Container> = {
   title: "UI/Container",
@@ -40,34 +40,34 @@ const meta: Meta<typeof Container> = {
       description: "Vertical gap between grid items",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Container>
+export default meta;
+type Story = StoryObj<typeof Container>;
 
 // Helper component to visualize the grid
-const GridVisualizer = ({ 
-  span = 1, 
-  start, 
-  children, 
-  className, 
-  ...props 
-}: { 
-  span?: number,
-  start?: number,
-  children?: React.ReactNode, 
-  className?: string, 
-  [key: string]: unknown
+const GridVisualizer = ({
+  span = 1,
+  start,
+  children,
+  className,
+  ...props
+}: {
+  span?: number;
+  start?: number;
+  children?: React.ReactNode;
+  className?: string;
+  [key: string]: unknown;
 }) => (
-  <GridItem 
-    span={span} 
-    start={start} 
+  <GridItem
+    span={span}
+    start={start}
     className={`bg-cobalt/20 border border-cobalt p-4 text-center ${className || ""}`}
     {...props}
   >
     {children || `${span} cols`}
   </GridItem>
-)
+);
 
 // Base example
 export const Default: Story = {
@@ -78,7 +78,9 @@ export const Default: Story = {
     className: "bg-muted/20 p-4",
     children: (
       <>
-        <div className="col-span-12 mb-4 text-center text-muted-foreground">12-column grid</div>
+        <div className="col-span-12 mb-4 text-center text-muted-foreground">
+          12-column grid
+        </div>
         {Array.from({ length: 12 }).map((_, i) => (
           <GridVisualizer key={i} span={1}>
             {i + 1}
@@ -87,7 +89,7 @@ export const Default: Story = {
       </>
     ),
   },
-}
+};
 
 // Various column spans
 export const ColumnSpans: Story = {
@@ -98,7 +100,9 @@ export const ColumnSpans: Story = {
     className: "bg-muted/20 p-4 gap-4",
     children: (
       <>
-        <div className="col-span-12 mb-4 text-center text-muted-foreground">Various column spans</div>
+        <div className="col-span-12 mb-4 text-center text-muted-foreground">
+          Various column spans
+        </div>
         <GridVisualizer span={12}>12 cols (full width)</GridVisualizer>
         <GridVisualizer span={6}>6 cols</GridVisualizer>
         <GridVisualizer span={6}>6 cols</GridVisualizer>
@@ -112,7 +116,7 @@ export const ColumnSpans: Story = {
       </>
     ),
   },
-}
+};
 
 // Responsive behavior
 export const Responsive: Story = {
@@ -126,31 +130,19 @@ export const Responsive: Story = {
         <div className="col-span-12 mb-4 text-center text-muted-foreground">
           Responsive grid (resize window to see changes)
         </div>
-        <GridVisualizer 
-          span={12} 
-          md={6} 
-          lg={4}
-        >
+        <GridVisualizer span={12} md={6} lg={4}>
           12 cols on small, 6 on md, 4 on lg
         </GridVisualizer>
-        <GridVisualizer 
-          span={12} 
-          md={6} 
-          lg={4}
-        >
+        <GridVisualizer span={12} md={6} lg={4}>
           12 cols on small, 6 on md, 4 on lg
         </GridVisualizer>
-        <GridVisualizer 
-          span={12} 
-          md={12} 
-          lg={4}
-        >
+        <GridVisualizer span={12} md={12} lg={4}>
           12 cols on small, 12 on md, 4 on lg
         </GridVisualizer>
       </>
     ),
   },
-}
+};
 
 // Column start positioning
 export const ColumnPositioning: Story = {
@@ -179,7 +171,7 @@ export const ColumnPositioning: Story = {
       </>
     ),
   },
-}
+};
 
 // Example page layout
 export const PageLayout: Story = {
@@ -190,11 +182,21 @@ export const PageLayout: Story = {
     className: "bg-muted/20 p-4 gap-y-8",
     children: (
       <>
-        <GridItem span={12} md={10} mdStart={2} lg={8} lgStart={3} className="bg-background p-6 rounded-lg shadow">
+        <GridItem
+          span={12}
+          md={10}
+          mdStart={2}
+          lg={8}
+          lgStart={3}
+          className="bg-background p-6 rounded-lg shadow"
+        >
           <h1 className="text-2xl font-bold mb-4">Hero Section</h1>
-          <p>This example shows a typical centered content layout that&apos;s responsive.</p>
+          <p>
+            This example shows a typical centered content layout that&apos;s
+            responsive.
+          </p>
         </GridItem>
-        
+
         <GridItem span={12} className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-background p-6 rounded-lg shadow">
             <h2 className="text-xl font-medium mb-2">Feature 1</h2>
@@ -209,16 +211,23 @@ export const PageLayout: Story = {
             <p>Feature description goes here</p>
           </div>
         </GridItem>
-        
-        <GridItem span={12} md={8} mdStart={3} className="bg-background p-6 rounded-lg shadow text-center">
+
+        <GridItem
+          span={12}
+          md={8}
+          mdStart={3}
+          className="bg-background p-6 rounded-lg shadow text-center"
+        >
           <h2 className="text-xl font-medium mb-2">Call to Action</h2>
           <p className="mb-4">Sign up today to get started!</p>
-          <button className="bg-cobalt text-chalk px-4 py-2 rounded-lg">Sign Up</button>
+          <button className="bg-cobalt text-chalk px-4 py-2 rounded-lg">
+            Sign Up
+          </button>
         </GridItem>
       </>
     ),
   },
-}
+};
 
 // Gap options
 export const GapOptions: Story = {
@@ -241,7 +250,7 @@ export const GapOptions: Story = {
     ),
     gap: "lg",
   },
-}
+};
 
 // Gap X and Gap Y options
 export const DirectionalGaps: Story = {
@@ -266,7 +275,7 @@ export const DirectionalGaps: Story = {
     gapX: "lg",
     gapY: "sm",
   },
-}
+};
 
 // Using with the NoiseBackground component
 export const WithNoiseBackground: Story = {
@@ -277,24 +286,43 @@ export const WithNoiseBackground: Story = {
     gap: "lg",
     children: (
       <>
-        <GridItem span={12} className="relative h-64 overflow-hidden rounded-lg">
-          <NoiseBackground baseColor="var(--color-ink)" noiseOpacity={0.02} className="h-full">
+        <GridItem
+          span={12}
+          className="relative h-64 overflow-hidden rounded-lg"
+        >
+          <NoiseBackground
+            baseColor="var(--color-ink)"
+            noiseOpacity={0.02}
+            className="h-full"
+          >
             <div className="flex items-center justify-center h-full relative z-10">
-              <h1 className="text-3xl font-bold text-chalk">Container with Noise Background</h1>
+              <h1 className="text-3xl font-bold text-chalk">
+                Container with Noise Background
+              </h1>
             </div>
           </NoiseBackground>
         </GridItem>
-        
-        <GridItem span={12} md={6} className="bg-background p-6 rounded-lg shadow">
+
+        <GridItem
+          span={12}
+          md={6}
+          className="bg-background p-6 rounded-lg shadow"
+        >
           <h2 className="text-xl font-medium mb-2">Left Column</h2>
-          <p>This demonstrates using the grid with the NoiseBackground component.</p>
+          <p>
+            This demonstrates using the grid with the NoiseBackground component.
+          </p>
         </GridItem>
-        
-        <GridItem span={12} md={6} className="bg-background p-6 rounded-lg shadow">
+
+        <GridItem
+          span={12}
+          md={6}
+          className="bg-background p-6 rounded-lg shadow"
+        >
           <h2 className="text-xl font-medium mb-2">Right Column</h2>
           <p>The container handles all the responsive grid layout.</p>
         </GridItem>
       </>
     ),
   },
-}
+};

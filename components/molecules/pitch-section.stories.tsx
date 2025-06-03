@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { PitchSection } from "./pitch-section"
+import type { Meta, StoryObj } from "@storybook/react";
+import { PitchSection } from "./pitch-section";
 
 const meta: Meta<typeof PitchSection> = {
   title: "Molecules/PitchSection",
@@ -24,30 +24,30 @@ const meta: Meta<typeof PitchSection> = {
       description: "Additional class names",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof PitchSection>
+export default meta;
+type Story = StoryObj<typeof PitchSection>;
 
 export const Default: Story = {
   args: {},
-}
+};
 
 export const Centered: Story = {
   args: {
     centered: true,
   },
-}
+};
 
 export const CustomTextColor: Story = {
   args: {
     textColor: "text-blue-500",
   },
-}
+};
 
 export const DarkTheme: Story = {
   parameters: {
     backgrounds: { default: "dark" },
   },
   args: {},
-}
+};

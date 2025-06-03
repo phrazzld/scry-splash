@@ -1,13 +1,13 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { PageLayout, DefaultLayout } from '@/components/organisms/page-layout';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { PageLayout, DefaultLayout } from "@/components/organisms/page-layout";
 
 // Mock the Footer component
-jest.mock('@/components/molecules/footer', () => ({
+jest.mock("@/components/molecules/footer", () => ({
   Footer: ({ projectText, centered, showThemeToggle, ...props }: any) => (
-    <div 
-      data-testid="mock-footer" 
+    <div
+      data-testid="mock-footer"
       data-project-text={projectText}
       data-centered={centered}
       data-show-theme-toggle={showThemeToggle}
@@ -19,10 +19,10 @@ jest.mock('@/components/molecules/footer', () => ({
 }));
 
 // Mock the ThemeToggleButton component
-jest.mock('@/components/ui/theme-toggle-button', () => ({
+jest.mock("@/components/ui/theme-toggle-button", () => ({
   ThemeToggleButton: ({ className, ...props }: any) => (
-    <button 
-      data-testid="mock-theme-toggle-button" 
+    <button
+      data-testid="mock-theme-toggle-button"
       data-class-name={className}
       {...props}
     >
@@ -61,19 +61,19 @@ interface NoiseBackgroundProps {
 }
 
 // Mock the dependencies
-jest.mock('@/components/ui/container', () => ({
-  Container: ({ 
-    children, 
-    maxWidth, 
-    padding, 
-    center, 
-    className, 
-    ...props 
+jest.mock("@/components/ui/container", () => ({
+  Container: ({
+    children,
+    maxWidth,
+    padding,
+    center,
+    className,
+    ...props
   }: ContainerProps) => (
-    <div 
-      data-testid="mock-container" 
-      data-max-width={maxWidth} 
-      data-padding={padding} 
+    <div
+      data-testid="mock-container"
+      data-max-width={maxWidth}
+      data-padding={padding}
       data-center={center}
       className={className}
       {...props}
@@ -81,20 +81,20 @@ jest.mock('@/components/ui/container', () => ({
       {children}
     </div>
   ),
-  GridItem: ({ 
-    children, 
-    span, 
-    md, 
-    lg, 
-    mdStart, 
-    lgStart, 
-    className, 
-    ...props 
+  GridItem: ({
+    children,
+    span,
+    md,
+    lg,
+    mdStart,
+    lgStart,
+    className,
+    ...props
   }: GridItemProps) => (
-    <div 
-      data-testid="mock-grid-item" 
-      data-span={span} 
-      data-md={md} 
+    <div
+      data-testid="mock-grid-item"
+      data-span={span}
+      data-md={md}
       data-lg={lg}
       data-md-start={mdStart}
       data-lg-start={lgStart}
@@ -106,17 +106,17 @@ jest.mock('@/components/ui/container', () => ({
   ),
 }));
 
-jest.mock('@/components/ui/noise-background', () => ({
-  NoiseBackground: ({ 
-    baseColor, 
-    noiseOpacity, 
-    className, 
+jest.mock("@/components/ui/noise-background", () => ({
+  NoiseBackground: ({
+    baseColor,
+    noiseOpacity,
+    className,
     children,
-    ...props 
+    ...props
   }: NoiseBackgroundProps) => (
-    <div 
-      data-testid="mock-noise-background" 
-      data-base-color={baseColor} 
+    <div
+      data-testid="mock-noise-background"
+      data-base-color={baseColor}
       data-noise-opacity={noiseOpacity}
       className={className}
       {...props}
@@ -127,261 +127,256 @@ jest.mock('@/components/ui/noise-background', () => ({
 }));
 
 // Mock the cn utility function
-jest.mock('@/lib/utils', () => ({
-  cn: (...args: string[]) => args.filter(Boolean).join(' ')
+jest.mock("@/lib/utils", () => ({
+  cn: (...args: string[]) => args.filter(Boolean).join(" "),
 }));
 
-describe('PageLayout Component', () => {
-  it('renders correctly with default props', () => {
+describe("PageLayout Component", () => {
+  it("renders correctly with default props", () => {
     render(<PageLayout>Test Content</PageLayout>);
-    
+
     // Check main wrapper - no longer uses role="main" to avoid landmark nesting issues
-    const wrapper = screen.getByLabelText('Main content');
+    const wrapper = screen.getByLabelText("Main content");
     expect(wrapper).toBeInTheDocument();
-    
+
     // Check background
-    const background = screen.getByTestId('mock-noise-background');
+    const background = screen.getByTestId("mock-noise-background");
     expect(background).toBeInTheDocument();
-    expect(background).toHaveAttribute('data-base-color', 'var(--background)');
-    expect(background).toHaveAttribute('data-noise-opacity', '0.02');
-    
+    expect(background).toHaveAttribute("data-base-color", "var(--background)");
+    expect(background).toHaveAttribute("data-noise-opacity", "0.02");
+
     // Check container
-    const container = screen.getByTestId('mock-container');
+    const container = screen.getByTestId("mock-container");
     expect(container).toBeInTheDocument();
-    expect(container).toHaveAttribute('data-max-width', 'xl');
-    expect(container).toHaveAttribute('data-padding', 'md');
-    expect(container).toHaveAttribute('data-center', 'false');
-    expect(container).toHaveClass('animate-fade-in');
-    
+    expect(container).toHaveAttribute("data-max-width", "xl");
+    expect(container).toHaveAttribute("data-padding", "md");
+    expect(container).toHaveAttribute("data-center", "false");
+    expect(container).toHaveClass("animate-fade-in");
+
     // Check content
-    expect(container).toHaveTextContent('Test Content');
-    
+    expect(container).toHaveTextContent("Test Content");
+
     // Check footer
-    const footer = screen.getByTestId('mock-footer');
+    const footer = screen.getByTestId("mock-footer");
     expect(footer).toBeInTheDocument();
-    expect(footer).toHaveAttribute('data-project-text', 'a misty step project');
-    expect(footer).toHaveAttribute('data-centered', 'false');
+    expect(footer).toHaveAttribute("data-project-text", "a misty step project");
+    expect(footer).toHaveAttribute("data-centered", "false");
   });
 
-  it('renders with custom background color and noise opacity', () => {
-    const customColor = 'var(--color-cobalt)';
+  it("renders with custom background color and noise opacity", () => {
+    const customColor = "var(--color-cobalt)";
     const customOpacity = 0.05;
-    
+
     render(
-      <PageLayout 
-        backgroundColor={customColor} 
-        noiseOpacity={customOpacity}
-      >
+      <PageLayout backgroundColor={customColor} noiseOpacity={customOpacity}>
         Content
-      </PageLayout>
+      </PageLayout>,
     );
-    
-    const background = screen.getByTestId('mock-noise-background');
-    expect(background).toHaveAttribute('data-base-color', customColor);
-    expect(background).toHaveAttribute('data-noise-opacity', String(customOpacity));
+
+    const background = screen.getByTestId("mock-noise-background");
+    expect(background).toHaveAttribute("data-base-color", customColor);
+    expect(background).toHaveAttribute(
+      "data-noise-opacity",
+      String(customOpacity),
+    );
   });
 
-  it('renders with custom maxWidth and padding', () => {
+  it("renders with custom maxWidth and padding", () => {
     render(
-      <PageLayout 
-        maxWidth="lg" 
-        padding="lg"
-      >
+      <PageLayout maxWidth="lg" padding="lg">
         Content
-      </PageLayout>
+      </PageLayout>,
     );
-    
-    const container = screen.getByTestId('mock-container');
-    expect(container).toHaveAttribute('data-max-width', 'lg');
-    expect(container).toHaveAttribute('data-padding', 'lg');
+
+    const container = screen.getByTestId("mock-container");
+    expect(container).toHaveAttribute("data-max-width", "lg");
+    expect(container).toHaveAttribute("data-padding", "lg");
   });
 
-  it('disables centering when centered is false', () => {
+  it("disables centering when centered is false", () => {
     render(<PageLayout centered={false}>Content</PageLayout>);
-    
-    const container = screen.getByTestId('mock-container');
-    expect(container).toHaveAttribute('data-center', 'false');
+
+    const container = screen.getByTestId("mock-container");
+    expect(container).toHaveAttribute("data-center", "false");
   });
 
-  it('disables animation when animate is false', () => {
+  it("disables animation when animate is false", () => {
     render(<PageLayout animate={false}>Content</PageLayout>);
-    
-    const container = screen.getByTestId('mock-container');
-    expect(container).not.toHaveClass('animate-fade-in');
+
+    const container = screen.getByTestId("mock-container");
+    expect(container).not.toHaveClass("animate-fade-in");
   });
 
-  it('applies custom className', () => {
-    const customClass = 'test-class';
+  it("applies custom className", () => {
+    const customClass = "test-class";
     render(<PageLayout className={customClass}>Content</PageLayout>);
-    
-    const wrapper = screen.getByLabelText('Main content');
+
+    const wrapper = screen.getByLabelText("Main content");
     expect(wrapper).toHaveClass(customClass);
   });
-  
-  it('includes a skip link for accessibility', () => {
+
+  it("includes a skip link for accessibility", () => {
     render(<PageLayout>Content</PageLayout>);
-    
+
     // Look for the skip link
-    const skipLink = screen.getByText('Skip to content');
+    const skipLink = screen.getByText("Skip to content");
     expect(skipLink).toBeInTheDocument();
-    expect(skipLink).toHaveAttribute('href', '#main-content');
-    expect(skipLink).toHaveClass('sr-only');
-    expect(skipLink).toHaveClass('focus:not-sr-only');
-    
+    expect(skipLink).toHaveAttribute("href", "#main-content");
+    expect(skipLink).toHaveClass("sr-only");
+    expect(skipLink).toHaveClass("focus:not-sr-only");
+
     // Check for the target of the skip link
-    const mainContent = document.getElementById('main-content');
+    const mainContent = document.getElementById("main-content");
     expect(mainContent).toBeInTheDocument();
-    expect(mainContent).toHaveAttribute('tabIndex', '-1');
+    expect(mainContent).toHaveAttribute("tabIndex", "-1");
   });
 
-  it('passes additional props to main div', () => {
+  it("passes additional props to main div", () => {
     render(<PageLayout data-custom="custom-attr">Content</PageLayout>);
-    
-    const wrapper = screen.getByLabelText('Main content');
-    expect(wrapper).toHaveAttribute('data-custom', 'custom-attr');
+
+    const wrapper = screen.getByLabelText("Main content");
+    expect(wrapper).toHaveAttribute("data-custom", "custom-attr");
   });
 
-  it('renders without footer when showFooter is false', () => {
+  it("renders without footer when showFooter is false", () => {
     render(<PageLayout showFooter={false}>Content</PageLayout>);
-    
-    expect(screen.queryByTestId('mock-footer')).not.toBeInTheDocument();
+
+    expect(screen.queryByTestId("mock-footer")).not.toBeInTheDocument();
   });
 
-  it('renders with custom footer text', () => {
-    const customFooterText = 'Custom footer text';
+  it("renders with custom footer text", () => {
+    const customFooterText = "Custom footer text";
     render(<PageLayout footerText={customFooterText}>Content</PageLayout>);
-    
-    const footer = screen.getByTestId('mock-footer');
-    expect(footer).toHaveAttribute('data-project-text', customFooterText);
-    
+
+    const footer = screen.getByTestId("mock-footer");
+    expect(footer).toHaveAttribute("data-project-text", customFooterText);
+
     // No longer using role="contentinfo" for footer to avoid nesting issues
     const footerContainer = footer.parentElement;
     expect(footerContainer).toBeInTheDocument();
   });
 
-  it('does not render theme toggle button by default', () => {
+  it("does not render theme toggle button by default", () => {
     render(<PageLayout>Content</PageLayout>);
-    
-    expect(screen.queryByTestId('mock-theme-toggle-button')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('header-theme-toggle')).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByTestId("mock-theme-toggle-button"),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId("header-theme-toggle")).not.toBeInTheDocument();
   });
 
-  it('renders theme toggle button in header when showThemeToggle is true', () => {
+  it("renders theme toggle button in header when showThemeToggle is true", () => {
     render(<PageLayout showThemeToggle={true}>Content</PageLayout>);
-    
-    const themeToggle = screen.getByTestId('mock-theme-toggle-button');
+
+    const themeToggle = screen.getByTestId("mock-theme-toggle-button");
     expect(themeToggle).toBeInTheDocument();
-    
-    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
+
+    const themeToggleContainer = screen.getByTestId("header-theme-toggle");
     expect(themeToggleContainer).toBeInTheDocument();
-    
+
     // Check that the footer theme toggle is hidden when header toggle is shown
-    const footer = screen.getByTestId('mock-footer');
-    expect(footer).toHaveAttribute('data-show-theme-toggle', 'false');
+    const footer = screen.getByTestId("mock-footer");
+    expect(footer).toHaveAttribute("data-show-theme-toggle", "false");
   });
 
-  it('positions theme toggle on right side by default', () => {
+  it("positions theme toggle on right side by default", () => {
     render(<PageLayout showThemeToggle={true}>Content</PageLayout>);
-    
-    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
-    expect(themeToggleContainer.className).toContain('right-3');
-    expect(themeToggleContainer.className).toContain('sm:right-4');
-    expect(themeToggleContainer.className).not.toContain('left-3');
-    expect(themeToggleContainer.className).not.toContain('sm:left-4');
+
+    const themeToggleContainer = screen.getByTestId("header-theme-toggle");
+    expect(themeToggleContainer.className).toContain("right-3");
+    expect(themeToggleContainer.className).toContain("sm:right-4");
+    expect(themeToggleContainer.className).not.toContain("left-3");
+    expect(themeToggleContainer.className).not.toContain("sm:left-4");
   });
 
-  it('positions theme toggle based on themeTogglePosition prop', () => {
-    render(<PageLayout showThemeToggle={true} themeTogglePosition="left">Content</PageLayout>);
-    
-    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
-    expect(themeToggleContainer.className).toContain('left-3');
-    expect(themeToggleContainer.className).toContain('sm:left-4');
-    expect(themeToggleContainer.className).not.toContain('right-3');
-    expect(themeToggleContainer.className).not.toContain('sm:right-4');
+  it("positions theme toggle based on themeTogglePosition prop", () => {
+    render(
+      <PageLayout showThemeToggle={true} themeTogglePosition="left">
+        Content
+      </PageLayout>,
+    );
+
+    const themeToggleContainer = screen.getByTestId("header-theme-toggle");
+    expect(themeToggleContainer.className).toContain("left-3");
+    expect(themeToggleContainer.className).toContain("sm:left-4");
+    expect(themeToggleContainer.className).not.toContain("right-3");
+    expect(themeToggleContainer.className).not.toContain("sm:right-4");
   });
 });
 
-describe('DefaultLayout Component', () => {
-  it('renders correctly with default props', () => {
+describe("DefaultLayout Component", () => {
+  it("renders correctly with default props", () => {
     render(<DefaultLayout>Test Content</DefaultLayout>);
-    
+
     // Check PageLayout is used
-    const wrapper = screen.getByLabelText('Main content');
+    const wrapper = screen.getByLabelText("Main content");
     expect(wrapper).toBeInTheDocument();
-    expect(wrapper).toHaveClass('flex justify-center');
-    
+    expect(wrapper).toHaveClass("flex justify-center");
+
     // Check GridItem is used with correct props
-    const gridItem = screen.getByTestId('mock-grid-item');
+    const gridItem = screen.getByTestId("mock-grid-item");
     expect(gridItem).toBeInTheDocument();
-    expect(gridItem).toHaveAttribute('data-span', '12');
-    expect(gridItem).toHaveAttribute('data-md', '10');
-    expect(gridItem).toHaveAttribute('data-lg', '8');
+    expect(gridItem).toHaveAttribute("data-span", "12");
+    expect(gridItem).toHaveAttribute("data-md", "10");
+    expect(gridItem).toHaveAttribute("data-lg", "8");
     // mdStart and lgStart are no longer used in the implementation
-    expect(gridItem).toHaveClass('flex flex-col');
-    
+    expect(gridItem).toHaveClass("flex flex-col");
+
     // Check content
-    expect(gridItem).toHaveTextContent('Test Content');
+    expect(gridItem).toHaveTextContent("Test Content");
   });
 
-  it('passes props to the PageLayout component', () => {
-    const customColor = 'var(--color-cobalt)';
-    const customFooterText = 'Custom footer for DefaultLayout';
-    
+  it("passes props to the PageLayout component", () => {
+    const customColor = "var(--color-cobalt)";
+    const customFooterText = "Custom footer for DefaultLayout";
+
     render(
-      <DefaultLayout 
-        backgroundColor={customColor} 
+      <DefaultLayout
+        backgroundColor={customColor}
         animate={false}
         footerText={customFooterText}
       >
         Content
-      </DefaultLayout>
+      </DefaultLayout>,
     );
-    
+
     // Check that props are passed to the NoiseBackground
-    const background = screen.getByTestId('mock-noise-background');
-    expect(background).toHaveAttribute('data-base-color', customColor);
-    
+    const background = screen.getByTestId("mock-noise-background");
+    expect(background).toHaveAttribute("data-base-color", customColor);
+
     // Check that props are passed to the Container
-    const container = screen.getByTestId('mock-container');
-    expect(container).not.toHaveClass('animate-fade-in');
-    
+    const container = screen.getByTestId("mock-container");
+    expect(container).not.toHaveClass("animate-fade-in");
+
     // Check that props are passed to the Footer
-    const footer = screen.getByTestId('mock-footer');
-    expect(footer).toHaveAttribute('data-project-text', customFooterText);
-  });
-  
-  it('renders without footer when showFooter is false', () => {
-    render(
-      <DefaultLayout showFooter={false}>
-        Content
-      </DefaultLayout>
-    );
-    
-    expect(screen.queryByTestId('mock-footer')).not.toBeInTheDocument();
+    const footer = screen.getByTestId("mock-footer");
+    expect(footer).toHaveAttribute("data-project-text", customFooterText);
   });
 
-  it('renders theme toggle button when showThemeToggle is true', () => {
-    render(
-      <DefaultLayout showThemeToggle={true}>
-        Content
-      </DefaultLayout>
-    );
-    
-    expect(screen.getByTestId('mock-theme-toggle-button')).toBeInTheDocument();
-    expect(screen.getByTestId('header-theme-toggle')).toBeInTheDocument();
+  it("renders without footer when showFooter is false", () => {
+    render(<DefaultLayout showFooter={false}>Content</DefaultLayout>);
+
+    expect(screen.queryByTestId("mock-footer")).not.toBeInTheDocument();
   });
 
-  it('passes themeTogglePosition prop to PageLayout', () => {
+  it("renders theme toggle button when showThemeToggle is true", () => {
+    render(<DefaultLayout showThemeToggle={true}>Content</DefaultLayout>);
+
+    expect(screen.getByTestId("mock-theme-toggle-button")).toBeInTheDocument();
+    expect(screen.getByTestId("header-theme-toggle")).toBeInTheDocument();
+  });
+
+  it("passes themeTogglePosition prop to PageLayout", () => {
     render(
       <DefaultLayout showThemeToggle={true} themeTogglePosition="left">
         Content
-      </DefaultLayout>
+      </DefaultLayout>,
     );
-    
-    const themeToggleContainer = screen.getByTestId('header-theme-toggle');
-    expect(themeToggleContainer.className).toContain('left-3');
-    expect(themeToggleContainer.className).toContain('sm:left-4');
-    expect(themeToggleContainer.className).not.toContain('right-3');
-    expect(themeToggleContainer.className).not.toContain('sm:right-4');
+
+    const themeToggleContainer = screen.getByTestId("header-theme-toggle");
+    expect(themeToggleContainer.className).toContain("left-3");
+    expect(themeToggleContainer.className).toContain("sm:left-4");
+    expect(themeToggleContainer.className).not.toContain("right-3");
+    expect(themeToggleContainer.className).not.toContain("sm:right-4");
   });
 });

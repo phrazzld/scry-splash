@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { CTASection } from "./cta-section"
-import { NoiseBackground } from "@/components/ui/noise-background"
+import type { Meta, StoryObj } from "@storybook/react";
+import { CTASection } from "./cta-section";
+import { NoiseBackground } from "@/components/ui/noise-background";
 
 const meta: Meta<typeof CTASection> = {
   title: "Molecules/CTASection",
@@ -37,11 +37,13 @@ const meta: Meta<typeof CTASection> = {
     },
     onFormSubmit: {
       action: "form submitted",
-      description: "Callback function when form is submitted with the input value",
+      description:
+        "Callback function when form is submitted with the input value",
     },
     onButtonClick: {
       action: "button clicked",
-      description: "Legacy callback function when button is clicked (deprecated)",
+      description:
+        "Legacy callback function when button is clicked (deprecated)",
     },
     buttonAriaLabel: {
       control: "text",
@@ -56,17 +58,17 @@ const meta: Meta<typeof CTASection> = {
       description: "Text color class for microcopy",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof CTASection>
+export default meta;
+type Story = StoryObj<typeof CTASection>;
 
 // Helper for consistent decoration
 const withBackground = (Story: React.ComponentType) => (
   <NoiseBackground baseColor="var(--background)" className="p-12">
     <Story />
   </NoiseBackground>
-)
+);
 
 // Default (matches production configuration)
 export const Default: Story = {
@@ -76,14 +78,16 @@ export const Default: Story = {
     inputPlaceholder: "Your email address",
     buttonSize: "default",
     centered: false, // Left-aligned in production
-    microcopyColor: "text-foreground" // Theme-aware color in production
+    microcopyColor: "text-foreground", // Theme-aware color in production
   },
-  decorators: [(Story) => (
-    <NoiseBackground baseColor="var(--background)" className="p-12">
-      <Story />
-    </NoiseBackground>
-  )],
-}
+  decorators: [
+    (Story) => (
+      <NoiseBackground baseColor="var(--background)" className="p-12">
+        <Story />
+      </NoiseBackground>
+    ),
+  ],
+};
 
 // Centered layout with large button
 export const CenteredLayout: Story = {
@@ -96,7 +100,7 @@ export const CenteredLayout: Story = {
     microcopyColor: "text-chalk",
   },
   decorators: [withBackground],
-}
+};
 
 // Custom placeholders
 export const CustomPlaceholder: Story = {
@@ -109,7 +113,7 @@ export const CustomPlaceholder: Story = {
     microcopyColor: "text-chalk",
   },
   decorators: [withBackground],
-}
+};
 
 // Alternative content
 export const AlternativeContent: Story = {
@@ -122,7 +126,7 @@ export const AlternativeContent: Story = {
     microcopyColor: "text-chalk",
   },
   decorators: [withBackground],
-}
+};
 
 // Secondary button style
 export const SecondaryButton: Story = {
@@ -135,7 +139,7 @@ export const SecondaryButton: Story = {
     microcopyColor: "text-chalk",
   },
   decorators: [withBackground],
-}
+};
 
 // Left-aligned with alternate size
 export const LeftAlignedLarge: Story = {
@@ -148,7 +152,7 @@ export const LeftAlignedLarge: Story = {
     microcopyColor: "text-foreground",
   },
   decorators: [withBackground],
-}
+};
 
 // No microcopy
 export const NoMicrocopy: Story = {
@@ -160,7 +164,7 @@ export const NoMicrocopy: Story = {
     centered: true,
   },
   decorators: [withBackground],
-}
+};
 
 // Alternative color scheme
 export const AlternativeColorScheme: Story = {
@@ -172,12 +176,14 @@ export const AlternativeColorScheme: Story = {
     centered: true,
     microcopyColor: "text-chalk",
   },
-  decorators: [(Story) => (
-    <NoiseBackground baseColor="#1a1a1a" className="p-12">
-      <Story />
-    </NoiseBackground>
-  )],
-}
+  decorators: [
+    (Story) => (
+      <NoiseBackground baseColor="#1a1a1a" className="p-12">
+        <Story />
+      </NoiseBackground>
+    ),
+  ],
+};
 
 // Mobile stacked view (small container)
 export const MobileStacked: Story = {
@@ -189,9 +195,15 @@ export const MobileStacked: Story = {
     centered: true,
     microcopyColor: "text-chalk",
   },
-  decorators: [(Story) => (
-    <NoiseBackground baseColor="var(--color-ink)" className="p-6" style={{ maxWidth: "375px" }}>
-      <Story />
-    </NoiseBackground>
-  )],
-}
+  decorators: [
+    (Story) => (
+      <NoiseBackground
+        baseColor="var(--color-ink)"
+        className="p-6"
+        style={{ maxWidth: "375px" }}
+      >
+        <Story />
+      </NoiseBackground>
+    ),
+  ],
+};

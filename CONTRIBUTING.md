@@ -15,17 +15,20 @@ Thank you for your interest in contributing to Scry Splash! This guide will help
 ## Development Setup
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/your-org/scry-splash.git
    cd scry-splash
    ```
 
 2. Install dependencies:
+
    ```bash
    pnpm install
    ```
 
 3. Configure Git hooks:
+
    ```bash
    git config core.hooksPath .githooks
    ```
@@ -41,12 +44,14 @@ This project enforces strict TypeScript configuration to ensure type safety and 
 
 ### Core Principles
 
-1. **Strict Mode is Required**: 
+1. **Strict Mode is Required**:
+
    - Our `tsconfig.json` has `"strict": true` and all individual strictness flags enabled
    - We enforce `noImplicitAny`, `strictNullChecks`, and other strict checks
    - These settings cannot be overridden or disabled
 
 2. **No Type Suppressions**:
+
    - It is **FORBIDDEN** to use `@ts-ignore`, `@ts-expect-error`, or explicit `any` types
    - When encountering type errors, fix the underlying issue rather than suppressing it
    - If you believe you've found a legitimate case where a suppression is needed, discuss it with maintainers first
@@ -59,15 +64,17 @@ This project enforces strict TypeScript configuration to ensure type safety and 
 ### TypeScript Workflow
 
 1. **Running Type Checking**:
+
    ```bash
    # Check all TypeScript files
    pnpm typecheck
-   
+
    # Check specific files
    pnpm tsc --noEmit path/to/file.ts
    ```
 
 2. **Type Error Remediation**:
+
    - When encountering type errors, prefer specific types or interfaces over generic ones
    - Use union types (`|`), intersection types (`&`), or generics (`<T>`) when appropriate
    - Use `unknown` instead of `any` when the type cannot be determined at compile time, then perform type narrowing
@@ -84,11 +91,13 @@ For the best development experience, configure your IDE to provide real-time Typ
 ### Visual Studio Code
 
 1. Install recommended extensions:
+
    - TypeScript and JavaScript Language Features (built-in)
    - ESLint
    - Prettier
 
 2. Enable TypeScript strict checking in settings:
+
    ```json
    "typescript.tsdk": "node_modules/typescript/lib",
    "typescript.enablePromptUseWorkspaceTsdk": true,
@@ -108,10 +117,12 @@ For the best development experience, configure your IDE to provide real-time Typ
 ### JetBrains WebStorm/IntelliJ IDEA
 
 1. Enable TypeScript service:
+
    - Go to Settings → Languages & Frameworks → TypeScript
    - Select "Use TypeScript from node_modules folder"
 
 2. Configure ESLint:
+
    - Go to Settings → Languages & Frameworks → JavaScript → Code Quality Tools → ESLint
    - Enable "Automatic ESLint configuration"
 
@@ -122,11 +133,13 @@ For the best development experience, configure your IDE to provide real-time Typ
 ## Git Workflow
 
 1. Create feature branches from main:
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
 2. Make focused, atomic commits following Conventional Commits format:
+
    ```
    feat: add user authentication feature
    fix: address null pointer in profile component

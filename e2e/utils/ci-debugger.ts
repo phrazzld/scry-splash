@@ -1,49 +1,49 @@
 /**
  * CI Debugger
- * 
+ *
  * Central module for enhanced debugging of CI-specific issues.
  * Provides a unified API for all debugging capabilities, including environment detection,
  * filesystem validation, browser metrics collection, and environment information capture.
- * 
+ *
  * This module coordinates all the debugging functionality implemented in other modules.
  */
 
-import { Page, TestInfo } from '@playwright/test';
+import { Page, TestInfo } from "@playwright/test";
 import {
   getEnvironmentInfo,
   printEnvironmentDiagnosis,
-  updateBrowserInfo
-} from './environment-detector';
+  updateBrowserInfo,
+} from "./environment-detector";
 import {
   validateArtifactStructure,
   ensureDirectoryExists,
   applyCIFilesystemOptimizations,
-  FilesystemError
-} from './filesystem-validator';
+  FilesystemError,
+} from "./filesystem-validator";
 import {
   setupPerformanceMetrics,
   getBrowserInfo,
-  MetricsCollector
-} from './browser-metrics';
+  MetricsCollector,
+} from "./browser-metrics";
 import {
   captureEnvironmentDiagnostics,
-  setupErrorCapture
-} from './environment-capture';
-import path from 'path';
-import fs from 'fs';
+  setupErrorCapture,
+} from "./environment-capture";
+import path from "path";
+import fs from "fs";
 
 /**
  * Debug level for CI debugger
  */
 export enum DebugLevel {
   // Only essential debugging information
-  Essential = 'essential',
+  Essential = "essential",
   // Standard debugging information
-  Standard = 'standard',
+  Standard = "standard",
   // Comprehensive debugging information
-  Comprehensive = 'comprehensive',
+  Comprehensive = "comprehensive",
   // Maximum debugging information (may impact performance)
-  Maximum = 'maximum'
+  Maximum = "maximum",
 }
 
 /**
@@ -70,17 +70,17 @@ export interface CIDebuggerConfig {
 const DEFAULT_DEBUGGER_CONFIG: CIDebuggerConfig = {
   debugLevel: DebugLevel.Standard,
   artifactDirectories: [
-    'screenshots',
-    'videos',
-    'traces',
-    'logs',
-    'reports',
-    'metrics'
+    "screenshots",
+    "videos",
+    "traces",
+    "logs",
+    "reports",
+    "metrics",
   ],
   capturePerformanceMetrics: true,
   verboseLogs: true,
   createHtmlReports: true,
-  addEnvironmentToScreenshots: true
+  addEnvironmentToScreenshots: true,
 };
 
 /**
@@ -92,35 +92,40 @@ export class CIDebugger {
   private config: CIDebuggerConfig;
   private metricsCollector: MetricsCollector | null = null;
   private isCI: boolean;
-  private errorCaptureHandler: ReturnType<typeof setupErrorCapture> | null = null;
+  private errorCaptureHandler: ReturnType<typeof setupErrorCapture> | null =
+    null;
   private logs: string[] = [];
   private initialized = false;
-  
+
   /**
    * Create a new CI debugger
    * @param page Playwright page
    * @param testInfo Test info object
    * @param config Optional configuration overrides
    */
-  constructor(page: Page, testInfo: TestInfo, config: Partial<CIDebuggerConfig> = {}) {
+  constructor(
+    page: Page,
+    testInfo: TestInfo,
+    config: Partial<CIDebuggerConfig> = {},
+  ) {
     this.page = page;
     this.testInfo = testInfo;
     this.config = { ...DEFAULT_DEBUGGER_CONFIG, ...config };
-    
+
     // Auto-adjust debug level in CI
     const envInfo = getEnvironmentInfo();
     this.isCI = envInfo.isCI;
-    
+
     if (this.isCI && this.config.debugLevel === DebugLevel.Standard) {
       this.config.debugLevel = DebugLevel.Comprehensive;
     }
-    
+
     // Start log with timestamp
     this.log(`CI-Debugger initialized for test: ${testInfo.title}`);
     this.log(`Debug level: ${this.config.debugLevel}`);
-    this.log(`Running in CI: ${this.isCI ? 'Yes' : 'No'}`);
+    this.log(`Running in CI: ${this.isCI ? "Yes" : "No"}`);
   }
-  
+
   /**
    * Initialize the debugger
    */
@@ -128,7 +133,7 @@ export class CIDebugger {
     if (this.initialized) {
       return;
     }
-    
+
     try {
       // Set up browser info
       const browser = this.page.context().browser();
@@ -137,88 +142,110 @@ export class CIDebugger {
         this.log(`Browser: ${browserInfo.type} ${browserInfo.version}`);
         updateBrowserInfo(browserInfo.type, browserInfo.version);
       }
-      
+
       // Ensure artifact directories exist
       await this.ensureArtifactDirectories();
-      
+
       // Print environment diagnosis at Comprehensive or Maximum level
-      if (this.config.debugLevel === DebugLevel.Comprehensive || 
-          this.config.debugLevel === DebugLevel.Maximum) {
+      if (
+        this.config.debugLevel === DebugLevel.Comprehensive ||
+        this.config.debugLevel === DebugLevel.Maximum
+      ) {
         printEnvironmentDiagnosis();
       }
-      
+
       // Initialize metrics collection at Standard level or higher
-      if (this.config.capturePerformanceMetrics && 
-          this.config.debugLevel !== DebugLevel.Essential) {
-        this.metricsCollector = await setupPerformanceMetrics(this.page, this.testInfo);
-        this.log('Performance metrics collection started');
+      if (
+        this.config.capturePerformanceMetrics &&
+        this.config.debugLevel !== DebugLevel.Essential
+      ) {
+        this.metricsCollector = await setupPerformanceMetrics(
+          this.page,
+          this.testInfo,
+        );
+        this.log("Performance metrics collection started");
       }
-      
+
       // Initialize error capture
       this.errorCaptureHandler = setupErrorCapture(this.page, this.testInfo);
-      
+
       // Apply CI filesystem optimizations
       if (this.isCI) {
         await applyCIFilesystemOptimizations(this.testInfo.outputDir);
       }
-      
+
       // Capture initial environment diagnostics
       await captureEnvironmentDiagnostics(this.testInfo);
-      
+
       // Listen for console messages at Comprehensive or Maximum level
-      if (this.config.debugLevel === DebugLevel.Comprehensive || 
-          this.config.debugLevel === DebugLevel.Maximum) {
-        this.page.on('console', msg => {
+      if (
+        this.config.debugLevel === DebugLevel.Comprehensive ||
+        this.config.debugLevel === DebugLevel.Maximum
+      ) {
+        this.page.on("console", (msg) => {
           this.log(`Browser console [${msg.type()}]: ${msg.text()}`);
         });
       }
-      
+
       this.initialized = true;
-      this.log('CI-Debugger initialization complete');
+      this.log("CI-Debugger initialization complete");
     } catch (error) {
-      this.log(`ERROR during initialization: ${(error as Error).message}`, true);
-      console.error('CI-Debugger initialization failed:', error);
+      this.log(
+        `ERROR during initialization: ${(error as Error).message}`,
+        true,
+      );
+      console.error("CI-Debugger initialization failed:", error);
       // Continue without failing - debugging shouldn't break the test
     }
   }
-  
+
   /**
    * Ensure artifact directories exist
    */
   async ensureArtifactDirectories(): Promise<void> {
     const baseDir = this.testInfo.outputDir;
-    
+
     this.log(`Ensuring artifact directories in ${baseDir}...`);
-    
+
     try {
       // Create base directory
       await ensureDirectoryExists(baseDir);
-      
+
       // Create and validate artifact directories
       const dirResults = await validateArtifactStructure(
         baseDir,
         this.config.artifactDirectories,
-        true
+        true,
       );
-      
+
       // Log detailed results at Comprehensive or Maximum level
-      if (this.config.debugLevel === DebugLevel.Comprehensive || 
-          this.config.debugLevel === DebugLevel.Maximum) {
+      if (
+        this.config.debugLevel === DebugLevel.Comprehensive ||
+        this.config.debugLevel === DebugLevel.Maximum
+      ) {
         for (const result of dirResults) {
-          this.log(`Directory ${result.path}: ${result.hasPermission ? 'OK' : 'ISSUE'} ` +
-                  `(R:${result.readable ? 'Yes' : 'No'}, W:${result.writable ? 'Yes' : 'No'}, ` +
-                  `X:${result.executable ? 'Yes' : 'No'})`);
+          this.log(
+            `Directory ${result.path}: ${result.hasPermission ? "OK" : "ISSUE"} ` +
+              `(R:${result.readable ? "Yes" : "No"}, W:${result.writable ? "Yes" : "No"}, ` +
+              `X:${result.executable ? "Yes" : "No"})`,
+          );
         }
       }
     } catch (error) {
-      this.log(`ERROR: Failed to create artifact directories: ${(error as Error).message}`, true);
-      
+      this.log(
+        `ERROR: Failed to create artifact directories: ${(error as Error).message}`,
+        true,
+      );
+
       if (error instanceof FilesystemError) {
-        this.log(`Filesystem error details: ${error.getDetailedMessage()}`, true);
+        this.log(
+          `Filesystem error details: ${error.getDetailedMessage()}`,
+          true,
+        );
       }
     }
   }
-  
+
   /**
    * Log a message
    * @param message Message to log
@@ -226,11 +253,11 @@ export class CIDebugger {
    */
   log(message: string, isError = false): void {
     const timestamp = new Date().toISOString();
-    const formattedMessage = `[${timestamp}] ${isError ? 'ERROR: ' : ''}${message}`;
-    
+    const formattedMessage = `[${timestamp}] ${isError ? "ERROR: " : ""}${message}`;
+
     // Add to internal logs
     this.logs.push(formattedMessage);
-    
+
     // Output to console
     if (isError) {
       console.error(formattedMessage);
@@ -238,46 +265,52 @@ export class CIDebugger {
       console.log(formattedMessage);
     }
   }
-  
+
   /**
    * Handle an error
    * @param error Error to handle
    * @param stepName Optional name of the step that failed
    */
   async handleError(error: Error, stepName?: string): Promise<void> {
-    this.log(`Error encountered${stepName ? ` in step "${stepName}"` : ''}: ${error.message}`, true);
-    
+    this.log(
+      `Error encountered${stepName ? ` in step "${stepName}"` : ""}: ${error.message}`,
+      true,
+    );
+
     if (this.errorCaptureHandler) {
       await this.errorCaptureHandler(error, stepName);
     }
   }
-  
+
   /**
    * Save debug information
    */
   async saveDebugInfo(): Promise<void> {
     try {
       // Save logs
-      const logsDir = path.join(this.testInfo.outputDir, 'logs');
+      const logsDir = path.join(this.testInfo.outputDir, "logs");
       if (!fs.existsSync(logsDir)) {
         fs.mkdirSync(logsDir, { recursive: true });
       }
-      
+
       const logPath = path.join(logsDir, `ci-debugger-${Date.now()}.log`);
-      fs.writeFileSync(logPath, this.logs.join('\n'));
-      
+      fs.writeFileSync(logPath, this.logs.join("\n"));
+
       // Attach to test report
-      await this.testInfo.attach('ci-debugger.log', {
+      await this.testInfo.attach("ci-debugger.log", {
         path: logPath,
-        contentType: 'text/plain'
+        contentType: "text/plain",
       });
-      
+
       this.log(`Debug logs saved to ${logPath}`);
     } catch (error) {
-      this.log(`ERROR: Failed to save debug info: ${(error as Error).message}`, true);
+      this.log(
+        `ERROR: Failed to save debug info: ${(error as Error).message}`,
+        true,
+      );
     }
   }
-  
+
   /**
    * Finalize debugging
    */
@@ -285,21 +318,21 @@ export class CIDebugger {
     try {
       // Log test result
       this.log(`Test result: ${this.testInfo.status}`);
-      
+
       // Save metrics if they were collected
       if (this.metricsCollector) {
         await this.metricsCollector.saveMetrics();
       }
-      
+
       // Save the logs
       await this.saveDebugInfo();
-      
-      this.log('CI-Debugger finalization complete');
+
+      this.log("CI-Debugger finalization complete");
     } catch (error) {
-      console.error('Error during CI-Debugger finalization:', error);
+      console.error("Error during CI-Debugger finalization:", error);
     }
   }
-  
+
   /**
    * Add environment information to a screenshot
    * @param screenshotPath Path to the screenshot
@@ -309,11 +342,16 @@ export class CIDebugger {
       // Note: In a real implementation, this would add environment text overlay to the image
       // This is a placeholder that would typically use an image manipulation library
       // like sharp or canvas to add text overlay with environment info to the screenshot
-      
-      this.log(`Environment info would be added to screenshot: ${screenshotPath}`);
+
+      this.log(
+        `Environment info would be added to screenshot: ${screenshotPath}`,
+      );
       return screenshotPath;
     } catch (error) {
-      this.log(`ERROR: Failed to add environment info to screenshot: ${(error as Error).message}`, true);
+      this.log(
+        `ERROR: Failed to add environment info to screenshot: ${(error as Error).message}`,
+        true,
+      );
       return screenshotPath;
     }
   }
@@ -329,21 +367,21 @@ export class CIDebugger {
 export async function setupCIDebugging(
   page: Page,
   testInfo: TestInfo,
-  config: Partial<CIDebuggerConfig> = {}
+  config: Partial<CIDebuggerConfig> = {},
 ): Promise<CIDebugger> {
   const debuggerInstance = new CIDebugger(page, testInfo, config);
-  
+
   // Initialize the debugger
   await debuggerInstance.initialize();
-  
+
   // Set up test hooks (using any to work around TypeScript limitations)
   const testInfoAny = testInfo as any;
-  if (typeof testInfoAny.onFinish === 'function') {
+  if (typeof testInfoAny.onFinish === "function") {
     testInfoAny.onFinish(async () => {
       await debuggerInstance.finalize();
     });
   }
-  
+
   // Return the debugger instance for direct use
   return debuggerInstance;
 }
@@ -356,7 +394,7 @@ export async function setupCIDebugging(
  */
 export async function withCIDebugging(page: Page, testInfo: TestInfo) {
   const debuggerInstance = await setupCIDebugging(page, testInfo);
-  
+
   // Helper function for named test steps with error handling
   const step = async (name: string, action: () => Promise<void>) => {
     debuggerInstance.log(`Starting step: ${name}`);
@@ -368,9 +406,9 @@ export async function withCIDebugging(page: Page, testInfo: TestInfo) {
       throw error;
     }
   };
-  
+
   return {
     ciDebugger: debuggerInstance,
-    step
+    step,
   };
 }

@@ -13,7 +13,7 @@ The a11y addon is globally configured in `.storybook/preview.ts` with the follow
 ```typescript
 parameters: {
   // Other parameters...
-  
+
   a11y: {
     // WCAG AA compliance level
     config: {
@@ -48,10 +48,10 @@ parameters: {
     config: {
       rules: [
         {
-          id: 'specific-rule-id',
-          enabled: true
-        }
-      ]
+          id: "specific-rule-id",
+          enabled: true,
+        },
+      ];
     }
   }
 }

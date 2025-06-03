@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { TokensOverview } from "./tokens-overview"
+import type { Meta, StoryObj } from "@storybook/react";
+import { TokensOverview } from "./tokens-overview";
 
 const meta: Meta<typeof TokensOverview> = {
   title: "Design System/TokensOverview",
@@ -7,9 +7,9 @@ const meta: Meta<typeof TokensOverview> = {
   parameters: {
     layout: "fullscreen",
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof TokensOverview>
+export default meta;
+type Story = StoryObj<typeof TokensOverview>;
 
-export const Default: Story = {}
+export const Default: Story = {};

@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "@/lib/utils"
+import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 const logoVariants = cva("font-bold", {
   variants: {
@@ -18,15 +18,15 @@ const logoVariants = cva("font-bold", {
     // Color variants mapped to semantic colors for better theming
     color: {
       chalk: "text-foreground", // Default - adapts to current theme
-      ink: "text-background", 
+      ink: "text-background",
       cobalt: "text-primary",
-    }
+    },
   },
   defaultVariants: {
     size: "default",
-    color: "chalk" // chalk maps to foreground
-  }
-})
+    color: "chalk", // chalk maps to foreground
+  },
+});
 
 /**
  * Props for the Logo component
@@ -35,7 +35,7 @@ const logoVariants = cva("font-bold", {
  * with configurable size, color, and semantic element.
  */
 export interface LogoProps
-  extends Omit<React.HTMLAttributes<HTMLElement>, 'color'>,
+  extends Omit<React.HTMLAttributes<HTMLElement>, "color">,
     VariantProps<typeof logoVariants> {
   /**
    * The HTML element to render the logo with
@@ -46,7 +46,7 @@ export interface LogoProps
    *
    * @default "h1"
    */
-  as?: React.ElementType
+  as?: React.ElementType;
 
   /**
    * Size variant for the logo
@@ -59,7 +59,7 @@ export interface LogoProps
    *
    * @default "default"
    */
-  size?: "default" | "small" | "medium" | "large"
+  size?: "default" | "small" | "medium" | "large";
 
   /**
    * Color variant for the logo
@@ -71,7 +71,7 @@ export interface LogoProps
    *
    * @default "chalk"
    */
-  color?: "chalk" | "ink" | "cobalt"
+  color?: "chalk" | "ink" | "cobalt";
 }
 
 /**
@@ -107,16 +107,16 @@ export function Logo({
   ...props
 }: LogoProps) {
   // Generate aria-label if not explicitly provided
-  const ariaProps = props["aria-label"] ? 
-    props : 
-    { ...props, "aria-label": "Scry" };
+  const ariaProps = props["aria-label"]
+    ? props
+    : { ...props, "aria-label": "Scry" };
 
   return (
-    <Component 
+    <Component
       className={cn(logoVariants({ size, color, className }))}
       {...ariaProps}
     >
       Scry<span className="opacity-70">.</span>
     </Component>
-  )
+  );
 }

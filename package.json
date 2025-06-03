@@ -33,7 +33,8 @@
     "e2e:functional": "TEST_MODE=ci-functional PLAYWRIGHT_TEST_GREP_INVERT='@visual' playwright test",
     "e2e:visual": "TEST_MODE=ci-visual PLAYWRIGHT_TEST_GREP='@visual' VISUAL_TESTS_ENABLED_IN_CI=1 playwright test",
     "e2e:performance": "TEST_MODE=local-development PLAYWRIGHT_TEST_GREP='@performance' playwright test",
-    "e2e:critical": "TEST_MODE=local-development PLAYWRIGHT_TEST_GREP='@critical' playwright test"
+    "e2e:critical": "TEST_MODE=local-development PLAYWRIGHT_TEST_GREP='@critical' playwright test",
+    "audit": "pnpm audit --audit-level=high --prod"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

@@ -16,8 +16,8 @@ This document outlines our approach to accessibility in the Scry Splash project.
 Skip links allow keyboard users to bypass navigation and jump directly to the main content. Our implementation:
 
 ```tsx
-<a 
-  href="#main-content" 
+<a
+  href="#main-content"
   className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50"
 >
   Skip to content
@@ -30,6 +30,7 @@ Skip links allow keyboard users to bypass navigation and jump directly to the ma
 ```
 
 Key principles:
+
 - The skip link is visibly hidden until focused
 - It appears above all other content when focused
 - The target element has `tabIndex={-1}` to allow focus programmatically
@@ -48,8 +49,10 @@ Example:
 
 ```tsx
 <form aria-labelledby="form-heading" noValidate>
-  <h2 id="form-heading" className="sr-only">Contact Form</h2>
-  
+  <h2 id="form-heading" className="sr-only">
+    Contact Form
+  </h2>
+
   <label htmlFor="email-input" className="sr-only">
     Enter your email address
   </label>
@@ -61,18 +64,18 @@ Example:
     aria-describedby={hasError ? "error-message" : undefined}
     required
   />
-  
+
   {hasError && (
-    <div 
-      id="error-message" 
-      className="text-red-600" 
+    <div
+      id="error-message"
+      className="text-red-600"
       role="alert"
       aria-live="assertive"
     >
       Please enter a valid email address
     </div>
   )}
-  
+
   <Button type="submit" aria-busy={isSubmitting}>
     Submit
   </Button>
@@ -97,7 +100,7 @@ Example for a toggle button:
   onClick={toggleTheme}
 >
   <span className="sr-only">
-    {isDarkMode ? 'Currently in dark mode' : 'Currently in light mode'}
+    {isDarkMode ? "Currently in dark mode" : "Currently in light mode"}
   </span>
   <Icon aria-hidden="true" />
 </button>
@@ -108,26 +111,23 @@ Example for a toggle button:
 For dynamic content updates, use ARIA live regions:
 
 ```tsx
-{/* Polite announcements (don't interrupt) */}
-<div 
-  aria-live="polite"
-  aria-atomic="true"
-  className="sr-only"
->
+{
+  /* Polite announcements (don't interrupt) */
+}
+<div aria-live="polite" aria-atomic="true" className="sr-only">
   {statusMessage}
-</div>
+</div>;
 
-{/* Important alerts that should interrupt */}
-<div 
-  role="alert"
-  aria-live="assertive"
-  aria-atomic="true"
->
+{
+  /* Important alerts that should interrupt */
+}
+<div role="alert" aria-live="assertive" aria-atomic="true">
   {errorMessage}
-</div>
+</div>;
 ```
 
 Key principles:
+
 - Use `polite` for non-critical updates
 - Use `assertive` for critical information like errors
 - Include `aria-atomic="true"` for content that should be announced as a whole
@@ -137,16 +137,22 @@ Key principles:
 All images must have appropriate `alt` text:
 
 ```tsx
-{/* Informative image */}
-<img src="chart.png" alt="Quarter 1 sales increased by 30%" />
+{
+  /* Informative image */
+}
+<img src="chart.png" alt="Quarter 1 sales increased by 30%" />;
 
-{/* Decorative image */}
-<img src="decoration.png" alt="" aria-hidden="true" />
+{
+  /* Decorative image */
+}
+<img src="decoration.png" alt="" aria-hidden="true" />;
 
-{/* SVG icons */}
+{
+  /* SVG icons */
+}
 <svg aria-hidden="true" role="presentation">
   {/* Icon paths */}
-</svg>
+</svg>;
 ```
 
 ## Testing Accessibility
@@ -158,11 +164,11 @@ We use several approaches to ensure accessibility:
 - jest-axe for component-level testing:
 
 ```tsx
-import { axe, toHaveNoViolations } from 'jest-axe';
+import { axe, toHaveNoViolations } from "jest-axe";
 
 expect.extend(toHaveNoViolations);
 
-it('has no accessibility violations', async () => {
+it("has no accessibility violations", async () => {
   const { container } = render(<MyComponent />);
   const results = await axe(container);
   expect(results).toHaveNoViolations();

@@ -5,6 +5,7 @@ This directory contains end-to-end tests for the Scry Splash page using Playwrig
 ## Overview
 
 Our E2E testing setup uses:
+
 - **Playwright** for browser automation and testing
 - **Page Object Model (POM)** pattern for maintainable test structure
 - **TypeScript** for type-safe test code
@@ -24,6 +25,7 @@ pnpm playwright install --with-deps
 ```
 
 This command installs:
+
 - Chromium, Firefox, and WebKit browsers
 - System dependencies required for these browsers
 - All necessary drivers for test execution
@@ -72,6 +74,7 @@ pnpm e2e --trace on
 By default, CI runs only Chromium tests to optimize execution time. This significantly reduces the time taken for E2E tests to complete in the CI pipeline (from 18+ minutes to under 9 minutes).
 
 The CI workflow includes several optimizations:
+
 1. **Browser Selection**: Only Chromium by default, with option to run all browsers when needed
 2. **Dependency Caching**: Uses pnpm cache to avoid reinstalling dependencies on each run
 3. **Browser Caching**: Caches downloaded browser binaries to avoid reinstallation
@@ -81,6 +84,7 @@ The CI workflow includes several optimizations:
 When needed, you can run tests in all browsers by manually triggering the workflow with the "Run tests on all browsers" option selected.
 
 To manually trigger:
+
 1. Go to the GitHub repository
 2. Navigate to the Actions tab
 3. Select "E2E Tests" workflow
@@ -111,13 +115,13 @@ Page objects encapsulate page-specific elements and actions:
 // Example: e2e/page-objects/SplashPage.pom.ts
 export class SplashPage {
   constructor(private page: Page) {}
-  
+
   async navigate() {
-    await this.page.goto('/')
+    await this.page.goto("/");
   }
-  
+
   async getHeadline() {
-    return this.page.getByRole('heading', { level: 1 })
+    return this.page.getByRole("heading", { level: 1 });
   }
 }
 ```
@@ -126,15 +130,15 @@ Tests use page objects for cleaner, more maintainable code:
 
 ```typescript
 // Example: e2e/tests/splash-page-load.spec.ts
-import { SplashPage } from '../page-objects/SplashPage.pom'
+import { SplashPage } from "../page-objects/SplashPage.pom";
 
-test('should display headline', async ({ page }) => {
-  const splashPage = new SplashPage(page)
-  await splashPage.navigate()
-  
-  const headline = await splashPage.getHeadline()
-  await expect(headline).toBeVisible()
-})
+test("should display headline", async ({ page }) => {
+  const splashPage = new SplashPage(page);
+  await splashPage.navigate();
+
+  const headline = await splashPage.getHeadline();
+  await expect(headline).toBeVisible();
+});
 ```
 
 ## Writing New Tests
@@ -147,30 +151,30 @@ test('should display headline', async ({ page }) => {
 4. Example structure:
 
 ```typescript
-import { type Page, type Locator } from '@playwright/test'
+import { type Page, type Locator } from "@playwright/test";
 
 /**
  * Page Object for the About page
  */
 export class AboutPage {
-  private readonly page: Page
-  
+  private readonly page: Page;
+
   constructor(page: Page) {
-    this.page = page
+    this.page = page;
   }
-  
+
   /**
    * Navigate to the About page
    */
   async navigate(): Promise<void> {
-    await this.page.goto('/about')
+    await this.page.goto("/about");
   }
-  
+
   /**
    * Get the main content section
    */
   getContent(): Locator {
-    return this.page.getByRole('main')
+    return this.page.getByRole("main");
   }
 }
 ```
@@ -184,17 +188,17 @@ export class AboutPage {
 5. Example structure:
 
 ```typescript
-import { test, expect } from '@playwright/test'
-import { AboutPage } from '../page-objects/AboutPage.pom'
+import { test, expect } from "@playwright/test";
+import { AboutPage } from "../page-objects/AboutPage.pom";
 
-test.describe('About Page', () => {
-  test('should display content', async ({ page }) => {
-    const aboutPage = new AboutPage(page)
-    
-    await aboutPage.navigate()
-    await expect(aboutPage.getContent()).toBeVisible()
-  })
-})
+test.describe("About Page", () => {
+  test("should display content", async ({ page }) => {
+    const aboutPage = new AboutPage(page);
+
+    await aboutPage.navigate();
+    await expect(aboutPage.getContent()).toBeVisible();
+  });
+});
 ```
 
 ## Selector Best Practices
@@ -206,17 +210,18 @@ When writing selectors in page objects, prioritize in this order:
 3. **CSS selectors**: As a last resort for complex cases
 
 Examples:
+
 ```typescript
 // Preferred: semantic selectors
-this.page.getByRole('button', { name: 'Submit' })
-this.page.getByLabel('Email address')
-this.page.getByText('Welcome to Scry')
+this.page.getByRole("button", { name: "Submit" });
+this.page.getByLabel("Email address");
+this.page.getByText("Welcome to Scry");
 
 // Good: test IDs for specific elements
-this.page.getByTestId('cta-form')
+this.page.getByTestId("cta-form");
 
 // Avoid: brittle CSS selectors
-this.page.locator('.btn-primary') // Not recommended
+this.page.locator(".btn-primary"); // Not recommended
 ```
 
 ## Debugging Tests
@@ -249,6 +254,7 @@ pnpm e2e:report
 ```
 
 The report includes:
+
 - Test results with pass/fail status
 - Screenshots of failures
 - Test execution timeline
@@ -257,25 +263,28 @@ The report includes:
 ### Debugging Tips
 
 1. **Add screenshots** at key points:
+
    ```typescript
-   await page.screenshot({ path: 'debug.png' })
+   await page.screenshot({ path: "debug.png" });
    ```
 
 2. **Use wait conditions** to handle timing issues:
+
    ```typescript
-   await page.waitForSelector('.element')
-   await page.waitForLoadState('networkidle')
+   await page.waitForSelector(".element");
+   await page.waitForLoadState("networkidle");
    ```
 
 3. **Log page content** for debugging:
+
    ```typescript
-   console.log(await page.content())
+   console.log(await page.content());
    ```
 
 4. **Check element state**:
    ```typescript
-   const isVisible = await element.isVisible()
-   const isEnabled = await element.isEnabled()
+   const isVisible = await element.isVisible();
+   const isEnabled = await element.isEnabled();
    ```
 
 ## Visual Regression Testing
@@ -285,10 +294,10 @@ Visual regression tests capture screenshots to detect unintended UI changes.
 ### Creating Visual Tests
 
 ```typescript
-test('visual regression', async ({ page }) => {
-  await page.goto('/')
-  await expect(page).toHaveScreenshot('homepage.png')
-})
+test("visual regression", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveScreenshot("homepage.png");
+});
 ```
 
 ### Updating Snapshots
@@ -314,6 +323,7 @@ These snapshots are committed to the repository and checked during test runs.
 To generate Linux snapshots (required for CI):
 
 1. Use the dedicated GitHub workflow:
+
    - Go to the GitHub repository
    - Navigate to Actions → "Generate Linux Visual Snapshots"
    - Click "Run workflow"
@@ -331,6 +341,7 @@ To generate Linux snapshots (required for CI):
 When making UI changes that affect snapshots:
 
 1. Update local (darwin/Windows) snapshots first:
+
    ```bash
    pnpm e2e:update-snapshots
    ```
@@ -341,21 +352,24 @@ When making UI changes that affect snapshots:
 ### Best Practices for Visual Tests
 
 1. **Wait for stable state** before capturing:
+
    ```typescript
-   await page.waitForLoadState('networkidle')
-   await page.waitForTimeout(100) // Brief wait for animations
+   await page.waitForLoadState("networkidle");
+   await page.waitForTimeout(100); // Brief wait for animations
    ```
 
 2. **Mask dynamic content**:
+
    ```typescript
-   await expect(page).toHaveScreenshot('page.png', {
-     mask: [page.locator('.timestamp')],
-   })
+   await expect(page).toHaveScreenshot("page.png", {
+     mask: [page.locator(".timestamp")],
+   });
    ```
 
 3. **Set viewport size** for consistency:
+
    ```typescript
-   await page.setViewportSize({ width: 1280, height: 720 })
+   await page.setViewportSize({ width: 1280, height: 720 });
    ```
 
 4. **Commit snapshots for all platforms/browsers**:
@@ -368,19 +382,19 @@ When making UI changes that affect snapshots:
 For tests that involve API calls, use Playwright's request interception:
 
 ```typescript
-test('mocked API response', async ({ page }) => {
+test("mocked API response", async ({ page }) => {
   // Mock API response
-  await page.route('**/api/submit', async route => {
+  await page.route("**/api/submit", async (route) => {
     await route.fulfill({
       status: 200,
       body: JSON.stringify({ success: true }),
-    })
-  })
-  
+    });
+  });
+
   // Test continues with mocked response
-  await page.goto('/')
+  await page.goto("/");
   // ... rest of test
-})
+});
 ```
 
 ## Configuration
@@ -399,10 +413,12 @@ The Playwright configuration is defined in `playwright.config.ts` at the project
 ## CI Integration
 
 E2E tests run automatically in CI on:
+
 - Pull requests
 - Pushes to main branch
 
 The CI workflow:
+
 1. Installs dependencies
 2. Installs Playwright browsers
 3. Runs all E2E tests
@@ -413,15 +429,18 @@ The CI workflow:
 ### Common Issues
 
 1. **Browsers not installed**:
+
    ```bash
    pnpm playwright install --with-deps
    ```
 
 2. **Port 3000 already in use**:
+
    - Kill the process using the port
    - Or update `baseURL` in config
 
 3. **Test timeouts**:
+
    - Increase timeout in test or config
    - Check for proper wait conditions
    - Verify network requests complete

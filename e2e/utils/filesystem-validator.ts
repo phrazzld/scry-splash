@@ -1,17 +1,21 @@
 /**
  * Filesystem Validator
- * 
+ *
  * Provides utilities for validating filesystem permissions, paths, and handling
  * filesystem operations with robust error handling and recovery strategies.
- * 
+ *
  * This module is particularly useful for ensuring reliable filesystem operations
  * in CI environments where permissions and path handling may differ from local environments.
  */
 
-import fs from 'fs';
-import path from 'path';
-import { promisify } from 'util';
-import { isRunningInCI, detectOperatingSystem, OperatingSystem } from './environment-detector';
+import fs from "fs";
+import path from "path";
+import { promisify } from "util";
+import {
+  isRunningInCI,
+  detectOperatingSystem,
+  OperatingSystem,
+} from "./environment-detector";
 
 // Promisified fs functions
 const mkdir = promisify(fs.mkdir);
@@ -25,14 +29,14 @@ const chmod = promisify(fs.chmod);
  * Error codes for filesystem operations
  */
 export enum FilesystemErrorCode {
-  PATH_NOT_FOUND = 'PATH_NOT_FOUND',
-  PERMISSION_DENIED = 'PERMISSION_DENIED',
-  PATH_NOT_DIRECTORY = 'PATH_NOT_DIRECTORY',
-  PATH_ALREADY_EXISTS = 'PATH_ALREADY_EXISTS',
-  UNKNOWN_ERROR = 'UNKNOWN_ERROR',
-  INVALID_PATH = 'INVALID_PATH',
-  WRITE_ERROR = 'WRITE_ERROR',
-  READ_ERROR = 'READ_ERROR'
+  PATH_NOT_FOUND = "PATH_NOT_FOUND",
+  PERMISSION_DENIED = "PERMISSION_DENIED",
+  PATH_NOT_DIRECTORY = "PATH_NOT_DIRECTORY",
+  PATH_ALREADY_EXISTS = "PATH_ALREADY_EXISTS",
+  UNKNOWN_ERROR = "UNKNOWN_ERROR",
+  INVALID_PATH = "INVALID_PATH",
+  WRITE_ERROR = "WRITE_ERROR",
+  READ_ERROR = "READ_ERROR",
 }
 
 /**
@@ -43,22 +47,22 @@ export class FilesystemError extends Error {
   path: string;
   operation: string;
   originalError?: Error;
-  
+
   constructor(
     code: FilesystemErrorCode,
     message: string,
     path: string,
     operation: string,
-    originalError?: Error
+    originalError?: Error,
   ) {
     super(message);
-    this.name = 'FilesystemError';
+    this.name = "FilesystemError";
     this.code = code;
     this.path = path;
     this.operation = operation;
     this.originalError = originalError;
   }
-  
+
   /**
    * Get a detailed description of the error
    */
@@ -67,12 +71,12 @@ export class FilesystemError extends Error {
     message += `Code: ${this.code}\n`;
     message += `Path: ${this.path}\n`;
     message += `Operation: ${this.operation}\n`;
-    
+
     if (this.originalError) {
       message += `Original Error: ${this.originalError.message}\n`;
       message += `Original Stack: ${this.originalError.stack}\n`;
     }
-    
+
     return message;
   }
 }
@@ -114,7 +118,7 @@ export function getAbsolutePath(filePath: string): string {
   if (path.isAbsolute(filePath)) {
     return path.normalize(filePath);
   }
-  
+
   return path.resolve(process.cwd(), filePath);
 }
 
@@ -137,7 +141,9 @@ export function isValidPath(filePath: string): boolean {
  * @param filePath Path to check
  * @returns Permission result object
  */
-export async function checkPermissions(filePath: string): Promise<PermissionResult> {
+export async function checkPermissions(
+  filePath: string,
+): Promise<PermissionResult> {
   const absPath = getAbsolutePath(filePath);
   const result: PermissionResult = {
     hasPermission: false,
@@ -146,22 +152,22 @@ export async function checkPermissions(filePath: string): Promise<PermissionResu
     executable: false,
     path: absPath,
     isDirectory: false,
-    isFile: false
+    isFile: false,
   };
-  
+
   try {
     // Check if path exists
     const exists = await pathExists(absPath);
     if (!exists) {
-      result.error = 'Path does not exist';
+      result.error = "Path does not exist";
       return result;
     }
-    
+
     // Get file stats
     const stats = await stat(absPath);
     result.isDirectory = stats.isDirectory();
     result.isFile = stats.isFile();
-    
+
     // Check read permission
     try {
       await access(absPath, fs.constants.R_OK);
@@ -169,7 +175,7 @@ export async function checkPermissions(filePath: string): Promise<PermissionResu
     } catch (error) {
       result.readable = false;
     }
-    
+
     // Check write permission
     try {
       await access(absPath, fs.constants.W_OK);
@@ -177,7 +183,7 @@ export async function checkPermissions(filePath: string): Promise<PermissionResu
     } catch (error) {
       result.writable = false;
     }
-    
+
     // Check execute permission
     try {
       await access(absPath, fs.constants.X_OK);
@@ -185,7 +191,7 @@ export async function checkPermissions(filePath: string): Promise<PermissionResu
     } catch (error) {
       result.executable = false;
     }
-    
+
     result.hasPermission = result.readable && result.writable;
     return result;
   } catch (error) {
@@ -205,25 +211,25 @@ export async function checkPermissions(filePath: string): Promise<PermissionResu
 export async function ensureDirectoryExists(
   dirPath: string,
   recursive = true,
-  permissions = 0o755
+  permissions = 0o755,
 ): Promise<boolean> {
   const absPath = getAbsolutePath(dirPath);
-  
+
   try {
     // Check if directory already exists
     if (await pathExists(absPath)) {
       const stats = await stat(absPath);
-      
+
       // Check if it's a directory
       if (!stats.isDirectory()) {
         throw new FilesystemError(
           FilesystemErrorCode.PATH_NOT_DIRECTORY,
           `Path exists but is not a directory: ${absPath}`,
           absPath,
-          'ensureDirectoryExists'
+          "ensureDirectoryExists",
         );
       }
-      
+
       // Check permissions
       const permResult = await checkPermissions(absPath);
       if (!permResult.readable || !permResult.writable) {
@@ -236,18 +242,18 @@ export async function ensureDirectoryExists(
             FilesystemErrorCode.PERMISSION_DENIED,
             `Directory exists but has insufficient permissions: ${absPath}`,
             absPath,
-            'ensureDirectoryExists',
-            chmodError as Error
+            "ensureDirectoryExists",
+            chmodError as Error,
           );
         }
       }
-      
+
       return true;
     }
-    
+
     // Create directory if it doesn't exist
     await mkdir(absPath, { recursive, mode: permissions });
-    
+
     // Verify directory was created
     const exists = await pathExists(absPath);
     if (!exists) {
@@ -255,45 +261,45 @@ export async function ensureDirectoryExists(
         FilesystemErrorCode.UNKNOWN_ERROR,
         `Failed to create directory: ${absPath}`,
         absPath,
-        'ensureDirectoryExists'
+        "ensureDirectoryExists",
       );
     }
-    
+
     return true;
   } catch (error) {
     if (error instanceof FilesystemError) {
       throw error;
     }
-    
+
     // Handle common error cases
     const originalError = error as Error;
-    
-    if (originalError.message.includes('ENOENT')) {
+
+    if (originalError.message.includes("ENOENT")) {
       throw new FilesystemError(
         FilesystemErrorCode.PATH_NOT_FOUND,
         `Parent directory does not exist: ${path.dirname(absPath)}`,
         absPath,
-        'ensureDirectoryExists',
-        originalError
+        "ensureDirectoryExists",
+        originalError,
       );
     }
-    
-    if (originalError.message.includes('EACCES')) {
+
+    if (originalError.message.includes("EACCES")) {
       throw new FilesystemError(
         FilesystemErrorCode.PERMISSION_DENIED,
         `Permission denied creating directory: ${absPath}`,
         absPath,
-        'ensureDirectoryExists',
-        originalError
+        "ensureDirectoryExists",
+        originalError,
       );
     }
-    
+
     throw new FilesystemError(
       FilesystemErrorCode.UNKNOWN_ERROR,
       `Unknown error creating directory: ${absPath}`,
       absPath,
-      'ensureDirectoryExists',
-      originalError
+      "ensureDirectoryExists",
+      originalError,
     );
   }
 }
@@ -309,49 +315,49 @@ export async function ensureDirectoryExists(
 export async function writeDataToFile(
   filePath: string,
   data: string | Buffer,
-  ensureDir = true
+  ensureDir = true,
 ): Promise<boolean> {
   const absPath = getAbsolutePath(filePath);
-  
+
   try {
     // Ensure parent directory exists if requested
     if (ensureDir) {
       const dirPath = path.dirname(absPath);
       await ensureDirectoryExists(dirPath);
     }
-    
+
     // Write file
     await writeFile(absPath, data);
     return true;
   } catch (error) {
     const originalError = error as Error;
-    
-    if (originalError.message.includes('ENOENT')) {
+
+    if (originalError.message.includes("ENOENT")) {
       throw new FilesystemError(
         FilesystemErrorCode.PATH_NOT_FOUND,
         `Parent directory does not exist: ${path.dirname(absPath)}`,
         absPath,
-        'writeDataToFile',
-        originalError
+        "writeDataToFile",
+        originalError,
       );
     }
-    
-    if (originalError.message.includes('EACCES')) {
+
+    if (originalError.message.includes("EACCES")) {
       throw new FilesystemError(
         FilesystemErrorCode.PERMISSION_DENIED,
         `Permission denied writing file: ${absPath}`,
         absPath,
-        'writeDataToFile',
-        originalError
+        "writeDataToFile",
+        originalError,
       );
     }
-    
+
     throw new FilesystemError(
       FilesystemErrorCode.WRITE_ERROR,
       `Failed to write file: ${absPath}`,
       absPath,
-      'writeDataToFile',
-      originalError
+      "writeDataToFile",
+      originalError,
     );
   }
 }
@@ -364,7 +370,7 @@ export async function writeDataToFile(
  */
 export async function getDirectoryContents(dirPath: string): Promise<string[]> {
   const absPath = getAbsolutePath(dirPath);
-  
+
   try {
     // Check if directory exists
     if (!(await pathExists(absPath))) {
@@ -372,10 +378,10 @@ export async function getDirectoryContents(dirPath: string): Promise<string[]> {
         FilesystemErrorCode.PATH_NOT_FOUND,
         `Directory does not exist: ${absPath}`,
         absPath,
-        'getDirectoryContents'
+        "getDirectoryContents",
       );
     }
-    
+
     // Check if it's a directory
     const stats = await stat(absPath);
     if (!stats.isDirectory()) {
@@ -383,35 +389,35 @@ export async function getDirectoryContents(dirPath: string): Promise<string[]> {
         FilesystemErrorCode.PATH_NOT_DIRECTORY,
         `Path is not a directory: ${absPath}`,
         absPath,
-        'getDirectoryContents'
+        "getDirectoryContents",
       );
     }
-    
+
     // List directory contents
     return await readdir(absPath);
   } catch (error) {
     if (error instanceof FilesystemError) {
       throw error;
     }
-    
+
     const originalError = error as Error;
-    
-    if (originalError.message.includes('EACCES')) {
+
+    if (originalError.message.includes("EACCES")) {
       throw new FilesystemError(
         FilesystemErrorCode.PERMISSION_DENIED,
         `Permission denied reading directory: ${absPath}`,
         absPath,
-        'getDirectoryContents',
-        originalError
+        "getDirectoryContents",
+        originalError,
       );
     }
-    
+
     throw new FilesystemError(
       FilesystemErrorCode.READ_ERROR,
       `Failed to read directory: ${absPath}`,
       absPath,
-      'getDirectoryContents',
-      originalError
+      "getDirectoryContents",
+      originalError,
     );
   }
 }
@@ -437,18 +443,18 @@ export function testPath(basePath: string, ...segments: string[]): string {
 export async function validateArtifactStructure(
   rootDir: string,
   requiredDirs: string[] = [],
-  autoFix = true
+  autoFix = true,
 ): Promise<PermissionResult[]> {
   const results: PermissionResult[] = [];
-  
+
   // Validate root directory
   const rootResult = await checkPermissions(rootDir);
   results.push(rootResult);
-  
+
   // Create root directory if needed and requested
   if (!rootResult.hasPermission && autoFix) {
     await ensureDirectoryExists(rootDir);
-    
+
     // Check again after fix
     const fixedRootResult = await checkPermissions(rootDir);
     if (!fixedRootResult.hasPermission) {
@@ -456,23 +462,26 @@ export async function validateArtifactStructure(
         FilesystemErrorCode.PERMISSION_DENIED,
         `Failed to create or fix permissions for root directory: ${rootDir}`,
         rootDir,
-        'validateArtifactStructure'
+        "validateArtifactStructure",
       );
     }
-    
+
     results[0] = fixedRootResult;
   }
-  
+
   // Validate required subdirectories
   for (const subDir of requiredDirs) {
     const fullPath = path.join(rootDir, subDir);
     const dirResult = await checkPermissions(fullPath);
     results.push(dirResult);
-    
+
     // Create or fix directory if needed and requested
-    if (autoFix && (!await pathExists(fullPath) || !dirResult.hasPermission)) {
+    if (
+      autoFix &&
+      (!(await pathExists(fullPath)) || !dirResult.hasPermission)
+    ) {
       await ensureDirectoryExists(fullPath);
-      
+
       // Check again after fix
       const fixedDirResult = await checkPermissions(fullPath);
       if (!fixedDirResult.hasPermission) {
@@ -480,15 +489,15 @@ export async function validateArtifactStructure(
           FilesystemErrorCode.PERMISSION_DENIED,
           `Failed to create or fix permissions for directory: ${fullPath}`,
           fullPath,
-          'validateArtifactStructure'
+          "validateArtifactStructure",
         );
       }
-      
+
       // Update the result
       results[results.length - 1] = fixedDirResult;
     }
   }
-  
+
   return results;
 }
 
@@ -496,18 +505,20 @@ export async function validateArtifactStructure(
  * Apply CI-specific filesystem optimizations
  * @param rootDir Root directory for artifacts
  */
-export async function applyCIFilesystemOptimizations(rootDir: string): Promise<void> {
+export async function applyCIFilesystemOptimizations(
+  rootDir: string,
+): Promise<void> {
   // Only apply in CI environments
   if (!isRunningInCI()) {
     return;
   }
-  
+
   const os = detectOperatingSystem();
-  
+
   try {
     // Ensure the root directory exists
     await ensureDirectoryExists(rootDir);
-    
+
     // Apply different optimizations based on OS
     switch (os) {
       case OperatingSystem.Linux:
@@ -516,20 +527,24 @@ export async function applyCIFilesystemOptimizations(rootDir: string): Promise<v
         try {
           await chmod(rootDir, 0o777);
         } catch (error) {
-          console.warn(`Warning: Could not set 777 permissions on ${rootDir}: ${(error as Error).message}`);
+          console.warn(
+            `Warning: Could not set 777 permissions on ${rootDir}: ${(error as Error).message}`,
+          );
         }
         break;
-        
+
       case OperatingSystem.Windows:
         // Windows-specific optimizations could go here
         break;
-        
+
       default:
         // No specific optimizations for other platforms
         break;
     }
   } catch (error) {
     // Log but don't fail - these are optimizations, not requirements
-    console.warn(`Warning: Failed to apply CI filesystem optimizations: ${(error as Error).message}`);
+    console.warn(
+      `Warning: Failed to apply CI filesystem optimizations: ${(error as Error).message}`,
+    );
   }
 }

@@ -11,6 +11,7 @@ Visual regression testing helps catch unintended visual changes to components by
 ### Setting Up Chromatic
 
 1. **Obtain a Chromatic project token**:
+
    - Create an account at [chromatic.com](https://www.chromatic.com/)
    - Link your GitHub repository
    - Obtain a project token
@@ -29,6 +30,7 @@ Visual regression testing helps catch unintended visual changes to components by
 ### Running Visual Tests
 
 1. **Run locally**:
+
    ```bash
    pnpm chromatic
    ```
@@ -58,14 +60,14 @@ export const Default: Story = {
     chromatic: {
       // Disable snapshots for this story
       disableSnapshot: true,
-      
+
       // Custom viewports for this story
       viewports: [320, 768, 1024, 1280],
-      
+
       // Delay before capturing (for components with delayed rendering)
       delay: 300,
-    }
-  }
+    },
+  },
 };
 ```
 
@@ -76,11 +78,13 @@ export const Default: Story = {
 Chromatic integrates seamlessly with CI/CD pipelines:
 
 1. **GitHub Actions Integration**:
+
    - Chromatic runs automatically on all pull requests
    - Uses the `CHROMATIC_PROJECT_TOKEN` repository secret
    - Provides status checks that can block merging
 
 2. **CI Workflow Configuration**:
+
    ```yaml
    - name: Run Chromatic
      uses: chromaui/action@v1
@@ -97,11 +101,13 @@ Chromatic integrates seamlessly with CI/CD pipelines:
 ### CI Artifact Management
 
 **Storybook Build Artifacts**:
+
 - CI builds and uploads the complete Storybook
 - Provides permanent links to component library versions
 - Enables historical comparison across builds
 
 **Review Workflow**:
+
 1. CI runs Chromatic and reports status
 2. Team reviews changes via Chromatic web interface
 3. Changes are approved or rejected
@@ -110,6 +116,7 @@ Chromatic integrates seamlessly with CI/CD pipelines:
 ### Handling CI Failures
 
 **When Chromatic CI Fails**:
+
 1. **Check the Chromatic Link**: CI logs include direct link to review interface
 2. **Review Changes**: Use web interface to see visual diffs
 3. **Determine Action**:
@@ -118,6 +125,7 @@ Chromatic integrates seamlessly with CI/CD pipelines:
 4. **Status Update**: Chromatic automatically updates CI status
 
 **Troubleshooting CI Issues**:
+
 - **Token Issues**: Verify `CHROMATIC_PROJECT_TOKEN` is correctly set
 - **Build Failures**: Check Storybook builds locally before CI
 - **Network Issues**: Chromatic may need retry on network failures
@@ -125,19 +133,23 @@ Chromatic integrates seamlessly with CI/CD pipelines:
 ## Best Practices
 
 1. **Consistent Test Data**:
+
    - Use static data in stories to ensure consistent rendering
    - Avoid random values or dates that could change between runs
 
 2. **Component States**:
+
    - Create stories for all important component states
    - Include error states, loading states, and edge cases
 
 3. **Reviewing Changes**:
+
    - Look for unintended changes in spacing, alignment, colors
    - Pay attention to component behavior across different viewport sizes
    - Verify text rendering and truncation
 
 4. **CI Integration**:
+
    - Chromatic runs automatically on pull requests
    - Review and approve/reject changes before merging
    - Use Chromatic status checks to prevent merging unreviewed changes
@@ -170,11 +182,13 @@ If components aren't being captured:
 ### Token Management
 
 1. **GitHub Repository Secrets**:
+
    - Store the `CHROMATIC_PROJECT_TOKEN` as a repository secret in GitHub
    - Never expose this token in logs or commit it to the repository
    - Use the secret in GitHub Actions workflows via `${{ secrets.CHROMATIC_PROJECT_TOKEN }}`
 
 2. **Local Development**:
+
    - Store your token in `.env.local` which is automatically excluded from Git
    - Never commit `.env.local` or any file containing your Chromatic token
    - Consider using a different token for local development vs. CI

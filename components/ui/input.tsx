@@ -1,43 +1,43 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   /**
    * Optional class name for styling override
    */
-  className?: string
-  
+  className?: string;
+
   /**
    * Input container class name
    */
-  containerClassName?: string
+  containerClassName?: string;
 }
 
 /**
  * A form input component with styling consistent with Scry's design system
- * 
+ *
  * This component wraps a standard HTML input with styled container and focus states.
  * Input styling includes consistent height, border, padding, and focus ring effects.
- * 
+ *
  * @param props - Input props including container and input className overrides
  * @param ref - React ref forwarded to the input element
- * 
+ *
  * @example
  * ```tsx
  * // Basic usage
  * <Input placeholder="Enter your email" />
- * 
+ *
  * // With type
  * <Input type="email" placeholder="Enter your email" required />
- * 
+ *
  * // With custom styling
- * <Input 
- *   className="border-blue-500" 
+ * <Input
+ *   className="border-blue-500"
  *   containerClassName="mb-4"
- *   placeholder="Custom styled input" 
+ *   placeholder="Custom styled input"
  * />
  * ```
  */
@@ -52,15 +52,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             "text-foreground focus-visible:outline-none",
             "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:border-transparent",
             "disabled:cursor-not-allowed disabled:opacity-50",
-            className
+            className,
           )}
           ref={ref}
           {...props}
         />
       </div>
-    )
-  }
-)
-Input.displayName = "Input"
+    );
+  },
+);
+Input.displayName = "Input";
 
-export { Input }
+export { Input };

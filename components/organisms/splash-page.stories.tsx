@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { SplashPage } from "./splash-page"
-import { ThemeProvider } from "@/components/ui/theme-provider"
+import type { Meta, StoryObj } from "@storybook/react";
+import { SplashPage } from "./splash-page";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const meta: Meta<typeof SplashPage> = {
   title: "Organisms/SplashPage",
@@ -13,9 +13,9 @@ const meta: Meta<typeof SplashPage> = {
           The main splash page component for the Scry application.
           This component supports both light and dark themes, with automatic
           adaptation based on the selected theme.
-        `
-      }
-    }
+        `,
+      },
+    },
   },
   argTypes: {
     headline: { control: "text" },
@@ -30,15 +30,19 @@ const meta: Meta<typeof SplashPage> = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider defaultTheme="system" storageKey="storybook-theme" enableSystem>
+      <ThemeProvider
+        defaultTheme="system"
+        storageKey="storybook-theme"
+        enableSystem
+      >
         <Story />
       </ThemeProvider>
-    )
-  ]
-}
+    ),
+  ],
+};
 
-export default meta
-type Story = StoryObj<typeof SplashPage>
+export default meta;
+type Story = StoryObj<typeof SplashPage>;
 
 /**
  * Default splash page matching production configuration with left alignment and theme-aware styling
@@ -54,7 +58,7 @@ export const Default: Story = {
     animate: true,
     staggerDelay: 100,
   },
-}
+};
 
 /**
  * Animation disabled for testing and static rendering
@@ -63,7 +67,7 @@ export const NoAnimation: Story = {
   args: {
     animate: false,
   },
-}
+};
 
 /**
  * Centered version of the splash page (alternate layout)
@@ -72,7 +76,7 @@ export const Centered: Story = {
   args: {
     centered: true,
   },
-}
+};
 
 /**
  * Custom content example
@@ -80,11 +84,12 @@ export const Centered: Story = {
 export const CustomContent: Story = {
   args: {
     headline: "Unlock Your Knowledge",
-    subheadline: "Transform your notes into a powerful learning system with AI-powered spaced repetition",
+    subheadline:
+      "Transform your notes into a powerful learning system with AI-powered spaced repetition",
     buttonText: "Get Early Access",
     microcopy: "Join thousands of beta users today",
   },
-}
+};
 
 /**
  * Custom background color
@@ -93,7 +98,7 @@ export const CustomBackground: Story = {
   args: {
     backgroundColor: "#1a1a2e",
   },
-}
+};
 
 /**
  * Faster stagger animation
@@ -102,7 +107,7 @@ export const FastAnimation: Story = {
   args: {
     staggerDelay: 50,
   },
-}
+};
 
 /**
  * Slower stagger animation
@@ -111,7 +116,7 @@ export const SlowAnimation: Story = {
   args: {
     staggerDelay: 200,
   },
-}
+};
 
 /**
  * Dark theme variant
@@ -127,10 +132,10 @@ export const DarkTheme: Story = {
     animate: false, // Disabled for consistent screenshots
   },
   parameters: {
-    backgrounds: { default: 'dark' },
-    chromatic: { theme: 'dark' }
-  }
-}
+    backgrounds: { default: "dark" },
+    chromatic: { theme: "dark" },
+  },
+};
 
 /**
  * Light theme variant
@@ -146,7 +151,7 @@ export const LightTheme: Story = {
     animate: false, // Disabled for consistent screenshots
   },
   parameters: {
-    backgrounds: { default: 'light' },
-    chromatic: { theme: 'light' }
-  }
-}
+    backgrounds: { default: "light" },
+    chromatic: { theme: "light" },
+  },
+};

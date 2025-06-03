@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { HeroSection } from "./hero-section"
-import { NoiseBackground } from "@/components/ui/noise-background"
+import type { Meta, StoryObj } from "@storybook/react";
+import { HeroSection } from "./hero-section";
+import { NoiseBackground } from "@/components/ui/noise-background";
 
 const meta: Meta<typeof HeroSection> = {
   title: "Molecules/HeroSection",
@@ -22,7 +22,8 @@ const meta: Meta<typeof HeroSection> = {
     },
     headline: {
       control: "text",
-      description: "Main headline text (used when typewriter effect is disabled)",
+      description:
+        "Main headline text (used when typewriter effect is disabled)",
     },
     subheadline: {
       control: "text",
@@ -41,10 +42,10 @@ const meta: Meta<typeof HeroSection> = {
       description: "Enable typewriter animation for the headline",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof HeroSection>
+export default meta;
+type Story = StoryObj<typeof HeroSection>;
 
 // Default hero section with typewriter animation (matches production configuration)
 export const Default: Story = {
@@ -64,13 +65,14 @@ export const Default: Story = {
       </NoiseBackground>
     ),
   ],
-}
+};
 
 // Static headline (no typewriter)
 export const StaticHeadline: Story = {
   args: {
     headline: "Remember effortlessly.",
-    subheadline: "Turns your notes into spaced‑repetition prompts—automatically.",
+    subheadline:
+      "Turns your notes into spaced‑repetition prompts—automatically.",
     logoSize: "default",
     logoColor: "chalk",
     centered: true,
@@ -84,13 +86,14 @@ export const StaticHeadline: Story = {
       </NoiseBackground>
     ),
   ],
-}
+};
 
 // Left-aligned variant
 export const LeftAligned: Story = {
   args: {
     headline: "Remember effortlessly.",
-    subheadline: "Turns your notes into spaced‑repetition prompts—automatically.",
+    subheadline:
+      "Turns your notes into spaced‑repetition prompts—automatically.",
     logoSize: "default",
     logoColor: "chalk",
     centered: false,
@@ -104,13 +107,14 @@ export const LeftAligned: Story = {
       </NoiseBackground>
     ),
   ],
-}
+};
 
 // With larger logo
 export const LargerLogo: Story = {
   args: {
     headline: "Remember effortlessly.",
-    subheadline: "Turns your notes into spaced‑repetition prompts—automatically.",
+    subheadline:
+      "Turns your notes into spaced‑repetition prompts—automatically.",
     logoSize: "large",
     logoColor: "chalk",
     centered: true,
@@ -124,7 +128,7 @@ export const LargerLogo: Story = {
       </NoiseBackground>
     ),
   ],
-}
+};
 
 // With custom content
 export const CustomContent: Story = {
@@ -144,13 +148,14 @@ export const CustomContent: Story = {
       </NoiseBackground>
     ),
   ],
-}
+};
 
 // With different color scheme
 export const AlternateColors: Story = {
   args: {
     headline: "Remember effortlessly.",
-    subheadline: "Turns your notes into spaced‑repetition prompts—automatically.",
+    subheadline:
+      "Turns your notes into spaced‑repetition prompts—automatically.",
     logoSize: "default",
     logoColor: "cobalt",
     centered: true,
@@ -164,4 +169,4 @@ export const AlternateColors: Story = {
       </NoiseBackground>
     ),
   ],
-}
+};
