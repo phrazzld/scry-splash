@@ -22,9 +22,10 @@ This project enforces mandatory quality gates through automated CI:
 - **Stage 3**: Security & E2E - Dependency auditing and Playwright end-to-end tests
 
 All PRs must pass these quality gates before merging. Coverage thresholds:
+
 - Global: 75% statements, 80% branches, 85% functions, 75% lines
 - UI components: 80% statements, 50% branches, 85% functions, 80% lines
-- Molecules: 60% statements, 65% branches, 65% functions, 60% lines  
+- Molecules: 60% statements, 65% branches, 65% functions, 60% lines
 - Organisms: 90% statements, 90% branches, 90% functions, 90% lines
 - Lib utilities: 100% all metrics
 

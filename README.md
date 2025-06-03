@@ -1,5 +1,7 @@
 # Scry Splash Page
 
+[![Quality Gate](https://github.com/phrazzld/scry-splash/actions/workflows/quality-gate.yml/badge.svg)](https://github.com/phrazzld/scry-splash/actions/workflows/quality-gate.yml)
+
 This is the landing page for Scry, built with Next.js and shadcn/ui components. The project uses a Storybook-driven approach following atomic design principles. It features a functional early access form that integrates with Formspark.
 
 ## Getting Started
@@ -91,20 +93,38 @@ This project uses [Formspark](https://formspark.io) for handling the early acces
 
 For more information, see the Formspark [documentation](https://documentation.formspark.io/).
 
-## CI/CD Workflow
+## Quality Gate CI Pipeline
 
-This project uses GitHub Actions for continuous integration and testing:
+This project enforces mandatory quality gates through a comprehensive 3-stage CI pipeline:
 
-1. **Unit Tests**: Runs Jest tests on code changes
-2. **Type Checking**: Ensures TypeScript type safety
-3. **E2E Tests**: Runs Playwright end-to-end tests with performance optimizations:
-   - Dependency caching for faster installations
-   - Browser binary caching
-   - Selective browser testing (Chromium by default)
-   - Parallel test execution
-4. **Visual Testing**: Uses Chromatic for UI regression testing
+### Stage 1: Setup & Lint
 
-For more details on the E2E testing setup, see the [E2E Testing documentation](e2e/README.md).
+- **Code Formatting**: Prettier formatting validation
+- **Code Quality**: ESLint static analysis
+- **Fail-Fast**: Issues prevent progression to later stages
+
+### Stage 2: Type & Test
+
+- **Type Safety**: TypeScript strict mode validation
+- **Unit Testing**: Jest test execution with coverage enforcement
+- **Coverage Thresholds**: Component-specific coverage requirements:
+  - Global: 75% statements, 80% branches, 85% functions, 75% lines
+  - UI Components: 80% statements, 50% branches, 85% functions, 80% lines
+  - Molecules: 60% statements, 65% branches, 65% functions, 60% lines
+  - Organisms: 90% statements, 90% branches, 90% functions, 90% lines
+  - Lib Utilities: 100% all metrics
+
+### Stage 3: Security & E2E
+
+- **Security Auditing**: Dependency vulnerability scanning (blocks on high/critical)
+- **End-to-End Testing**: Playwright functional tests
+- **Performance Optimized**: Browser caching and selective test execution
+
+### Additional Testing
+
+- **Visual Testing**: Uses Chromatic for UI regression testing (separate workflow)
+
+All PRs must pass the complete quality gate pipeline before merging. For development setup and local testing, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Deploy on Vercel
 
