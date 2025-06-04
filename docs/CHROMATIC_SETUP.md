@@ -25,19 +25,24 @@ This is the primary configuration file that defines all Chromatic settings:
 export default {
   // Project token can be passed via command line or environment variable
   projectToken: process.env.CHROMATIC_PROJECT_TOKEN,
-  
+
   // Core settings
   buildScriptName: "build-storybook",
   storybookBuildDir: "storybook-static",
-  
+
   // File patterns
   fileMatch: ["**/*.tsx", "**/*.css", "**/*.stories.tsx", "**/*.stories.ts"],
-  skip: ["**/*template*/**", "**/node_modules/**", "**/*.test.tsx", "**/*.spec.tsx"],
-  
+  skip: [
+    "**/*template*/**",
+    "**/node_modules/**",
+    "**/*.test.tsx",
+    "**/*.spec.tsx",
+  ],
+
   // Visual testing options
   viewports: [320, 768, 1024],
   disableAnimations: true,
-  
+
   // Build behavior
   exitZeroOnChanges: true,
   onlyChanged: false,
@@ -93,12 +98,14 @@ Chromatic is integrated into our CI pipeline with GitHub Actions. The workflow i
 ### Trigger Conditions
 
 Chromatic runs on:
+
 - Pushes to the main branch that modify components, stories, or Storybook configs
 - Pull requests that change components, stories, or Storybook configs
 
 ### CI-Specific Settings
 
 In CI, we override some settings to optimize the build:
+
 - `onlyChanged: true` - Only build stories affected by the current changes, which speeds up the CI process
 
 ## Environment Variables
@@ -126,6 +133,7 @@ If you need to set up Chromatic for a new environment or repository:
 ## Configuration Hierarchy
 
 The configuration is applied in this order (later overrides earlier):
+
 1. Default Chromatic settings
 2. `.chromatic.tsx` settings
 3. Command line flags (used sparingly)

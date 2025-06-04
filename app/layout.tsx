@@ -33,7 +33,7 @@ export default function RootLayout({
                 opacity: 0; 
                 visibility: hidden; 
               }
-            `
+            `,
           }}
         />
 
@@ -41,12 +41,12 @@ export default function RootLayout({
           ThemeScript is placed immediately after the critical CSS to ensure it runs
           as early as possible in the page lifecycle, preventing FOUC
         */}
-        <ThemeScript 
+        <ThemeScript
           defaultTheme="system"
           storageKey="scry-ui-theme"
           attribute="class"
         />
-        
+
         {/* Add a preload mechanism to minimize FOUC */}
         <style
           dangerouslySetInnerHTML={{
@@ -69,12 +69,14 @@ export default function RootLayout({
                   transition: background-color 0.3s ease, color 0.3s ease;
                 }
               }
-            `
+            `,
           }}
         />
       </head>
-      <body className={`${geistMono.variable} bg-background text-foreground prevent-transition`}>
-        <ThemeProvider 
+      <body
+        className={`${geistMono.variable} bg-background text-foreground prevent-transition`}
+      >
+        <ThemeProvider
           defaultTheme="system"
           attribute="class"
           enableSystem={true}
@@ -82,9 +84,11 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
-        
+
         {/* Remove transition prevention after initial load */}
-        <script dangerouslySetInnerHTML={{ __html: `
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
           (function() {
             // Wait for first contentful paint to remove transition prevention
             if ('requestAnimationFrame' in window) {
@@ -95,7 +99,9 @@ export default function RootLayout({
               });
             }
           })();
-        `}} />
+        `,
+          }}
+        />
       </body>
     </html>
   );

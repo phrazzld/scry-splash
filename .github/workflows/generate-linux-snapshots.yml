@@ -2,7 +2,7 @@ name: Generate Linux Visual Snapshots
 
 # This workflow generates Linux-specific snapshots for visual regression tests
 # It can be triggered manually with workflow_dispatch
-# 
+#
 # Visual test snapshots are platform-specific, so we need separate snapshots for
 # Linux environments (like CI runners) compared to local development on macOS/Windows
 #
@@ -22,9 +22,9 @@ on:
   workflow_dispatch:
     inputs:
       browser:
-        description: 'Browser to generate snapshots for'
+        description: "Browser to generate snapshots for"
         required: true
-        default: 'chromium'
+        default: "chromium"
         type: choice
         options:
           - all
@@ -32,46 +32,46 @@ on:
           - firefox
           - webkit
       commit_changes:
-        description: 'Commit snapshot changes back to the repository'
+        description: "Commit snapshot changes back to the repository"
         type: boolean
         default: true
       test_mode:
-        description: 'Test selection mode'
+        description: "Test selection mode"
         required: true
-        default: 'visual'
+        default: "visual"
         type: choice
         options:
-          - visual     # Only tests with @visual tag
-          - all        # All tests
-          - specific   # Specific test files (requires test_files)
+          - visual # Only tests with @visual tag
+          - all # All tests
+          - specific # Specific test files (requires test_files)
       test_files:
-        description: 'Specific test files to generate snapshots for (comma-separated), required if test_mode=specific'
+        description: "Specific test files to generate snapshots for (comma-separated), required if test_mode=specific"
         type: string
-        default: ''
+        default: ""
         required: false
 
 jobs:
   generate-snapshots:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 10.x
-          
+
       - name: Setup Node.js with pnpm cache
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: 'pnpm'
-          
+          node-version: "20.x"
+          cache: "pnpm"
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        
+
       - name: Install Playwright browsers
         run: |
           if [ "${{ github.event.inputs.browser }}" = "all" ]; then
@@ -83,14 +83,14 @@ jobs:
           fi
           echo "Verifying browser installation..."
           pnpm exec playwright --version
-        
+
       - name: Generate Snapshots
         run: |
           # Set environment variables to ensure we generate Linux-specific snapshots
           export CI=true
           export PLAYWRIGHT_LINUX_SNAPSHOTS=true
           export VISUAL_TESTS_ENABLED_IN_CI=1
-          
+
           # Determine which test files to update based on test_mode
           if [ "${{ github.event.inputs.test_mode }}" = "visual" ]; then
             echo "Generating snapshots for visual tests (@visual tag)..."
@@ -130,12 +130,12 @@ jobs:
           fi
         env:
           NEXT_PUBLIC_FORMSPARK_FORM_ID: test-form-id
-          
+
       - name: List generated snapshots
         run: |
           echo "Generated snapshots:"
           find e2e -name "*.png" | grep -v "node_modules"
-          
+
       - name: Upload snapshots as artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -144,14 +144,14 @@ jobs:
             e2e/**/*.spec.ts-snapshots/
             !**/node_modules/**
           retention-days: 7
-          
+
       - name: Commit snapshots
         if: ${{ github.event.inputs.commit_changes == 'true' }}
         run: |
           # Configure git
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          
+
           # Check if there are changes
           if [[ -n $(git status -s | grep ".png") ]]; then
             # Add all png files in the e2e directory structure

@@ -1,65 +1,66 @@
-"use client"
+"use client";
 
-import React from "react"
-import { cn } from "@/lib/utils"
-import { PageLayout } from "@/components/organisms/page-layout"
-import { HeroSection } from "@/components/molecules/hero-section"
-import { CTASection } from "@/components/molecules/cta-section"
+import React from "react";
+import { cn } from "@/lib/utils";
+import { PageLayout } from "@/components/organisms/page-layout";
+import { HeroSection } from "@/components/molecules/hero-section";
+import { CTASection } from "@/components/molecules/cta-section";
 
-export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+export interface SplashPageProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   /**
    * Hero headline
    * @default "Remember effortlessly."
    */
   headline?: string;
-  
+
   /**
    * Hero subheadline
    * @default "Turns your notes into spaced‑repetition prompts—automatically."
    */
   subheadline?: string;
-  
+
   /**
    * CTA button text
    * @default "Get early access"
    */
   buttonText?: string;
-  
+
   /**
    * CTA microcopy text
    * @default "Beta invites roll out weekly."
    */
   microcopy?: string;
-  
+
   /**
    * Background color for page
    * @default "var(--background)"
    */
   backgroundColor?: string;
-  
+
   /**
    * Whether to center content
    * @default false
    */
   centered?: boolean;
-  
+
   /**
    * Whether to animate the content
    * @default true
    */
   animate?: boolean;
-  
+
   /**
    * Animation stagger delay in ms between sections
    * @default 100
    */
   staggerDelay?: number;
-  
+
   /**
    * Callback function when CTA button is clicked
    */
   onCtaClick?: () => void;
-  
+
   /**
    * Optional class name for styling
    */
@@ -68,7 +69,7 @@ export interface SplashPageProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 
 /**
  * SplashPage component combines all molecules for a complete splash page
- * 
+ *
  * @example
  * ```tsx
  * <SplashPage /> // Default with preset content
@@ -83,7 +84,7 @@ export function SplashPage({
   microcopy = "",
   backgroundColor = "var(--background)",
   centered = false,
-  animate = true, 
+  animate = true,
   staggerDelay = 100,
   onCtaClick,
   className,
@@ -91,13 +92,15 @@ export function SplashPage({
 }: SplashPageProps) {
   // Generate staggered animation delay classes if animation is enabled
   const heroDelay = animate ? { style: { animationDelay: "0ms" } } : {};
-  const ctaDelay = animate ? { style: { animationDelay: `${staggerDelay}ms` } } : {};
-  
+  const ctaDelay = animate
+    ? { style: { animationDelay: `${staggerDelay}ms` } }
+    : {};
+
   // Animation classes for fade-in
   const animateClass = animate ? "animate-fade-in opacity-0" : "";
-  
+
   return (
-    <PageLayout 
+    <PageLayout
       backgroundColor={backgroundColor}
       animate={false} // We handle our own animation
       centered={centered}
@@ -116,9 +119,12 @@ export function SplashPage({
             textColor="text-foreground"
           />
         </div>
-        
+
         {/* CTA Section */}
-        <div className={cn("mt-8 sm:mt-12 md:mt-16", animateClass)} {...ctaDelay}>
+        <div
+          className={cn("mt-8 sm:mt-12 md:mt-16", animateClass)}
+          {...ctaDelay}
+        >
           <CTASection
             buttonText={buttonText}
             microcopy={microcopy}
@@ -129,5 +135,5 @@ export function SplashPage({
         </div>
       </div>
     </PageLayout>
-  )
+  );
 }

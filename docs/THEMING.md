@@ -62,11 +62,11 @@ The `ThemeProvider` component in `/components/ui/theme-provider.tsx` is responsi
 
 ```tsx
 // Usage
-<ThemeProvider 
-  defaultTheme="system"  // Initial theme if no preference exists
-  storageKey="scry-ui-theme"  // localStorage key
-  attribute="class"  // HTML attribute to use for theming
-  enableSystem={true}  // Whether to detect system preference
+<ThemeProvider
+  defaultTheme="system" // Initial theme if no preference exists
+  storageKey="scry-ui-theme" // localStorage key
+  attribute="class" // HTML attribute to use for theming
+  enableSystem={true} // Whether to detect system preference
 >
   {children}
 </ThemeProvider>
@@ -101,7 +101,7 @@ The `ThemeScript` component in `/components/ui/theme-script.tsx` prevents flash 
 ```tsx
 // Usage in app/layout.tsx
 <head>
-  <ThemeScript 
+  <ThemeScript
     defaultTheme="system"
     storageKey="scry-ui-theme"
     attribute="class"
@@ -137,15 +137,17 @@ The ThemeToggleButton component accepts all standard button HTML attributes alon
 Theme styling is implemented using CSS variables in `/app/theme.css` with a tiered approach:
 
 1. **Base Tokens**: Raw color values and design constants
+
    ```css
    :root {
-     --cobalt-base: #0047AB;
-     --chalk-base: #FAFAFA;
+     --cobalt-base: #0047ab;
+     --chalk-base: #fafafa;
      --ink-base: #121212;
    }
    ```
 
 2. **Color Tokens**: Theme-specific mappings of semantic names to raw values
+
    ```css
    :root {
      --color-ink: var(--ink-base);
@@ -178,22 +180,20 @@ The theme system integrates with Tailwind CSS through:
 Use the theme system in components by:
 
 1. Using theme-aware Tailwind classes
+
    ```tsx
    <div className="bg-background text-foreground">
-     <button className="bg-primary text-primary-foreground">
-       Click me
-     </button>
+     <button className="bg-primary text-primary-foreground">Click me</button>
    </div>
    ```
 
 2. Using the theme hook for dynamic theming
+
    ```tsx
    const { theme, setTheme } = useTheme();
-   
+
    // Example of conditionally styling based on theme
-   const buttonClass = theme === "dark" 
-     ? "bg-blue-700" 
-     : "bg-blue-500";
+   const buttonClass = theme === "dark" ? "bg-blue-700" : "bg-blue-500";
    ```
 
 ### Best Practices
@@ -210,6 +210,7 @@ Use the theme system in components by:
 To add new theme colors:
 
 1. Add base color constants in `:root` in `theme.css`
+
    ```css
    :root {
      --new-color-base: #hex;
@@ -217,22 +218,24 @@ To add new theme colors:
    ```
 
 2. Add color tokens to both theme variations
+
    ```css
    :root {
      --color-new: var(--new-color-base);
    }
-   
+
    .light {
      --color-new: var(--new-color-base);
    }
    ```
 
 3. Create semantic tokens in both theme variations
+
    ```css
    :root {
      --feature-background: var(--color-new);
    }
-   
+
    .light {
      --feature-background: var(--color-new);
    }
@@ -243,6 +246,7 @@ To add new theme colors:
 To add a new theme variant (e.g., "high-contrast"):
 
 1. Define a new theme in `theme.css`
+
    ```css
    .high-contrast {
      /* Theme variables */
@@ -250,6 +254,7 @@ To add a new theme variant (e.g., "high-contrast"):
    ```
 
 2. Update the Theme type in the ThemeProvider
+
    ```tsx
    type Theme = "dark" | "light" | "system" | "high-contrast";
    ```
@@ -268,6 +273,7 @@ The `ThemeDebug` component displays detailed theme information for debugging:
 ```
 
 It shows:
+
 - Current theme context state
 - DOM state (HTML classes, attributes)
 - Current CSS variables
@@ -281,7 +287,7 @@ The theme system includes:
 
 E2E tests in `/e2e/theme/` verify:
 
-- System theme detection 
+- System theme detection
 - Theme switching
 - Theme persistence
 - Anti-FOUC protection
@@ -298,11 +304,13 @@ The ThemeToggleButton tests in `/e2e/theme/theme-toggle.spec.ts` specifically ve
 - System theme preference override
 
 Run with:
+
 ```bash
 pnpm e2e
 ```
 
 Run specific tests with:
+
 ```bash
 pnpm e2e e2e/theme/theme-toggle.spec.ts
 ```
@@ -312,6 +320,7 @@ pnpm e2e e2e/theme/theme-toggle.spec.ts
 Unit tests for the theme system are split across multiple files:
 
 **Theme Provider Tests** in `/__tests__/components/ui/theme-provider.test.tsx` verify:
+
 - Theme provider initialization
 - Theme state management
 - System theme detection
@@ -319,6 +328,7 @@ Unit tests for the theme system are split across multiple files:
 - Theme hook behavior
 
 **ThemeToggleButton Tests** in `/__tests__/components/ui/theme-toggle-button.test.tsx` verify:
+
 - Correct rendering based on theme state
 - Theme toggling functionality
 - Accessibility attributes
@@ -326,11 +336,13 @@ Unit tests for the theme system are split across multiple files:
 - Event handling
 
 Run all theme-related tests with:
+
 ```bash
 pnpm test __tests__/components/ui
 ```
 
 Or run specific component tests:
+
 ```bash
 pnpm test __tests__/components/ui/theme-provider.test.tsx
 pnpm test __tests__/components/ui/theme-toggle-button.test.tsx

@@ -1,50 +1,50 @@
-import type { Preview } from '@storybook/react';
-import '../app/globals.css';
-import { ThemeDecorator } from './ThemeDecorator';
-import { ChromaticDecorator } from './chromatic-decorator';
+import type { Preview } from "@storybook/react";
+import "../app/globals.css";
+import { ThemeDecorator } from "./ThemeDecorator";
+import { ChromaticDecorator } from "./chromatic-decorator";
 
 // Define viewports matching Tailwind breakpoints
 const viewports = {
   mobile: {
-    name: 'Mobile',
+    name: "Mobile",
     styles: {
-      width: '320px',
-      height: '568px',
+      width: "320px",
+      height: "568px",
     },
   },
   mobileLarge: {
-    name: 'Mobile Large',
+    name: "Mobile Large",
     styles: {
-      width: '425px',
-      height: '768px',
+      width: "425px",
+      height: "768px",
     },
   },
   tablet: {
-    name: 'Tablet',
+    name: "Tablet",
     styles: {
-      width: '768px',
-      height: '1024px',
+      width: "768px",
+      height: "1024px",
     },
   },
   desktop: {
-    name: 'Desktop',
+    name: "Desktop",
     styles: {
-      width: '1024px',
-      height: '768px',
+      width: "1024px",
+      height: "768px",
     },
   },
   desktopLarge: {
-    name: 'Desktop Large',
+    name: "Desktop Large",
     styles: {
-      width: '1280px',
-      height: '800px',
+      width: "1280px",
+      height: "800px",
     },
   },
   desktopXL: {
-    name: 'Desktop XL',
+    name: "Desktop XL",
     styles: {
-      width: '1536px',
-      height: '864px',
+      width: "1536px",
+      height: "864px",
     },
   },
 };
@@ -61,20 +61,20 @@ const preview: Preview = {
       viewports,
     },
     backgrounds: {
-      default: 'dark',
+      default: "dark",
       values: [
         {
-          name: 'dark',
-          value: '#121212', // --color-ink
+          name: "dark",
+          value: "#121212", // --color-ink
         },
         {
-          name: 'light',
-          value: '#FAFAFA', // --color-chalk
+          name: "light",
+          value: "#FAFAFA", // --color-chalk
         },
       ],
     },
-    layout: 'fullscreen',
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    layout: "fullscreen",
+    actions: { argTypesRegex: "^on[A-Z].*" },
     // Chromatic parameters for visual testing
     chromatic: {
       // Disable animations to prevent flaky visual tests
@@ -91,16 +91,16 @@ const preview: Preview = {
         rules: [
           {
             // High contrast requirement
-            id: 'color-contrast',
-            enabled: true
-          }
-        ]
+            id: "color-contrast",
+            enabled: true,
+          },
+        ],
       },
       // Options for the a11y addon
       options: {
         runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa', 'wcag21aa'], // WCAG 2.1 AA compliance
+          type: "tag",
+          values: ["wcag2a", "wcag2aa", "wcag21aa"], // WCAG 2.1 AA compliance
         },
       },
       // Automatically check a11y for all stories
@@ -109,14 +109,14 @@ const preview: Preview = {
   },
   globalTypes: {
     theme: {
-      name: 'Theme',
-      description: 'Global theme for components',
-      defaultValue: 'dark',
+      name: "Theme",
+      description: "Global theme for components",
+      defaultValue: "dark",
       toolbar: {
-        icon: 'circlehollow',
+        icon: "circlehollow",
         items: [
-          { value: 'dark', icon: 'circle', title: 'Dark' },
-          { value: 'light', icon: 'circlehollow', title: 'Light' },
+          { value: "dark", icon: "circle", title: "Dark" },
+          { value: "light", icon: "circlehollow", title: "Light" },
         ],
         showName: true,
       },

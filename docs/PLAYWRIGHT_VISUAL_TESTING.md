@@ -13,11 +13,13 @@ Playwright automatically generates and compares platform-specific snapshots, as 
 ### Snapshot Naming Convention
 
 Snapshots follow this naming pattern:
+
 ```
 {test-name}-{browser}-{platform}.png
 ```
 
 Example:
+
 ```
 splash-page-stable-chromium-darwin.png  # macOS snapshot
 splash-page-stable-chromium-linux.png   # Linux snapshot
@@ -26,6 +28,7 @@ splash-page-stable-chromium-linux.png   # Linux snapshot
 ### Snapshot Storage
 
 Snapshots are stored in the test directory with a `-snapshots` suffix:
+
 ```
 e2e/tests/splash-page-load.spec.ts-snapshots/
 ```
@@ -35,11 +38,13 @@ e2e/tests/splash-page-load.spec.ts-snapshots/
 ### Locally (macOS)
 
 Run the tests and verify against existing snapshots:
+
 ```bash
 pnpm playwright test
 ```
 
 Update snapshots if you've made intentional UI changes:
+
 ```bash
 pnpm playwright test --update-snapshots
 ```
@@ -55,6 +60,7 @@ Tests run automatically on GitHub Actions for each pull request and push to trac
 For robust testing across environments:
 
 1. **Maintain both sets of snapshots**
+
    - macOS (darwin) snapshots for local development
    - Linux snapshots for CI
 
@@ -75,6 +81,7 @@ git commit -m "test(visual): update macOS visual snapshots"
 #### For Linux (CI Environment)
 
 1. Temporarily modify `.github/workflows/e2e.yml` to update and save snapshots:
+
    ```yaml
    - name: Run E2E tests
      run: pnpm playwright test --update-snapshots
@@ -83,6 +90,7 @@ git commit -m "test(visual): update macOS visual snapshots"
 2. Push this change to trigger the workflow
 3. Download the snapshot artifacts from GitHub Actions
 4. Add the Linux snapshots to your local repository:
+
    ```bash
    git add e2e/tests/splash-page-load.spec.ts-snapshots/*-linux.png
    git commit -m "test(visual): update Linux visual snapshots"
@@ -97,15 +105,18 @@ git commit -m "test(visual): update macOS visual snapshots"
 ## Best Practices
 
 1. **Reduce Flakiness**:
+
    - Add appropriate waits for animations to complete
    - Ensure consistent initial state before taking snapshots
    - Consider disabling animations with CSS when possible
 
 2. **Review Differences Carefully**:
+
    - Minor pixel differences may be expected between platforms
    - Focus on meaningful layout and content changes
 
 3. **Update Both Platforms Together**:
+
    - Always update both macOS and Linux snapshots when making UI changes
    - Commit both sets of snapshots in the same PR
 
@@ -119,11 +130,13 @@ git commit -m "test(visual): update macOS visual snapshots"
 ### Common Issues
 
 1. **Snapshots Failing in CI but Passing Locally**:
+
    - OS-specific rendering differences (Linux vs macOS)
    - Missing or outdated Linux snapshots
    - Solution: Update Linux snapshots following the process above
 
 2. **Inconsistent Snapshots**:
+
    - Dynamic content changing between runs
    - Animations or transitions not fully completed
    - Solution: Add wait times or stabilize dynamic content

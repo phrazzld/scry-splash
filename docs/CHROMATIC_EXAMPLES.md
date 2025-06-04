@@ -237,7 +237,7 @@ export const Focus: Story = {
     pseudo: { focus: true }, // Simulate focus state
   },
   args: {
-    // Default props 
+    // Default props
   },
 };
 ```

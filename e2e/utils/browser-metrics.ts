@@ -1,15 +1,15 @@
 /**
  * Browser Metrics Collection
- * 
+ *
  * Collects performance and browser metrics during test execution,
  * particularly focused on capturing detailed metrics in CI environments
  * to help diagnose performance issues and test flakiness.
  */
 
-import { Page, TestInfo, Browser } from '@playwright/test';
-import { getEnvironmentConfig, BrowserType } from './environment-detector';
-import { writeDataToFile } from './filesystem-validator';
-import path from 'path';
+import { Page, TestInfo, Browser } from "@playwright/test";
+import { getEnvironmentConfig, BrowserType } from "./environment-detector";
+import { writeDataToFile } from "./filesystem-validator";
+import path from "path";
 
 /**
  * Core Web Vital metrics
@@ -88,13 +88,13 @@ export interface PerformanceMetrics {
   viewportSize?: { width: number; height: number };
   browser?: string;
   browserVersion?: string;
-  
+
   // Core metrics
   coreWebVitals: CoreWebVitals;
   jsMetrics: JavaScriptMetrics;
   resourceMetrics: ResourceMetrics;
   networkMetrics: NetworkMetrics;
-  
+
   // Raw metrics
   raw?: Record<string, any>;
 }
@@ -127,7 +127,7 @@ const DEFAULT_METRICS_OPTIONS: MetricsCollectionOptions = {
   collectNetworkMetrics: true,
   saveRawMetrics: false,
   collectionInterval: 5000,
-  customSelectors: []
+  customSelectors: [],
 };
 
 /**
@@ -135,11 +135,11 @@ const DEFAULT_METRICS_OPTIONS: MetricsCollectionOptions = {
  */
 export function getDefaultMetricsOptions(): MetricsCollectionOptions {
   const envConfig = getEnvironmentConfig();
-  
+
   return {
     ...DEFAULT_METRICS_OPTIONS,
     collectionInterval: envConfig.performanceMetricsInterval,
-    saveRawMetrics: envConfig.verboseLogging
+    saveRawMetrics: envConfig.verboseLogging,
   };
 }
 
@@ -153,10 +153,10 @@ export function getDefaultMetricsOptions(): MetricsCollectionOptions {
 export async function collectPerformanceMetrics(
   page: Page,
   testInfo: TestInfo,
-  options: MetricsCollectionOptions = {}
+  options: MetricsCollectionOptions = {},
 ): Promise<PerformanceMetrics> {
   const mergedOptions = { ...getDefaultMetricsOptions(), ...options };
-  
+
   // Basic metrics structure
   const metrics: PerformanceMetrics = {
     testName: testInfo.title,
@@ -167,148 +167,151 @@ export async function collectPerformanceMetrics(
     coreWebVitals: {},
     jsMetrics: {},
     resourceMetrics: {},
-    networkMetrics: {}
+    networkMetrics: {},
   };
-  
+
   // Collect performance metrics via JavaScript execution in the page
   const rawMetrics = await page.evaluate(() => {
     const performance = window.performance;
     const perfMetrics: Record<string, any> = {};
-    
+
     // Navigation timing
     if (performance.timing) {
       const timing = performance.timing;
       perfMetrics.timing = {
         navigationStart: timing.navigationStart,
-        domContentLoaded: timing.domContentLoadedEventEnd - timing.navigationStart,
+        domContentLoaded:
+          timing.domContentLoadedEventEnd - timing.navigationStart,
         domComplete: timing.domComplete - timing.navigationStart,
-        loadEvent: timing.loadEventEnd - timing.navigationStart
+        loadEvent: timing.loadEventEnd - timing.navigationStart,
       };
     }
-    
+
     // Performance entries
     if (performance.getEntriesByType) {
       try {
         perfMetrics.entries = {
-          navigation: performance.getEntriesByType('navigation'),
-          resource: performance.getEntriesByType('resource'),
-          paint: performance.getEntriesByType('paint'),
-          mark: performance.getEntriesByType('mark'),
-          measure: performance.getEntriesByType('measure')
+          navigation: performance.getEntriesByType("navigation"),
+          resource: performance.getEntriesByType("resource"),
+          paint: performance.getEntriesByType("paint"),
+          mark: performance.getEntriesByType("mark"),
+          measure: performance.getEntriesByType("measure"),
         };
       } catch (error) {
         perfMetrics.entriesError = String(error);
       }
     }
-    
+
     // Memory info - using any for browser-specific properties
     const performanceAny = performance as any;
     if (performanceAny.memory) {
       perfMetrics.memory = {
         jsHeapSizeLimit: performanceAny.memory.jsHeapSizeLimit,
         totalJSHeapSize: performanceAny.memory.totalJSHeapSize,
-        usedJSHeapSize: performanceAny.memory.usedJSHeapSize
+        usedJSHeapSize: performanceAny.memory.usedJSHeapSize,
       };
     }
-    
+
     // LCP from PerformanceObserver (if available)
     // Using any since these are custom properties we may set in the page
     const windowAny = window as any;
-    if (typeof windowAny.LargestContentfulPaint !== 'undefined') {
+    if (typeof windowAny.LargestContentfulPaint !== "undefined") {
       perfMetrics.lcp = windowAny.LargestContentfulPaint;
     }
-    
+
     // CLS from PerformanceObserver (if available)
-    if (typeof windowAny.CumulativeLayoutShift !== 'undefined') {
+    if (typeof windowAny.CumulativeLayoutShift !== "undefined") {
       perfMetrics.cls = windowAny.CumulativeLayoutShift;
     }
-    
+
     // Resource count and sizes
-    const resources = performance.getEntriesByType('resource');
+    const resources = performance.getEntriesByType("resource");
     const resourceStats: Record<string, any> = {
       count: resources.length,
       totalSize: 0,
-      byType: {}
+      byType: {},
     };
-    
+
     resources.forEach((resource: any) => {
-      const type = resource.initiatorType || 'other';
+      const type = resource.initiatorType || "other";
       if (!resourceStats.byType[type]) {
         resourceStats.byType[type] = {
           count: 0,
-          size: 0
+          size: 0,
         };
       }
-      
+
       resourceStats.byType[type].count++;
-      
+
       if (resource.transferSize) {
         resourceStats.byType[type].size += resource.transferSize;
         resourceStats.totalSize += resource.transferSize;
       }
     });
-    
+
     perfMetrics.resources = resourceStats;
-    
+
     // Paint timing
-    const paintEntries = performance.getEntriesByType('paint');
+    const paintEntries = performance.getEntriesByType("paint");
     const paintTiming: Record<string, number> = {};
-    
+
     paintEntries.forEach((entry: any) => {
       paintTiming[entry.name] = entry.startTime;
     });
-    
+
     perfMetrics.paint = paintTiming;
-    
+
     return perfMetrics;
   });
-  
+
   // Process raw metrics into structured format
   if (mergedOptions.collectCoreWebVitals) {
     // Extract Core Web Vitals
     if (rawMetrics.paint) {
-      metrics.coreWebVitals.fcp = rawMetrics.paint['first-contentful-paint'];
+      metrics.coreWebVitals.fcp = rawMetrics.paint["first-contentful-paint"];
     }
-    
+
     if (rawMetrics.lcp) {
       metrics.coreWebVitals.lcp = rawMetrics.lcp;
     }
-    
+
     if (rawMetrics.cls) {
       metrics.coreWebVitals.cls = rawMetrics.cls;
     }
   }
-  
+
   if (mergedOptions.collectJSMetrics && rawMetrics.memory) {
     // Extract JS Metrics
     metrics.jsMetrics = {
       jsHeapSize: rawMetrics.memory.totalJSHeapSize,
       jsHeapSizeLimit: rawMetrics.memory.jsHeapSizeLimit,
-      usedJsHeapSize: rawMetrics.memory.usedJSHeapSize
+      usedJsHeapSize: rawMetrics.memory.usedJSHeapSize,
     };
   }
-  
+
   if (mergedOptions.collectResourceMetrics && rawMetrics.resources) {
     // Extract Resource Metrics
     metrics.resourceMetrics = {
       resourceCount: rawMetrics.resources.count,
       totalResourceSize: rawMetrics.resources.totalSize,
       resourceCountByType: {},
-      transferSizeByType: {}
+      transferSizeByType: {},
     };
-    
+
     // Process resource types
-    Object.entries(rawMetrics.resources.byType).forEach(([type, data]: [string, any]) => {
-      if (metrics.resourceMetrics.resourceCountByType) {
-        metrics.resourceMetrics.resourceCountByType[type] = data.count;
-      }
-      
-      if (metrics.resourceMetrics.transferSizeByType) {
-        metrics.resourceMetrics.transferSizeByType[type] = data.size;
-      }
-    });
+    Object.entries(rawMetrics.resources.byType).forEach(
+      ([type, data]: [string, any]) => {
+        if (metrics.resourceMetrics.resourceCountByType) {
+          metrics.resourceMetrics.resourceCountByType[type] = data.count;
+        }
+
+        if (metrics.resourceMetrics.transferSizeByType) {
+          metrics.resourceMetrics.transferSizeByType[type] = data.size;
+        }
+      },
+    );
   }
-  
+
   if (mergedOptions.collectNetworkMetrics && rawMetrics.timing) {
     // Extract Network Metrics
     metrics.networkMetrics = {
@@ -317,15 +320,15 @@ export async function collectPerformanceMetrics(
       domComplete: rawMetrics.timing.domComplete,
       loadEvent: rawMetrics.timing.loadEvent,
       requestCount: rawMetrics.resources?.count,
-      transferSize: rawMetrics.resources?.totalSize
+      transferSize: rawMetrics.resources?.totalSize,
     };
   }
-  
+
   // Save raw metrics if requested
   if (mergedOptions.saveRawMetrics) {
     metrics.raw = rawMetrics;
   }
-  
+
   return metrics;
 }
 
@@ -339,13 +342,17 @@ export class MetricsCollector {
   private metrics: PerformanceMetrics[] = [];
   private intervalId: NodeJS.Timeout | null = null;
   private isRunning = false;
-  
-  constructor(page: Page, testInfo: TestInfo, options: MetricsCollectionOptions = {}) {
+
+  constructor(
+    page: Page,
+    testInfo: TestInfo,
+    options: MetricsCollectionOptions = {},
+  ) {
     this.page = page;
     this.testInfo = testInfo;
     this.options = { ...getDefaultMetricsOptions(), ...options };
   }
-  
+
   /**
    * Start collecting metrics at the specified interval
    */
@@ -353,15 +360,18 @@ export class MetricsCollector {
     if (this.isRunning) {
       return;
     }
-    
+
     this.isRunning = true;
     this.metrics = [];
-    
+
     // Collect initial metrics
     await this.collectMetrics();
-    
+
     // Setup interval for continuous collection
-    if (this.options.collectionInterval && this.options.collectionInterval > 0) {
+    if (
+      this.options.collectionInterval &&
+      this.options.collectionInterval > 0
+    ) {
       this.intervalId = setInterval(async () => {
         try {
           await this.collectMetrics();
@@ -371,7 +381,7 @@ export class MetricsCollector {
       }, this.options.collectionInterval);
     }
   }
-  
+
   /**
    * Stop collecting metrics
    */
@@ -380,17 +390,17 @@ export class MetricsCollector {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
-    
+
     this.isRunning = false;
   }
-  
+
   /**
    * Get all collected metrics
    */
   getMetrics(): PerformanceMetrics[] {
     return this.metrics;
   }
-  
+
   /**
    * Get the latest metrics
    */
@@ -398,38 +408,52 @@ export class MetricsCollector {
     if (this.metrics.length === 0) {
       return null;
     }
-    
+
     return this.metrics[this.metrics.length - 1];
   }
-  
+
   /**
    * Save metrics to a file
    * @param filePath Path to save metrics to
    */
   async saveMetrics(filePath?: string): Promise<string> {
     let metricsPath = filePath;
-    
+
     if (!metricsPath) {
       const artifacts = this.testInfo.outputDir;
-      const sanitizedTestName = this.testInfo.title.replace(/[^a-zA-Z0-9]/g, '-');
-      metricsPath = path.join(artifacts, `metrics-${sanitizedTestName}-${Date.now()}.json`);
+      const sanitizedTestName = this.testInfo.title.replace(
+        /[^a-zA-Z0-9]/g,
+        "-",
+      );
+      metricsPath = path.join(
+        artifacts,
+        `metrics-${sanitizedTestName}-${Date.now()}.json`,
+      );
     }
-    
-    const metricsData = JSON.stringify({
-      test: this.testInfo.title,
-      metrics: this.metrics
-    }, null, 2);
-    
+
+    const metricsData = JSON.stringify(
+      {
+        test: this.testInfo.title,
+        metrics: this.metrics,
+      },
+      null,
+      2,
+    );
+
     await writeDataToFile(metricsPath, metricsData);
     return metricsPath;
   }
-  
+
   /**
    * Collect a single metrics sample
    */
   private async collectMetrics(): Promise<void> {
     try {
-      const metrics = await collectPerformanceMetrics(this.page, this.testInfo, this.options);
+      const metrics = await collectPerformanceMetrics(
+        this.page,
+        this.testInfo,
+        this.options,
+      );
       this.metrics.push(metrics);
     } catch (error) {
       console.warn(`Error collecting metrics: ${(error as Error).message}`);
@@ -447,32 +471,32 @@ export class MetricsCollector {
 export async function setupPerformanceMetrics(
   page: Page,
   testInfo: TestInfo,
-  options: MetricsCollectionOptions = {}
+  options: MetricsCollectionOptions = {},
 ): Promise<MetricsCollector> {
   const collector = new MetricsCollector(page, testInfo, options);
-  
+
   // Start collecting metrics
   await collector.start();
-  
+
   // In a real implementation, we would use testInfo.onFinish
   // Since TypeScript doesn't recognize this property, we use a workaround
   // Register a hook to save metrics at the end
   try {
     // TypeScript doesn't know about onFinish, so we use a workaround
     const testInfoAny = testInfo as any;
-    if (typeof testInfoAny.onFinish === 'function') {
+    if (typeof testInfoAny.onFinish === "function") {
       testInfoAny.onFinish(async () => {
         collector.stop();
-        
+
         try {
           // Only save metrics if we actually collected any
           if (collector.getMetrics().length > 0) {
             const filePath = await collector.saveMetrics();
-            
+
             // Attach metrics to test report
-            await testInfo.attach('performance-metrics.json', {
+            await testInfo.attach("performance-metrics.json", {
               path: filePath,
-              contentType: 'application/json'
+              contentType: "application/json",
             });
           }
         } catch (error) {
@@ -481,12 +505,16 @@ export async function setupPerformanceMetrics(
       });
     } else {
       // Fallback if onFinish isn't available
-      console.warn('TestInfo.onFinish not available - metrics will need to be saved manually');
+      console.warn(
+        "TestInfo.onFinish not available - metrics will need to be saved manually",
+      );
     }
   } catch (error) {
-    console.warn(`Error setting up metrics collection: ${(error as Error).message}`);
+    console.warn(
+      `Error setting up metrics collection: ${(error as Error).message}`,
+    );
   }
-  
+
   return collector;
 }
 
@@ -495,27 +523,32 @@ export async function setupPerformanceMetrics(
  * @param browser Playwright browser
  * @returns Browser type and version
  */
-export async function getBrowserInfo(browser: Browser): Promise<{ type: BrowserType; version: string }> {
+export async function getBrowserInfo(
+  browser: Browser,
+): Promise<{ type: BrowserType; version: string }> {
   // Default values
   let type = BrowserType.Unknown;
-  let version = 'unknown';
-  
+  let version = "unknown";
+
   try {
     // Get browser version
     const versionInfo = await browser.version();
-    
+
     // Determine browser type
-    if (versionInfo.toLowerCase().includes('chrome')) {
+    if (versionInfo.toLowerCase().includes("chrome")) {
       type = BrowserType.Chromium;
-    } else if (versionInfo.toLowerCase().includes('firefox')) {
+    } else if (versionInfo.toLowerCase().includes("firefox")) {
       type = BrowserType.Firefox;
-    } else if (versionInfo.toLowerCase().includes('webkit') || versionInfo.toLowerCase().includes('safari')) {
+    } else if (
+      versionInfo.toLowerCase().includes("webkit") ||
+      versionInfo.toLowerCase().includes("safari")
+    ) {
       type = BrowserType.WebKit;
     }
-    
+
     // Clean up version string
-    version = versionInfo.replace(/^.+\/([0-9.]+).*$/, '$1');
-    
+    version = versionInfo.replace(/^.+\/([0-9.]+).*$/, "$1");
+
     return { type, version };
   } catch (error) {
     console.warn(`Error getting browser info: ${(error as Error).message}`);

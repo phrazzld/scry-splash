@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './button';
-import { ThemeProvider } from './theme-provider';
-import { Typography } from './typography';
+import type { Meta, StoryObj } from "@storybook/react";
+import { Button } from "./button";
+import { ThemeProvider } from "./theme-provider";
+import { Typography } from "./typography";
 
 const meta = {
-  title: 'UI/Button',
+  title: "UI/Button",
   component: Button,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
         component: `
@@ -16,65 +16,78 @@ const meta = {
           All buttons have proper focus states with high contrast outlines.
           
           This component is theme-aware and adapts to both light and dark themes.
-        `
-      }
+        `,
+      },
     },
     a11y: {
       // Accessibility checks
       config: {
         rules: [
           {
-            id: 'color-contrast',
-            enabled: true
-          }
-        ]
-      }
-    }
+            id: "color-contrast",
+            enabled: true,
+          },
+        ],
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: 'select',
-      options: ['default', 'cta', 'gradient', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
-      description: 'The visual style variant of the button',
+      control: "select",
+      options: [
+        "default",
+        "cta",
+        "gradient",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link",
+      ],
+      description: "The visual style variant of the button",
       table: {
-        defaultValue: { summary: 'default' }
-      }
+        defaultValue: { summary: "default" },
+      },
     },
     size: {
-      control: 'select',
-      options: ['default', 'sm', 'md', 'lg', 'xl', 'icon'],
-      description: 'The size of the button',
+      control: "select",
+      options: ["default", "sm", "md", "lg", "xl", "icon"],
+      description: "The size of the button",
       table: {
-        defaultValue: { summary: 'default' }
-      }
+        defaultValue: { summary: "default" },
+      },
     },
-    'aria-label': {
-      control: 'text',
-      description: 'Accessibility label for the button',
+    "aria-label": {
+      control: "text",
+      description: "Accessibility label for the button",
     },
     disabled: {
-      control: 'boolean',
-      description: 'Whether the button is disabled',
+      control: "boolean",
+      description: "Whether the button is disabled",
     },
     className: {
-      control: 'text',
-      description: 'Additional CSS classes to apply',
+      control: "text",
+      description: "Additional CSS classes to apply",
     },
     children: {
-      control: 'text',
-      description: 'The content of the button',
+      control: "text",
+      description: "The content of the button",
     },
   },
   decorators: [
     (Story) => (
-      <ThemeProvider defaultTheme="system" storageKey="storybook-theme" enableSystem>
+      <ThemeProvider
+        defaultTheme="system"
+        storageKey="storybook-theme"
+        enableSystem
+      >
         <div className="p-6 bg-background text-foreground rounded-lg">
           <Story />
         </div>
       </ThemeProvider>
-    )
-  ]
+    ),
+  ],
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -85,8 +98,8 @@ type Story = StoryObj<typeof meta>;
  */
 export const Primary: Story = {
   args: {
-    children: 'Button',
-    variant: 'default',
+    children: "Button",
+    variant: "default",
   },
 };
 
@@ -96,11 +109,11 @@ export const Primary: Story = {
  */
 export const CTA: Story = {
   args: {
-    children: 'Get early access',
-    variant: 'gradient',
-    size: 'default',
-    'aria-label': 'Get early access to Scry',
-    className: 'whitespace-nowrap h-12 text-base font-bold px-10 py-3'
+    children: "Get early access",
+    variant: "gradient",
+    size: "default",
+    "aria-label": "Get early access to Scry",
+    className: "whitespace-nowrap h-12 text-base font-bold px-10 py-3",
   },
 };
 
@@ -109,8 +122,8 @@ export const CTA: Story = {
  */
 export const Secondary: Story = {
   args: {
-    children: 'Button',
-    variant: 'secondary',
+    children: "Button",
+    variant: "secondary",
   },
 };
 
@@ -119,8 +132,8 @@ export const Secondary: Story = {
  */
 export const Outline: Story = {
   args: {
-    children: 'Button',
-    variant: 'outline',
+    children: "Button",
+    variant: "outline",
   },
 };
 
@@ -129,8 +142,8 @@ export const Outline: Story = {
  */
 export const Destructive: Story = {
   args: {
-    children: 'Button',
-    variant: 'destructive',
+    children: "Button",
+    variant: "destructive",
   },
 };
 
@@ -139,8 +152,8 @@ export const Destructive: Story = {
  */
 export const Ghost: Story = {
   args: {
-    children: 'Button',
-    variant: 'ghost',
+    children: "Button",
+    variant: "ghost",
   },
 };
 
@@ -149,8 +162,8 @@ export const Ghost: Story = {
  */
 export const Link: Story = {
   args: {
-    children: 'Button',
-    variant: 'link',
+    children: "Button",
+    variant: "link",
   },
 };
 
@@ -159,8 +172,8 @@ export const Link: Story = {
  */
 export const Large: Story = {
   args: {
-    children: 'Large Button',
-    size: 'lg',
+    children: "Large Button",
+    size: "lg",
   },
 };
 
@@ -169,8 +182,8 @@ export const Large: Story = {
  */
 export const Small: Story = {
   args: {
-    children: 'Small Button',
-    size: 'sm',
+    children: "Small Button",
+    size: "sm",
   },
 };
 
@@ -181,7 +194,9 @@ export const ButtonGrid: Story = {
   render: () => (
     <div className="flex flex-col gap-8">
       <div>
-        <Typography variant="subheading" className="mb-4">Button Variants</Typography>
+        <Typography variant="subheading" className="mb-4">
+          Button Variants
+        </Typography>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <Button variant="default">Default</Button>
           <Button variant="cta">CTA</Button>
@@ -194,9 +209,11 @@ export const ButtonGrid: Story = {
           <Button disabled>Disabled</Button>
         </div>
       </div>
-      
+
       <div>
-        <Typography variant="subheading" className="mb-4">Button Sizes</Typography>
+        <Typography variant="subheading" className="mb-4">
+          Button Sizes
+        </Typography>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end">
           <Button size="sm">Small</Button>
           <Button size="default">Default</Button>
@@ -222,7 +239,7 @@ export const CTAExample: Story = {
       <Typography variant="body" className="mb-8 text-center opacity-80">
         Turns your notes into spaced‑repetition prompts—automatically.
       </Typography>
-      <Button 
+      <Button
         variant="gradient"
         size="default"
         className="whitespace-nowrap h-12 text-base font-bold px-10 py-3"
@@ -241,49 +258,99 @@ export const CTAExample: Story = {
  * Demonstrates button interaction states.
  */
 export const InteractionStates: Story = {
-  args: { children: 'Placeholder' }, // Required by type but not used in render function
+  args: { children: "Placeholder" }, // Required by type but not used in render function
   render: () => (
     <div className="space-y-10">
       <div>
-        <Typography variant="subheading" className="mb-4">Default Button States</Typography>
+        <Typography variant="subheading" className="mb-4">
+          Default Button States
+        </Typography>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center">
           <div className="flex flex-col items-center gap-2">
             <Button variant="default">Default</Button>
-            <Typography variant="small" className="mt-2">Normal</Typography>
+            <Typography variant="small" className="mt-2">
+              Normal
+            </Typography>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Button variant="default" className="hover">Hover State</Button>
-            <Typography variant="small" className="mt-2">Hover</Typography>
+            <Button variant="default" className="hover">
+              Hover State
+            </Button>
+            <Typography variant="small" className="mt-2">
+              Hover
+            </Typography>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Button variant="default" className="focus-visible">Focus State</Button>
-            <Typography variant="small" className="mt-2">Focus</Typography>
+            <Button variant="default" className="focus-visible">
+              Focus State
+            </Button>
+            <Typography variant="small" className="mt-2">
+              Focus
+            </Typography>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Button variant="default" disabled>Disabled</Button>
-            <Typography variant="small" className="mt-2">Disabled</Typography>
+            <Button variant="default" disabled>
+              Disabled
+            </Button>
+            <Typography variant="small" className="mt-2">
+              Disabled
+            </Typography>
           </div>
         </div>
       </div>
-      
+
       <div>
-        <Typography variant="subheading" className="mb-4">CTA Button States</Typography>
+        <Typography variant="subheading" className="mb-4">
+          CTA Button States
+        </Typography>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center">
           <div className="flex flex-col items-center gap-2">
-            <Button variant="gradient" size="default" className="whitespace-nowrap h-12 text-base font-bold px-10 py-3">CTA Button</Button>
-            <Typography variant="small" className="mt-2">Normal</Typography>
+            <Button
+              variant="gradient"
+              size="default"
+              className="whitespace-nowrap h-12 text-base font-bold px-10 py-3"
+            >
+              CTA Button
+            </Button>
+            <Typography variant="small" className="mt-2">
+              Normal
+            </Typography>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Button variant="gradient" size="default" className="whitespace-nowrap h-12 text-base font-bold px-10 py-3 hover">Hover State</Button>
-            <Typography variant="small" className="mt-2">Hover</Typography>
+            <Button
+              variant="gradient"
+              size="default"
+              className="whitespace-nowrap h-12 text-base font-bold px-10 py-3 hover"
+            >
+              Hover State
+            </Button>
+            <Typography variant="small" className="mt-2">
+              Hover
+            </Typography>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Button variant="gradient" size="default" className="whitespace-nowrap h-12 text-base font-bold px-10 py-3 focus-visible">Focus State</Button>
-            <Typography variant="small" className="mt-2">Focus</Typography>
+            <Button
+              variant="gradient"
+              size="default"
+              className="whitespace-nowrap h-12 text-base font-bold px-10 py-3 focus-visible"
+            >
+              Focus State
+            </Button>
+            <Typography variant="small" className="mt-2">
+              Focus
+            </Typography>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Button variant="gradient" size="default" className="whitespace-nowrap h-12 text-base font-bold px-10 py-3 active scale-[0.98]">Active State</Button>
-            <Typography variant="small" className="mt-2">Active</Typography>
+            <Button
+              variant="gradient"
+              size="default"
+              className="whitespace-nowrap h-12 text-base font-bold px-10 py-3 active scale-[0.98]"
+            >
+              Active State
+            </Button>
+            <Typography variant="small" className="mt-2">
+              Active
+            </Typography>
           </div>
         </div>
       </div>
@@ -295,57 +362,89 @@ export const InteractionStates: Story = {
  * Theme comparison demonstrating how buttons adapt to light and dark themes
  */
 export const ThemeComparison: Story = {
-  args: { children: 'Placeholder' }, // Required by type but not used in render function
+  args: { children: "Placeholder" }, // Required by type but not used in render function
   render: () => (
     <div className="space-y-8 max-w-3xl">
       <div className="space-y-3">
         <Typography variant="heading">Button Theme Adaptation</Typography>
         <Typography variant="body">
-          This example demonstrates how buttons adapt to theme changes.
-          Toggle between dark and light themes in the toolbar to see the difference.
+          This example demonstrates how buttons adapt to theme changes. Toggle
+          between dark and light themes in the toolbar to see the difference.
         </Typography>
       </div>
-      
+
       <div className="p-6 border border-border rounded-lg bg-card text-card-foreground">
-        <Typography variant="subheading" className="mb-4">Default Backgrounds</Typography>
+        <Typography variant="subheading" className="mb-4">
+          Default Backgrounds
+        </Typography>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="space-y-2">
             <Button variant="default">Default</Button>
-            <Typography variant="small" className="block text-center">Primary</Typography>
+            <Typography variant="small" className="block text-center">
+              Primary
+            </Typography>
           </div>
           <div className="space-y-2">
             <Button variant="secondary">Secondary</Button>
-            <Typography variant="small" className="block text-center">Secondary</Typography>
+            <Typography variant="small" className="block text-center">
+              Secondary
+            </Typography>
           </div>
           <div className="space-y-2">
             <Button variant="outline">Outline</Button>
-            <Typography variant="small" className="block text-center">Outline</Typography>
+            <Typography variant="small" className="block text-center">
+              Outline
+            </Typography>
           </div>
           <div className="space-y-2">
             <Button variant="ghost">Ghost</Button>
-            <Typography variant="small" className="block text-center">Ghost</Typography>
+            <Typography variant="small" className="block text-center">
+              Ghost
+            </Typography>
           </div>
         </div>
       </div>
-      
+
       <div className="p-6 border border-border rounded-lg bg-muted text-muted-foreground">
-        <Typography variant="subheading" className="mb-4 text-foreground">On Muted Background</Typography>
+        <Typography variant="subheading" className="mb-4 text-foreground">
+          On Muted Background
+        </Typography>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="space-y-2">
             <Button variant="default">Default</Button>
-            <Typography variant="small" className="block text-center text-foreground">Primary</Typography>
+            <Typography
+              variant="small"
+              className="block text-center text-foreground"
+            >
+              Primary
+            </Typography>
           </div>
           <div className="space-y-2">
             <Button variant="secondary">Secondary</Button>
-            <Typography variant="small" className="block text-center text-foreground">Secondary</Typography>
+            <Typography
+              variant="small"
+              className="block text-center text-foreground"
+            >
+              Secondary
+            </Typography>
           </div>
           <div className="space-y-2">
             <Button variant="outline">Outline</Button>
-            <Typography variant="small" className="block text-center text-foreground">Outline</Typography>
+            <Typography
+              variant="small"
+              className="block text-center text-foreground"
+            >
+              Outline
+            </Typography>
           </div>
           <div className="space-y-2">
             <Button variant="ghost">Ghost</Button>
-            <Typography variant="small" className="block text-center text-foreground">Ghost</Typography>
+            <Typography
+              variant="small"
+              className="block text-center text-foreground"
+            >
+              Ghost
+            </Typography>
           </div>
         </div>
       </div>
@@ -355,6 +454,6 @@ export const ThemeComparison: Story = {
     chromatic: {
       // Removed modes to fix Chromatic error - viewports and modes cannot be used together
       // Theme comparison is handled by the global theme toolbar instead
-    }
-  }
+    },
+  },
 };

@@ -13,6 +13,7 @@ The test mode system provides different configurations for different testing sce
 **Description**: Full testing capabilities for local development
 
 **Characteristics**:
+
 - All test types enabled (functional, visual, performance)
 - No retries (fail fast for immediate feedback)
 - Screenshots only on failure
@@ -21,6 +22,7 @@ The test mode system provides different configurations for different testing sce
 - Standard timeouts
 
 **Usage**:
+
 ```bash
 pnpm e2e:local
 # or
@@ -32,6 +34,7 @@ TEST_MODE=local-development pnpm e2e
 **Description**: CI mode focused on functional tests (default CI mode)
 
 **Characteristics**:
+
 - Excludes visual tests
 - 1 retry for flaky test tolerance
 - Screenshots on failure, videos on retry
@@ -41,6 +44,7 @@ TEST_MODE=local-development pnpm e2e
 - Chromium browser only
 
 **Usage**:
+
 ```bash
 pnpm e2e:ci-functional
 # or
@@ -52,6 +56,7 @@ TEST_MODE=ci-functional pnpm e2e
 **Description**: CI mode for visual regression testing
 
 **Characteristics**:
+
 - Only runs visual tests
 - 1 retry for visual test stability
 - Screenshots on success and failure
@@ -61,6 +66,7 @@ TEST_MODE=ci-functional pnpm e2e
 - Extended timeouts
 
 **Usage**:
+
 ```bash
 pnpm e2e:ci-visual
 # or
@@ -72,6 +78,7 @@ TEST_MODE=ci-visual pnpm e2e
 **Description**: Complete test suite for comprehensive CI runs
 
 **Characteristics**:
+
 - All test types enabled
 - 2 retries for maximum stability
 - Screenshots on failure, videos and traces always
@@ -81,6 +88,7 @@ TEST_MODE=ci-visual pnpm e2e
 - Visual testing enabled with CI thresholds
 
 **Usage**:
+
 ```bash
 pnpm e2e:ci-full
 # or
@@ -92,6 +100,7 @@ TEST_MODE=ci-full pnpm e2e
 **Description**: Minimal test suite for quick CI feedback
 
 **Characteristics**:
+
 - Only functional tests (excludes visual, performance, flaky)
 - 1 retry for basic stability
 - Minimal artifact capture
@@ -101,6 +110,7 @@ TEST_MODE=ci-full pnpm e2e
 - Higher performance thresholds
 
 **Usage**:
+
 ```bash
 pnpm e2e:ci-lightweight
 # or
@@ -135,28 +145,28 @@ The system automatically selects the appropriate test mode based on:
 ### Basic Test Fixtures
 
 ```typescript
-import { 
+import {
   enhancedTest,
   visualTest,
   performanceTest,
-  criticalTest
-} from '../utils/test-segmentation';
+  criticalTest,
+} from "../utils/test-segmentation";
 
 // Standard test - runs in all modes
-enhancedTest('basic functionality', async ({ page }) => {
-  await page.goto('/');
+enhancedTest("basic functionality", async ({ page }) => {
+  await page.goto("/");
   // test logic
 });
 
 // Visual test - only runs when visual testing is enabled
-visualTest('visual appearance', async ({ page }) => {
-  await page.goto('/');
+visualTest("visual appearance", async ({ page }) => {
+  await page.goto("/");
   // visual test logic
 });
 
 // Performance test - skipped in lightweight mode
-performanceTest('page load performance', async ({ page }) => {
-  await page.goto('/');
+performanceTest("page load performance", async ({ page }) => {
+  await page.goto("/");
   // performance test logic
 });
 ```
@@ -164,12 +174,12 @@ performanceTest('page load performance', async ({ page }) => {
 ### Checking Current Mode
 
 ```typescript
-import { 
-  getCurrentTestMode, 
+import {
+  getCurrentTestMode,
   getTestModeConfig,
   isInMode,
-  TestMode 
-} from '../utils/test-modes';
+  TestMode,
+} from "../utils/test-modes";
 
 // Get current mode
 const mode = getCurrentTestMode();
@@ -186,20 +196,21 @@ if (isInMode(TestMode.CIVisual)) {
 ### Adaptive Test Behavior
 
 ```typescript
-import { getAdjustedTimeouts } from '../utils/test-segmentation';
+import { getAdjustedTimeouts } from "../utils/test-segmentation";
 
-enhancedTest('adaptive test', async ({ page }, testInfo) => {
+enhancedTest("adaptive test", async ({ page }, testInfo) => {
   const timeouts = getAdjustedTimeouts(testInfo);
-  
+
   // Use mode-appropriate timeouts
-  await page.goto('/', { timeout: timeouts.navigation });
-  await page.waitForSelector('#content', { timeout: timeouts.action });
+  await page.goto("/", { timeout: timeouts.navigation });
+  await page.waitForSelector("#content", { timeout: timeouts.action });
 });
 ```
 
 ## Environment Variables
 
 ### Core Configuration
+
 - `TEST_MODE` - Explicitly set test mode
 - `CI` - Indicates CI environment
 - `VISUAL_TESTS_ENABLED_IN_CI` - Enable visual tests in CI
@@ -207,6 +218,7 @@ enhancedTest('adaptive test', async ({ page }, testInfo) => {
 - `RUN_ALL_BROWSERS` - Run on all browsers
 
 ### Playwright Integration
+
 - `PLAYWRIGHT_TEST_GREP` - Include only matching tests
 - `PLAYWRIGHT_TEST_GREP_INVERT` - Exclude matching tests
 - `PLAYWRIGHT_UPDATE_SNAPSHOTS` - Snapshot update mode
@@ -247,6 +259,7 @@ TEST_MODE=ci-visual ts-node e2e/scripts/test-mode-info.ts
 ### Test Mode Attachment
 
 Each test automatically receives a `test-mode.json` attachment containing:
+
 - Current mode
 - Mode description
 - Browser configuration

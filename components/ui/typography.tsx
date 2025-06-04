@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "@/lib/utils"
+import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 /**
  * Typography component for Scry
- * 
+ *
  * Maps to Scry's design tokens for typography:
  * - Display: 5.33rem (64pt), line-height 1.1, weight 700
  * - Heading: 2.67rem (32pt), line-height 1.2, weight 400
@@ -17,8 +17,10 @@ import { cn } from "@/lib/utils"
 const typographyVariants = cva("text-foreground", {
   variants: {
     variant: {
-      display: "text-[2.75rem] md:text-display font-bold leading-[1.1] tracking-tight",
-      heading: "text-[2rem] md:text-heading font-regular leading-[1.2] tracking-tight",
+      display:
+        "text-[2.75rem] md:text-display font-bold leading-[1.1] tracking-tight",
+      heading:
+        "text-[2rem] md:text-heading font-regular leading-[1.2] tracking-tight",
       subheading: "text-[1.25rem] md:text-subheading font-medium leading-[1.3]",
       body: "text-[1rem] md:text-body font-regular leading-[1.5]",
       small: "text-sm font-regular leading-[1.5]",
@@ -34,7 +36,7 @@ const typographyVariants = cva("text-foreground", {
     variant: "body",
     weight: undefined, // Use the weight defined by the variant
   },
-})
+});
 
 export interface TypographyProps
   extends React.HTMLAttributes<HTMLElement>,
@@ -48,13 +50,13 @@ export interface TypographyProps
    * - p for body
    * - span for small and subtle
    */
-  as?: React.ElementType
-  children: React.ReactNode
+  as?: React.ElementType;
+  children: React.ReactNode;
 }
 
 /**
  * Typography component for consistent text styling
- * 
+ *
  * @example
  * ```tsx
  * <Typography variant="display">Headline Text</Typography>
@@ -74,12 +76,17 @@ export function Typography({
   ...props
 }: TypographyProps) {
   // Determine the appropriate element based on the variant if not explicitly specified
-  const Component = as || 
-    (variant === "display" ? "h1" :
-    variant === "heading" ? "h2" :
-    variant === "subheading" ? "h3" :
-    variant === "body" ? "p" :
-    "span")
+  const Component =
+    as ||
+    (variant === "display"
+      ? "h1"
+      : variant === "heading"
+        ? "h2"
+        : variant === "subheading"
+          ? "h3"
+          : variant === "body"
+            ? "p"
+            : "span");
 
   return (
     <Component
@@ -88,57 +95,57 @@ export function Typography({
     >
       {children}
     </Component>
-  )
+  );
 }
 
 /**
  * Typography variants as individual components for convenience
  */
 
-export function DisplayText({ 
+export function DisplayText({
   weight = "bold",
   as = "h1",
-  ...props 
+  ...props
 }: Omit<TypographyProps, "variant">) {
-  return <Typography variant="display" weight={weight} as={as} {...props} />
+  return <Typography variant="display" weight={weight} as={as} {...props} />;
 }
 
-export function HeadingText({ 
+export function HeadingText({
   weight,
   as = "h2",
-  ...props 
+  ...props
 }: Omit<TypographyProps, "variant">) {
-  return <Typography variant="heading" weight={weight} as={as} {...props} />
+  return <Typography variant="heading" weight={weight} as={as} {...props} />;
 }
 
-export function SubheadingText({ 
+export function SubheadingText({
   weight,
   as = "h3",
-  ...props 
+  ...props
 }: Omit<TypographyProps, "variant">) {
-  return <Typography variant="subheading" weight={weight} as={as} {...props} />
+  return <Typography variant="subheading" weight={weight} as={as} {...props} />;
 }
 
-export function BodyText({ 
+export function BodyText({
   weight,
   as = "p",
-  ...props 
+  ...props
 }: Omit<TypographyProps, "variant">) {
-  return <Typography variant="body" weight={weight} as={as} {...props} />
+  return <Typography variant="body" weight={weight} as={as} {...props} />;
 }
 
-export function SmallText({ 
+export function SmallText({
   weight,
   as = "span",
-  ...props 
+  ...props
 }: Omit<TypographyProps, "variant">) {
-  return <Typography variant="small" weight={weight} as={as} {...props} />
+  return <Typography variant="small" weight={weight} as={as} {...props} />;
 }
 
-export function SubtleText({ 
+export function SubtleText({
   weight,
   as = "span",
-  ...props 
+  ...props
 }: Omit<TypographyProps, "variant">) {
-  return <Typography variant="subtle" weight={weight} as={as} {...props} />
+  return <Typography variant="subtle" weight={weight} as={as} {...props} />;
 }

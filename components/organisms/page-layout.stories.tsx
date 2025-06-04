@@ -1,9 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { PageLayout, DefaultLayout } from "./page-layout"
-import { GridItem } from "@/components/ui/container"
-import { HeadingText, SubheadingText, BodyText } from "@/components/ui/typography"
-import { Button } from "@/components/ui/button"
-import { Logo } from "@/components/ui/logo"
+import type { Meta, StoryObj } from "@storybook/react";
+import { PageLayout, DefaultLayout } from "./page-layout";
+import { GridItem } from "@/components/ui/container";
+import {
+  HeadingText,
+  SubheadingText,
+  BodyText,
+} from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/ui/logo";
 
 const meta: Meta<typeof PageLayout> = {
   title: "Organisms/PageLayout",
@@ -57,10 +61,10 @@ const meta: Meta<typeof PageLayout> = {
       description: "Position of the theme toggle button in the header",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof PageLayout>
+export default meta;
+type Story = StoryObj<typeof PageLayout>;
 
 // Default PageLayout (with 12-column grid demo)
 export const Default: Story = {
@@ -76,53 +80,103 @@ export const Default: Story = {
     children: (
       <>
         <GridItem span={12} className="mb-8 text-center">
-          <HeadingText className="text-chalk">12-Column Grid System</HeadingText>
-          <BodyText className="text-chalk mt-2">This demonstrates the responsive grid layout</BodyText>
+          <HeadingText className="text-chalk">
+            12-Column Grid System
+          </HeadingText>
+          <BodyText className="text-chalk mt-2">
+            This demonstrates the responsive grid layout
+          </BodyText>
         </GridItem>
-        
+
         {/* Grid demonstration */}
         {Array.from({ length: 12 }).map((_, i) => (
-          <GridItem key={i} span={1} className="h-16 bg-cobalt/20 border border-cobalt rounded-md flex items-center justify-center">
+          <GridItem
+            key={i}
+            span={1}
+            className="h-16 bg-cobalt/20 border border-cobalt rounded-md flex items-center justify-center"
+          >
             <BodyText className="text-chalk font-medium">{i + 1}</BodyText>
           </GridItem>
         ))}
-        
+
         {/* Common layouts examples */}
         <GridItem span={12} className="mt-12 mb-4">
-          <SubheadingText as="h3" className="text-chalk">Common Layouts</SubheadingText>
+          <SubheadingText as="h3" className="text-chalk">
+            Common Layouts
+          </SubheadingText>
         </GridItem>
-        
-        <GridItem span={12} className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4">
+
+        <GridItem
+          span={12}
+          className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4"
+        >
           <BodyText className="text-chalk">Full width (span 12)</BodyText>
         </GridItem>
-        
-        <GridItem span={12} md={6} mdStart={4} className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4">
-          <BodyText className="text-chalk">Centered content (span 6, start 4 on md+)</BodyText>
+
+        <GridItem
+          span={12}
+          md={6}
+          mdStart={4}
+          className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4"
+        >
+          <BodyText className="text-chalk">
+            Centered content (span 6, start 4 on md+)
+          </BodyText>
         </GridItem>
-        
-        <GridItem span={12} md={6} className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4">
-          <BodyText className="text-chalk">Left column (span 6 on md+)</BodyText>
+
+        <GridItem
+          span={12}
+          md={6}
+          className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4"
+        >
+          <BodyText className="text-chalk">
+            Left column (span 6 on md+)
+          </BodyText>
         </GridItem>
-        
-        <GridItem span={12} md={6} className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4">
-          <BodyText className="text-chalk">Right column (span 6 on md+)</BodyText>
+
+        <GridItem
+          span={12}
+          md={6}
+          className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4"
+        >
+          <BodyText className="text-chalk">
+            Right column (span 6 on md+)
+          </BodyText>
         </GridItem>
-        
-        <GridItem span={12} lg={4} className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4">
-          <BodyText className="text-chalk">3-column: First (span 4 on lg+)</BodyText>
+
+        <GridItem
+          span={12}
+          lg={4}
+          className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4"
+        >
+          <BodyText className="text-chalk">
+            3-column: First (span 4 on lg+)
+          </BodyText>
         </GridItem>
-        
-        <GridItem span={12} lg={4} className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4">
-          <BodyText className="text-chalk">3-column: Second (span 4 on lg+)</BodyText>
+
+        <GridItem
+          span={12}
+          lg={4}
+          className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4"
+        >
+          <BodyText className="text-chalk">
+            3-column: Second (span 4 on lg+)
+          </BodyText>
         </GridItem>
-        
-        <GridItem span={12} lg={4} className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4">
-          <BodyText className="text-chalk">3-column: Third (span 4 on lg+)</BodyText>
+
+        <GridItem
+          span={12}
+          lg={4}
+          className="bg-cobalt/10 p-6 rounded-lg border border-cobalt mb-4"
+        >
+          <BodyText className="text-chalk">
+            3-column: Third (span 4 on lg+)
+          </BodyText>
         </GridItem>
       </>
     ),
   },
-}
+};
 
 // DefaultLayout example (centered content)
 export const WithDefaultLayout: Story = {
@@ -130,15 +184,20 @@ export const WithDefaultLayout: Story = {
     <DefaultLayout {...args}>
       <div className="text-center">
         <Logo className="mb-8" />
-        <HeadingText className="text-chalk mb-4">DefaultLayout Example</HeadingText>
+        <HeadingText className="text-chalk mb-4">
+          DefaultLayout Example
+        </HeadingText>
         <BodyText className="text-chalk mb-8 opacity-80">
-          This uses the DefaultLayout which centers content in a responsive column
+          This uses the DefaultLayout which centers content in a responsive
+          column
         </BodyText>
-        <Button size="xl" variant="cta">Call to Action</Button>
+        <Button size="xl" variant="cta">
+          Call to Action
+        </Button>
       </div>
     </DefaultLayout>
   ),
-}
+};
 
 // With different background color
 export const AlternativeBackground: Story = {
@@ -151,14 +210,16 @@ export const AlternativeBackground: Story = {
     animate: true,
     children: (
       <GridItem span={12} md={8} mdStart={3} className="text-center py-12">
-        <HeadingText className="text-chalk mb-4">Alternative Background</HeadingText>
+        <HeadingText className="text-chalk mb-4">
+          Alternative Background
+        </HeadingText>
         <BodyText className="text-chalk opacity-80">
           This demonstrates a different background color and noise opacity
         </BodyText>
       </GridItem>
     ),
   },
-}
+};
 
 // Hero section example
 export const HeroSectionExample: Story = {
@@ -173,18 +234,29 @@ export const HeroSectionExample: Story = {
     footerText: "a misty step project",
     children: (
       <>
-        <GridItem span={12} md={10} lg={8} mdStart={2} lgStart={3} className="text-center py-16">
+        <GridItem
+          span={12}
+          md={10}
+          lg={8}
+          mdStart={2}
+          lgStart={3}
+          className="text-center py-16"
+        >
           <Logo size="large" className="mb-8" />
-          <HeadingText className="text-chalk mb-4">Remember effortlessly</HeadingText>
+          <HeadingText className="text-chalk mb-4">
+            Remember effortlessly
+          </HeadingText>
           <BodyText className="text-chalk opacity-80 mb-8">
             Turns your notes into spaced-repetition prompts—automatically
           </BodyText>
-          <Button size="xl" variant="cta">Get early access</Button>
+          <Button size="xl" variant="cta">
+            Get early access
+          </Button>
         </GridItem>
       </>
     ),
   },
-}
+};
 
 // No footer example
 export const WithoutFooter: Story = {
@@ -206,7 +278,7 @@ export const WithoutFooter: Story = {
       </GridItem>
     ),
   },
-}
+};
 
 // Custom footer text example
 export const CustomFooterText: Story = {
@@ -221,7 +293,9 @@ export const CustomFooterText: Story = {
     footerText: "built with ❤️ by misty step",
     children: (
       <GridItem span={12} md={8} mdStart={3} className="text-center py-12">
-        <HeadingText className="text-chalk mb-4">Custom Footer Text</HeadingText>
+        <HeadingText className="text-chalk mb-4">
+          Custom Footer Text
+        </HeadingText>
         <BodyText className="text-chalk opacity-80 mb-6">
           This demonstrates a layout with custom footer text
         </BodyText>
@@ -229,7 +303,7 @@ export const CustomFooterText: Story = {
       </GridItem>
     ),
   },
-}
+};
 
 // With theme toggle button in header
 export const WithThemeToggle: Story = {
@@ -245,13 +319,15 @@ export const WithThemeToggle: Story = {
     themeTogglePosition: "right",
     children: (
       <GridItem span={12} md={8} mdStart={3} className="text-center py-12">
-        <HeadingText className="text-chalk mb-4">Theme Toggle in Header</HeadingText>
+        <HeadingText className="text-chalk mb-4">
+          Theme Toggle in Header
+        </HeadingText>
         <BodyText className="text-chalk opacity-80 mb-6">
-          This demonstrates a layout with theme toggle button in the header.
-          The toggle button allows users to switch between light and dark modes.
+          This demonstrates a layout with theme toggle button in the header. The
+          toggle button allows users to switch between light and dark modes.
         </BodyText>
         <Button variant="cta">Action Button</Button>
       </GridItem>
     ),
   },
-}
+};

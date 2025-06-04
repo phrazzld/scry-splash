@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { DesignTokens } from './design-tokens';
+import type { Meta, StoryObj } from "@storybook/react";
+import { DesignTokens } from "./design-tokens";
 
 const meta = {
-  title: 'Design System/Tokens',
+  title: "Design System/Tokens",
   component: DesignTokens,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof DesignTokens>;
 
 export default meta;
@@ -28,8 +28,8 @@ export const AllTokens: Story = {
 export const DarkMode: Story = {
   args: {},
   parameters: {
-    backgrounds: { default: 'dark' }
-  }
+    backgrounds: { default: "dark" },
+  },
 };
 
 /**
@@ -38,6 +38,6 @@ export const DarkMode: Story = {
 export const LightMode: Story = {
   args: {},
   parameters: {
-    backgrounds: { default: 'light' }
-  }
+    backgrounds: { default: "light" },
+  },
 };

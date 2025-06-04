@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /**
  * This component renders an inline script that prevents FOUC (Flash of Unstyled Content)
@@ -73,7 +73,9 @@ export function ThemeScript({
         console.warn("Theme detection failed:", e);
       }
     })();
-  `.replace(/\n\s+/g, ' ').trim(); // Minify by removing newlines and extra spaces
+  `
+    .replace(/\n\s+/g, " ")
+    .trim(); // Minify by removing newlines and extra spaces
 
   // Create the ultimate anti-FOUC setup:
   // 1. Generate a blocking script - executes before anything else
@@ -81,15 +83,15 @@ export function ThemeScript({
   return (
     <>
       {/* High-priority blocking script that runs before anything else */}
-      <script 
+      <script
         id="theme-script"
         dangerouslySetInnerHTML={{ __html: script }}
         key="theme-script"
       />
-      
+
       {/* Fallback for non-JS environments using media queries */}
       <noscript>
-        <style 
+        <style
           dangerouslySetInnerHTML={{
             __html: `
               @media (prefers-color-scheme: dark) {
@@ -102,7 +104,7 @@ export function ThemeScript({
                   color-scheme: light;
                 }
               }
-            `
+            `,
           }}
         />
       </noscript>

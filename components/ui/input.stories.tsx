@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { Input } from "./input"
-import { NoiseBackground } from "@/components/ui/noise-background"
+import type { Meta, StoryObj } from "@storybook/react";
+import { Input } from "./input";
+import { NoiseBackground } from "@/components/ui/noise-background";
 
 const meta: Meta<typeof Input> = {
   title: "UI/Input",
@@ -31,10 +31,10 @@ const meta: Meta<typeof Input> = {
       description: "Whether the input is disabled",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Input>
+export default meta;
+type Story = StoryObj<typeof Input>;
 
 // Helper for consistent decoration
 const withBackground = (Story: React.ComponentType) => (
@@ -43,7 +43,7 @@ const withBackground = (Story: React.ComponentType) => (
       <Story />
     </div>
   </NoiseBackground>
-)
+);
 
 // Default
 export const Default: Story = {
@@ -51,7 +51,7 @@ export const Default: Story = {
     placeholder: "Input field",
   },
   decorators: [withBackground],
-}
+};
 
 // Email input
 export const EmailInput: Story = {
@@ -60,7 +60,7 @@ export const EmailInput: Story = {
     placeholder: "Your email address",
   },
   decorators: [withBackground],
-}
+};
 
 // Password input
 export const PasswordInput: Story = {
@@ -69,7 +69,7 @@ export const PasswordInput: Story = {
     placeholder: "Enter password",
   },
   decorators: [withBackground],
-}
+};
 
 // Disabled input
 export const DisabledInput: Story = {
@@ -78,7 +78,7 @@ export const DisabledInput: Story = {
     disabled: true,
   },
   decorators: [withBackground],
-}
+};
 
 // With value
 export const WithValue: Story = {
@@ -87,7 +87,7 @@ export const WithValue: Story = {
     value: "user@example.com",
   },
   decorators: [withBackground],
-}
+};
 
 // With custom styling
 export const CustomStyling: Story = {
@@ -96,4 +96,4 @@ export const CustomStyling: Story = {
     className: "border-purple-500 bg-purple-900/20",
   },
   decorators: [withBackground],
-}
+};

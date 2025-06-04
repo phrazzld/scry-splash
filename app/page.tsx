@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { SplashPage } from "@/components/organisms/splash-page";
 
@@ -13,9 +13,7 @@ export default function Home() {
 
   return (
     <main>
-      <SplashPage 
-        onCtaClick={handleCtaClick}
-      />
+      <SplashPage onCtaClick={handleCtaClick} />
       {/* Theme testing tools have been removed */}
     </main>
   );

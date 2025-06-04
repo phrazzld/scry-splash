@@ -10,9 +10,9 @@ const meta: Meta<typeof NoiseBackground> = {
   tags: ["autodocs"],
   argTypes: {
     baseColor: { control: "color" },
-    noiseOpacity: { 
-      control: { type: "range", min: 0, max: 0.2, step: 0.01 }
-    }
+    noiseOpacity: {
+      control: { type: "range", min: 0, max: 0.2, step: 0.01 },
+    },
   },
 };
 
@@ -67,7 +67,8 @@ export const FullPage: Story = {
       <div className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10">
         <h2 className="text-chalk text-2xl font-bold mb-4">Page Example</h2>
         <p className="text-chalk text-center max-w-md">
-          This demonstrates how the NoiseBackground can be used as a full-page background with content placed on top.
+          This demonstrates how the NoiseBackground can be used as a full-page
+          background with content placed on top.
         </p>
       </div>
     ),

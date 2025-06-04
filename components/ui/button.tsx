@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 /**
  * Configuration for button style variants using class-variance-authority
- * 
+ *
  * Defines the available variants and sizes for the Button component with
  * their corresponding Tailwind CSS classes.
- * 
+ *
  * Variants:
  * - default: Standard button with primary color and border
  * - cta: Call-to-action button with shadow and scale effect
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils"
  * - secondary: Less prominent than primary
  * - ghost: Text-like button with hover effect
  * - link: Underlined text that looks like a link
- * 
+ *
  * Sizes:
  * - default: Standard size
  * - sm: Small compact button
@@ -34,12 +34,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary",
+        default:
+          "bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary",
         cta: "bg-primary hover:bg-[--primary-hover] text-white font-bold shadow-md hover:shadow-lg active:scale-[0.98] transition-all border-0",
-        gradient: "bg-primary hover:bg-[--primary-hover] text-white font-bold shadow-md hover:shadow-lg active:scale-[0.98] transition-all border-0",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-primary bg-transparent hover:bg-primary/10 text-primary",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        gradient:
+          "bg-primary hover:bg-[--primary-hover] text-white font-bold shadow-md hover:shadow-lg active:scale-[0.98] transition-all border-0",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-primary bg-transparent hover:bg-primary/10 text-primary",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-primary/10 text-primary",
         link: "text-primary underline-offset-4 hover:underline",
       },
@@ -56,12 +61,12 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
-)
+  },
+);
 
 /**
  * Props for the Button component
- * 
+ *
  * @extends React.ButtonHTMLAttributes<HTMLButtonElement> - All standard button HTML attributes
  * @extends VariantProps<typeof buttonVariants> - Variant props from class-variance-authority
  */
@@ -72,47 +77,47 @@ export interface ButtonProps
    * When true, the component will not render its own DOM element and
    * instead render its child. Used for custom button implementations.
    */
-  asChild?: boolean
+  asChild?: boolean;
 }
 
 /**
  * A button component with multiple style variants and sizes
- * 
+ *
  * @param props - Button props including variant and size options
  * @param ref - React ref forwarded to the button element
- * 
+ *
  * @example
  * ```tsx
  * // Default button
  * <Button>Click me</Button>
- * 
+ *
  * // Primary CTA button
  * <Button variant="cta" size="lg">Get Started</Button>
- * 
+ *
  * // Outline button
  * <Button variant="outline">Learn More</Button>
  * ```
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, ...props }, ref) => {
-    const Comp = "button"
+    const Comp = "button";
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
       />
-    )
-  }
-)
-Button.displayName = "Button"
+    );
+  },
+);
+Button.displayName = "Button";
 
 /**
  * Export the Button component and buttonVariants
- * 
+ *
  * buttonVariants can be used independently for styling other elements
  * with button-like appearance without using the Button component.
- * 
+ *
  * @example
  * ```tsx
  * // Using buttonVariants directly
@@ -121,4 +126,4 @@ Button.displayName = "Button"
  * </Link>
  * ```
  */
-export { Button, buttonVariants }
+export { Button, buttonVariants };

@@ -1,7 +1,7 @@
-import React from 'react';
-import ColorTokens from './color-tokens';
-import TypographyTokens from './typography-tokens';
-import SpacingTokens from './spacing-tokens';
+import React from "react";
+import ColorTokens from "./color-tokens";
+import TypographyTokens from "./typography-tokens";
+import SpacingTokens from "./spacing-tokens";
 
 export interface DesignTokensProps {
   /**
@@ -13,16 +13,17 @@ export interface DesignTokensProps {
 /**
  * Complete display of design tokens used in the Scry design system
  */
-export const DesignTokens: React.FC<DesignTokensProps> = ({ 
-  className = '' 
+export const DesignTokens: React.FC<DesignTokensProps> = ({
+  className = "",
 }) => {
   return (
     <div className={`space-y-12 p-6 ${className}`}>
       <section>
         <h2 className="text-2xl font-medium mb-6">Design Tokens</h2>
         <p className="mb-6">
-          These design tokens form the foundation of the Scry design system and are mapped to shadcn/ui
-          components to ensure consistent styling throughout the application.
+          These design tokens form the foundation of the Scry design system and
+          are mapped to shadcn/ui components to ensure consistent styling
+          throughout the application.
         </p>
       </section>
 
@@ -46,7 +47,9 @@ export const DesignTokens: React.FC<DesignTokensProps> = ({
         <div className="space-y-4">
           <div className="border rounded-md p-4">
             <h3 className="text-lg font-medium mb-2">Color Mapping</h3>
-            <p className="mb-4 text-sm">How Scry design tokens map to shadcn/ui semantic tokens:</p>
+            <p className="mb-4 text-sm">
+              How Scry design tokens map to shadcn/ui semantic tokens:
+            </p>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
@@ -87,7 +90,9 @@ export const DesignTokens: React.FC<DesignTokensProps> = ({
 
           <div className="border rounded-md p-4">
             <h3 className="text-lg font-medium mb-2">Typography Mapping</h3>
-            <p className="mb-4 text-sm">How Scry typography maps to shadcn/ui components:</p>
+            <p className="mb-4 text-sm">
+              How Scry typography maps to shadcn/ui components:
+            </p>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
