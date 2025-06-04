@@ -218,4 +218,3 @@ This synthesized todo list represents the collective intelligence of 11 AI model
     2. Follow CONTRIBUTING.md setup instructions on clean environment
     3. Verify CLAUDE.md commands work as documented
   - **Depends‑on:** T009
-

@@ -42,7 +42,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Check formatting (Prettier)
-        run: pnpm prettier --check .
+        run: pnpm format:check
 
       - name: Lint code (ESLint)
         run: pnpm lint
