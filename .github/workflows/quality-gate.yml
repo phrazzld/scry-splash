@@ -100,7 +100,7 @@ jobs:
   security-and-e2e:
     name: "Stage 3: Security & E2E"
     runs-on: ubuntu-latest
-    needs: type-and-test
+    needs: [setup-and-lint, type-and-test]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
