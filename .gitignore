@@ -57,6 +57,11 @@ next-env.d.ts
 **/.claude/settings.local.json
 **/glance.md
 thinktank_*/
+PLAN.md
+TODO.md
+BACKLOG.md
+*-plan.md
+*-task.md
 
 # debug and test artifacts
 /.debug/
